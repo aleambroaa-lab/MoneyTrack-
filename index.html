@@ -1225,7 +1225,7 @@ function aggiungiInvestimento() {
     const nome = document.getElementById("inv-nome").value;
     const qta = parseFloat(document.getElementById("inv-quantita").value);
     const carico = parseFloat(document.getElementById("inv-prezzo-carico").value);
-    const attuale = parseFloat(document.getElementById("inv-prezzo-attuale").value);
+    const attuale = parseFloat(document.getElementById(if "inv-prezzo-attuale").value);
 
     if(!nome || isNaN(qta) || isNaN(carico) || isNaN(attuale)) return alert("Compila tutti i campi!");
 
@@ -1306,12 +1306,12 @@ function eliminaInvestimento(idx) {
 function salvaInvestimenti() {
     localStorage.setItem("moneyTrack_inv", JSON.stringify(investimenti));
 }// --- FUNZIONE RECUPERO NEWS COLORATE ---
-async function caricaNews() {
+//async function caricaNews() {
     const container = document.getElementById("news-container");
     const loader = document.getElementById("loading-news");
     const MIA_CHIAVE_RSS = "r3y5egzmzp1pfzikyhmsiwjwd2evzfq2lspug5az";
 
-    const fonti = [
+    //const fonti = [
         { nome: "Il Sole 24 Ore", url: "https://www.ilsole24ore.com/rss/finanza.xml", colore: "#f37021", cat: "it" },
         { nome: "Milano Finanza", url: "https://www.milanofinanza.it/rss/home.aspx", colore: "#b30000", cat: "it" },
         { nome: "Yahoo Finance", url: "https://it.finance.yahoo.com/news/rss", colore: "#7e1fff", cat: "it" },
@@ -1325,7 +1325,7 @@ async function caricaNews() {
 
     const promesse = fonti.map(async (fonte) => {
         try {
-            const API_URL = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(fonte.url)}&api_key=${MIA_CHIAVE_RSS}&t=${Date.now()}`;
+           // const API_URL = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(fonte.url)}&api_key=${MIA_CHIAVE_RSS}&t=${Date.now()}`;
             const response = await fetch(API_URL);
             const data = await response.json();
 
@@ -1456,7 +1456,7 @@ function togglePreferito(event, safeItem) {
         stella.style.color = '#ffc107';
     }
    
-    localStorage.setItem("moneyTrack_fav_news", JSON.stringify(preferitiNews));
+   // localStorage.setItem("moneyTrack_fav_news", JSON.stringify(preferitiNews));
 }
 // Carica le news all'avvio
 //window.onload = () => {
@@ -1464,17 +1464,17 @@ function togglePreferito(event, safeItem) {
    // investimenti = JSON.parse(localStorage.getItem("moneyTrack_inv")) || [];
    
     // Poi facciamo partire le funzioni grafiche
-    caricaNews();
-    if(typeof aggiornaInvestimenti === "function") aggiornaInvestimenti();
+   // caricaNews();
+  //  if(typeof aggiornaInvestimenti === "function") aggiornaInvestimenti();
    
     // QUESTA È QUELLA CHE FA SPARIRE "CARICAMENTO..."
-    aggiornaTickerHome();
+   // aggiornaTickerHome();
 };
-let preferitiNews = JSON.parse(localStorage.getItem("moneyTrack_fav_news")) || [];
+//let preferitiNews = JSON.parse(localStorage.getItem("moneyTrack_fav_news")) || [];
 
-function aggiornaTickerHome() {
-    const ticker = document.getElementById("investimenti-ticker");
-    if (!ticker) return; // Se il ticker non esiste nell'HTML, esce
+//function aggiornaTickerHome() {
+  //  const ticker = document.getElementById("investimenti-ticker");
+    //if (!ticker) return; // Se il ticker non esiste nell'HTML, esce
 
     // Se non ci sono investimenti, scriviamo un messaggio gentile
     if (!investimenti || investimenti.length === 0) {
@@ -1488,12 +1488,12 @@ function aggiornaTickerHome() {
         const colore = variazione >= 0 ? "ticker-pos" : "ticker-neg";
         const freccia = variazione >= 0 ? "▲" : "▼";
 
-        testoTicker += `
-            <span class="ticker-item">
-                ${inv.nome.toUpperCase()}
-                <span class="${colore}">${freccia} ${Math.abs(variazione)}%</span>
-            </span>
-            <span style="color: #444; margin: 0 15px;">•</span>`;
+        //testoTicker += `
+          // <span class="ticker-item">
+            //    ${inv.nome.toUpperCase()}
+              //  <span class="${colore}">${freccia} ${Math.abs(variazione)}%</span>
+           // </span>
+          //  <span style="color: #444; margin: 0 15px;">•</span>`;
     });
 
     // Lo ripetiamo per non avere buchi durante lo scorrimento
