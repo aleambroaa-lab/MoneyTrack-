@@ -1459,9 +1459,9 @@ function togglePreferito(event, safeItem) {
     localStorage.setItem("moneyTrack_fav_news", JSON.stringify(preferitiNews));
 }
 // Carica le news all'avvio
-window.onload = () => {
+//window.onload = () => {
     // Carichiamo prima i dati dal database
-    investimenti = JSON.parse(localStorage.getItem("moneyTrack_inv")) || [];
+   // investimenti = JSON.parse(localStorage.getItem("moneyTrack_inv")) || [];
    
     // Poi facciamo partire le funzioni grafiche
     caricaNews();
