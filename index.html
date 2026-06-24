@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MoneyTrack - Versione Definitiva</title>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://query1.finance.yahoo.com https://api.rss2json.com https://cdn.jsdelivr.net; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: https://*; connect-src 'self' https://query1.finance.yahoo.com https://api.rss2json.com;">
+    <title>MoneyTrack - Versione 1.0</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
@@ -1357,9 +1358,10 @@ async function caricaNews() {
                             </div>
                         </div>
                         <div class="news-content" style="padding: 12px;">
-                            <a href="${item.link}" target="_blank" style="display:block; margin-bottom:8px; color:#222; text-decoration:none; font-weight:bold; font-size:0.95rem;">
-                                ${item.title}
-                            </a>
+                           <a href="${item.link}" target="_blank" rel="noopener noreferrer" class="block group">
+        <h4 class="font-semibold text-sm text-gray-900 group-hover:text-blue-600 transition">${item.title}</h4>
+        <p class="text-xs text-gray-400 mt-1">${new Date(item.pubDate).toLocaleDateString('it-IT')} - Apri notizia</p>
+    </a>
                         </div>`;
                    
                     container.appendChild(card);
