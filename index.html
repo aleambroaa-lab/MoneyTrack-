@@ -50,7 +50,15 @@
         .container { max-width: 900px; margin: 0 auto; padding-bottom: 40px; }
         .header-saldo { padding: 20px; color: white; display: flex; justify-content: space-between; align-items: center; transition: background 0.3s; }
         #saldo-cifra { margin: 5px 0 0 0; font-size: 2.2rem; font-weight: bold; }
-        .info-previsione { text-align: right; padding: 0 20px 15px 20px; border-bottom: 1px solid var(--border); }
+        .info-previsione {
+    background: #f4f6f4; /* Lo sfondo grigio/salvia chiarissimo che ti piace */
+    border-radius: 14px;
+    padding: 20px;
+    margin: 25px auto 15px auto; /* Distanza di 35px dai pulsanti sopra per non essere attaccata */
+    max-width: 900px;
+    box-sizing: border-box;
+    border-bottom: none !important; /* Rimuove la vecchia linea nera inferiore */
+}
 
         .section { padding: 20px; border-bottom: 1px solid var(--border); }
         h3 { margin-top: 0; font-size: 1.1rem; color: #444; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
@@ -354,8 +362,95 @@
     background: #e0e0e0;
     transform: translateY(-2px);
 }
+.stats-card {
+    background: #f4f6f4; /* Sfondo grigio/salvia chiarissimo in linea con l'immagine */
+    border-radius: 14px;
+    padding: 22px 20px;
+    margin: 35px auto 20px auto;
+    max-width: 900px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-sizing: border-box;
+}
 
-</head>
+.stat-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Allineamento sinistro */
+.left-side {
+    text-align: center;
+    justify-content: center;
+}
+
+.stat-value-big {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #111111;
+    margin-top: 6px;
+}
+
+/* Configurazione colonna destra */
+.right-side {
+    padding-left: 30px;
+    gap: 10px; /* Spazio uniforme tra le righe */
+}
+
+.right-row {
+    display: flex;
+    justify-content: space-between; /* Spinge il testo a sinistra e l'importo a destra */
+    align-items: center;
+    font-size: 0.95rem;
+}
+
+.stat-label {
+    font-size: 0.95rem;
+    color: #555555;
+    font-weight: 500;
+}
+
+.stat-label-small {
+    color: #555555;
+    font-weight: 500;
+}
+
+.stat-value-small {
+    font-weight: bold;
+    color: #111111;
+}
+
+/* Separatore soft sopra il saldo finale */
+.highlight-saldo {
+    border-top: 1px dashed #d0d4d0;
+    padding-top: 8px;
+    margin-top: 2px;
+}
+
+/* Divisore centrale verticale */
+.divider {
+    width: 1px;
+    height: 80px; /* Copre l'altezza delle tre righe destre */
+    background: #e0e4e0;
+}
+
+/* Ottimizzazione per dispositivi mobili */
+@media (max-width: 600px) {
+    .stats-card {
+        flex-direction: column;
+        gap: 20px;
+    }
+    .divider {
+        width: 100%;
+        height: 1px;
+    }
+    .right-side {
+        padding-left: 0;
+        width: 100%;
+    }
+}</head>
 </style>
 <body>
 <datalist id="lista-assets">
@@ -385,12 +480,10 @@
 
         <!-- Pulsanti a destra -->
         <div class="nav-right">
-            <div class="nav-buttons">
-                <button id="loginBtn" onclick="fintoLogin()">Accedi</button>
-            </div>
-            <div class="menu-container">
+                        <div class="menu-container">
                 <div class="menu-dots" onclick="toggleMenu()">⋮</div>
                 <div id="myDropdown" class="dropdown-content">
+                    <a onclick="login-btn()" >Login</a>
                     <a onclick="esportaDati()">💾 Backup (Esporta)</a>
                     <a onclick="document.getElementById('fileInput').click()">📂 Ripristina (Importa)</a>
                 </div>
@@ -416,8 +509,8 @@
     </button>
 </div>
 
-    <div id="previsione-fine-mese" class="info-previsione"></div>
-
+ <div id="previsione-fine-mese" class="info-previsione"></div>
+     
     <div class="desktop-grid">
         <div class="section section-divider">
             
@@ -883,7 +976,8 @@ function aggiornaListaFuture() {
                 </div>
                 <div style="text-align: right; flex-shrink: 0; display: flex; align-items: center; gap: 10px;">
                     <span class="negativo" style="font-weight:bold; white-space: nowrap;">${valore.toFixed(2)}€</span>
-                    <span onclick="confermaFutura(${idx})" style="cursor:pointer; font-size:1.2rem; user-select:none; padding: 4px;">✅</span>
+                    <span onclick="confermaFutura(${idx})" style="cursor:pointer; font-size:1.2rem; user-select:none; padding: 4px;" title="Conferma e aggiungi">✅</span>
+                    <span onclick="eliminaFutura(${idx})" style="cursor:pointer; font-size:1.2rem; user-select:none; padding: 4px;" title="Elimina spesa">🗑️</span>
                 </div>
             </div>`;
     });
@@ -897,6 +991,14 @@ function aggiornaListaFuture() {
         localStorage.setItem("moneyTrack_future", JSON.stringify(future));
         aggiornaApp();
     }
+function eliminaFutura(idx) {
+    if(confirm("Vuoi eliminare questa spesa futura senza registrarla?")) {
+        future.splice(idx, 1); // Rimuove l'elemento dall'array
+        localStorage.setItem("moneyTrack_future", JSON.stringify(future)); // Salva la modifica
+        aggiornaListaFuture(); // Ridisegna la lista
+        aggiornaApp(); // Aggiorna la scheda "Entro fine mese / Prospettiva"
+    }
+}
 
 // Configura il lavoratore di PDF.js
 // --- LOGICA IMPORTAZIONE PDF BANCARIO (Versione Corretta senza blocco Worker) ---
