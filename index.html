@@ -21,10 +21,10 @@
        
         nav {
             display: flex; justify-content: space-between; align-items: center;
-            background: white; padding: 5px 15px; border-bottom: 2px solid var(--border);
+            background: white; padding: 50px 15px; border-bottom: 2px solid var(--border);
             position: sticky; top: 0; z-index: 100; height: 60px; box-sizing: border-box;
         }
-        .logo-box img { height: 55px; border-radius: 6px; cursor: pointer; }
+        .logo-box img { height: 70px; border-radius: 15px; cursor: pointer; }
         .nav-right { display: flex; align-items: center; }
         .nav-buttons button {
             background: white; border: none; color: #555; padding: 8px 14px;
@@ -309,6 +309,25 @@
 .calc-buttons .btn-clear { background-color: #ff4d4d; color: white; }
 .calc-buttons .btn-equal { background-color: #4caf50; color: white; grid-row: span 2; height: 100%; }
 
+.btn-back-home {
+    background: #f4f4f4;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: #555;
+    cursor: pointer;
+    margin-bottom: 20px; /* Spazio tra il tasto e il titolo */
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    transition: all 0.2s ease;
+}
+
+.btn-back-home:hover {
+    background: #e0e0e0;
+    transform: translateY(-2px);
+}
+
     </style>
 </head>
     </style>
@@ -367,11 +386,12 @@
 
     <div class="desktop-grid">
         <div class="section section-divider">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; width: 100%; gap: 10px;">
+            
+            <div style="display: flex; flex-direction: column; align-items: flex-start; margin-bottom: 20px; width: 100%; gap: 15px;">
    
     <h3 id="form-label" style="margin: 0; white-space: nowrap; flex-shrink: 0;">✍️ Nuova Operazione</h3>
    
-    <div style="display: flex; gap: 8px; align-items: center; flex-shrink: 0;" class="cat-row">
+    <div style="display: flex; gap: 8px; align-items: center; width: 100%;" class="cat-row">
         <button type="button" onclick="document.getElementById('cameraInput').click()" style="background: #f4f4f4; border: none; border-radius: 12px; padding: 0 15px; cursor: pointer; height: 46px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); display: flex; align-items: center; gap: 6px; font-weight: 600; color: #444; transition: all 0.25s ease;">
             📷 <span style="font-size: 0.8rem; font-weight: bold;">SCAN</span>
         </button>
@@ -455,6 +475,13 @@
 </div>
 
 <div id="pagina-analisi" class="container" style="display: none; padding: 20px;">
+    <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 20px;">
+        <button onclick="mostraPagina('home')" class="btn-back-home">⬅ Torna alla Home</button>
+        <select id="anno-selezionato" onchange="generaReport()" style="padding: 10px; border-radius: 10px; border: 1px solid #ddd; font-size: 0.9rem; cursor: pointer;"></select>
+    </div>
+
+    <h3>📈 Andamento Annuale</h3>
+    </div>    </button>
     <h3>📈 Andamento Annuale</h3>
     <div style="height: 300px; margin-bottom: 30px;">
         <canvas id="graficoAnnuale"></canvas>
@@ -982,19 +1009,29 @@ function analizzaTestoEstratto(testo) {
         });
     }
 
-    function generaReport() {
-    const ctx = document.getElementById('graficoAnnuale').getContext('2d');
-   
-    // AGGIUNGI QUESTO CONTROLLO: se il grafico esiste già, lo distrugge prima di ricrearlo
-    if (graficoBarre) {
-        graficoBarre.destroy();
+   // Aggiungi questa funzione per inizializzare il menu a tendina
+function initYearSelect() {
+    const select = document.getElementById("anno-selezionato");
+    if (select.options.length > 0) return; // Evita di duplicare se già popolato
+    const annoCorrente = new Date().getFullYear();
+    for (let i = annoCorrente; i >= annoCorrente - 5; i--) {
+        select.innerHTML += `<option value="${i}">${i}</option>`;
     }
+}
+
+// Aggiorna la funzione generaReport
+function generaReport() {
+    initYearSelect(); // Assicura che il menu sia pronto
+    const anno = parseInt(document.getElementById("anno-selezionato").value);
+    
+    const ctx = document.getElementById('graficoAnnuale').getContext('2d');
+    if (graficoBarre) graficoBarre.destroy();
 
     let entrate = new Array(12).fill(0), uscite = new Array(12).fill(0);
-    const anno = new Date().getFullYear();
+    
     spese.forEach(s => {
         const d = new Date(s.data);
-        if(d.getFullYear() === anno) {
+        if(d.getFullYear() === anno) { // Usa l'anno selezionato
             if(s.tipo === "Entrata") entrate[d.getMonth()] += s.imp;
             else uscite[d.getMonth()] += s.imp;
         }
@@ -1012,35 +1049,44 @@ function analizzaTestoEstratto(testo) {
         options: { responsive: true, maintainAspectRatio: false }
     });
 
-    // Matrice
     aggiornaMatrice(anno);
 }
+
+// Aggiorna la funzione aggiornaMatrice
 function aggiornaMatrice(anno) {
     const head = document.getElementById("headerMesi");
     const body = document.getElementById("bodyMatrice");
     if(!head || !body) return;
 
-    head.innerHTML = "<th class='sticky-col'>Categoria</th>" + ["Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic"].map(m => `<th>${m}</th>`).join("");
+    // Aggiungi colonna "Totale" nell'header
+    head.innerHTML = "<th class='sticky-col'>Categoria</th>" + ["Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic"].map(m => `<th>${m}</th>`).join("") + "<th>Totale</th>";
    
     body.innerHTML = "";
     const categorieUniche = [...new Set(spese.map(s => s.cat))];
    
     if(categorieUniche.length === 0) {
-        body.innerHTML = "<tr><td colspan='13' style='text-align:center'>Nessun dato per l'anno selezionato</td></tr>";
+        body.innerHTML = "<tr><td colspan='14' style='text-align:center'>Nessun dato per l'anno selezionato</td></tr>";
         return;
     }
 
     categorieUniche.forEach(cat => {
         let r = `<tr><td class='sticky-col'>${cat}</td>`;
+        let totaleRiga = 0; // Variabile per il totale annuale della categoria
+        
         for(let i=0; i<12; i++) {
             let v = spese.filter(s =>
                 s.cat === cat &&
                 new Date(s.data).getMonth() === i &&
                 new Date(s.data).getFullYear() === anno
             ).reduce((a,b) => a + (b.tipo === 'Entrata' ? b.imp : -b.imp), 0);
+            
+            totaleRiga += v; // Somma mensile al totale riga
             r += `<td>${v !== 0 ? v.toFixed(0) + '€' : '-'}</td>`;
         }
-        body.innerHTML += r + "</tr>";
+        
+        // Aggiungi la cella del totale annuale in grassetto
+        r += `<td style="font-weight:bold">${totaleRiga !== 0 ? totaleRiga.toFixed(0) + '€' : '-'}</td></tr>`;
+        body.innerHTML += r;
     });
 }
 
