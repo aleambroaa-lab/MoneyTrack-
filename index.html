@@ -21,10 +21,10 @@
        
         nav {
             display: flex; justify-content: space-between; align-items: center;
-            background: white; padding: 40px 15px; border-bottom: 2px solid var(--border);
+            background: white; padding: 20px 15px; border-bottom: 2px solid var(--border);
             position: sticky; top: 0; z-index: 100; height: 60px; box-sizing: border-box;
         }
-        .logo-box img { height: 60px; border-radius: 15px; cursor: pointer; }
+        .logo-box img { height: 40px; border-radius: 15px; cursor: pointer; }
         .nav-right { display: flex; align-items: center; }
         .nav-buttons button {
             background: white; border: none; color: #555; padding: 8px 14px;
@@ -207,17 +207,44 @@
 .news-title { font-weight: bold; font-size: 1rem; margin-bottom: 8px; display: block; color: #333; text-decoration: none; }
 .news-date { font-size: 0.75rem; color: #888; }
 
-<head>
-    <style>
-      /* Incolla questo nel tuo <style>, sostituendo il vecchio CSS dei bottoni */
-.nav-buttons-container {
-    display: flex;
-    justify-content: center;
-    gap: 12px;
-    padding: 20px 15px;
-    background: #fdfdfd; /* Sfondo quasi bianco per pulizia */
-    border-bottom: 1px solid #eee; /* Linea sottile di separazione */
+      nav {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+    background: #000000; /* Barra Nera */
+    padding: 10px 20px;
+    height: 80px; /* Aumentata per contenere il sottotitolo */
+    position: sticky; top: 0; z-index: 100;
 }
+
+/* Container per mantenere il logo e il menu allineati al container principale */
+.nav-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 900px; /* Allineato alla larghezza del tuo .container */
+    margin: 0 auto;
+}
+
+.center-title {
+    color: white;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.center-title h1 { 
+    margin: 0 !important; 
+    font-size: 2.5rem !important; /* Forza la dimensione a 2.5rem */
+    line-height: 1.2 !important;
+}}.center-title small { font-size: 0.65rem; opacity: 0.8; }
+
+.logo-box img { height: 50px; }
+
+/* Colore bianco per i puntini e il testo di sistema in barra nera */
+.menu-dots { color: white !important; }
+.nav-buttons button { background: #333; color: white; }
 
 .btn-modern {
     flex: 1; /* Stessa larghezza per tutti */
@@ -328,10 +355,8 @@
     transform: translateY(-2px);
 }
 
-    </style>
 </head>
-    </style>
-</head>
+</style>
 <body>
 <datalist id="lista-assets">
     <option value="BTC">Bitcoin</option>
@@ -346,24 +371,33 @@
 </datalist>
 
 <nav>
-    <div class="logo-box" onclick="mostraPagina('home')">
-        <img src="logo.png" alt="MT" onerror="this.src='https://via.placeholder.com/100x40/b5c3b6/FFFFFF?text=MoneyTrack'">
-    </div>
-    <div class="nav-right">
-        <div class="nav-buttons">
-            <button id="loginBtn" onclick="fintoLogin()">Accedi</button>
+    <div class="nav-inner">
+        <!-- Logo a sinistra -->
+        <div class="logo-box" onclick="mostraPagina('home')">
+            <img src="logo.png" alt="MT" onerror="this.src='https://via.placeholder.com/100x40/b5c3b6/FFFFFF?text=MoneyTrack'">
         </div>
-        <div class="menu-container">
-            <div class="menu-dots" onclick="toggleMenu()">⋮</div>
-            <div id="myDropdown" class="dropdown-content">
-                <a onclick="esportaDati()">💾 Backup (Esporta)</a>
-                <a onclick="document.getElementById('fileInput').click()">📂 Ripristina (Importa)</a>
+
+        <!-- Titolo al centro -->
+        <div class="center-title">
+            <div style="font-weight: bold; font-size: 1.2rem; color: #fff;">MoneyTrack</div>
+            <div style="font-size: 0.7rem; color: #ccc;">Controlla le tue finanze, investi nel futuro</div>
+        </div>
+
+        <!-- Pulsanti a destra -->
+        <div class="nav-right">
+            <div class="nav-buttons">
+                <button id="loginBtn" onclick="fintoLogin()">Accedi</button>
+            </div>
+            <div class="menu-container">
+                <div class="menu-dots" onclick="toggleMenu()">⋮</div>
+                <div id="myDropdown" class="dropdown-content">
+                    <a onclick="esportaDati()">💾 Backup (Esporta)</a>
+                    <a onclick="document.getElementById('fileInput').click()">📂 Ripristina (Importa)</a>
+                </div>
             </div>
         </div>
-        <input type="file" id="fileInput" style="display:none" onchange="importaDati(event)">
     </div>
 </nav>
-
 <div id="pagina-home" class="container">
     <div class="header-saldo" id="boxSaldo">
         <div><small>DISPONIBILITÀ ATTUALE</small><h1 id="saldo-cifra">0.00 €</h1></div>
