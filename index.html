@@ -21,10 +21,10 @@
        
         nav {
             display: flex; justify-content: space-between; align-items: center;
-            background: white; padding: 50px 15px; border-bottom: 2px solid var(--border);
+            background: white; padding: 40px 15px; border-bottom: 2px solid var(--border);
             position: sticky; top: 0; z-index: 100; height: 60px; box-sizing: border-box;
         }
-        .logo-box img { height: 70px; border-radius: 15px; cursor: pointer; }
+        .logo-box img { height: 60px; border-radius: 15px; cursor: pointer; }
         .nav-right { display: flex; align-items: center; }
         .nav-buttons button {
             background: white; border: none; color: #555; padding: 8px 14px;
@@ -1009,7 +1009,7 @@ function analizzaTestoEstratto(testo) {
         });
     }
 
-   // Aggiungi questa funzione per inizializzare il menu a tendina
+    // Aggiungi questa funzione per inizializzare il menu a tendina
 function initYearSelect() {
     const select = document.getElementById("anno-selezionato");
     if (select.options.length > 0) return; // Evita di duplicare se già popolato
@@ -1093,26 +1093,61 @@ function aggiornaMatrice(anno) {
     // --- UTILS ---
     function togglePrivacy() { privacy = !privacy; aggiornaApp(); }
     function fintoLogin() { let u = prompt("Tuo nome?"); if(u) document.getElementById("loginBtn").innerText = u; }
-    function esportaDati() {
-        const data = JSON.stringify({spese, future, customCats});
-        const blob = new Blob([data], {type: "application/json"});
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = `Backup_MoneyTrack_${new Date().toISOString().split('T')[0]}.json`;
-        a.click();
+    
+function esportaDati() {
+    // Creiamo un oggetto con tutti i dati attuali del localStorage
+    let backup = {};
+    for (let i = 0; i < localStorage.length; i++) {
+        let key = localStorage.key(i);
+        backup[key] = localStorage.getItem(key);
     }
-    function importaDati(e) {
-        const reader = new FileReader();
-        reader.onload = (ev) => {
-            const d = JSON.parse(ev.target.result);
-            spese = d.spese; future = d.future || []; customCats = d.customCats || customCats;
-            localStorage.setItem("moneyTrack_db", JSON.stringify(spese));
-            localStorage.setItem("moneyTrack_future", JSON.stringify(future));
-            localStorage.setItem("moneyTrack_cats", JSON.stringify(customCats));
-            location.reload();
-        };
-        reader.readAsText(e.target.files[0]);
-    }
+
+    // Convertiamo in un file scaricabile
+    const dataStr = JSON.stringify(backup, null, 2);
+    const blob = new Blob([dataStr], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = "backup_moneytrack_" + new Date().toISOString().split('T')[0] + ".json";
+    a.click();
+    URL.revokeObjectURL(url);
+}
+
+   function importaDati(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const contenuto = e.target.result;
+            const dati = JSON.parse(contenuto);
+
+            // 1. Chiediamo conferma
+            if (!confirm("ATTENZIONE: Questo sovrascriverà tutti i dati attuali. Procedere?")) {
+                return;
+            }
+
+            // 2. IMPORTANTE: Pulizia totale
+            localStorage.clear();
+
+            // 3. Ripristino dei dati dal file
+            Object.keys(dati).forEach(key => {
+                localStorage.setItem(key, dati[key]);
+            });
+
+            alert("Ripristino completato! La pagina si ricaricherà per applicare i dati.");
+            
+            // 4. Ricaricamento forzato (resetta la memoria JS)
+            window.location.reload(true); 
+        } catch (error) {
+            console.error(error);
+            alert("Errore: Il file non è un backup valido.");
+        }
+    };
+    reader.readAsText(file);
+}
 
     // Inizializzazione
     document.getElementById('data').value = new Date().toISOString().split('T')[0];
