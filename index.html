@@ -734,7 +734,7 @@ function modificaCategoria() {
         aggiornaListaFuture();
     }
 
-    function calcolaPrevisione(saldoAttuale) {
+   function calcolaPrevisione(saldoAttuale) {
     const oggi = new Date();
     // Azzera ore, minuti e secondi per far funzionare il confronto con le scadenze inserite oggi
     oggi.setHours(0, 0, 0, 0);
@@ -759,25 +759,32 @@ function modificaCategoria() {
     const previstoFineMese = saldoAttuale - impegniMese;
     const saldoFuturo = saldoAttuale - tuttiImpegniFuturi; 
 
+    // Determinazione dinamica del colore (verde se >= 0, rosso se < 0)
+    const coloreFineMese = previstoFineMese >= 0 ? "var(--success)" : "var(--danger)";
+    const coloreFuturo = saldoFuturo >= 0 ? "var(--success)" : "var(--danger)";
+
     const div = document.getElementById("previsione-fine-mese");
-    div.style.textAlign = "left"; // Sovrascrive il text-align: right di default del CSS originale per fare spazio
+    div.style.textAlign = "left"; 
 
     if (privacy) {
         div.innerHTML = `<small>Previsione fine mese: *** € | Saldo Futuro: *** €</small>`;
     } else {
-        // Grafica a due colonne per accogliere tutti i dati in modo chiaro
+        // Layout compatto con diciture uniformate e colori condizionali
         div.innerHTML = `
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
-                <div style="flex: 1; min-width: 150px;">
-                    <small style="color: #666; font-weight: bold;">ENTRO FINE MESE:</small><br>
-                    <small style="color:var(--danger)">Impegni: -${impegniMese.toFixed(2)}€</small><br>
-                    <span>Stimato: <strong>${previstoFineMese.toFixed(2)}€</strong></span>
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px;">
+                
+                <div style="flex: 1; min-width: 0; font-size: 0.9rem;">
+                    <div style="color: #666; font-weight: bold; font-size: 0.7rem; margin-bottom: 2px;">ENTRO FINE MESE</div>
+                    <div style="color:var(--danger); font-size: 0.75rem;">Impegni: -${impegniMese.toFixed(2)}€</div>
+                    <div style="margin-top: 2px; white-space: nowrap;">Saldo: <strong style="color: ${coloreFineMese};">${previstoFineMese.toFixed(2)}€</strong></div>
                 </div>
-                <div style="flex: 1; text-align: right; min-width: 150px; border-left: 1px solid var(--border); padding-left: 10px;">
-                    <small style="color: #666; font-weight: bold;">PROSPETTIVA TOTALE:</small><br>
-                    <small style="color:var(--danger)">Tutte le rate in coda: -${tuttiImpegniFuturi.toFixed(2)}€</small><br>
-                    <span>Saldo Futuro: <strong style="color: #007bff;">${saldoFuturo.toFixed(2)}€</strong></span>
+
+                <div style="flex: 1; min-width: 0; text-align: right; border-left: 1px solid var(--border); padding-left: 8px; font-size: 0.9rem;">
+                    <div style="color: #666; font-weight: bold; font-size: 0.7rem; margin-bottom: 2px;">PROSPETTIVA TOTALE</div>
+                    <div style="color:var(--danger); font-size: 0.75rem;">Impegni: -${tuttiImpegniFuturi.toFixed(2)}€</div>
+                    <div style="margin-top: 2px; white-space: nowrap;">Saldo: <strong style="color: ${coloreFuturo};">${saldoFuturo.toFixed(2)}€</strong></div>
                 </div>
+
             </div>`;
     }
 }
