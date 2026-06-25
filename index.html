@@ -735,24 +735,52 @@ function modificaCategoria() {
     }
 
     function calcolaPrevisione(saldoAttuale) {
-        const oggi = new Date();
-        const fineMese = new Date(oggi.getFullYear(), oggi.getMonth() + 1, 0);
-        let impegni = future.filter(f => {
-            const df = new Date(f.data);
-            return df >= oggi && df <= fineMese;
-        }).reduce((acc, curr) => acc + curr.imp, 0);
+    const oggi = new Date();
+    // Azzera ore, minuti e secondi per far funzionare il confronto con le scadenze inserite oggi
+    oggi.setHours(0, 0, 0, 0);
 
-        const previsto = saldoAttuale - impegni;
-        const div = document.getElementById("previsione-fine-mese");
-       
-        if(privacy) {
-            div.innerHTML = `<small>Previsione fine mese: *** €</small>`;
-        } else {
-            div.innerHTML = `
-                <small>Fine mese stimato: <strong>${previsto.toFixed(2)}€</strong></small>
-                <br><small style="color:var(--danger)">Impegni previsti: -${impegni.toFixed(2)}€</small>`;
-        }
+    // Identifica l'ultimo istante dell'ultimo giorno del mese corrente
+    const fineMese = new Date(oggi.getFullYear(), oggi.getMonth() + 1, 0);
+    fineMese.setHours(23, 59, 59, 999);
+
+    // 1. Calcola gli impegni SOLO per il mese in corso
+    let impegniMese = future.filter(f => {
+        const df = new Date(f.data);
+        return df >= oggi && df <= fineMese;
+    }).reduce((acc, curr) => acc + curr.imp, 0);
+
+    // 2. Calcola TUTTI gli impegni futuri in lista (per il Saldo Futuro)
+    let tuttiImpegniFuturi = future.filter(f => {
+        const df = new Date(f.data);
+        return df >= oggi;
+    }).reduce((acc, curr) => acc + curr.imp, 0);
+
+    // Formule matematiche di previsione
+    const previstoFineMese = saldoAttuale - impegniMese;
+    const saldoFuturo = saldoAttuale - tuttiImpegniFuturi; 
+
+    const div = document.getElementById("previsione-fine-mese");
+    div.style.textAlign = "left"; // Sovrascrive il text-align: right di default del CSS originale per fare spazio
+
+    if (privacy) {
+        div.innerHTML = `<small>Previsione fine mese: *** € | Saldo Futuro: *** €</small>`;
+    } else {
+        // Grafica a due colonne per accogliere tutti i dati in modo chiaro
+        div.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                <div style="flex: 1; min-width: 150px;">
+                    <small style="color: #666; font-weight: bold;">ENTRO FINE MESE:</small><br>
+                    <small style="color:var(--danger)">Impegni: -${impegniMese.toFixed(2)}€</small><br>
+                    <span>Stimato: <strong>${previstoFineMese.toFixed(2)}€</strong></span>
+                </div>
+                <div style="flex: 1; text-align: right; min-width: 150px; border-left: 1px solid var(--border); padding-left: 10px;">
+                    <small style="color: #666; font-weight: bold;">PROSPETTIVA TOTALE:</small><br>
+                    <small style="color:var(--danger)">Tutte le rate in coda: -${tuttiImpegniFuturi.toFixed(2)}€</small><br>
+                    <span>Saldo Futuro: <strong style="color: #007bff;">${saldoFuturo.toFixed(2)}€</strong></span>
+                </div>
+            </div>`;
     }
+}
 
     function aggiungiOperazione() {
         const d = document.getElementById("data").value, i = parseFloat(document.getElementById("importo").value);
