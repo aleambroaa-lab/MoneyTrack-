@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MoneyTrack - Versione Definitiva</title>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://query1.finance.yahoo.com https://api.rss2json.com https://cdn.jsdelivr.net; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: https://*; connect-src 'self' https://query1.finance.yahoo.com https://api.rss2json.com;">
+    <title>MoneyTrack - Versione 1.0</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
@@ -206,38 +207,6 @@
 .news-title { font-weight: bold; font-size: 1rem; margin-bottom: 8px; display: block; color: #333; text-decoration: none; }
 .news-date { font-size: 0.75rem; color: #888; }
 
-.ticker-wrapper {
-    width: 100%;
-    overflow: hidden;
-    background: #1a1a1a; /* Sfondo scuro tipo Wall Street */
-    color: white;
-    padding: 8px 0;
-    font-family: 'monospace';
-    font-size: 0.9rem;
-    border-bottom: 2px solid #333;
-}
-
-.ticker-content {
-    display: inline-block;
-    white-space: nowrap;
-    padding-left: 100%;
-    animation: ticker-animation 20s linear infinite;
-}
-
-@keyframes ticker-animation {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-100%); }
-}
-
-.ticker-item {
-    display: inline-block;
-    margin-right: 30px;
-    font-weight: bold;
-}
-
-.ticker-pos { color: #2ecc71; } /* Verde per il profitto */
-.ticker-neg { color: #e74c3c; } /* Rosso per la perdita */
-
 <head>
     <style>
       /* Incolla questo nel tuo <style>, sostituendo il vecchio CSS dei bottoni */
@@ -376,11 +345,6 @@
     </div>
 </nav>
 
-<div class="ticker-wrapper">
-   <div id="investimenti-ticker" class="ticker-content">Caricamento portafoglio...</div>
-         </div>
-</div>
-
 <div id="pagina-home" class="container">
     <div class="header-saldo" id="boxSaldo">
         <div><small>DISPONIBILITÀ ATTUALE</small><h1 id="saldo-cifra">0.00 €</h1></div>
@@ -388,10 +352,10 @@
     </div>
  
 <div class="nav-buttons-container">
-    <button class="btn-modern" onclick="mostraPagina('investimenti')">
+    <button class="btn-modern" onclick="alert('Presto disponibile!')">
         📊 INVESTIMENTI
     </button>
-    <button class="btn-modern" onclick="mostraPagina('news')">
+    <button class="btn-modern" onclick="alert('Presto disponibile!')">
         📰 NEWS
     </button>
     <button class="btn-modern" onclick="mostraPagina('analisi')">
@@ -412,7 +376,9 @@
             📷 <span style="font-size: 0.8rem; font-weight: bold;">SCAN</span>
         </button>
         <button class="small-btn" onclick="apriCalcolatrice()" title="Calcolatrice">🧮</button>
-       <a onclick="document.getElementById('pdfInput').click()">📄 Importa da PDF Bancario</a>
+        <button type="button" onclick="document.getElementById('pdfInput').click()" style="background: #f4f4f4; border: none; border-radius: 12px; padding: 0 15px; cursor: pointer; height: 46px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); display: flex; align-items: center; gap: 6px; font-weight: 600; color: #444; transition: all 0.25s ease;">
+            📄 <span style="font-size: 0.8rem; font-weight: bold;">PDF</span>
+        </button>
 </div>
 <input type="file" id="pdfInput" style="display:none" accept=".pdf" onchange="elaboraPDFBancario(event)">
 
@@ -1231,7 +1197,7 @@ function aggiungiInvestimento() {
     investimenti.push({ nome, qta, carico, attuale });
     salvaInvestimenti();
     aggiornaInvestimenti();
-aggiornaTickerHome();
+    // aggiornaTickerHome();
     // Reset campi
     ["inv-nome", "inv-quantita", "inv-prezzo-carico", "inv-prezzo-attuale"].forEach(id => document.getElementById(id).value = "");
 }
@@ -1264,7 +1230,7 @@ async function aggiornaTuttiIPrezzi() {
     salvaInvestimenti();
     aggiornaInvestimenti();
     if(btn) btn.innerText = "🔄 AGGIORNA PREZZI";
-aggiornaTickerHome();
+    // aggiornaTickerHome();
 }
 
 // 4. RENDERING TABELLA
@@ -1357,9 +1323,10 @@ async function caricaNews() {
                             </div>
                         </div>
                         <div class="news-content" style="padding: 12px;">
-                            <a href="${item.link}" target="_blank" style="display:block; margin-bottom:8px; color:#222; text-decoration:none; font-weight:bold; font-size:0.95rem;">
-                                ${item.title}
-                            </a>
+                           <a href="${item.link}" target="_blank" rel="noopener noreferrer" class="block group">
+        <h4 class="font-semibold text-sm text-gray-900 group-hover:text-blue-600 transition">${item.title}</h4>
+        <p class="text-xs text-gray-400 mt-1">${new Date(item.pubDate).toLocaleDateString('it-IT')} - Apri notizia</p>
+    </a>
                         </div>`;
                    
                     container.appendChild(card);
@@ -1462,14 +1429,16 @@ window.onload = () => {
     investimenti = JSON.parse(localStorage.getItem("moneyTrack_inv")) || [];
    
     // Poi facciamo partire le funzioni grafiche
-    caricaNews();
-    if(typeof aggiornaInvestimenti === "function") aggiornaInvestimenti();
+    // caricaNews(); // Disabilitato momentaneamente
+    // if(typeof aggiornaInvestimenti === "function") aggiornaInvestimenti(); // Disabilitato momentaneamente
    
     // QUESTA È QUELLA CHE FA SPARIRE "CARICAMENTO..."
-    aggiornaTickerHome();
+    // aggiornaTickerHome(); // Disabilitato momentaneamente
 };
 let preferitiNews = JSON.parse(localStorage.getItem("moneyTrack_fav_news")) || [];
 
+// La funzione aggiornaTickerHome è stata lasciata nel codice nel caso ti servisse in futuro,
+// ma non verrà più chiamata.
 function aggiornaTickerHome() {
     const ticker = document.getElementById("investimenti-ticker");
     if (!ticker) return; // Se il ticker non esiste nell'HTML, esce
