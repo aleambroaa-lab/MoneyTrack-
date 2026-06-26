@@ -736,6 +736,7 @@
         }
     }
 function modificaCategoria() {
+    const t = document.getElementById("tipo").value;
     const select = document.getElementById('categoria');
     const opzioneSelezionata = select.options[select.selectedIndex];
 
@@ -744,20 +745,60 @@ function modificaCategoria() {
         return;
     }
 
-    const vecchioNome = opzioneSelezionata.text;
-    const vecchioValore = opzioneSelezionata.value;
-
+    const vecchioNome = opzioneSelezionata.value;
     const nuovoNome = prompt("Modifica il nome della categoria:", vecchioNome);
 
-    if (nuovoNome !== null && nuovoNome.trim() !== "") {
-        opzioneSelezionata.text = nuovoNome.trim();
-        if (vecchioValore === vecchioNome) {
-            opzioneSelezionata.value = nuovoNome.trim();
+    if (nuovoNome !== null && nuovoNome.trim() !== "" && nuovoNome !== vecchioNome) {
+        const nuovo = nuovoNome.trim();
+        
+        // 1. Aggiorna la lista delle categorie salvate
+        const index = customCats[t].indexOf(vecchioNome);
+        if (index !== -1) {
+            customCats[t][index] = nuovo;
+            saveCats();
         }
+
+        // 2. Aggiorna TUTTO lo storico dei movimenti già salvati
+        let movimentiAggiornati = false;
+        spese.forEach(s => {
+            if (s.cat === vecchioNome && s.tipo === t) {
+                s.cat = nuovo;
+                movimentiAggiornati = true;
+            }
+        });
+
+        // 3. Salva nel database le modifiche ai movimenti
+        if (movimentiAggiornati) {
+            localStorage.setItem("moneyTrack_db", JSON.stringify(spese));
+        }
+
+        // 4. Ricarica la grafica per mostrare subito i cambiamenti
+        aggiornaCategorie();
+        document.getElementById("categoria").value = nuovo;
+        aggiornaApp(); 
     }
 }
 
-    function saveCats() { localStorage.setItem("moneyTrack_cats", JSON.stringify(customCats)); }
+function eliminaCategoria() {
+    const t = document.getElementById("tipo").value;
+    const sel = document.getElementById("categoria").value;
+    
+    if (!sel) return;
+
+    // Chiediamo conferma spiegando cosa succede ai vecchi movimenti
+    if(confirm(`Sei sicuro di voler rimuovere la categoria "${sel}" dalla lista?\n\nI vecchi movimenti registrati con questa categoria NON verranno eliminati per non sballare il saldo.`)) {
+        
+        // Rimuove la categoria dalla lista
+        customCats[t] = customCats[t].filter(c => c !== sel);
+        
+        // Se la lista rimane vuota, aggiunge una categoria di sicurezza
+        if(customCats[t].length === 0) customCats[t] = ["Generica"];
+        
+        saveCats();
+        aggiornaCategorie();
+    }
+}   
+ function saveCats() { localStorage.setItem("moneyTrack_cats", JSON.stringify(customCats)); }
 
     // --- LOGICA CORE ---
     function aggiornaApp() {
