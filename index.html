@@ -219,7 +219,8 @@
     display: flex; 
     justify-content: space-between; 
     align-items: center;
-    background: #000000; /* Barra Nera */
+    background: #ffffff; /* Barra Bianca */
+    border-bottom: 2px solid var(--border);
     padding: 10px 20px;
     height: 80px; /* Aumentata per contenere il sottotitolo */
     position: sticky; top: 0; z-index: 100;
@@ -236,7 +237,7 @@
 }
 
 .center-title {
-    color: white;
+    color: #333;
     text-align: center;
     display: flex;
     flex-direction: column;
@@ -250,8 +251,8 @@
 
 .logo-box img { height: 50px; }
 
-/* Colore bianco per i puntini e il testo di sistema in barra nera */
-.menu-dots { color: white !important; }
+/* Colore scuro per i puntini e il testo di sistema in barra bianca */
+.menu-dots { color: #555 !important; }
 .nav-buttons button { background: #333; color: white; }
 
 .btn-modern {
@@ -467,18 +468,15 @@
 
 <nav>
     <div class="nav-inner">
-        <!-- Logo a sinistra -->
         <div class="logo-box" onclick="mostraPagina('home')">
             <img src="logo.png" alt="MT" onerror="this.src='https://via.placeholder.com/100x40/b5c3b6/FFFFFF?text=MoneyTrack'">
         </div>
 
-        <!-- Titolo al centro -->
         <div class="center-title">
-            <div style="font-weight: bold; font-size: 1.2rem; color: #fff;">MoneyTrack</div>
-            <div style="font-size: 0.7rem; color: #ccc;">Controlla le tue finanze, investi nel futuro</div>
+            <div style="font-weight: bold; font-size: 1.2rem; color: #333;">MoneyTrack</div>
+            <div style="font-size: 0.7rem; color: #666;">Controlla le tue finanze, investi nel futuro</div>
         </div>
 
-        <!-- Pulsanti a destra -->
         <div class="nav-right">
                         <div class="menu-container">
                 <div class="menu-dots" onclick="toggleMenu()">⋮</div>
