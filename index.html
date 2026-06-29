@@ -597,10 +597,11 @@
             <div style="height: 250px; position: relative;">
                 <canvas id="graficoTorta"></canvas>
             </div>
+
 <div class="budget-container">
     <h4 style="margin-top: 0; margin-bottom: 12px; color: #444; display: flex; align-items: center; gap: 6px;">🎯 Budget Mensili</h4>
     <div class="budget-row">
-        <select id="budget-categoria"></select>
+        <select id="budget-categoria" style="width: 100%;"></select>
         <input type="number" id="budget-importo" placeholder="Limite (€)" step="1">
         <button class="btn-modern" onclick="impostaBudget()" style="background: var(--primary); color: white;">Imposta</button>
     </div>
@@ -616,14 +617,10 @@
     </div>
     <div id="lista-obiettivi"></div>
 </div>
-           
-            <h3 style="margin-top: 30px;">🕒 Storico</h3>
-            <input type="text" id="filtroRicerca" onkeyup="aggiornaApp()" placeholder="🔍 Cerca tra note o categorie...">
-            <div id="lista-transazioni"></div>
-        </div>
-    </div>
-</div>
 
+<h3 style="margin-top: 30px;">🕒 Storico</h3>
+<input type="text" id="filtroRicerca" onkeyup="aggiornaApp()" placeholder="🔍 Cerca tra note o categorie...">
+<div id="lista-transazioni"></div>
 <div id="pagina-analisi" class="container" style="display: none; padding: 20px;">
     <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 20px;">
         <button onclick="mostraPagina('home')" class="btn-back-home">⬅ Torna alla Home</button>
