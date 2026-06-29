@@ -253,20 +253,14 @@
 .nav-buttons button { background: #333; color: white; }
 
 .btn-modern {
-    flex: 1;
-    max-width: 140px;
+    padding: 10px 15px;
     border: none;
-    padding: 14px 8px;
-    border-radius: 12px;
-    font-weight: 600;
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    border-radius: 6px;
     cursor: pointer;
-    transition: all 0.25s ease;
-    background: #f4f4f4;
-    color: #444;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    font-weight: 600;
+    font-size: 0.9rem;
+    display: inline-block;
+    transition: opacity 0.2s;
 }
 
 .btn-modern:hover {
@@ -448,21 +442,20 @@
 .progress-bar-bg { 
     background: #e9ecef; 
     border-radius: 8px; 
-    height: 12px;        /* Aumentato leggermente per essere più visibile */
-    width: 100%;         /* Forza la larghezza al 100% del genitore */
-    display: block;      /* Forza il blocco */
+    height: 16px !important; /* Forza l'altezza minima */
+    width: 100%; 
+    display: block; 
     overflow: hidden; 
-    position: relative;  /* Importante per il posizionamento */
-    margin: 5px 0;       /* Spazio sopra e sotto */
+    margin: 8px 0;
+    border: 1px solid #ddd; /* Aggiungi un bordo per vedere il contenitore */
 }
+
 .progress-bar-fill { 
     height: 100%; 
     background: var(--primary); 
-    transition: width 0.5s ease; /* Transizione più fluida */
-    display: block;      /* Forza il blocco */
-    min-width: 2px;      /* Assicura che si veda anche se è allo 0.1% */
-}
-.progress-bar-fill.danger { background: var(--danger); }
+    display: block; 
+    transition: width 0.5s ease;
+}.progress-bar-fill.danger { background: var(--danger); }
 .budget-row { display: flex; gap: 8px; margin-bottom: 12px; }
 .budget-row select, .budget-row input { margin-bottom: 0; padding: 10px; font-size: 0.9rem; }
 .budget-row button { padding: 10px; font-size: 0.85rem; max-width: 100px; height: 42px; margin-top: 0; }
