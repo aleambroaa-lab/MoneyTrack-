@@ -5,18 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://query1.finance.yahoo.com https://api.rss2json.com https://cdn.jsdelivr.net; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: https://*; connect-src 'self' https://query1.finance.yahoo.com https://api.rss2json.com;">
     <title>MoneyTrack - Versione 1.0</title>
-    
-    <!-- LIBRERIE ESTERNE -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
-
-    <!-- 🎯 PUNTO CORRETTO PER I TAG PWA -->
-    <link rel="manifest" href="manifest.json">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="MoneyTrack">
-    <link rel="apple-touch-icon" href="icona-512.png">
 
     <style>
         :root {
@@ -193,6 +184,15 @@
             .desktop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
             .section-divider { border-right: 1px solid var(--border); border-bottom: none; }
            
+            <link rel="manifest" href="manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+<meta name="apple-mobile-web-app-title" content="Nome Tua App">
+
+<link rel="apple-touch-icon" href="icona-512.png">
+        }
 .table-container table {
     min-width: 600px;
 }
@@ -253,14 +253,20 @@
 .nav-buttons button { background: #333; color: white; }
 
 .btn-modern {
-    padding: 10px 15px;
+    flex: 1;
+    max-width: 140px;
     border: none;
-    border-radius: 6px;
-    cursor: pointer;
+    padding: 14px 8px;
+    border-radius: 12px;
     font-weight: 600;
-    font-size: 0.9rem;
-    display: inline-block;
-    transition: opacity 0.2s;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    background: #f4f4f4;
+    color: #444;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
 
 .btn-modern:hover {
@@ -439,29 +445,12 @@
 }
 .budget-item { margin-bottom: 15px; }
 .budget-info { display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 5px; font-weight: 500; }
-.progress-bar-bg { 
-    background: #e9ecef; 
-    border-radius: 8px; 
-    height: 16px !important; /* Forza l'altezza minima */
-    width: 100%; 
-    display: block; 
-    overflow: hidden; 
-    margin: 8px 0;
-    border: 1px solid #ddd; /* Aggiungi un bordo per vedere il contenitore */
-}
-
-.progress-bar-fill { 
-    height: 100%; 
-    background: var(--primary); 
-    display: block; 
-    transition: width 0.5s ease;
-}.progress-bar-fill.danger { background: var(--danger); }
+.progress-bar-bg { background: #e9ecef; border-radius: 8px; height: 10px; width: 100%; overflow: hidden; }
+.progress-bar-fill { height: 100%; background: var(--primary); transition: width 0.3s ease, background-color 0.3s; }
+.progress-bar-fill.danger { background: var(--danger); }
 .budget-row { display: flex; gap: 8px; margin-bottom: 12px; }
 .budget-row select, .budget-row input { margin-bottom: 0; padding: 10px; font-size: 0.9rem; }
 .budget-row button { padding: 10px; font-size: 0.85rem; max-width: 100px; height: 42px; margin-top: 0; }
-.goal-actions { display: flex; gap: 5px; align-items: center; }
-.goal-btn-small { background: #e9ecef; border: none; padding: 4px 8px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: bold; color: #444; }
-.goal-btn-small:hover { background: #dee2e6; }
 
 </style>
 </head>
@@ -605,32 +594,23 @@
             <div style="height: 250px; position: relative;">
                 <canvas id="graficoTorta"></canvas>
             </div>
-
 <div class="budget-container">
     <h4 style="margin-top: 0; margin-bottom: 12px; color: #444; display: flex; align-items: center; gap: 6px;">🎯 Budget Mensili</h4>
     <div class="budget-row">
-        <select id="budget-categoria" style="width: 100%;"></select>
+        <select id="budget-categoria"></select>
         <input type="number" id="budget-importo" placeholder="Limite (€)" step="1">
         <button class="btn-modern" onclick="impostaBudget()" style="background: var(--primary); color: white;">Imposta</button>
     </div>
     <div id="lista-budget"></div>
 </div>
-
-<div class="budget-container" style="margin-top: 20px;">
-    <h4 style="margin-top: 0; margin-bottom: 12px; color: #444; display: flex; align-items: center; gap: 6px;">🐷 
-
-Obiettivi di Risparmio</h4>
-    <div class="budget-row">
-        <input type="text" id="goal-nome" placeholder="Es. Nuovo PC, Vacanze..." style="flex: 2; margin-bottom: 0;">
-        <input type="number" id="goal-target" placeholder="Target (€)" step="50" style="flex: 1; margin-bottom: 0;">
-        <button class="btn-modern" onclick="aggiungiObiettivo()" style="background: var(--success); color: white; max-width: 90px;">Crea</button>
+           
+            <h3 style="margin-top: 30px;">🕒 Storico</h3>
+            <input type="text" id="filtroRicerca" onkeyup="aggiornaApp()" placeholder="🔍 Cerca tra note o categorie...">
+            <div id="lista-transazioni"></div>
+        </div>
     </div>
-    <div id="lista-obiettivi"></div>
 </div>
 
-<h3 style="margin-top: 30px;">🕒 Storico</h3>
-<input type="text" id="filtroRicerca" onkeyup="aggiornaApp()" placeholder="🔍 Cerca tra note o categorie...">
-<div id="lista-transazioni"></div>
 <div id="pagina-analisi" class="container" style="display: none; padding: 20px;">
     <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 20px;">
         <button onclick="mostraPagina('home')" class="btn-back-home">⬅ Torna alla Home</button>
@@ -722,7 +702,6 @@ Obiettivi di Risparmio</h4>
     const mesiEstesi = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"];
 
 let budgets = JSON.parse(localStorage.getItem("moneyTrack_budgets")) || {};
-let obiettiviRisparmio = JSON.parse(localStorage.getItem("moneyTrack_goals")) || [];
 
     // --- NAVIGAZIONE & MENU ---
     function toggleMenu() { document.getElementById("myDropdown").classList.toggle("show"); }
@@ -911,67 +890,6 @@ function aggiornaBudgetProgress(catsUscita) {
     });
 }
 
-function aggiungiObiettivo() {
-    const nome = document.getElementById("goal-nome").value.trim();
-    const target = parseFloat(document.getElementById("goal-target").value);
-    if (!nome || isNaN(target) || target <= 0) return alert("Inserisci un nome e un traguardo validi!");
-    obiettiviRisparmio.push({ id: Date.now(), nome: nome, target: target, risparmiato: 0 });
-    localStorage.setItem("moneyTrack_goals", JSON.stringify(obiettiviRisparmio));
-    document.getElementById("goal-nome").value = "";
-    document.getElementById("goal-target").value = "";
-    aggiornaApp();
-}
-
-function rimuoviObiettivo(index) {
-    if (confirm(`Vuoi eliminare l'obiettivo "${obiettiviRisparmio[index].nome}"?`)) {
-        obiettiviRisparmio.splice(index, 1);
-        localStorage.setItem("moneyTrack_goals", JSON.stringify(obiettiviRisparmio));
-        aggiornaApp();
-    }
-}
-
-function versaInObiettivo(index) {
-    const g = obiettiviRisparmio[index];
-    const cifra = parseFloat(prompt(`Quanto vuoi aggiungere o prelevare dall'obiettivo "${g.nome}"?\n(Usa valori negativi come -50 per prelevare)`));
-    if (isNaN(cifra) || cifra === 0) return;
-    g.risparmiato += cifra;
-    if (g.risparmiato < 0) g.risparmiato = 0;
-    localStorage.setItem("moneyTrack_goals", JSON.stringify(obiettiviRisparmio));
-    aggiornaApp();
-}
-
-function aggiornaObiettivi() {
-    const container = document.getElementById("lista-obiettivi");
-    if (!container) return;
-    container.innerHTML = "";
-    if (obiettiviRisparmio.length === 0) {
-        container.innerHTML = `<small style="color: #888; display: block; text-align: center; margin-top: 5px;">Nessun obiettivo attivo. Impostane uno qui sopra!</small>`;
-        return;
-    }
-    obiettiviRisparmio.forEach((g, idx) => {
-        let percentuale = (g.risparmiato / g.target) * 100;
-        if (percentuale > 100) percentuale = 100;
-        const completato = g.risparmiato >= g.target;
-        container.innerHTML += `
-            <div class="budget-item" style="margin-bottom: 18px;">
-                <div class="budget-info">
-                    <strong>${completato ? '🎉 ' : ''}${g.nome}</strong>
-                    <div class="goal-actions">
-                        <button class="goal-btn-small" onclick="versaInObiettivo(${idx})">💰 Versa/Preleva</button>
-                        <span onclick="rimuoviObiettivo(${idx})" style="cursor:pointer; opacity:0.4; margin-left:5px;">🗑️</span>
-                    </div>
-                </div>
-                <div class="progress-bar-bg" style="position: relative; height: 16px; border-radius: 6px;">
-                    <div class="progress-bar-fill" style="width: ${percentuale}%; background: ${completato ? 'var(--success)' : '#36a2eb'}; height: 100%;"></div>
-                    <small style="position: absolute; width: 100%; text-align: center; top: 0px; left: 0; font-size: 0.75rem; font-weight: bold; color: ${percentuale > 55 ? '#fff' : '#333'}; pointer-events: none; line-height: 16px;">
-                        ${privacy ? '***' : g.risparmiato.toFixed(0)}€ / ${privacy ? '***' : g.target.toFixed(0)}€ (${percentuale.toFixed(0)}%)
-                    </small>
-                </div>
-            </div>`;
-    });
-}
-
-
  function saveCats() { localStorage.setItem("moneyTrack_cats", JSON.stringify(customCats)); }
 
     // --- LOGICA CORE ---
@@ -1034,7 +952,6 @@ function aggiornaObiettivi() {
         disegnaTorta(catsUscita, totUsciteMese);
         aggiornaListaFuture();
         aggiornaBudgetProgress(catsUscita);
-        aggiornaObiettivi();
     }
 
    function calcolaPrevisione(saldoAttuale) {
