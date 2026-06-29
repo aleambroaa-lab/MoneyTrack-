@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://query1.finance.yahoo.com https://api.rss2json.com https://cdn.jsdelivr.net; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: https://*; connect-src 'self' https://query1.finance.yahoo.com https://api.rss2json.com;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://query1.finance.yahoo.com https://api.rss2json.com https://cdn.jsdelivr.net https://*.supabase.co; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: https://*; connect-src 'self' https://query1.finance.yahoo.com https://api.rss2json.com https://*.supabase.co wss://*.supabase.co;">
     <title>MoneyTrack - Versione 1.0</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
         :root {
@@ -689,6 +690,243 @@
 
 <script>
  
+// ==========================================
+// ☁️ CONFIGURAZIONE E INTEGRAZIONE SUPABASE
+// ==========================================
+
+// Sostituisci questi due valori con i dati reali del tuo progetto Supabase (li trovi in Settings -> API)
+const SUPABASE_URL = "https://tfgiruqmxcyjhepsxolw.supabase.co/rest/v1/";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRmZ2lydXFteGN5amhlcHN4b2x3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI3MzQ4NjksImV4cCI6MjA5ODMxMDg2OX0.aAF964CLJwWg-b2TKVkanTCGjKFyNKyBXEIu8go95ls";
+
+const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+let currentUser = null;
+
+// Funzione ausiliaria per leggere in sicurezza il localStorage
+function safeGetJSON(key) {
+    try { return JSON.parse(localStorage.getItem(key)) || null; } catch(e) { return null; }
+}
+
+// 🔥 L'INTERCETTORE MAGICO: Cattura ogni salvataggio locale e lo sincronizza sul cloud
+const originalSetItem = localStorage.setItem;
+localStorage.setItem = function(key, value) {
+    originalSetItem.apply(this, arguments);
+    if (key.startsWith("moneyTrack_") && currentUser) {
+        syncDatiSuSupabase();
+    }
+};
+
+let syncTimeout = null;
+function syncDatiSuSupabase() {
+    if (!currentUser) return;
+    // Debounce di 600ms per evitare di sovraccaricare il cloud durante inserimenti rapidi
+    clearTimeout(syncTimeout);
+    syncTimeout = setTimeout(async () => {
+        try {
+            const payload = {
+                spese: safeGetJSON("moneyTrack_db") || [],
+                future: safeGetJSON("moneyTrack_future") || [],
+                customCats: safeGetJSON("moneyTrack_cats") || {},
+                budgets: safeGetJSON("moneyTrack_budgets") || {},
+                investimenti: safeGetJSON("moneyTrack_inv") || [],
+                preferitiNews: safeGetJSON("moneyTrack_fav_news") || []
+            };
+            await _supabase.from('userdata').upsert({
+                id: currentUser.id,
+                payload: payload,
+                updated_at: new Date().toISOString()
+            });
+            console.log("☁️ Cloud Sync completato con successo!");
+        } catch (e) {
+            console.error("❌ Errore durante il Cloud Sync:", e);
+        }
+    }, 600);
+}
+
+// 🪄 MIGRAZIONE AUTOMATICA & GESTIONE CLOUD DATA
+async function gestisciLoginOSincronizzazione(user) {
+    currentUser = user;
+    if (!user) return;
+
+    mostraStatoUtenteLoggato(user.email);
+
+    // Scarica i dati dal Cloud
+    const { data, error } = await _supabase.from('userdata').select('payload').eq('id', user.id).single();
+    const localeHaDati = (localStorage.getItem("moneyTrack_db") && safeGetJSON("moneyTrack_db").length > 0);
+
+    if (error && error.code === 'PGRST116') {
+        // Caso A: L'utente si è loggato ma sul cloud non c'è nulla -> È LA PRIMA MIGRAZIONE AUTOMATICA!
+        if (localeHaDati) {
+            console.log("Rilevati dati locali. Avvio migrazione su Cloud...");
+            syncDatiSuSupabase();
+            alert("🎉 MIGRAZIONE COMPLETATA!\n\nI dati presenti su questo dispositivo sono stati salvati al sicuro sul tuo nuovo spazio Cloud.");
+        }
+    } else if (data && data.payload) {
+        // Caso B: Ci sono dati sul Cloud
+        if (localeHaDati) {
+            // Se ci sono dati sia sul telefono che sul cloud, chiediamo conferma per evitare sovrascritture accidentali
+            if (confirm("Abbiamo trovato un salvataggio Cloud per questo account.\n\nVuoi CARICARE i dati dal Cloud sostituendo quelli di questo dispositivo?\n\n[OK] Carica dal Cloud\n[Annulla] Mantieni i dati del telefono e sovrascrivi il Cloud")) {
+                applicaDatiCloud(data.payload);
+            } else {
+                syncDatiSuSupabase();
+            }
+        } else {
+            // Il dispositivo è vuoto (es. nuovo iPhone o nuova installazione): scarica tutto dal Cloud
+            applicaDatiCloud(data.payload);
+        }
+    }
+}
+
+function applicaDatiCloud(payload) {
+    if (!payload) return;
+    
+    // Assegna i dati scaricati alle variabili globali della tua app
+    if (payload.spese) spese = payload.spese;
+    if (payload.future) future = payload.future;
+    if (payload.customCats) customCats = payload.customCats;
+    if (payload.budgets) budgets = payload.budgets;
+    if (payload.investimenti) investimenti = payload.investimenti;
+    if (payload.preferitiNews) preferitiNews = payload.preferitiNews;
+
+    // Salva nel vero localStorage del browser senza attivare il loop del sync
+    originalSetItem.call(localStorage, "moneyTrack_db", JSON.stringify(spese));
+    originalSetItem.call(localStorage, "moneyTrack_future", JSON.stringify(future));
+    originalSetItem.call(localStorage, "moneyTrack_cats", JSON.stringify(customCats));
+    originalSetItem.call(localStorage, "moneyTrack_budgets", JSON.stringify(budgets));
+    originalSetItem.call(localStorage, "moneyTrack_inv", JSON.stringify(investimenti));
+    originalSetItem.call(localStorage, "moneyTrack_fav_news", JSON.stringify(preferitiNews));
+
+    // Forzo l'aggiornamento grafico dei componenti nativi della tua app
+    if (typeof aggiornaApp === "function") aggiornaApp();
+    if (typeof aggiornaInvestimenti === "function") aggiornaInvestimenti();
+}
+
+// --- INTERFACCIA GRAFICA LOGIN (COMPLETAMENTE AUTOMATICA) ---
+function injectAuthModal() {
+    if (document.getElementById("auth-modal")) return;
+    const modalHtml = `
+    <div id="auth-modal" class="modal" style="display:none;">
+        <div class="modal-content" style="background-color: white; color: #333; max-width: 340px; width: 90%; padding: 25px; border-radius: 16px; border: 1px solid #eee; box-shadow: 0 10px 30px rgba(0,0,0,0.15);">
+            <span class="close-btn" onclick="chiudiAuthModal()" style="color: #aaa; right: 15px; top: 10px;">&times;</span>
+            <h3 style="margin-bottom: 20px; justify-content: center; font-size: 1.25rem;" id="auth-title">🔐 Cloud Sync Login</h3>
+            <div id="auth-error" style="color:var(--danger); font-size:0.85rem; margin-bottom:12px; display:none; text-align:center; font-weight:bold;"></div>
+            <input type="email" id="auth-email" placeholder="La tua Email" style="margin-bottom: 12px; background: #f9f9f9; border: 1px solid #ddd;">
+            <input type="password" id="auth-password" placeholder="Password (min. 6 caratteri)" style="margin-bottom: 15px; background: #f9f9f9; border: 1px solid #ddd;">
+            <button class="add-btn" id="btn-auth-primary" onclick="eseguiAuth()" style="margin-top: 5px; padding: 14px; border-radius: 10px;">ACCEDI</button>
+            <div style="text-align: center; margin-top: 18px; font-size: 0.85rem;">
+                <a id="auth-toggle-link" onclick="toggleAuthMode()" style="color: var(--secondary); font-weight: bold; cursor: pointer; text-decoration: underline;">Non hai un account? Registrati</a>
+            </div>
+        </div>
+    </div>`;
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+}
+
+let authMode = "login";
+function toggleAuthMode() {
+    const title = document.getElementById("auth-title");
+    const btn = document.getElementById("btn-auth-primary");
+    const link = document.getElementById("auth-toggle-link");
+    document.getElementById("auth-error").style.display = "none";
+    if (authMode === "login") {
+        authMode = "signup";
+        title.innerText = "📝 Registra Nuovo Account";
+        btn.innerText = "REGISTRATI";
+        link.innerText = "Hai già un account? Accedi";
+    } else {
+        authMode = "login";
+        title.innerText = "🔐 Cloud Sync Login";
+        btn.innerText = "ACCEDI";
+        link.innerText = "Non hai un account? Registrati";
+    }
+}
+
+function loginbtn() {
+    injectAuthModal();
+    document.getElementById("auth-modal").style.display = "flex";
+    document.getElementById("auth-error").style.display = "none";
+}
+
+function chiudiAuthModal() {
+    const m = document.getElementById("auth-modal");
+    if(m) m.style.display = "none";
+}
+
+async function eseguiAuth() {
+    const email = document.getElementById("auth-email").value.trim();
+    const password = document.getElementById("auth-password").value;
+    const errBox = document.getElementById("auth-error");
+    errBox.style.display = "none";
+
+    if (!email || !password) {
+        errBox.innerText = "Compila tutti i campi!";
+        errBox.style.display = "block";
+        return;
+    }
+
+    const btn = document.getElementById("btn-auth-primary");
+    btn.innerText = "ELABORAZIONE...";
+    btn.disabled = true;
+
+    let res = authMode === "login" 
+        ? await _supabase.auth.signInWithPassword({ email, password })
+        : await _supabase.auth.signUp({ email, password });
+
+    btn.disabled = false;
+    btn.innerText = authMode === "login" ? "ACCEDI" : "REGISTRATI";
+
+    if (res.error) {
+        errBox.innerText = "Errore: " + res.error.message;
+        errBox.style.display = "block";
+    } else {
+        if (authMode === "signup") {
+            alert("✉️ Account creato! Controlla la tua email per confermare la registrazione se richiesto dal tuo pannello Supabase.");
+        }
+        chiudiAuthModal();
+    }
+}
+
+function mostraStatoUtenteLoggato(email) {
+    const link = document.querySelector("a[onclick='loginbtn()']") || document.getElementById("login-nav-link");
+    if (link) {
+        link.id = "login-nav-link";
+        link.innerHTML = `🚪 Esci (${email.split('@')[0]})`;
+        link.setAttribute("onclick", "eseguiLogout()");
+    }
+}
+
+function mostraStatoUtenteDisconnesso() {
+    const link = document.getElementById("login-nav-link") || document.querySelector("a[onclick='eseguiLogout()']");
+    if (link) {
+        link.id = "login-nav-link";
+        link.innerHTML = "🔐 Login";
+        link.setAttribute("onclick", "loginbtn()");
+    }
+}
+
+async function eseguiLogout() {
+    if (confirm("Vuoi disconnetterti dal Cloud? I tuoi dati rimarranno comunque al sicuro sul telefono.")) {
+        await _supabase.auth.signOut();
+        alert("Disconnesso con successo.");
+        location.reload();
+    }
+}
+
+// Inizializzazione sicura al caricamento della pagina
+window.addEventListener('load', () => {
+    injectAuthModal();
+    _supabase.auth.onAuthStateChange((event, session) => {
+        if (session && session.user) {
+            gestisciLoginOSincronizzazione(session.user);
+        } else {
+            currentUser = null;
+            mostraStatoUtenteDisconnesso();
+        }
+    });
+});
+
+// ==========================================
+// FINISH SUPABASE CONFIG (Il tuo codice originale segue qui sotto...)
+// ==========================================
+
     // --- DATABASE & STATO ---
     let spese = JSON.parse(localStorage.getItem("moneyTrack_db")) || [];
     let future = JSON.parse(localStorage.getItem("moneyTrack_future")) || [];
