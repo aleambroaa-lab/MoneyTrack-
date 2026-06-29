@@ -445,8 +445,23 @@
 }
 .budget-item { margin-bottom: 15px; }
 .budget-info { display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 5px; font-weight: 500; }
-.progress-bar-bg { background: #e9ecef; border-radius: 8px; height: 10px; width: 100%; overflow: hidden; }
-.progress-bar-fill { height: 100%; background: var(--primary); transition: width 0.3s ease, background-color 0.3s; }
+.progress-bar-bg { 
+    background: #e9ecef; 
+    border-radius: 8px; 
+    height: 12px;        /* Aumentato leggermente per essere più visibile */
+    width: 100%;         /* Forza la larghezza al 100% del genitore */
+    display: block;      /* Forza il blocco */
+    overflow: hidden; 
+    position: relative;  /* Importante per il posizionamento */
+    margin: 5px 0;       /* Spazio sopra e sotto */
+}
+.progress-bar-fill { 
+    height: 100%; 
+    background: var(--primary); 
+    transition: width 0.5s ease; /* Transizione più fluida */
+    display: block;      /* Forza il blocco */
+    min-width: 2px;      /* Assicura che si veda anche se è allo 0.1% */
+}
 .progress-bar-fill.danger { background: var(--danger); }
 .budget-row { display: flex; gap: 8px; margin-bottom: 12px; }
 .budget-row select, .budget-row input { margin-bottom: 0; padding: 10px; font-size: 0.9rem; }
@@ -609,7 +624,9 @@
 </div>
 
 <div class="budget-container" style="margin-top: 20px;">
-    <h4 style="margin-top: 0; margin-bottom: 12px; color: #444; display: flex; align-items: center; gap: 6px;">🐷 Obiettivi di Risparmio</h4>
+    <h4 style="margin-top: 0; margin-bottom: 12px; color: #444; display: flex; align-items: center; gap: 6px;">🐷 
+
+Obiettivi di Risparmio</h4>
     <div class="budget-row">
         <input type="text" id="goal-nome" placeholder="Es. Nuovo PC, Vacanze..." style="flex: 2; margin-bottom: 0;">
         <input type="number" id="goal-target" placeholder="Target (€)" step="50" style="flex: 1; margin-bottom: 0;">
