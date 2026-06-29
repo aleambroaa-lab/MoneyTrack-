@@ -1373,41 +1373,51 @@ function aggiornaMatrice(anno) {
     function togglePrivacy() { privacy = !privacy; aggiornaApp(); }
     
 function esportaDati() {
-    // 1. Raccogliamo tutti i dati di MoneyTrack dal localStorage
+    // 1. Raccogliamo TUTTI i dati presenti nel telefono (spese, investimenti, ecc.)
     const backupData = {};
     for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i);
-        // Filtriamo solo le chiavi relative all'app per evitare "spazzatura"
         if (key && key.startsWith("moneyTrack_")) {
             backupData[key] = localStorage.getItem(key);
         }
     }
 
-    // Controlliamo che ci sia effettivamente qualcosa da esportare
     if (Object.keys(backupData).length === 0) {
-        alert("Nessun dato da esportare!");
+        alert("Nessun dato trovato nel telefono!");
         return;
     }
 
-    // 2. Creiamo il file JSON contenente il backup completo
     const jsonString = JSON.stringify(backupData);
-    const blob = new Blob([jsonString], { type: 'application/json' });
-    
-    // 3. Forziamo il download diretto (Metodo infallibile su Android)
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = "moneytrack_backup.json";
-    
-    // Aggiungiamo temporaneamente il link al DOM, clicchiamo e rimuoviamo
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    
-    // Puliamo la memoria per evitare memory leak
-    URL.revokeObjectURL(url);
-}
 
+    // 2. Metodo di copia forzata per APK (crea un campo di testo invisibile e lo copia)
+    const tempTextArea = document.createElement("textarea");
+    tempTextArea.value = jsonString;
+    tempTextArea.style.position = "fixed"; // Evita di scombinare la grafica visiva
+    document.body.appendChild(tempTextArea);
+    tempTextArea.select();
+    tempTextArea.setSelectionRange(0, 99999); // Per dispositivi mobile
+
+    try {
+        const successo = document.execCommand("copy");
+        document.body.removeChild(tempTextArea);
+        if (successo) {
+            alert("✅ CASSAFORTE AGGIORNATA!\n\nTutti i tuoi dati storici sono stati copiati negli appunti del telefono.\n\nOra apri l'app NOTE del telefono (o inviateli su WhatsApp) e fai 'INCOLLA'. Salva quel testo, contiene tutta la tua storia finanziaria.");
+        } else {
+            throw new Error();
+        }
+    } catch (err) {
+        // Se persino la copia automatica fallisce, mostriamo il testo a schermo per copiarlo a mano
+        tempTextArea.style.position = "fixed";
+        tempTextArea.style.top = "10%";
+        tempTextArea.style.left = "5%";
+        tempTextArea.style.width = "90%";
+        tempTextArea.style.height = "70%";
+        tempTextArea.style.zIndex = "99999";
+        tempTextArea.style.background = "#fff";
+        tempTextArea.style.color = "#000";
+        alert("Seleziona tutto il testo che vedi apparire sullo schermo, copialo e salvalo nelle tue NOTE.");
+    }
+}
    function importaDati(event) {
     const file = event.target.files[0];
     if (!file) return;
