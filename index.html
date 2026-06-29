@@ -1373,38 +1373,39 @@ function aggiornaMatrice(anno) {
     function togglePrivacy() { privacy = !privacy; aggiornaApp(); }
     
 function esportaDati() {
-    const dati = localStorage.getItem("moneyTrack_db"); // Assicurati che sia la chiave corretta
-    if (!dati) {
+    // 1. Raccogliamo tutti i dati di MoneyTrack dal localStorage
+    const backupData = {};
+    for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        // Filtriamo solo le chiavi relative all'app per evitare "spazzatura"
+        if (key && key.startsWith("moneyTrack_")) {
+            backupData[key] = localStorage.getItem(key);
+        }
+    }
+
+    // Controlliamo che ci sia effettivamente qualcosa da esportare
+    if (Object.keys(backupData).length === 0) {
         alert("Nessun dato da esportare!");
         return;
     }
 
-    // Crea un file temporaneo
-    const blob = new Blob([dati], { type: 'application/json' });
-    const file = new File([blob], "moneytrack_backup.json", { type: 'application/json' });
-
-    // Verifica se il telefono supporta la condivisione nativa
-    if (navigator.canShare && navigator.canShare({ files: [file] })) {
-        navigator.share({
-            files: [file],
-            title: 'Backup MoneyTrack',
-            text: 'Il mio file di backup MoneyTrack'
-        })
-        .then(() => console.log('Condivisione riuscita'))
-        .catch((error) => console.log('Errore condivisione', error));
-    } else {
-        // Fallback: se il browser non supporta la condivisione file
-        // (es. browser molto vecchi o alcune versioni di Chrome su Android)
-        // Usiamo un metodo di download classico che forziamo a funzionare
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = "moneytrack_backup.json";
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-    }
+    // 2. Creiamo il file JSON contenente il backup completo
+    const jsonString = JSON.stringify(backupData);
+    const blob = new Blob([jsonString], { type: 'application/json' });
+    
+    // 3. Forziamo il download diretto (Metodo infallibile su Android)
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = "moneytrack_backup.json";
+    
+    // Aggiungiamo temporaneamente il link al DOM, clicchiamo e rimuoviamo
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    
+    // Puliamo la memoria per evitare memory leak
+    URL.revokeObjectURL(url);
 }
 
    function importaDati(event) {
