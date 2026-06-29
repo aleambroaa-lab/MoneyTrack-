@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://query1.finance.yahoo.com https://api.rss2json.com https://cdn.jsdelivr.net; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: https://*; connect-src 'self' https://query1.finance.yahoo.com https://api.rss2json.com;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://query1.finance.yahoo.com https://api.rss2json.com https://cdn.jsdelivr.net; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: https://*; connect-src 'self' https://query1.finance.yahoo.com https://api.rss2json.com;">
     <title>MoneyTrack - Versione 1.0</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
@@ -465,7 +465,7 @@
                         <div class="menu-container">
                 <div class="menu-dots" onclick="toggleMenu()">⋮</div>
                 <div id="myDropdown" class="dropdown-content">
-                    <a onclick="login-btn()" >Login</a>
+                    <a onclick="loginbtn()" >Login</a>
                     <a onclick="esportaDati()">💾 Backup (Esporta)</a>
                     <a onclick="document.getElementById('fileInput').click()">📂 Ripristina (Importa)</a>
                 </div>
@@ -1612,8 +1612,6 @@ function chiudiCalcolatrice() {
     clearScreen();
 }
 
-const screen = document.getElementById('calc-screen');
-
 function pressKey(valore) {
     document.getElementById('calc-screen').value += valore;
 }
@@ -1626,13 +1624,20 @@ function calculate() {
     const espressione = document.getElementById('calc-screen').value;
     try {
         if (espressione) {
-            document.getElementById('calc-screen').value = eval(espressione);
+            // Esegue il calcolo
+            const risultato = eval(espressione);
+            document.getElementById('calc-screen').value = risultato;
+            
+            // Copia il risultato nel campo "importo" del form
+            document.getElementById('importo').value = risultato;
+            
+            // Chiude la calcolatrice dopo mezzo secondo per farti vedere il risultato
+            setTimeout(chiudiCalcolatrice, 500);
         }
     } catch (error) {
         document.getElementById('calc-screen').value = 'Errore';
     }
 }
-
 function togglePreferito(event, safeItem) {
     event.stopPropagation();
    
