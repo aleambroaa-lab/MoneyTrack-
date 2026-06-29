@@ -1373,21 +1373,33 @@ function aggiornaMatrice(anno) {
     function togglePrivacy() { privacy = !privacy; aggiornaApp(); }
     
 function esportaDati() {
-    let backup = {};
-    for (let i = 0; i < localStorage.length; i++) {
-        let key = localStorage.key(i);
-        backup[key] = localStorage.getItem(key);
+    const dati = localStorage.getItem("moneyTrack_db");
+    if (!dati) { 
+        alert("Nessun dato da esportare!"); 
+        return; 
     }
 
-    const dataStr = JSON.stringify(backup, null, 2);
-    const blob = new Blob([dataStr], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = "backup_moneytrack_" + new Date().toISOString().split('T')[0] + ".json";
-    a.click();
-    URL.revokeObjectURL(url);
+    const blob = new Blob([dati], { type: 'application/json' });
+    const file = new File([blob], "moneytrack_backup.json", { type: 'application/json' });
+
+    // Verifica se il dispositivo supporta la condivisione nativa
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        navigator.share({
+            files: [file],
+            title: 'Backup MoneyTrack',
+            text: 'Il mio backup'
+        }).catch(err => console.log('Condivisione annullata'));
+    } else {
+        // Fallback: se non supporta la condivisione file, scarica come file
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = "backup_moneytrack_" + new Date().toISOString().split('T')[0] + ".json";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
 }
 
    function importaDati(event) {
