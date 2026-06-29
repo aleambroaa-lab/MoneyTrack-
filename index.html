@@ -1373,28 +1373,33 @@ function aggiornaMatrice(anno) {
     function togglePrivacy() { privacy = !privacy; aggiornaApp(); }
     
 function esportaDati() {
-    const dati = localStorage.getItem("moneyTrack_db");
-    if (!dati) { 
-        alert("Nessun dato da esportare!"); 
-        return; 
+    const dati = localStorage.getItem("moneyTrack_db"); // Assicurati che sia la chiave corretta
+    if (!dati) {
+        alert("Nessun dato da esportare!");
+        return;
     }
 
+    // Crea un file temporaneo
     const blob = new Blob([dati], { type: 'application/json' });
     const file = new File([blob], "moneytrack_backup.json", { type: 'application/json' });
 
-    // Verifica se il dispositivo supporta la condivisione nativa
+    // Verifica se il telefono supporta la condivisione nativa
     if (navigator.canShare && navigator.canShare({ files: [file] })) {
         navigator.share({
             files: [file],
             title: 'Backup MoneyTrack',
-            text: 'Il mio backup'
-        }).catch(err => console.log('Condivisione annullata'));
+            text: 'Il mio file di backup MoneyTrack'
+        })
+        .then(() => console.log('Condivisione riuscita'))
+        .catch((error) => console.log('Errore condivisione', error));
     } else {
-        // Fallback: se non supporta la condivisione file, scarica come file
+        // Fallback: se il browser non supporta la condivisione file
+        // (es. browser molto vecchi o alcune versioni di Chrome su Android)
+        // Usiamo un metodo di download classico che forziamo a funzionare
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = "backup_moneytrack_" + new Date().toISOString().split('T')[0] + ".json";
+        a.download = "moneytrack_backup.json";
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
