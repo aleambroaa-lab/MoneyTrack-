@@ -435,6 +435,23 @@
         width: 100%;
     }
 }
+/* STILI SEZIONE BUDGET */
+.budget-container { 
+    margin-top: 25px; 
+    background: #fdfdfd; 
+    border: 1px solid var(--border); 
+    border-radius: 12px; 
+    padding: 15px; 
+}
+.budget-item { margin-bottom: 15px; }
+.budget-info { display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 5px; font-weight: 500; }
+.progress-bar-bg { background: #e9ecef; border-radius: 8px; height: 10px; width: 100%; overflow: hidden; }
+.progress-bar-fill { height: 100%; background: var(--primary); transition: width 0.3s ease, background-color 0.3s; }
+.progress-bar-fill.danger { background: var(--danger); }
+.budget-row { display: flex; gap: 8px; margin-bottom: 12px; }
+.budget-row select, .budget-row input { margin-bottom: 0; padding: 10px; font-size: 0.9rem; }
+.budget-row button { padding: 10px; font-size: 0.85rem; max-width: 100px; height: 42px; margin-top: 0; }
+
 </style>
 </head>
 <body>
@@ -577,6 +594,15 @@
             <div style="height: 250px; position: relative;">
                 <canvas id="graficoTorta"></canvas>
             </div>
+<div class="budget-container">
+    <h4 style="margin-top: 0; margin-bottom: 12px; color: #444; display: flex; align-items: center; gap: 6px;">🎯 Budget Mensili</h4>
+    <div class="budget-row">
+        <select id="budget-categoria"></select>
+        <input type="number" id="budget-importo" placeholder="Limite (€)" step="1">
+        <button class="btn-modern" onclick="impostaBudget()" style="background: var(--primary); color: white;">Imposta</button>
+    </div>
+    <div id="lista-budget"></div>
+</div>
            
             <h3 style="margin-top: 30px;">🕒 Storico</h3>
             <input type="text" id="filtroRicerca" onkeyup="aggiornaApp()" placeholder="🔍 Cerca tra note o categorie...">
@@ -675,6 +701,8 @@
     const mesiNomi = ["Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic"];
     const mesiEstesi = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"];
 
+let budgets = JSON.parse(localStorage.getItem("moneyTrack_budgets")) || {};
+
     // --- NAVIGAZIONE & MENU ---
     function toggleMenu() { document.getElementById("myDropdown").classList.toggle("show"); }
     window.onclick = (e) => { if (!e.target.matches('.menu-dots')) document.getElementById("myDropdown").classList.remove('show'); }
@@ -712,7 +740,8 @@
         const t = document.getElementById("tipo").value;
         const s = document.getElementById("categoria");
         s.innerHTML = customCats[t].map(c => `<option value="${c}">${c}</option>`).join("");
-    }
+        inizializzaSelectBudget();
+ }
 
     function creaCategoria() {
         const t = document.getElementById("tipo").value;
@@ -798,6 +827,69 @@ function eliminaCategoria() {
         aggiornaCategorie();
     }
 }   
+function inizializzaSelectBudget() {
+    const select = document.getElementById("budget-categoria");
+    if (select) {
+        // Popola il menu a tendina solo con le categorie di Uscita attuali
+        select.innerHTML = customCats["Uscita"].map(c => `<option value="${c}">${c}</option>`).join("");
+    }
+}
+
+function impostaBudget() {
+    const cat = document.getElementById("budget-categoria").value;
+    const imp = parseFloat(document.getElementById("budget-importo").value);
+    if (!cat || isNaN(imp) || imp <= 0) return alert("Inserisci un importo valido!");
+    
+    budgets[cat] = imp;
+    localStorage.setItem("moneyTrack_budgets", JSON.stringify(budgets));
+    document.getElementById("budget-importo").value = "";
+    aggiornaApp();
+}
+
+function rimuoviBudget(cat) {
+    if (confirm(`Vuoi rimuovere il budget mensile per "${cat}"?`)) {
+        delete budgets[cat];
+        localStorage.setItem("moneyTrack_budgets", JSON.stringify(budgets));
+        aggiornaApp();
+    }
+}
+
+function aggiornaBudgetProgress(catsUscita) {
+    inizializzaSelectBudget();
+    const container = document.getElementById("lista-budget");
+    if (!container) return;
+    container.innerHTML = "";
+
+    const activeBudgets = Object.keys(budgets);
+    if (activeBudgets.length === 0) {
+        container.innerHTML = `<small style="color: #888; display: block; text-align: center; margin-top: 5px;">Nessun limite impostato. Scegli una categoria sopra!</small>`;
+        return;
+    }
+
+    activeBudgets.forEach(cat => {
+        const limite = budgets[cat];
+        const speso = catsUscita[cat] || 0;
+        let percentuale = (speso / limite) * 100;
+        const superato = speso > limite;
+        
+        // Evita che la barra grafica "esca" dal 100% visivo
+        const larghezzaBarra = percentuale > 100 ? 100 : percentuale;
+
+        container.innerHTML += `
+            <div class="budget-item">
+                <div class="budget-info">
+                    <span>${cat} <span onclick="rimuoviBudget('${cat}')" style="cursor:pointer; opacity:0.4; margin-left:4px;" title="Rimuovi">🗑️</span></span>
+                    <span style="color: ${superato ? 'var(--danger)' : '#555'}; font-weight: bold;">
+                        ${privacy ? '***' : speso.toFixed(2)}€ / ${privacy ? '***' : limite.toFixed(0)}€ (${percentuale.toFixed(0)}%)
+                    </span>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill ${superato ? 'danger' : ''}" style="width: ${larghezzaBarra}%;"></div>
+                </div>
+            </div>`;
+    });
+}
+
  function saveCats() { localStorage.setItem("moneyTrack_cats", JSON.stringify(customCats)); }
 
     // --- LOGICA CORE ---
@@ -859,6 +951,7 @@ function eliminaCategoria() {
         aggiornaInsights(); // Avvia l'analisi dei consigli finanziari
         disegnaTorta(catsUscita, totUsciteMese);
         aggiornaListaFuture();
+        aggiornaBudgetProgress(catsUscita);
     }
 
    function calcolaPrevisione(saldoAttuale) {
