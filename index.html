@@ -3,8 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://query1.finance.yahoo.com https://api.rss2json.com https://cdn.jsdelivr.net https://*.supabase.co; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: https://*; connect-src 'self' https://query1.finance.yahoo.com https://api.rss2json.com https://*.supabase.co wss://*.supabase.co;">
-    <title>MoneyTrack - Versione 1.0</title>
+   <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://query1.finance.yahoo.com https://api.rss2json.com https://cdn.jsdelivr.net https://*.supabase.co; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: https://*; connect-src 'self' https://query1.finance.yahoo.com https://api.rss2json.com https://*.supabase.co wss://*.supabase.co;">
+                <link rel="manifest" href="manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+<meta name="apple-mobile-web-app-title" content="Nome Tua App">
+
+<link rel="apple-touch-icon" href="icona-512.png">
+<title>MoneyTrack - Versione 1.0</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
@@ -184,16 +192,8 @@
         @media (min-width: 768px) {
             .desktop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
             .section-divider { border-right: 1px solid var(--border); border-bottom: none; }
-           
-            <link rel="manifest" href="manifest.json">
-<meta name="apple-mobile-web-app-capable" content="yes">
+                   }
 
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
-<meta name="apple-mobile-web-app-title" content="Nome Tua App">
-
-<link rel="apple-touch-icon" href="icona-512.png">
-        }
 .table-container table {
     min-width: 600px;
 }
@@ -616,7 +616,7 @@
         <button onclick="mostraPagina('home')" class="btn-back-home">⬅ Torna alla Home</button>
         <select id="anno-selezionato" onchange="generaReport()" style="padding: 10px; border-radius: 10px; border: 1px solid #ddd; font-size: 0.9rem; cursor: pointer;"></select>
     </div>
-
+    
     <div class="section">
         <h3>📊 Andamento Annuale</h3>
         <div style="height: 300px; position: relative; width: 100%;">
@@ -632,8 +632,8 @@
             </thead>
             <tbody id="bodyMatrice"></tbody>
         </table>
-    </div>
-    </div>   <div id="pagina-news" class="container" style="display: none; padding: 20px;">
+    </div>  
+ </div> <div id="pagina-news" class="container" style="display: none; padding: 20px;">
     <h3>📰 News Finanziarie</h3>
    
     <div style="display: flex; gap: 8px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 10px;">
@@ -645,8 +645,7 @@
 
     <div id="loading-news" style="text-align: center; padding: 20px;">Caricamento notizie...</div>
     <div id="news-container" class="desktop-grid"></div>
-</div>
-</div>
+
 <div id="pagina-investimenti" class="container" style="display: none; padding: 20px;">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
         <h3 style="margin:0;">📈 Portafoglio</h3>
@@ -705,7 +704,7 @@ function safeGetJSON(key) {
 
 const originalSetItem = localStorage.setItem;
 localStorage.setItem = function(key, value) {
-    originalSetItem.apply(this, arguments);
+    originalSetItem.apply(localStorage, arguments);
     
     if (key.startsWith("moneyTrack_") && currentUser) {
         syncDatiSuSupabase();
@@ -811,6 +810,7 @@ async function gestisciLoginOSincronizzazione(user) {
         }
     }
 }
+
 function applicaDatiCloud(payload) {
     if (!payload) return;
     
