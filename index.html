@@ -522,7 +522,7 @@
    
     <div style="display: flex; gap: 8px; align-items: center; width: 100%;" class="cat-row">
         <button type="button" onclick="document.getElementById('cameraInput').click()" style="background: #f4f4f4; border: none; border-radius: 12px; padding: 0 15px; cursor: pointer; height: 46px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); display: flex; align-items: center; gap: 6px; font-weight: 600; color: #444; transition: all 0.25s ease;">
-            📷 <span style="font-size: 0.8rem; font-weight: bold;">SCAN</span>
+            📷 <span style="font-size: 0.8rem; font-weight: bold;">SCONTRINO</span>
         </button>
         <button class="small-btn" onclick="apriCalcolatrice()" title="Calcolatrice">🧮<span style="font-size: 0.8rem; font-weight: bold;">CAL</span></button>
         <button type="button" onclick="document.getElementById('pdfInput').click()" style="background: #f4f4f4; border: none; border-radius: 12px; padding: 0 15px; cursor: pointer; height: 46px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); display: flex; align-items: center; gap: 6px; font-weight: 600; color: #444; transition: all 0.25s ease;">
@@ -579,14 +579,13 @@
             <div style="display: flex; gap: 8px; margin-bottom: 10px;">
 </div>
 
-<input type="file" id="cameraInput" accept="image/*" capture="camera" style="display:none" onchange="elaboraScontrino(event)">
             <button class="btn-modern full-width" id="btn-salva" onclick="aggiungiOperazione()">SALVA MOVIMENTO</button>
 
             <h3 style="margin-top: 35px;">📅 Scadenze Future</h3>
             <input type="date" id="data-futura">
             <input type="text" id="desc-futura" placeholder="Descrizione (es. Affitto)">
             <input type="number" id="imp-futura" placeholder="Importo stimato (€)">
-            <button class="btn-modern full-width btn-accent" onclick="aggiungiSpesaFutura()">Inserisci Spesa Futura</button>
+            <button class="btn-modern full-width btn-accent" id="btn-salva-futura" onclick="aggiungiSpesaFutura()">Inserisci Spesa Futura</button>
             <div id="lista-future" style="margin-top: 15px;"></div>
         </div>
 
@@ -694,31 +693,52 @@
 // ☁️ CONFIGURAZIONE E INTEGRAZIONE SUPABASE
 // ==========================================
 
-// Sostituisci questi due valori con i dati reali del tuo progetto Supabase (li trovi in Settings -> API)
 const SUPABASE_URL = "https://tfgiruqmxcyjhepsxolw.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRmZ2lydXFteGN5amhlcHN4b2x3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI3MzQ4NjksImV4cCI6MjA5ODMxMDg2OX0.aAF964CLJwWg-b2TKVkanTCGjKFyNKyBXEIu8go95ls";
 
 const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 let currentUser = null;
 
-// Funzione ausiliaria per leggere in sicurezza il localStorage
 function safeGetJSON(key) {
     try { return JSON.parse(localStorage.getItem(key)) || null; } catch(e) { return null; }
 }
 
-// 🔥 L'INTERCETTORE MAGICO: Cattura ogni salvataggio locale e lo sincronizza sul cloud
 const originalSetItem = localStorage.setItem;
 localStorage.setItem = function(key, value) {
     originalSetItem.apply(this, arguments);
+    
     if (key.startsWith("moneyTrack_") && currentUser) {
         syncDatiSuSupabase();
+    }
+
+    if (key === "moneyTrack_db" && !currentUser) {
+        let conteggioSpese = parseInt(localStorage.getItem('conteggio_spese_promemoria') || '0');
+        conteggioSpese++;
+        originalSetItem.call(localStorage, 'conteggio_spese_promemoria', conteggioSpese);
+
+        if (conteggioSpese % 5 === 0) {
+            setTimeout(() => {
+                const modal = document.getElementById('cloud-modal');
+                if (modal) {
+                    modal.style.display = 'flex';
+
+                    document.getElementById('modal-close-btn').onclick = function() {
+                        modal.style.display = 'none';
+                    };
+
+                    document.getElementById('modal-login-btn').onclick = function() {
+                        modal.style.display = 'none';
+                        if (typeof loginbtn === "function") loginbtn();
+                    };
+                }
+            }, 400);
+        }
     }
 };
 
 let syncTimeout = null;
 function syncDatiSuSupabase() {
     if (!currentUser) return;
-    // Debounce di 600ms per evitare di sovraccaricare il cloud durante inserimenti rapidi
     clearTimeout(syncTimeout);
     syncTimeout = setTimeout(async () => {
         try {
@@ -742,35 +762,29 @@ function syncDatiSuSupabase() {
     }, 600);
 }
 
-// 🪄 MIGRAZIONE AUTOMATICA & GESTIONE CLOUD DATA
 async function gestisciLoginOSincronizzazione(user) {
     currentUser = user;
     if (!user) return;
 
     mostraStatoUtenteLoggato(user.email);
 
-    // Scarica i dati dal Cloud
     const { data, error } = await _supabase.from('userdata').select('payload').eq('id', user.id).single();
     const localeHaDati = (localStorage.getItem("moneyTrack_db") && safeGetJSON("moneyTrack_db").length > 0);
 
     if (error && error.code === 'PGRST116') {
-        // Caso A: L'utente si è loggato ma sul cloud non c'è nulla -> È LA PRIMA MIGRAZIONE AUTOMATICA!
         if (localeHaDati) {
             console.log("Rilevati dati locali. Avvio migrazione su Cloud...");
             syncDatiSuSupabase();
             alert("🎉 MIGRAZIONE COMPLETATA!\n\nI dati presenti su questo dispositivo sono stati salvati al sicuro sul tuo nuovo spazio Cloud.");
         }
     } else if (data && data.payload) {
-        // Caso B: Ci sono dati sul Cloud
         if (localeHaDati) {
-            // Se ci sono dati sia sul telefono che sul cloud, chiediamo conferma per evitare sovrascritture accidentali
-            if (confirm("Abbiamo trovato un salvataggio Cloud per questo account.\n\nVuoi CARICARE i dati dal Cloud sostituendo quelli di questo dispositivo?\n\n[OK] Carica dal Cloud\n[Annulla] Mantieni i dati del telefono e sovrascrivi il Cloud")) {
+            if (confirm("Abbiamo trovato un salvataggio Cloud for questo account.\n\nVuoi CARICARE i dati dal Cloud sostituendo quelli di questo dispositivo?\n\n[OK] Carica dal Cloud\n[Annulla] Mantieni i dati del telefono e sovrascrivi il Cloud")) {
                 applicaDatiCloud(data.payload);
             } else {
                 syncDatiSuSupabase();
             }
         } else {
-            // Il dispositivo è vuoto (es. nuovo iPhone o nuova installazione): scarica tutto dal Cloud
             applicaDatiCloud(data.payload);
         }
     }
@@ -779,7 +793,6 @@ async function gestisciLoginOSincronizzazione(user) {
 function applicaDatiCloud(payload) {
     if (!payload) return;
     
-    // Assegna i dati scaricati alle variabili globali della tua app
     if (payload.spese) spese = payload.spese;
     if (payload.future) future = payload.future;
     if (payload.customCats) customCats = payload.customCats;
@@ -787,7 +800,6 @@ function applicaDatiCloud(payload) {
     if (payload.investimenti) investimenti = payload.investimenti;
     if (payload.preferitiNews) preferitiNews = payload.preferitiNews;
 
-    // Salva nel vero localStorage del browser senza attivare il loop del sync
     originalSetItem.call(localStorage, "moneyTrack_db", JSON.stringify(spese));
     originalSetItem.call(localStorage, "moneyTrack_future", JSON.stringify(future));
     originalSetItem.call(localStorage, "moneyTrack_cats", JSON.stringify(customCats));
@@ -795,12 +807,10 @@ function applicaDatiCloud(payload) {
     originalSetItem.call(localStorage, "moneyTrack_inv", JSON.stringify(investimenti));
     originalSetItem.call(localStorage, "moneyTrack_fav_news", JSON.stringify(preferitiNews));
 
-    // Forzo l'aggiornamento grafico dei componenti nativi della tua app
     if (typeof aggiornaApp === "function") aggiornaApp();
     if (typeof aggiornaInvestimenti === "function") aggiornaInvestimenti();
 }
 
-// --- INTERFACCIA GRAFICA LOGIN (COMPLETAMENTE AUTOMATICA) ---
 function injectAuthModal() {
     if (document.getElementById("auth-modal")) return;
     const modalHtml = `
@@ -838,6 +848,19 @@ function toggleAuthMode() {
         link.innerText = "Non hai un account? Registrati";
     }
 }
+
+// Inizializzazione sicura al caricamento della pagina
+window.addEventListener('load', () => {
+    injectAuthModal();
+    _supabase.auth.onAuthStateChange((event, session) => {
+        if (session && session.user) {
+            gestisciLoginOSincronizzazione(session.user);
+        } else {
+            currentUser = null;
+            mostraStatoUtenteDisconnesso();
+        }
+    });
+});
 
 function loginbtn() {
     injectAuthModal();
@@ -910,23 +933,6 @@ async function eseguiLogout() {
     }
 }
 
-// Inizializzazione sicura al caricamento della pagina
-window.addEventListener('load', () => {
-    injectAuthModal();
-    _supabase.auth.onAuthStateChange((event, session) => {
-        if (session && session.user) {
-            gestisciLoginOSincronizzazione(session.user);
-        } else {
-            currentUser = null;
-            mostraStatoUtenteDisconnesso();
-        }
-    });
-});
-
-// ==========================================
-// FINISH SUPABASE CONFIG (Il tuo codice originale segue qui sotto...)
-// ==========================================
-
     // --- DATABASE & STATO ---
     let spese = JSON.parse(localStorage.getItem("moneyTrack_db")) || [];
     let future = JSON.parse(localStorage.getItem("moneyTrack_future")) || [];
@@ -938,6 +944,7 @@ window.addEventListener('load', () => {
     let graficoTorta, graficoBarre, privacy = false;
     const mesiNomi = ["Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic"];
     const mesiEstesi = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"];
+    let editFutureIdx = -1;
 
 let budgets = JSON.parse(localStorage.getItem("moneyTrack_budgets")) || {};
 
@@ -1018,14 +1025,12 @@ function modificaCategoria() {
     if (nuovoNome !== null && nuovoNome.trim() !== "" && nuovoNome !== vecchioNome) {
         const nuovo = nuovoNome.trim();
         
-        // 1. Aggiorna la lista delle categorie salvate
         const index = customCats[t].indexOf(vecchioNome);
         if (index !== -1) {
             customCats[t][index] = nuovo;
             saveCats();
         }
 
-        // 2. Aggiorna TUTTO lo storico dei movimenti già salvati
         let movimentiAggiornati = false;
         spese.forEach(s => {
             if (s.cat === vecchioNome && s.tipo === t) {
@@ -1034,12 +1039,10 @@ function modificaCategoria() {
             }
         });
 
-        // 3. Salva nel database le modifiche ai movimenti
         if (movimentiAggiornati) {
             localStorage.setItem("moneyTrack_db", JSON.stringify(spese));
         }
 
-        // 4. Ricarica la grafica per mostrare subito i cambiamenti
         aggiornaCategorie();
         document.getElementById("categoria").value = nuovo;
         aggiornaApp(); 
@@ -1052,15 +1055,9 @@ function eliminaCategoria() {
     
     if (!sel) return;
 
-    // Chiediamo conferma spiegando cosa succede ai vecchi movimenti
     if(confirm(`Sei sicuro di voler rimuovere la categoria "${sel}" dalla lista?\n\nI vecchi movimenti registrati con questa categoria NON verranno eliminati per non sballare il saldo.`)) {
-        
-        // Rimuove la categoria dalla lista
         customCats[t] = customCats[t].filter(c => c !== sel);
-        
-        // Se la lista rimane vuota, aggiunge una categoria di sicurezza
         if(customCats[t].length === 0) customCats[t] = ["Generica"];
-        
         saveCats();
         aggiornaCategorie();
     }
@@ -1068,7 +1065,6 @@ function eliminaCategoria() {
 function inizializzaSelectBudget() {
     const select = document.getElementById("budget-categoria");
     if (select) {
-        // Popola il menu a tendina solo con le categorie di Uscita attuali
         select.innerHTML = customCats["Uscita"].map(c => `<option value="${c}">${c}</option>`).join("");
     }
 }
@@ -1110,7 +1106,6 @@ function aggiornaBudgetProgress(catsUscita) {
         let percentuale = (speso / limite) * 100;
         const superato = speso > limite;
         
-        // Evita che la barra grafica "esca" dal 100% visivo
         const larghezzaBarra = percentuale > 100 ? 100 : percentuale;
 
         container.innerHTML += `
@@ -1186,7 +1181,7 @@ function aggiornaBudgetProgress(catsUscita) {
         }
 
         calcolaPrevisione(saldo);
-        aggiornaInsights(); // Avvia l'analisi dei consigli finanziari
+        aggiornaInsights();
         disegnaTorta(catsUscita, totUsciteMese);
         aggiornaListaFuture();
         aggiornaBudgetProgress(catsUscita);
@@ -1237,7 +1232,6 @@ function aggiornaBudgetProgress(catsUscita) {
     }
 }
 
-    // --- NUOVA LOGICA GENIALE: ASSISTENTE ED INSIGHTS FINANZIARI ---
     function aggiornaInsights() {
         const div = document.getElementById("insights-finanziari");
         if (!div) return;
@@ -1266,7 +1260,6 @@ function aggiornaBudgetProgress(catsUscita) {
             return;
         }
 
-        // Trova categoria con spesa più alta
         let maxCat = "", maxImp = 0;
         for (let c in catsUscita) {
             if (catsUscita[c] > maxImp) { maxImp = catsUscita[c]; maxCat = c; }
@@ -1279,7 +1272,6 @@ function aggiornaBudgetProgress(catsUscita) {
         } else {
             msg += `Questo mese la tua spesa maggiore è in <b>${maxCat}</b> con un totale di <b>${maxImp.toFixed(2)}€</b>. `;
             
-            // Suggerimenti basati sul testo della categoria
             if (maxCat.includes("Cibo") || maxCat.includes("Spesa") || maxCat.includes("🍕") || maxCat.includes("🛒")) {
                 msg += "Pianificare i pasti settimanali e fare la spesa a stomaco pieno riduce gli sprechi del 20%! 🛒";
             } else if (maxCat.includes("Auto") || maxCat.includes("🚗")) {
@@ -1290,7 +1282,6 @@ function aggiornaBudgetProgress(catsUscita) {
                 msg += "Prova a stabilire un piccolo budget limite per questa categoria all'inizio del prossimo mese. 💸";
             }
 
-            // Analisi sul tasso di risparmio / sforamento
             if (totEntrate > 0) {
                 const percUscite = (totUscite / totEntrate) * 100;
                 msg += `<br><br>📊 Finora hai speso il <b>${percUscite.toFixed(0)}%</b> delle tue entrate mensili. `;
@@ -1305,6 +1296,8 @@ function aggiornaBudgetProgress(catsUscita) {
         }
         div.innerHTML = msg;
     }
+
+    function aggiungereOperazione() {} // Sostituita con aggiungiOperazione sotto
 
     function aggiungiOperazione() {
         const d = document.getElementById("data").value, i = parseFloat(document.getElementById("importo").value);
@@ -1345,11 +1338,32 @@ function aggiornaBudgetProgress(catsUscita) {
     function aggiungiSpesaFutura() {
         const d = document.getElementById("data-futura").value, desc = document.getElementById("desc-futura").value, i = parseFloat(document.getElementById("imp-futura").value);
         if(!d || !desc || isNaN(i)) return alert("Compila tutti i campi!");
-        future.push({data: d, desc: desc, imp: i});
+        
+        if (editFutureIdx === -1) {
+            future.push({data: d, desc: desc, imp: i});
+        } else {
+            future[editFutureIdx] = {data: d, desc: desc, imp: i};
+            editFutureIdx = -1;
+            document.getElementById("btn-salva-futura").innerText = "Inserisci Spesa Futura";
+        }
+        
         localStorage.setItem("moneyTrack_future", JSON.stringify(future));
+        document.getElementById("data-futura").value = "";
+        document.getElementById("desc-futura").value = "";
+        document.getElementById("imp-futura").value = "";
         aggiornaListaFuture();
         aggiornaApp();
     }
+
+function preparaModificaFutura(idx) {
+    const s = future[idx];
+    document.getElementById("data-futura").value = s.data;
+    document.getElementById("desc-futura").value = s.desc;
+    document.getElementById("imp-futura").value = s.imp;
+    editFutureIdx = idx;
+    document.getElementById("btn-salva-futura").innerText = "AGGIORNA SPESA FUTURA";
+    window.scrollTo({ top: document.getElementById("data-futura").offsetTop - 100, behavior: 'smooth' });
+}
 
 function aggiornaListaFuture() {
     const c = document.getElementById("lista-future");
@@ -1367,6 +1381,7 @@ function aggiornaListaFuture() {
                 <div style="text-align: right; flex-shrink: 0; display: flex; align-items: center; gap: 10px;">
                     <span class="negativo" style="font-weight:bold; white-space: nowrap;">${valore.toFixed(2)}€</span>
                     <span onclick="confermaFutura(${idx})" style="cursor:pointer; font-size:1.2rem; user-select:none; padding: 4px;" title="Conferma e aggiungi">✅</span>
+                    <span onclick="preparaModificaFutura(${idx})" style="cursor:pointer; font-size:1.2rem; user-select:none; padding: 4px;" title="Modifica scadenza future">✏️</span>
                     <span onclick="eliminaFutura(${idx})" style="cursor:pointer; font-size:1.2rem; user-select:none; padding: 4px;" title="Elimina spesa">🗑️</span>
                 </div>
             </div>`;
@@ -1611,7 +1626,6 @@ function aggiornaMatrice(anno) {
     function togglePrivacy() { privacy = !privacy; aggiornaApp(); }
     
 function esportaDati() {
-    // 1. Raccogliamo TUTTI i dati presenti nel telefono (spese, investimenti, ecc.)
     const backupData = {};
     for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i);
@@ -1627,13 +1641,12 @@ function esportaDati() {
 
     const jsonString = JSON.stringify(backupData);
 
-    // 2. Metodo di copia forzata per APK (crea un campo di testo invisibile e lo copia)
     const tempTextArea = document.createElement("textarea");
     tempTextArea.value = jsonString;
-    tempTextArea.style.position = "fixed"; // Evita di scombinare la grafica visiva
+    tempTextArea.style.position = "fixed";
     document.body.appendChild(tempTextArea);
     tempTextArea.select();
-    tempTextArea.setSelectionRange(0, 99999); // Per dispositivi mobile
+    tempTextArea.setSelectionRange(0, 99999);
 
     try {
         const successo = document.execCommand("copy");
@@ -1644,7 +1657,6 @@ function esportaDati() {
             throw new Error();
         }
     } catch (err) {
-        // Se persino la copia automatica fallisce, mostriamo il testo a schermo per copiarlo a mano
         tempTextArea.style.position = "fixed";
         tempTextArea.style.top = "10%";
         tempTextArea.style.left = "5%";
@@ -1983,14 +1995,11 @@ function calculate() {
     const espressione = document.getElementById('calc-screen').value;
     try {
         if (espressione) {
-            // Esegue il calcolo
             const risultato = eval(espressione);
             document.getElementById('calc-screen').value = risultato;
             
-            // Copia il risultato nel campo "importo" del form
             document.getElementById('importo').value = risultato;
             
-            // Chiude la calcolatrice dopo mezzo secondo per farti vedere il risultato
             setTimeout(chiudiCalcolatrice, 500);
         }
     } catch (error) {
@@ -2049,6 +2058,40 @@ function aggiornaTickerHome() {
     ticker.innerHTML = testoTicker + testoTicker + testoTicker;
 }
 </script>
+
+<style>
+.modal-backdrop-cloud {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6); display: flex; justify-content: center;
+    align-items: center; z-index: 9999;
+}
+.modal-card-cloud {
+    background: white; padding: 30px; border-radius: 20px;
+    max-width: 400px; width: 90%; text-align: center;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2); animation: popUpCloud 0.3s ease;
+}
+@keyframes popUpCloud { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.modal-icon-cloud { font-size: 3.5rem; margin-bottom: 15px; }
+.modal-card-cloud h3 { margin: 0 0 10px 0; font-size: 1.4rem; color: #333; font-weight: bold; display: flex; justify-content: center; }
+.modal-card-cloud p { font-size: 0.95rem; color: #666; line-height: 1.5; margin-bottom: 25px; margin-top: 0; }
+.modal-buttons-cloud { display: flex; flex-direction: column; gap: 10px; }
+.modal-buttons-cloud .btn-primary-cloud { background: #28a745; color: white; border: none; padding: 14px; border-radius: 12px; font-weight: bold; font-size: 1rem; cursor: pointer; transition: 0.2s; }
+.modal-buttons-cloud .btn-primary-cloud:hover { background: #218838; }
+.modal-buttons-cloud .btn-secondary-cloud { background: none; color: #888; border: none; padding: 10px; font-size: 0.9rem; cursor: pointer; text-decoration: underline; }
+</style>
+
+<div id="cloud-modal" class="modal-backdrop-cloud" style="display: none;">
+    <div class="modal-card-cloud">
+        <div class="modal-icon-cloud">☁️</div>
+        <h3>Metti al sicuro i tuoi dati!</h3>
+        <p>Non rischiare di perdere le tue spese se cambi o smarrisci il telefono. Attiva il salvataggio automatico nel Cloud gratuito.</p>
+        <div class="modal-buttons-cloud">
+            <button id="modal-login-btn" class="btn-primary-cloud">🔐 Accedi / Registrati</button>
+            <button id="modal-close-btn" class="btn-secondary-cloud">Magari più tardi</button>
+        </div>
+    </div>
+</div>
+
 </body>
 <script src="script.js"></script>
 </html>
