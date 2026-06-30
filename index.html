@@ -762,34 +762,55 @@ function syncDatiSuSupabase() {
     }, 600);
 }
 
+// 🪄 MIGRAZIONE AUTOMATICA & GESTIONE CLOUD DATA (VERSIONE CORRETTA)
 async function gestisciLoginOSincronizzazione(user) {
     currentUser = user;
     if (!user) return;
 
     mostraStatoUtenteLoggato(user.email);
 
+    // Scarica i dati dal Cloud
     const { data, error } = await _supabase.from('userdata').select('payload').eq('id', user.id).single();
     const localeHaDati = (localStorage.getItem("moneyTrack_db") && safeGetJSON("moneyTrack_db").length > 0);
 
     if (error && error.code === 'PGRST116') {
+        // Caso A: L'utente si è loggato ma sul cloud non c'è nulla -> È LA PRIMA MIGRAZIONE AUTOMATICA!
         if (localeHaDati) {
             console.log("Rilevati dati locali. Avvio migrazione su Cloud...");
             syncDatiSuSupabase();
             alert("🎉 MIGRAZIONE COMPLETATA!\n\nI dati presenti su questo dispositivo sono stati salvati al sicuro sul tuo nuovo spazio Cloud.");
         }
     } else if (data && data.payload) {
+        // Caso B: Ci sono dati sul Cloud
         if (localeHaDati) {
-            if (confirm("Abbiamo trovato un salvataggio Cloud for questo account.\n\nVuoi CARICARE i dati dal Cloud sostituendo quelli di questo dispositivo?\n\n[OK] Carica dal Cloud\n[Annulla] Mantieni i dati del telefono e sovrascrivi il Cloud")) {
-                applicaDatiCloud(data.payload);
+            // 🟢 NUOVO CONTROLLO: Generiamo il payload locale per fare un confronto speculare
+            const localPayload = {
+                spese: safeGetJSON("moneyTrack_db") || [],
+                future: safeGetJSON("moneyTrack_future") || [],
+                customCats: safeGetJSON("moneyTrack_cats") || {},
+                budgets: safeGetJSON("moneyTrack_budgets") || {},
+                investimenti: safeGetJSON("moneyTrack_inv") || [],
+                preferitiNews: safeGetJSON("moneyTrack_fav_news") || []
+            };
+
+            // Convertiamo entrambi in stringhe JSON per verificare se sono identici
+            if (JSON.stringify(localPayload) === JSON.stringify(data.payload)) {
+                console.log("☁️ Dati locali e Cloud già allineati. Nessun popup mostrato.");
+                applicaDatiCloud(data.payload); // Carica semplicemente in memoria i dati
             } else {
-                syncDatiSuSupabase();
+                // Se ci sono reali differenze, allora (e solo allora) chiediamo conferma
+                if (confirm("Abbiamo trovato un salvataggio Cloud per questo account.\n\nVuoi CARICARE i dati dal Cloud sostituendo quelli di questo dispositivo?\n\n[OK] Carica dal Cloud\n[Annulla] Mantieni i dati del telefono e sovrascrivi il Cloud")) {
+                    applicaDatiCloud(data.payload);
+                } else {
+                    syncDatiSuSupabase();
+                }
             }
         } else {
+            // Il dispositivo è vuoto (es. nuovo dispositivo o nuova installazione): scarica tutto dal Cloud
             applicaDatiCloud(data.payload);
         }
     }
 }
-
 function applicaDatiCloud(payload) {
     if (!payload) return;
     
