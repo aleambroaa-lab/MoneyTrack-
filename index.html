@@ -797,12 +797,24 @@ async function gestisciLoginOSincronizzazione(user) {
                 console.log("☁️ Dati locali e Cloud già allineati. Nessun popup mostrato.");
                 applicaDatiCloud(data.payload); // Carica semplicemente in memoria i dati
             } else {
-                // Se ci sono reali differenze, allora (e solo allora) chiediamo conferma
-                if (confirm("Abbiamo trovato un salvataggio Cloud per questo account.\n\nVuoi CARICARE i dati dal Cloud sostituendo quelli di questo dispositivo?\n\n[OK] Carica dal Cloud\n[Annulla] Mantieni i dati del telefono e sovrascrivi il Cloud")) {
-                    applicaDatiCloud(data.payload);
-                } else {
-                    syncDatiSuSupabase();
-                }
+               
+ // Controlla se l'utente ha già risposto a questa domanda in passato
+const conflittoCloudRisolto = localStorage.getItem('conflitto_cloud_risolto');
+
+if (!conflittoCloudRisolto) {
+    // Se non ha mai risposto, mostra il popup di sistema
+    if (confirm("Abbiamo trovato un salvataggio Cloud per questo account.\n\nVuoi CARICARE i dati dal Cloud sostituendo quelli di questo dispositivo?\n\n[OK] Carica dal Cloud\n[Annulla] Mantieni i dati del telefono e sovrascrivi il Cloud")) {
+        applicaDatiCloud(data.payload);
+    } else {
+        syncDatiSuSupabase();
+    }
+    // Salva la scelta: non mostrare MAI PIÙ questo popup su questo dispositivo
+    localStorage.setItem('conflitto_cloud_risolto', 'true');
+} else {
+    // Se aveva già scelto in passato, applica i dati cloud silenziosamente 
+    // per mantenere l'app sincronizzata in background senza disturbare l'utente
+    applicaDatiCloud(data.payload);
+}
             }
         } else {
             // Il dispositivo è vuoto (es. nuovo dispositivo o nuova installazione): scarica tutto dal Cloud
@@ -2107,9 +2119,9 @@ function aggiornaTickerHome() {
         <h3>Metti al sicuro i tuoi dati!</h3>
         <p>Non rischiare di perdere le tue spese se cambi o smarrisci il telefono. Attiva il salvataggio automatico nel Cloud gratuito.</p>
         <div class="modal-buttons-cloud">
-            <button id="modal-login-btn" class="btn-primary-cloud">🔐 Accedi / Registrati</button>
-            <button id="modal-close-btn" class="btn-secondary-cloud">Magari più tardi</button>
-        </div>
+    <button id="modal-login-btn" class="btn-primary-cloud">🔐 Accedi / Registrati</button>
+    <button id="modal-close-btn" class="btn-secondary-cloud">Magari più tardi</button>
+</div>
     </div>
 </div>
 
