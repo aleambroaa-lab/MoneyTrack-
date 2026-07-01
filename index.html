@@ -1166,13 +1166,11 @@ function aggiornaBudgetProgress(catsUscita) {
        
         l.innerHTML = "";
         let saldo = 0, catsUscita = {}, totUsciteMese = 0;
-        let gruppi = {};
         const oggi = new Date();
 
+        // 1. Calcoliamo prima i totali del mese e il saldo senza alterare nulla
         spese.forEach(s => {
-            const indexOrig = spese.indexOf(s);
             const dataS = new Date(s.data);
-           
             if(s.tipo === "Entrata") saldo += s.imp; else saldo -= s.imp;
 
             if(dataS.getMonth() === oggi.getMonth() && dataS.getFullYear() === oggi.getFullYear()) {
@@ -1181,38 +1179,61 @@ function aggiornaBudgetProgress(catsUscita) {
                     totUsciteMese += s.imp;
                 }
             }
+        });
 
-            if (query && !s.nota.toLowerCase().includes(query) && !s.cat.toLowerCase().includes(query)) return;
+        // 2. Mappiamo le spese per salvare l'ID originale (fondamentale per modifica/elimina) e filtriamo
+        let speseOrdinate = spese.map((s, index) => ({ ...s, indexOrig: index }));
+        
+        if (query) {
+            speseOrdinate = speseOrdinate.filter(s => s.nota.toLowerCase().includes(query) || s.cat.toLowerCase().includes(query));
+        }
 
+        // 3. ORDINE CRONOLOGICO: Dal più recente al più vecchio
+        speseOrdinate.sort((a, b) => new Date(b.data) - new Date(a.data));
+
+        // 4. Creiamo i gruppi per mese utilizzando un Map per rispettare fedelmente l'ordine decrescente
+        let mappaGruppi = new Map();
+
+        speseOrdinate.forEach(s => {
+            const dataS = new Date(s.data);
             const chiaveMese = `${mesiEstesi[dataS.getMonth()]} ${dataS.getFullYear()}`;
-            if (!gruppi[chiaveMese]) gruppi[chiaveMese] = [];
-            gruppi[chiaveMese].push(`
+            
+            if (!mappaGruppi.has(chiaveMese)) mappaGruppi.set(chiaveMese, []);
+            
+            mappaGruppi.get(chiaveMese).push(`
                 <tr>
                     <td><small>${s.data}</small><br><strong>${s.cat}</strong><br><small>${s.nota || ''}</small></td>
                     <td style="text-align:right">
                         <span class="${s.tipo === 'Entrata' ? 'positivo':'negativo'}">${s.imp.toFixed(2)}€</span>
-                        <span class="action-icon" onclick="preparaModifica(${indexOrig})">✏️</span>
-                        <span class="action-icon" onclick="eliminaRiga(${indexOrig})">🗑️</span>
+                        <span class="action-icon" onclick="preparaModifica(${s.indexOrig})">✏️</span>
+                        <span class="action-icon" onclick="eliminaRiga(${s.indexOrig})">🗑️</span>
                     </td>
                 </tr>`);
         });
 
+        // 5. Generiamo l'interfaccia grafica
         document.getElementById("saldo-cifra").innerText = privacy ? "*** €" : saldo.toFixed(2) + " €";
         box.style.backgroundColor = saldo >= 0 ? "var(--success)" : "var(--danger)";
        
-        for (let m in gruppi) {
+        mappaGruppi.forEach((righeHtml, meseStr) => {
             const div = document.createElement('div');
             div.className = 'mese-container';
-            if (m.includes(mesiEstesi[oggi.getMonth()])) div.classList.add('attivo');
+            
+            // Apriamo di default solo il mese/anno corrente
+            if (meseStr.includes(mesiEstesi[oggi.getMonth()]) && meseStr.includes(oggi.getFullYear().toString())) {
+                div.classList.add('attivo');
+            }
+            
             div.innerHTML = `
                 <div class="mese-header" onclick="this.parentElement.classList.toggle('attivo')">
-                    <span>📅 ${m}</span>
-                    <span style="font-size:0.8rem; opacity:0.6">${gruppi[m].length} movimenti ▾</span>
+                    <span>📅 ${meseStr}</span>
+                    <span style="font-size:0.8rem; opacity:0.6">${righeHtml.length} movimenti ▾</span>
                 </div>
-                <div class="mese-content"><table>${gruppi[m].join("")}</table></div>`;
+                <div class="mese-content"><table>${righeHtml.join("")}</table></div>`;
             l.appendChild(div);
-        }
+        });
 
+        // 6. Aggiorniamo i grafici e widget esterni
         calcolaPrevisione(saldo);
         aggiornaInsights();
         disegnaTorta(catsUscita, totUsciteMese);
