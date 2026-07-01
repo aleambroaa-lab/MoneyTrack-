@@ -453,9 +453,65 @@
 .budget-row select, .budget-row input { margin-bottom: 0; padding: 10px; font-size: 0.9rem; }
 .budget-row button { padding: 10px; font-size: 0.85rem; max-width: 100px; height: 42px; margin-top: 0; }
 
+.grid-calendario {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    background-color: #f0f0f0;
+    padding: 4px;
+    border-radius: 12px;
+}
+.cal-giorno {
+    background: white;
+    min-height: 70px;
+    padding: 4px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    font-size: 0.85rem;
+    position: relative;
+}
+.cal-giorno.vuoto {
+    background: #f7f7f7;
+}
+.cal-giorno.oggi {
+    border: 2px solid var(--primary, #007bff);
+    font-weight: bold;
+}
+.cal-numero-giorno {
+    margin-bottom: 4px;
+    display: inline-block;
+}
+.cal-badge-scadenza {
+    font-size: 0.65rem;
+    padding: 2px 4px;
+    border-radius: 4px;
+    margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: white;
+    font-weight: normal;
+}
+.badge-impatta { background-color: #dc3545; } /* Rosso per spese reali */
+.badge-neutro { background-color: #6c757d; }  /* Grigio per promemoria informativi */
+
+/* Allinea perfettamente i pulsanti moderni in riga su smartphone e desktop */
+.nav-buttons-container {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    max-width: 900px;
+    margin: 15px auto;
+    padding: 0 15px;
+    box-sizing: border-box;
+}
+
 </style>
 </head>
 <body>
+
 <datalist id="lista-assets">
     <option value="BTC">Bitcoin</option>
     <option value="ETH">Ethereum</option>
@@ -506,6 +562,9 @@
     </button>
     <button class="btn-modern" onclick="mostraPagina('analisi')">
         🧠 ANALISI
+    </button>
+    <button class="btn-modern" onclick="mostraPagina('scadenze')">
+        📅 SCADENZE
     </button>
 </div>
 
@@ -585,7 +644,13 @@
             <input type="date" id="data-futura">
             <input type="text" id="desc-futura" placeholder="Descrizione (es. Affitto)">
             <input type="number" id="imp-futura" placeholder="Importo stimato (€)">
-            <button class="btn-modern full-width btn-accent" id="btn-salva-futura" onclick="aggiungiSpesaFutura()">Inserisci Spesa Futura</button>
+            <div style="margin: 10px 0; text-align: left;">
+    <label style="display: flex; align-items: center; gap: 8px; font-size: 0.9rem; cursor: pointer; color: #555;">
+        <input type="checkbox" id="impatta-saldo-futura" checked style="width: 16px; height: 16px;">
+        Includi nel calcolo del saldo futuro
+    </label>
+</div>         
+<button class="btn-modern full-width btn-accent" id="btn-salva-futura" onclick="aggiungiSpesaFutura()">Inserisci Spesa Futura</button>
             <div id="lista-future" style="margin-top: 15px;"></div>
         </div>
 
@@ -643,10 +708,9 @@
         <button onclick="filtraNews('tech')" style="background:#eee; border:none; padding:8px 15px; border-radius:20px; font-size:0.8rem; cursor:pointer; flex-shrink:0;">💻 Tech</button>
     </div>
 
-    <div id="loading-news" style="text-align: center; padding: 20px;">Caricamento notizie...</div>
+<div id="loading-news" style="text-align: center; padding: 20px;">Caricamento notizie...</div>
     <div id="news-container" class="desktop-grid"></div>
-
-<div id="pagina-investimenti" class="container" style="display: none; padding: 20px;">
+</div> <div id="pagina-investimenti" class="container" style="display: none; padding: 20px;">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
         <h3 style="margin:0;">📈 Portafoglio</h3>
         <div style="text-align: right;">
@@ -987,16 +1051,26 @@ let budgets = JSON.parse(localStorage.getItem("moneyTrack_budgets")) || {};
 
   function mostraPagina(p) {
     const pagine = ["pagina-home", "pagina-analisi", "pagina-news", "pagina-investimenti"];
+    
+    // 1. Nascondi tutte le pagine principali
     pagine.forEach(id => {
         const elemento = document.getElementById(id);
         if (elemento) elemento.style.display = 'none';
     });
 
+    // 2. NASCONDI IL CALENDARIO (così scompare quando torni alla Home)
+    const sezioneScadenze = document.getElementById('sezione-scadenze');
+    if (sezioneScadenze) {
+        sezioneScadenze.style.display = 'none';
+    }
+
+    // 3. Mostra la pagina selezionata
     const paginaCorrente = document.getElementById('pagina-' + p);
     if (paginaCorrente) {
         paginaCorrente.style.display = 'block';
     }
 
+    // 4. Esegui le funzioni specifiche per ogni pagina
     if (p === 'home') {
         aggiornaApp();
     }
@@ -1008,6 +1082,16 @@ let budgets = JSON.parse(localStorage.getItem("moneyTrack_budgets")) || {};
     }
     else if (p === 'analisi') {
         setTimeout(generaReport, 50);
+    }
+    
+    // 5. Se la pagina è scadenze, mostra il calendario
+    if (p === 'scadenze') {
+        if (sezioneScadenze) {
+            sezioneScadenze.style.display = 'block';
+        }
+        if (typeof disegnaCalendario === "function") {
+            disegnaCalendario(); 
+        }
     }
    
     window.scrollTo(0,0);
@@ -1250,12 +1334,12 @@ function aggiornaBudgetProgress(catsUscita) {
 
     let impegniMese = future.filter(f => {
         const df = new Date(f.data);
-        return df >= oggi && df <= fineMese;
+        return df >= oggi && df <= fineMese && f.impattaSaldo !== false;
     }).reduce((acc, curr) => acc + curr.imp, 0);
 
     let tuttiImpegniFuturi = future.filter(f => {
         const df = new Date(f.data);
-        return df >= oggi;
+        return df >= oggi && f.impattaSaldo !== false;
     }).reduce((acc, curr) => acc + curr.imp, 0);
 
     const previstoFineMese = saldoAttuale - impegniMese;
@@ -1351,7 +1435,7 @@ function aggiornaBudgetProgress(catsUscita) {
         div.innerHTML = msg;
     }
 
-    function aggiungereOperazione() {} // Sostituita con aggiungiOperazione sotto
+    
 
     function aggiungiOperazione() {
         const d = document.getElementById("data").value, i = parseFloat(document.getElementById("importo").value);
@@ -1391,12 +1475,16 @@ function aggiornaBudgetProgress(catsUscita) {
 
     function aggiungiSpesaFutura() {
         const d = document.getElementById("data-futura").value, desc = document.getElementById("desc-futura").value, i = parseFloat(document.getElementById("imp-futura").value);
+        
+        // Legge lo stato della casella di spunta
+        const impatta = document.getElementById("impatta-saldo-futura") ? document.getElementById("impatta-saldo-futura").checked : true;
+
         if(!d || !desc || isNaN(i)) return alert("Compila tutti i campi!");
         
         if (editFutureIdx === -1) {
-            future.push({data: d, desc: desc, imp: i});
+            future.push({data: d, desc: desc, imp: i, impattaSaldo: impatta});
         } else {
-            future[editFutureIdx] = {data: d, desc: desc, imp: i};
+            future[editFutureIdx] = {data: d, desc: desc, imp: i, impattaSaldo: impatta};
             editFutureIdx = -1;
             document.getElementById("btn-salva-futura").innerText = "Inserisci Spesa Futura";
         }
@@ -1405,19 +1493,26 @@ function aggiornaBudgetProgress(catsUscita) {
         document.getElementById("data-futura").value = "";
         document.getElementById("desc-futura").value = "";
         document.getElementById("imp-futura").value = "";
+        if(document.getElementById("impatta-saldo-futura")) document.getElementById("impatta-saldo-futura").checked = true; // resetta la spunta
+        
         aggiornaListaFuture();
         aggiornaApp();
     }
 
 function preparaModificaFutura(idx) {
-    const s = future[idx];
-    document.getElementById("data-futura").value = s.data;
-    document.getElementById("desc-futura").value = s.desc;
-    document.getElementById("imp-futura").value = s.imp;
-    editFutureIdx = idx;
-    document.getElementById("btn-salva-futura").innerText = "AGGIORNA SPESA FUTURA";
-    window.scrollTo({ top: document.getElementById("data-futura").offsetTop - 100, behavior: 'smooth' });
-}
+        const s = future[idx];
+        document.getElementById("data-futura").value = s.data;
+        document.getElementById("desc-futura").value = s.desc;
+        document.getElementById("imp-futura").value = s.imp;
+        
+        if(document.getElementById("impatta-saldo-futura")) {
+            document.getElementById("impatta-saldo-futura").checked = s.impattaSaldo !== false;
+        }
+
+        editFutureIdx = idx;
+        document.getElementById("btn-salva-futura").innerText = "AGGIORNA SPESA FUTURA";
+        window.scrollTo({ top: document.getElementById("data-futura").offsetTop - 100, behavior: 'smooth' });
+    }
 
 function aggiornaListaFuture() {
     const c = document.getElementById("lista-future");
@@ -2111,6 +2206,152 @@ function aggiornaTickerHome() {
 
     ticker.innerHTML = testoTicker + testoTicker + testoTicker;
 }
+
+let dataCalCorrente = new Date(); // Mantiene traccia del mese visualizzato nel calendario
+
+// Funzione per mostrare/nascondere la sezione (estendi la tua logica esistente)
+function cambiaSezione(idSezione) {
+    // Nascondi tutte le sezioni principali della tua app
+    // Sostituisci questi ID con quelli effettivi se differiscono
+    const sezioni = ['sezione-principale', 'sezione-analisi', 'sezione-scadenze']; 
+    sezioni.forEach(id => {
+        const el = document.getElementById(id);
+        if(el) el.style.display = 'none';
+    });
+    
+    // Mostra la sezione selezionata
+    const sezioneDaMostrare = document.getElementById('sezione-' + idSezione);
+    if(sezioneDaMostrare) {
+        sezioneDaMostrare.style.display = 'block';
+        if(idSezione === 'scadenze') {
+            disegnaCalendario();
+        }
+    }
+}
+
+function navigaMeseCalendario(direzione) {
+    dataCalCorrente.setMonth(dataCalCorrente.getMonth() + direzione);
+    disegnaCalendario();
+}
+
+function disegnaCalendario() {
+    const griglia = document.getElementById("cal-griglia");
+    const titolo = document.getElementById("cal-titolo-mese");
+    if (!griglia || !titolo) return;
+
+    griglia.innerHTML = "";
+    
+    const anno = dataCalCorrente.getFullYear();
+    const mese = dataCalCorrente.getMonth();
+    
+    // Imposta il titolo del mese corrente
+    titolo.innerText = `${dataCalCorrente.toLocaleString('it-IT', { month: 'long' })} ${anno}`;
+    
+    const primoGiornoMese = new Date(anno, mese, 1);
+    // Converte il giorno della settimana (0=Dom, 1=Lun...) al formato italiano (0=Lun, 6=Dom)
+    let giornoSettimanaInizio = primoGiornoMese.getDay() - 1;
+    if (giornoSettimanaInizio === -1) giornoSettimanaInizio = 6;
+    
+    const totaleGiorniMese = new Date(anno, mese + 1, 0).getDate();
+    const oggi = new Date();
+
+    // 1. Disegna i quadrati vuoti prima dell'inizio del mese
+    for (let i = 0; i < giornoSettimanaInizio; i++) {
+        const divVuoto = document.createElement("div");
+        divVuoto.className = "cal-giorno vuoto";
+        griglia.appendChild(divVuoto);
+    }
+
+    // 2. Disegna i giorni del mese
+    for (let giorno = 1; giorno <= totaleGiorniMese; giorno++) {
+        const divGiorno = document.createElement("div");
+        divGiorno.className = "cal-giorno";
+        
+        // Controlla se è oggi
+        if (giorno === oggi.getDate() && mese === oggi.getMonth() && anno === oggi.getFullYear()) {
+            divGiorno.classList.add("oggi");
+        }
+        
+        divGiorno.innerHTML = `<span class="cal-numero-giorno">${giorno}</span>`;
+        
+        // Costruisci la stringa data in formato YYYY-MM-DD per confrontarla con le tue scadenze
+        const meseStr = String(mese + 1).padStart(2, '0');
+        const giornoStr = String(giorno).padStart(2, '0');
+        const dataFormatoStringa = `${anno}-${meseStr}-${giornoStr}`;
+        
+        // Filtra le scadenze appartenenti a questo giorno
+        // (Usa il nome esatto del tuo array delle scadenze future, qui ipotizzato 'speseFuture')
+       if (typeof future !== 'undefined') {
+            future.forEach(s => {
+                if (s.data === dataFormatoStringa) {
+                    const badge = document.createElement("div");
+                    // Determina la classe in base al fatto se impatta il saldo o no
+                    const classeImpatto = s.impattaSaldo === false ? 'badge-neutro' : 'badge-impatta';
+                    badge.className = `cal-badge-scadenza ${classeImpatto}`;
+                    badge.title = `${s.cat}: ${s.nota || ''} (${s.imp}€)`;
+                    badge.innerText = `${s.imp > 0 ? s.imp.toFixed(0) + '€ ' : ''}${s.cat}`;
+                    divGiorno.appendChild(badge);
+                }
+            });
+        }
+        
+        griglia.appendChild(divGiorno);
+    }
+}
+
+// ==========================================
+// 🔔 SISTEMA DI NOTIFICHE SCADENZE (GIORNO PRIMA)
+// ==========================================
+function inizializzaNotifiche() {
+    if ("Notification" in window) {
+        if (Notification.permission !== "granted" && Notification.permission !== "denied") {
+            Notification.requestPermission();
+        }
+    }
+}
+
+function verificaScadenzeDomani() {
+        if (!("Notification" in window) || Notification.permission !== "granted") return;
+        const oggi = new Date(); oggi.setHours(0, 0, 0, 0);
+    
+    // Creiamo la data di "domani"
+    const domani = new Date(oggi);
+    domani.setDate(domani.getDate() + 1);
+    
+    const anno = domani.getFullYear();
+    const mese = String(domani.getMonth() + 1).padStart(2, '0');
+    const giorno = String(domani.getDate()).padStart(2, '0');
+    const dataDomaniStr = `${anno}-${mese}-${giorno}`;
+
+    if (typeof future !== 'undefined') {
+        future.forEach((s, idx) => {
+            if (s.data === dataDomaniStr) {
+                // Chiave univoca per non inviare due volte la stessa notifica
+                const chiaveNotifica = `notificato_scadenza_${idx}_${s.data}`;
+                
+                if (!localStorage.getItem(chiaveNotifica)) {
+                    let messaggio = `Domani scade: ${s.desc}`;
+                    if(s.imp > 0) messaggio += ` di ${parseFloat(s.imp).toFixed(2)}€`;
+
+                    new Notification("📌 Promemoria Scadenza", {
+                        body: messaggio,
+                        icon: "icona-512.png" // Assicurati che l'icona esista nella cartella
+                    });
+                    
+                    localStorage.setItem(chiaveNotifica, "true");
+                }
+            }
+        });
+    }
+}
+
+// Lancia la richiesta dei permessi e il controllo notifiche all'avvio dell'app
+window.addEventListener('DOMContentLoaded', () => {
+    inizializzaNotifiche();
+    // Aspetta 2 secondi per essere sicuro che l'array "future" sia stato caricato
+    setTimeout(verificaScadenzeDomani, 2000); 
+});
+
 </script>
 
 <style>
@@ -2144,6 +2385,20 @@ function aggiornaTickerHome() {
     <button id="modal-close-btn" class="btn-secondary-cloud">Magari più tardi</button>
 </div>
     </div>
+</div>
+
+<div id="sezione-scadenze" class="sezione-app" style="display: none; padding: 15px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+        <button onclick="navigaMeseCalendario(-1)" class="btn-sm" style="padding: 8px 12px; border-radius: 8px; border: 1px solid #ccc; background: white; cursor: pointer;">◀ Mese Prec.</button>
+        <h3 id="cal-titolo-mese" style="margin: 0; font-size: 1.2rem; font-weight: bold; text-transform: capitalize;"></h3>
+        <button onclick="navigaMeseCalendario(1)" class="btn-sm" style="padding: 8px 12px; border-radius: 8px; border: 1px solid #ccc; background: white; cursor: pointer;">Mese Succ. ▶</button>
+    </div>
+    
+    <div style="display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-weight: bold; font-size: 0.8rem; margin-bottom: 5px; opacity: 0.7;">
+        <div>Lun</div><div>Mar</div><div>Mer</div><div>Gio</div><div>Ven</div><div>Sab</div><div>Dom</div>
+    </div>
+    
+    <div id="cal-griglia" class="grid-calendario"></div>
 </div>
 
 </body>
