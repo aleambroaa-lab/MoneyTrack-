@@ -660,10 +660,11 @@
         </div>
 
         <div class="section">
-            <h3>📊 Analisi Spese Mese</h3>
-            <div style="height: 250px; position: relative;">
-                <canvas id="graficoTorta"></canvas>
-            </div>
+                 
+           <h3 style="margin-top: 30px;">🕒 Storico</h3>
+            <input type="text" id="filtroRicerca" onkeyup="aggiornaApp()" placeholder="🔍 Cerca tra note o categorie...">
+            <div id="lista-transazioni"></div>
+        </div>
 <div class="budget-container">
     <h4 style="margin-top: 0; margin-bottom: 12px; color: #444; display: flex; align-items: center; gap: 6px;">🎯 Budget Mensili</h4>
     <div class="budget-row">
@@ -673,28 +674,36 @@
     </div>
     <div id="lista-budget"></div>
 </div>
-           
-            <h3 style="margin-top: 30px;">🕒 Storico</h3>
-            <input type="text" id="filtroRicerca" onkeyup="aggiornaApp()" placeholder="🔍 Cerca tra note o categorie...">
-            <div id="lista-transazioni"></div>
-        </div>
+
     </div>
 </div>
+
+
+<div id="sezione-scadenze" class="container" style="display: none; padding: 20px;">
+    <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 20px;">
+        <button onclick="mostraPagina('home')" class="btn-back-home">⬅ Torna alla Home</button>
+    </div>
+    
+    <h3 style="margin-bottom: 15px;">📅 Calendario Scadenze</h3>
+    
+    <!-- Qui è dove Javascript disegnerà i giorni -->
+    <div id="calendario-grid" class="grid-calendario"></div>
+</div>
+
 
 <div id="pagina-analisi" class="container" style="display: none; padding: 20px;">
     <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 20px;">
         <button onclick="mostraPagina('home')" class="btn-back-home">⬅ Torna alla Home</button>
         <select id="anno-selezionato" onchange="generaReport()" style="padding: 10px; border-radius: 10px; border: 1px solid #ddd; font-size: 0.9rem; cursor: pointer;"></select>
     </div>
-    
-    <div class="section">
-        <h3>📊 Andamento Annuale</h3>
-        <div style="height: 300px; position: relative; width: 100%;">
-            <canvas id="graficoAnnuale"></canvas>
-        </div>
-    </div>
 
-    <div class="section table-container" style="margin-top: 20px;">
+          <div class="section">
+        <h3>📊 Analisi Spese Mese</h3>
+            <div style="height: 250px; position: relative;">
+                <canvas id="graficoTorta"></canvas>
+            </div>
+    
+        <div class="section table-container" style="margin-top: 20px;">
         <h3>📅 Dettaglio Mensile</h3>
         <table style="width: 100%; min-width: 800px;">
             <thead>
@@ -703,6 +712,13 @@
             <tbody id="bodyMatrice"></tbody>
         </table>
     </div>  
+<div class="section">
+        <h3>📊 Andamento Annuale</h3>
+        <div style="height: 300px; position: relative; width: 100%;">
+            <canvas id="graficoAnnuale"></canvas>
+        </div>
+    </div>
+
  </div> <div id="pagina-news" class="container" style="display: none; padding: 20px;">
     <h3>📰 News Finanziarie</h3>
    
@@ -1085,10 +1101,14 @@ let budgets = JSON.parse(localStorage.getItem("moneyTrack_budgets")) || {};
     else if (p === 'investimenti') {
         aggiornaInvestimenti();
     }
-    else if (p === 'analisi') {
-        setTimeout(generaReport, 50);
+   else if (p === 'analisi') {
+    setTimeout(() => {
+        generaReport();
+        if (graficoTorta) graficoTorta.resize();
     }
-    
+, 50);
+}
+ 
     // 5. Se la pagina è scadenze, mostra il calendario
     if (p === 'scadenze') {
         if (sezioneScadenze) {
@@ -2240,70 +2260,50 @@ function navigaMeseCalendario(direzione) {
 }
 
 function disegnaCalendario() {
-    const griglia = document.getElementById("cal-griglia");
-    const titolo = document.getElementById("cal-titolo-mese");
-    if (!griglia || !titolo) return;
+    const grid = document.getElementById("calendario-grid");
+    if (!grid) return;
+    grid.innerHTML = "";
 
-    griglia.innerHTML = "";
-    
-    const anno = dataCalCorrente.getFullYear();
-    const mese = dataCalCorrente.getMonth();
-    
-    // Imposta il titolo del mese corrente
-    titolo.innerText = `${dataCalCorrente.toLocaleString('it-IT', { month: 'long' })} ${anno}`;
-    
-    const primoGiornoMese = new Date(anno, mese, 1);
-    // Converte il giorno della settimana (0=Dom, 1=Lun...) al formato italiano (0=Lun, 6=Dom)
-    let giornoSettimanaInizio = primoGiornoMese.getDay() - 1;
-    if (giornoSettimanaInizio === -1) giornoSettimanaInizio = 6;
-    
-    const totaleGiorniMese = new Date(anno, mese + 1, 0).getDate();
     const oggi = new Date();
+    const anno = oggi.getFullYear();
+    const mese = oggi.getMonth();
 
-    // 1. Disegna i quadrati vuoti prima dell'inizio del mese
-    for (let i = 0; i < giornoSettimanaInizio; i++) {
-        const divVuoto = document.createElement("div");
-        divVuoto.className = "cal-giorno vuoto";
-        griglia.appendChild(divVuoto);
+    const primoGiorno = new Date(anno, mese, 1).getDay();
+    const giorniMese = new Date(anno, mese + 1, 0).getDate();
+    
+    // Allinea il calendario per iniziare di lunedì (opzionale)
+    let offset = primoGiorno === 0 ? 6 : primoGiorno - 1;
+
+    // Celle vuote prima dell'inizio del mese
+    for (let i = 0; i < offset; i++) {
+        grid.innerHTML += `<div class="cal-giorno vuoto"></div>`;
     }
 
-    // 2. Disegna i giorni del mese
-    for (let giorno = 1; giorno <= totaleGiorniMese; giorno++) {
-        const divGiorno = document.createElement("div");
-        divGiorno.className = "cal-giorno";
+    // Genera i giorni
+    for (let giorno = 1; giorno <= giorniMese; giorno++) {
+        let isOggi = (giorno === oggi.getDate()) ? "oggi" : "";
+        let dataStr = `${anno}-${String(mese + 1).padStart(2, '0')}-${String(giorno).padStart(2, '0')}`;
         
-        // Controlla se è oggi
-        if (giorno === oggi.getDate() && mese === oggi.getMonth() && anno === oggi.getFullYear()) {
-            divGiorno.classList.add("oggi");
-        }
+        let scadenzeHtml = "";
         
-        divGiorno.innerHTML = `<span class="cal-numero-giorno">${giorno}</span>`;
-        
-        // Costruisci la stringa data in formato YYYY-MM-DD per confrontarla con le tue scadenze
-        const meseStr = String(mese + 1).padStart(2, '0');
-        const giornoStr = String(giorno).padStart(2, '0');
-        const dataFormatoStringa = `${anno}-${meseStr}-${giornoStr}`;
-        
-        // Filtra le scadenze appartenenti a questo giorno
-        // (Usa il nome esatto del tuo array delle scadenze future, qui ipotizzato 'speseFuture')
-       if (typeof future !== 'undefined') {
-            future.forEach(s => {
-                if (s.data === dataFormatoStringa) {
-                    const badge = document.createElement("div");
-                    // Determina la classe in base al fatto se impatta il saldo o no
-                    const classeImpatto = s.impattaSaldo === false ? 'badge-neutro' : 'badge-impatta';
-                    badge.className = `cal-badge-scadenza ${classeImpatto}`;
-                    badge.title = `${s.cat}: ${s.nota || ''} (${s.imp}€)`;
-                    badge.innerText = `${s.imp > 0 ? s.imp.toFixed(0) + '€ ' : ''}${s.cat}`;
-                    divGiorno.appendChild(badge);
+        // Cerca se ci sono spese future in questa data
+        if (typeof future !== 'undefined') {
+            future.forEach(f => {
+                if (f.data === dataStr) {
+                    let classeBadge = f.impattaSaldo !== false ? "badge-impatta" : "badge-neutro";
+                    scadenzeHtml += `<div class="cal-badge-scadenza ${classeBadge}">${f.desc} (${f.imp}€)</div>`;
                 }
             });
         }
-        
-        griglia.appendChild(divGiorno);
+
+        grid.innerHTML += `
+            <div class="cal-giorno ${isOggi}">
+                <span class="cal-numero-giorno">${giorno}</span>
+                ${scadenzeHtml}
+            </div>
+        `;
     }
 }
-
 // ==========================================
 // 🔔 SISTEMA DI NOTIFICHE SCADENZE (GIORNO PRIMA)
 // ==========================================
