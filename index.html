@@ -651,7 +651,12 @@
     </label>
 </div>         
 <button class="btn-modern full-width btn-accent" id="btn-salva-futura" onclick="aggiungiSpesaFutura()">Inserisci Spesa Futura</button>
-            <div id="lista-future" style="margin-top: 15px;"></div>
+            <details style="margin-top: 15px; background: #fdfdfd; border: 1px solid var(--border); border-radius: 12px; padding: 10px;">
+    <summary style="cursor: pointer; font-weight: bold; color: #555; outline: none; user-select: none;">
+        📋 Mostra / Nascondi Lista Spese Future
+    </summary>
+    <div id="lista-future" style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #eee;"></div>
+</details>
         </div>
 
         <div class="section">
