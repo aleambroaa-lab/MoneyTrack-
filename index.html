@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://query1.finance.yahoo.com https://api.rss2json.com https://cdn.jsdelivr.net https://*.supabase.co; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: https://*; connect-src 'self' https://query1.finance.yahoo.com https://api.rss2json.com https://*.supabase.co wss://*.supabase.co;">
+   <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://query1.finance.yahoo.com https://api.rss2json.com https://cdn.jsdelivr.net https://*.supabase.co; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: https: http:; connect-src 'self' https://query1.finance.yahoo.com https://api.rss2json.com https://*.supabase.co wss://*.supabase.co;">
                 <link rel="manifest" href="manifest.json">
 <meta name="apple-mobile-web-app-capable" content="yes">
 
@@ -557,12 +557,15 @@
     <button class="btn-modern" onclick="alert('Presto disponibile!')">
         📊 INVESTIMENTI
     </button>
-    <button class="btn-modern" onclick="alert('Presto disponibile!')">
-        📰 NEWS
-    </button>
+
+   <button class="btn-modern" onclick="mostraPagina('news')">
+    📰 NEWS
+</button>
+
     <button class="btn-modern" onclick="mostraPagina('analisi')">
         🧠 ANALISI
     </button>
+
     <button class="btn-modern" onclick="mostraPagina('scadenze')">
         📅 SCADENZE
     </button>
@@ -665,6 +668,7 @@
             <input type="text" id="filtroRicerca" onkeyup="aggiornaApp()" placeholder="🔍 Cerca tra note o categorie...">
             <div id="lista-transazioni"></div>
         </div>
+
 <div class="budget-container">
     <h4 style="margin-top: 0; margin-bottom: 12px; color: #444; display: flex; align-items: center; gap: 6px;">🎯 Budget Mensili</h4>
     <div class="budget-row">
@@ -720,13 +724,13 @@
     </div>
 
  </div> <div id="pagina-news" class="container" style="display: none; padding: 20px;">
-    <h3>📰 News Finanziarie</h3>
+    <h3>📰 News Finanziarie</h3> 
    
     <div style="display: flex; gap: 8px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 10px;">
-        <button onclick="filtraNews('tutte')" style="background:var(--primary); color:white; border:none; padding:8px 15px; border-radius:20px; font-size:0.8rem; cursor:pointer; flex-shrink:0;">🌎 Tutte</button>
-        <button onclick="filtraNews('italia')" style="background:#eee; border:none; padding:8px 15px; border-radius:20px; font-size:0.8rem; cursor:pointer; flex-shrink:0;">🇮🇹 Italia</button>
-        <button onclick="filtraNews('mondo')" style="background:#eee; border:none; padding:8px 15px; border-radius:20px; font-size:0.8rem; cursor:pointer; flex-shrink:0;">🌐 Global</button>
-        <button onclick="filtraNews('tech')" style="background:#eee; border:none; padding:8px 15px; border-radius:20px; font-size:0.8rem; cursor:pointer; flex-shrink:0;">💻 Tech</button>
+        <button onclick="filtraNews('tutte', event)" style="background:var(--primary); color:white; border:none; padding:8px 15px; border-radius:20px; font-size:0.8rem; cursor:pointer; flex-shrink:0;">🌎 Tutte</button>
+<button onclick="filtraNews('italia', event)" style="background:#eee; border:none; padding:8px 15px; border-radius:20px; font-size:0.8rem; cursor:pointer; flex-shrink:0;">🇮🇹 Italia</button>
+<button onclick="filtraNews('mondo', event)" style="background:#eee; border:none; padding:8px 15px; border-radius:20px; font-size:0.8rem; cursor:pointer; flex-shrink:0;">🌐 Global</button>
+<button onclick="filtraNews('tech', event)" style="background:#eee; border:none; padding:8px 15px; border-radius:20px; font-size:0.8rem; cursor:pointer; flex-shrink:0;">💻 Tech</button>
     </div>
 
 <div id="loading-news" style="text-align: center; padding: 20px;">Caricamento notizie...</div>
@@ -1914,6 +1918,8 @@ function esportaDati() {
 
 const MY_FINANCE_API_KEY = "26XHJPF20BYLQZWP";
 let investimenti = JSON.parse(localStorage.getItem("moneyTrack_inv")) || [];
+let preferitiNews = JSON.parse(localStorage.getItem("moneyTrack_fav_news")) || [];
+
 
 async function cercaPrezzoAutomatico() {
     const nomeInput = document.getElementById("inv-nome").value.toUpperCase().trim();
@@ -2054,7 +2060,6 @@ function salvaInvestimenti() {
 async function caricaNews() {
     const container = document.getElementById("news-container");
     const loader = document.getElementById("loading-news");
-    const MIA_CHIAVE_RSS = "r3y5egzmzp1pfzikyhmsiwjwd2evzfq2lspug5az";
 
     const fonti = [
         { nome: "Il Sole 24 Ore", url: "https://www.ilsole24ore.com/rss/finanza.xml", colore: "#f37021", cat: "it" },
@@ -2067,14 +2072,18 @@ async function caricaNews() {
 
     loader.style.display = "block";
     container.innerHTML = "";
+    
+    let notizieTrovate = 0; // Traccia se almeno un'API va a buon fine
 
-    const promesse = fonti.map(async (fonte) => {
+    // Eseguiamo le chiamate in sequenza per aggirare il blocco anti-spam
+    for (const fonte of fonti) {
         try {
-            const API_URL = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(fonte.url)}&api_key=${MIA_CHIAVE_RSS}&t=${Date.now()}`;
+            const API_URL = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(fonte.url)}&t=${Date.now()}`;
             const response = await fetch(API_URL);
             const data = await response.json();
 
             if (data.status === 'ok' && data.items) {
+                notizieTrovate++;
                 data.items.slice(0, 8).forEach(item => {
                     let imgUrl = item.thumbnail || (item.enclosure && item.enclosure.link) || "";
                     if (!imgUrl) imgUrl = `https://via.placeholder.com/400x200/f8f9fa/cccccc?text=${fonte.nome}`;
@@ -2101,9 +2110,9 @@ async function caricaNews() {
                             </div>
                         </div>
                         <div class="news-content" style="padding: 12px;">
-                           <a href="${item.link}" target="_blank" rel="noopener noreferrer" class="block group">
-                                <h4 class="font-semibold text-sm text-gray-900 group-hover:text-blue-600 transition">${item.title}</h4>
-                                <p class="text-xs text-gray-400 mt-1">${new Date(item.pubDate).toLocaleDateString('it-IT')} - Apri notizia</p>
+                           <a href="${item.link}" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: inherit; display: block;">
+                                <h4 style="margin: 0 0 5px 0; font-size: 0.95rem; color: #333;">${item.title}</h4>
+                                <p style="margin: 0; font-size: 0.75rem; color: #888;">${new Date(item.pubDate).toLocaleDateString('it-IT')} - Apri notizia</p>
                             </a>
                         </div>`;
                    
@@ -2111,15 +2120,22 @@ async function caricaNews() {
                 });
             }
         } catch (error) {
-            console.warn("Errore:", fonte.nome);
+            console.warn("Errore fetch news:", fonte.nome);
         }
-    });
+        
+        // Pausa di 500ms tra una chiamata e l'altra per proteggere l'IP
+        await new Promise(resolve => setTimeout(resolve, 500));
+    }
 
-    await Promise.allSettled(promesse);
+    // Se l'API ha comunque bloccato tutto, mostriamo l'avviso
+    if (notizieTrovate === 0) {
+        container.innerHTML = `<div style="text-align: center; width: 100%; padding: 20px; color: var(--danger); font-weight: bold;">⚠️ Limite di richieste API raggiunto. Riprova tra un paio di minuti.</div>`;
+    }
+
     loader.style.display = "none";
 }
 
-function filtraNews(catScelta) {
+function filtraNews(catScelta, evt) {
     const cards = document.querySelectorAll('.news-card');
     const bottoni = document.querySelectorAll('#pagina-news button');
    
@@ -2128,9 +2144,9 @@ function filtraNews(catScelta) {
         btn.style.color = "#333";
     });
    
-    if (event) {
-        event.target.style.background = "var(--primary)";
-        event.target.style.color = "white";
+    if (evt && evt.target) {
+        evt.target.style.background = "var(--primary)";
+        evt.target.style.color = "white";
     }
 
     cards.forEach(card => {
@@ -2204,7 +2220,6 @@ function togglePreferito(event, safeItem) {
 window.onload = () => {
     investimenti = JSON.parse(localStorage.getItem("moneyTrack_inv")) || [];
 };
-let preferitiNews = JSON.parse(localStorage.getItem("moneyTrack_fav_news")) || [];
 
 function aggiornaTickerHome() {
     const ticker = document.getElementById("investimenti-ticker");
