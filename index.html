@@ -33,7 +33,7 @@
             background: white; padding: 20px 15px; border-bottom: 2px solid var(--border);
             position: sticky; top: 0; z-index: 100; height: 60px; box-sizing: border-box;
         }
-        .logo-box img { height: 40px; border-radius: 15px; cursor: pointer; }
+        .logo-box img { height: 60px; border-radius: 15px; cursor: pointer; }
         .nav-right { display: flex; align-items: center; }
         .nav-buttons button {
             background: white; border: none; color: #555; padding: 8px 14px;
@@ -616,6 +616,7 @@
             <button onclick="pressKey('2')">2</button>
             <button onclick="pressKey('3')">3</button>
             <button onclick="pressKey('0')">0</button>
+            <button onclick="pressKey(',')">,</button>
         </div>
     </div>
 </div>
@@ -1698,31 +1699,46 @@ function analizzaTestoEstratto(testo) {
 }
     // --- GRAFICI ---
     function disegnaTorta(dati, totale) {
-        const ctx = document.getElementById('graficoTorta').getContext('2d');
-        if(graficoTorta) graficoTorta.destroy();
-       
-        const colori = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40', '#32CD32', '#EA80FC'];
+    const ctx = document.getElementById('graficoTorta').getContext('2d');
+    if(graficoTorta) graficoTorta.destroy();
+   
+    const colori = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40', '#32CD32', '#EA80FC'];
+    
+    // Otteniamo il nome del mese attuale
+    const nomeMese = mesiEstesi[new Date().getMonth()];
 
-        graficoTorta = new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-                labels: Object.keys(dati),
-                datasets: [{ data: Object.values(dati), backgroundColor: colori, borderWidth: 2 }]
-            },
-            options: {
-                maintainAspectRatio: false, cutout: '70%',
-                plugins: { legend: { display: false } }
-            },
-            plugins: [{
-                afterDraw(chart) {
-                    const { ctx, width, height } = chart; ctx.save(); ctx.textAlign = 'center';
-                    ctx.font = '12px Segoe UI'; ctx.fillStyle = '#888'; ctx.fillText('Uscite Mese', width/2, height/2 - 10);
-                    ctx.font = 'bold 16px Segoe UI'; ctx.fillStyle = '#444'; ctx.fillText((privacy ? "***" : totale.toFixed(0))+"€", width/2, height/2 + 15);
-                    ctx.restore();
-                }
-            }]
-        });
-    }
+    graficoTorta = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: Object.keys(dati),
+            datasets: [{ data: Object.values(dati), backgroundColor: colori, borderWidth: 2 }]
+        },
+        options: {
+            maintainAspectRatio: false, 
+            cutout: '70%',
+            plugins: { legend: { display: false } }
+        },
+        plugins: [{
+            afterDraw(chart) {
+                const { ctx, width, height } = chart; 
+                ctx.save(); 
+                ctx.textAlign = 'center';
+                
+                // Scritta "Uscite [Nome Mese]"
+                ctx.font = '20px Segoe UI'; 
+                ctx.fillStyle = '#888'; 
+                ctx.fillText('Uscite ' + nomeMese, width/2, height/2 - 10);
+                
+                // Totale in Euro
+                ctx.font = 'bold 16px Segoe UI'; 
+                ctx.fillStyle = '#444'; 
+                ctx.fillText((privacy ? "***" : totale.toFixed(0)) + "€", width/2, height/2 + 15);
+                
+                ctx.restore();
+            }
+        }]
+    });
+}
 
 function initYearSelect() {
     const select = document.getElementById("anno-selezionato");
@@ -1770,6 +1786,7 @@ function aggiornaMatrice(anno) {
     const body = document.getElementById("bodyMatrice");
     if(!head || !body) return;
 
+    // Aggiungiamo l'intestazione
     head.innerHTML = "<th class='sticky-col'>Categoria</th>" + ["Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic"].map(m => `<th>${m}</th>`).join("") + "<th>Totale</th>";
    
     body.innerHTML = "";
@@ -1779,6 +1796,10 @@ function aggiornaMatrice(anno) {
         body.innerHTML = "<tr><td colspan='14' style='text-align:center'>Nessun dato per l'anno selezionato</td></tr>";
         return;
     }
+
+    // Array per sommare i totali mensili di tutte le categorie
+    let totaliMensili = new Array(12).fill(0);
+    let totaleGeneraleAnnuale = 0;
 
     categorieUniche.forEach(cat => {
         let r = `<tr><td class='sticky-col'>${cat}</td>`;
@@ -1792,14 +1813,24 @@ function aggiornaMatrice(anno) {
             ).reduce((a,b) => a + (b.tipo === 'Entrata' ? b.imp : -b.imp), 0);
             
             totaleRiga += v;
+            totaliMensili[i] += v; // Aggiorna il totale del mese
             r += `<td>${v !== 0 ? v.toFixed(0) + '€' : '-'}</td>`;
         }
         
+        totaleGeneraleAnnuale += totaleRiga;
         r += `<td style="font-weight:bold">${totaleRiga !== 0 ? totaleRiga.toFixed(0) + '€' : '-'}</td></tr>`;
         body.innerHTML += r;
     });
-}
 
+    // Aggiungiamo la riga dei TOTALI in fondo
+    let rigaTotali = `<tr style="border-top: 2px solid #333; font-weight: bold; background: #f9f9f9;"><td>TOTALE</td>`;
+    totaliMensili.forEach(totMese => {
+        rigaTotali += `<td>${totMese !== 0 ? totMese.toFixed(0) + '€' : '-'}</td>`;
+    });
+    rigaTotali += `<td>${totaleGeneraleAnnuale.toFixed(0)}€</td></tr>`;
+    
+    body.innerHTML += rigaTotali;
+}
     // --- UTILS ---
     function togglePrivacy() { privacy = !privacy; aggiornaApp(); }
     
@@ -2174,28 +2205,36 @@ function chiudiCalcolatrice() {
 }
 
 function pressKey(valore) {
-    document.getElementById('calc-screen').value += valore;
+    const screen = document.getElementById('calc-screen');
+    // Se l'utente preme la virgola, inseriamo un punto (necessario per JavaScript)
+    if (valore === ',') {
+        screen.value += '.';
+    } else {
+        screen.value += valore;
+    }
 }
-
 function clearScreen() {
     document.getElementById('calc-screen').value = '';
 }
 
 function calculate() {
-    const espressione = document.getElementById('calc-screen').value;
+    const screen = document.getElementById('calc-screen');
+    const espressione = screen.value;
+    
     try {
         if (espressione) {
-            const risultato = eval(espressione);
-            document.getElementById('calc-screen').value = risultato;
+            // Esegue il calcolo
+            let risultato = eval(espressione);
             
-            document.getElementById('importo').value = risultato;
-            
-            setTimeout(chiudiCalcolatrice, 500);
+            // Sostituisce il punto con la virgola per la visualizzazione finale
+            // .toString().replace('.', ',') serve a trasformare il numero in stringa formattata
+            screen.value = risultato.toString().replace('.', ',');
         }
     } catch (error) {
-        document.getElementById('calc-screen').value = 'Errore';
+        screen.value = 'Errore';
     }
 }
+
 function togglePreferito(event, safeItem) {
     event.stopPropagation();
    
