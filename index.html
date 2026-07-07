@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; https://query1.finance.yahoo.com https://api.rss2json.com https://cdn.jsdelivr.net https://*.supabase.co; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: https: http:; connect-src 'self' https://query1.finance.yahoo.com https://api.rss2json.com https://*.supabase.co wss://*.supabase.co;">
                 <link rel="manifest" href="manifest.json">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -23,7 +23,7 @@
             --success: #28a745; --danger: #dc3545; --border: #eeeeee;
         }
 
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg); margin: 0; padding: 0; color: #333; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg); margin: 0; padding: 0; color: #333; overscroll-behavior-y: none;}
 
         /* HEADER & NAVIGATION */
        
@@ -859,10 +859,12 @@ async function gestisciLoginOSincronizzazione(user) {
         // Caso A: L'utente si è loggato ma sul cloud non c'è nulla -> È LA PRIMA MIGRAZIONE AUTOMATICA!
         if (localeHaDati) {
             console.log("Rilevati dati locali. Avvio migrazione su Cloud...");
-            syncDatiSuSupabase();
+            await syncDatiSuSupabaseImmediato(); // <-- Usa la funzione immediata con await
             alert("🎉 MIGRAZIONE COMPLETATA!\n\nI dati presenti su questo dispositivo sono stati salvati al sicuro sul tuo nuovo spazio Cloud.");
         }
-    } else if (data && data.payload) {
+    }
+
+ else if (data && data.payload) {
         // Caso B: Ci sono dati sul Cloud
         if (localeHaDati) {
             // 🟢 NUOVO CONTROLLO: Generiamo il payload locale per fare un confronto speculare
@@ -888,7 +890,7 @@ if (!conflittoCloudRisolto) {
     if (confirm("Abbiamo trovato un salvataggio Cloud per questo account.\n\nVuoi CARICARE i dati dal Cloud sostituendo quelli di questo dispositivo?\n\n[OK] Carica dal Cloud\n[Annulla] Mantieni i dati del telefono e sovrascrivi il Cloud")) {
         applicaDatiCloud(data.payload);
     } else {
-        syncDatiSuSupabase();
+       await syncDatiSuSupabaseImmediato();
     }
     // Salva la scelta: non mostrare MAI PIÙ questo popup su questo dispositivo
     localStorage.setItem('conflitto_cloud_risolto', 'true');
@@ -902,6 +904,27 @@ if (!conflittoCloudRisolto) {
             // Il dispositivo è vuoto (es. nuovo dispositivo o nuova installazione): scarica tutto dal Cloud
             applicaDatiCloud(data.payload);
         }
+    }
+}
+
+async function syncDatiSuSupabaseImmediato() {
+    if (!currentUser) return;
+    try {
+        const payload = {
+            spese: safeGetJSON("moneyTrack_db") || [],
+            future: safeGetJSON("moneyTrack_future") || [],
+            customCats: safeGetJSON("moneyTrack_cats") || {},
+            budgets: safeGetJSON("moneyTrack_budgets") || {},
+            preferitiNews: safeGetJSON("moneyTrack_fav_news") || []
+        };
+        await _supabase.from('userdata').upsert({
+            id: currentUser.id,
+            payload: payload,
+            updated_at: new Date().toISOString()
+        });
+        console.log("☁️ Cloud Sync immediato completato!");
+    } catch (e) {
+        console.error("❌ Errore durante il Cloud Sync immediato:", e);
     }
 }
 
@@ -1264,7 +1287,7 @@ function aggiornaBudgetProgress(catsUscita) {
         const l = document.getElementById("lista-transazioni");
         const box = document.getElementById("boxSaldo");
         const query = document.getElementById("filtroRicerca").value.toLowerCase();
-       
+        
         l.innerHTML = "";
         let saldo = 0, catsUscita = {}, totUsciteMese = 0;
         const oggi = new Date();
@@ -1905,8 +1928,6 @@ function esportaDati() {
 
 const MY_FINANCE_API_KEY = "26XHJPF20BYLQZWP";
 let preferitiNews = JSON.parse(localStorage.getItem("moneyTrack_fav_news")) || [];
-
-
 
 async function caricaNews() {
     const container = document.getElementById("news-container");
