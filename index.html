@@ -557,11 +557,12 @@
         <div class="nav-right">
                         <div class="menu-container">
                 <div class="menu-dots" onclick="toggleMenu()">⋮</div>
-                <div id="myDropdown" class="dropdown-content">
-                    <a onclick="loginbtn()" >Login</a>
-                    <a onclick="esportaDati()">💾 Backup (Esporta)</a>
-                    <a onclick="document.getElementById('fileInput').click()">📂 Ripristina (Importa)</a>
-                </div>
+                <div class="mydropdown" id="dropdownContent">
+    <a href="#" onclick="esportaDati()">⬇️ Esporta Dati (Backup)</a>
+    <a href="#" onclick="mostraModalRipristinoTesto()">🔄 Ripristina Dati (Testo)</a> 
+    <hr style="border: 0; border-top: 1px solid #eee; margin: 5px 0;">
+    <a href="#" onclick="mostraModalLogout()" style="color: #e74c3c;">🚪 Logout</a>
+</div>
             </div>
         </div>
     </div>
@@ -771,6 +772,21 @@
 
 
 <script>
+
+<div id="modalRipristinoTesto" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 9999; justify-content: center; align-items: center; padding: 15px; box-sizing: border-box;">
+    <div style="background: var(--bg, #ffffff); padding: 20px; border-radius: 12px; width: 100%; max-width: 400px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); color: #333;">
+        <h3 style="margin-top: 0;">🔄 Ripristina Dati da Testo</h3>
+        <p style="font-size: 0.9rem; color: #666; margin-bottom: 15px;">
+            Incolla qui sotto il testo di backup che hai esportato precedentemente.
+        </p>
+        <textarea id="textareaRipristino" rows="8" style="width: 100%; border: 1px solid #ccc; border-radius: 8px; padding: 10px; font-family: monospace; font-size: 0.85rem; box-sizing: border-box; resize: vertical;" placeholder='Incolla qui il codice di backup (inizia con {"spese":...)...'></textarea>
+        <div style="display: flex; gap: 10px; margin-top: 15px; justify-content: flex-end;">
+            <button onclick="chiudiModalRipristinoTesto()" style="background: #ccc; color: #333; border: none; padding: 10px 15px; border-radius: 8px; cursor: pointer; font-weight: bold;">Annulla</button>
+            <button onclick="elaboraRipristinoTesto()" style="background: #3498db; color: white; border: none; padding: 10px 15px; border-radius: 8px; cursor: pointer; font-weight: bold;">Avvia Ripristino</button>
+        </div>
+    </div>
+</div>
+
  
 // ==========================================
 // ☁️ CONFIGURAZIONE E INTEGRAZIONE SUPABASE
@@ -1156,16 +1172,22 @@ let budgets = JSON.parse(localStorage.getItem("moneyTrack_budgets")) || {};
         }
     }
 
-    function eliminarCategoria() {
-        const t = document.getElementById("tipo").value;
-        const sel = document.getElementById("categoria").value;
-        if(confirm(`Eliminare "${sel}"?`)) {
-            customCats[t] = customCats[t].filter(c => c !== sel);
-            if(customCats[t].length === 0) customCats[t] = ["Generica"];
-            saveCats();
-            aggiornaCategorie();
-        }
+    
+function eliminaCategoria() {
+    const t = document.getElementById("tipo").value;
+    const sel = document.getElementById("categoria").value;
+    
+    if (!sel) return;
+
+    if(confirm(`Sei sicuro di voler rimuovere la categoria "${sel}" dalla lista?\n\nI vecchi movimenti registrati con questa categoria NON verranno eliminati per non sballare il saldo.`)) {
+        customCats[t] = customCats[t].filter(c => c !== sel);
+        if(customCats[t].length === 0) customCats[t] = ["Generica"];
+        saveCats();
+        aggiornaCategorie();
     }
+}   
+
+
 function modificaCategoria() {
     const t = document.getElementById("tipo").value;
     const select = document.getElementById('categoria');
@@ -1206,19 +1228,6 @@ function modificaCategoria() {
     }
 }
 
-function eliminaCategoria() {
-    const t = document.getElementById("tipo").value;
-    const sel = document.getElementById("categoria").value;
-    
-    if (!sel) return;
-
-    if(confirm(`Sei sicuro di voler rimuovere la categoria "${sel}" dalla lista?\n\nI vecchi movimenti registrati con questa categoria NON verranno eliminati per non sballare il saldo.`)) {
-        customCats[t] = customCats[t].filter(c => c !== sel);
-        if(customCats[t].length === 0) customCats[t] = ["Generica"];
-        saveCats();
-        aggiornaCategorie();
-    }
-}   
 function inizializzaSelectBudget() {
     const select = document.getElementById("budget-categoria");
     if (select) {
@@ -1924,6 +1933,75 @@ function esportaDati() {
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js');
   }
+
+function mostraModalRipristinoTesto() {
+    // 1. Chiude il menu a tendina in modo sicuro (solo se lo trova)
+    const menu = document.getElementById('dropdownContent');
+    if (menu) {
+        menu.classList.remove('show');
+    }
+    
+    // 2. Pulisce la casella di testo
+    const textArea = document.getElementById('textareaRipristino');
+    if (textArea) {
+        textArea.value = ''; 
+    }
+    
+    // 3. Mostra il modale forzando il display a 'flex' per centrarlo
+    const modale = document.getElementById('modalRipristinoTesto');
+    if (modale) {
+        modale.style.display = 'flex';
+    } else {
+        alert("Errore: Impossibile trovare il modale nell'HTML. Verifica di aver incollato il blocco HTML.");
+    }
+}
+function chiudiModalRipristinoTesto() {
+    document.getElementById('modalRipristinoTesto').style.display = 'none';
+}
+
+async function elaboraRipristinoTesto() {
+    const testoInput = document.getElementById('textareaRipristino').value.trim();
+    
+    if (!testoInput) {
+        alert("⚠️ Per favore, incolla del testo prima di procedere.");
+        return;
+    }
+
+    try {
+        // Tenta di decodificare il testo incollato
+        const backupData = JSON.parse(testoInput);
+        
+        // Controllo validità minimo della struttura
+        if (!backupData.spese && !backupData.future && !backupData.customCats) {
+            alert("❌ Il testo inserito non sembra essere un backup valido di questa applicazione.");
+            return;
+        }
+
+        if (confirm("⚠️ Attenzione!\n\nIl ripristino sovrascriverà tutti i dati attualmente presenti sul dispositivo. Vuoi procedere?")) {
+            
+            // Ripristina i singoli pezzi nel LocalStorage
+            if (backupData.spese) localStorage.setItem('moneyTrack_db', JSON.stringify(backupData.spese));
+            if (backupData.future) localStorage.setItem('moneyTrack_future', JSON.stringify(backupData.future));
+            if (backupData.customCats) localStorage.setItem('moneyTrack_cats', JSON.stringify(backupData.customCats));
+            if (backupData.budgets) localStorage.setItem('moneyTrack_budgets', JSON.stringify(backupData.budgets));
+            if (backupData.preferitiNews) localStorage.setItem('moneyTrack_fav_news', JSON.stringify(backupData.preferitiNews));
+
+            chiudiModalRipristinoTesto();
+            
+            // Se l'utente è loggato, lancia il sync automatico su Supabase
+            if (currentUser) {
+                alert("🔄 Dati ripristinati localmente! Ora avvio la sincronizzazione con il Cloud...");
+                await syncDatiSuSupabaseImmediato();
+            }
+            
+            alert("🎉 Ripristino completato con successo! L'applicazione verrà ricaricata.");
+            window.location.reload();
+        }
+    } catch (e) {
+        console.error(e);
+        alert("❌ Errore nel formato del testo. Assicurati di aver copiato l'intero codice di backup senza modificarlo.");
+    }
+}
   
 
 const MY_FINANCE_API_KEY = "26XHJPF20BYLQZWP";
