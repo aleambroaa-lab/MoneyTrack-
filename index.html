@@ -2,6 +2,7 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; https://query1.finance.yahoo.com https://api.rss2json.com https://cdn.jsdelivr.net https://*.supabase.co; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: https: http:; connect-src 'self' https://query1.finance.yahoo.com https://api.rss2json.com https://*.supabase.co wss://*.supabase.co;">
                 <link rel="manifest" href="manifest.json">
@@ -23,10 +24,11 @@
             --success: #28a745; --danger: #dc3545; --border: #eeeeee;
         }
 
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg); margin: 0; padding: 0; color: #333; }
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg); margin: 0; padding: 0; color: #333; overscroll-behavior-y: none;}
 
         /* HEADER & NAVIGATION */
-       
+
         nav {
             display: flex; justify-content: space-between; align-items: center;
             background: white; padding: 20px 15px; border-bottom: 2px solid var(--border);
@@ -51,7 +53,7 @@
         .dropdown-content a { color: #444; padding: 10px 15px; text-decoration: none; display: block; font-size: 0.9rem; cursor: pointer; }
         .dropdown-content a:hover { background-color: #f8f9fa; color: var(--success); }
         .show { display: block !important; }
-       
+
 
 
         /* MAIN LAYOUT */
@@ -557,12 +559,11 @@
         <div class="nav-right">
                         <div class="menu-container">
                 <div class="menu-dots" onclick="toggleMenu()">⋮</div>
-                <div class="mydropdown" id="dropdownContent">
-    <a href="#" onclick="esportaDati()">⬇️ Esporta Dati (Backup)</a>
-    <a href="#" onclick="mostraModalRipristinoTesto()">🔄 Ripristina Dati (Testo)</a> 
-    <hr style="border: 0; border-top: 1px solid #eee; margin: 5px 0;">
-    <a href="#" onclick="mostraModalLogout()" style="color: #e74c3c;">🚪 Logout</a>
-</div>
+                <div id="myDropdown" class="dropdown-content">
+                    <a onclick="loginbtn()" >Login</a>
+                    <a onclick="esportaDati()">💾 Backup (Esporta)</a>
+                    <a onclick="document.getElementById('fileInput').click()">📂 Ripristina (Importa)</a>
+                </div>
             </div>
         </div>
     </div>
@@ -572,9 +573,9 @@
         <div><small>DISPONIBILITÀ ATTUALE</small><h1 id="saldo-cifra">0.00 €</h1></div>
         <button onclick="togglePrivacy()" style="background:rgba(0,0,0,0.1); border:none; color:white; width:44px; height:44px; border-radius:50%; cursor:pointer; font-size: 1.2rem;">👁️</button>
     </div>
- 
+
 <div class="nav-buttons-container">
-  
+
    <button class="btn-modern" onclick="mostraPagina('news')">
     📰 NEWS
 </button>
@@ -591,14 +592,14 @@
  <div id="previsione-fine-mese" class="info-previsione"></div>
  <!-- NUOVA CASELLA DEL COACH FINANZIARIO -->
  <div id="insights-finanziari" class="info-previsione" style="background: #edf4fe; border-left: 4px solid #36a2eb; margin-top: -5px; color: #2b4c7e;"></div>
-     
+
     <div class="desktop-grid">
         <div class="section section-divider">
-            
+
             <div style="display: flex; flex-direction: column; align-items: flex-start; margin-bottom: 20px; width: 100%; gap: 15px;">
-   
+
     <h3 id="form-label" style="margin: 0; white-space: nowrap; flex-shrink: 0;">✍️ Nuova Operazione</h3>
-   
+
 <div style="display: flex; gap: 8px; align-items: center; width: 100%;" class="cat-row">
     <button class="small-btn" onclick="apriCalcolatrice()" title="Calcolatrice">🧮<span style="font-size: 0.8rem; font-weight: bold;">CAL</span></button>
     <button type="button" onclick="document.getElementById('pdfInput').click()" style="background: #f4f4f4; border: none; border-radius: 12px; padding: 0 15px; cursor: pointer; height: 46px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); display: flex; align-items: center; gap: 6px; font-weight: 600; color: #444; transition: all 0.25s ease;">
@@ -640,7 +641,7 @@
                 <option value="Entrata">📈 Entrata</option>
             </select>
             <input type="date" id="data">
-           
+
             <div class="cat-row">
     <select id="categoria">
         <option>Opzione 1</option>
@@ -676,7 +677,7 @@
         </div>
 
         <div class="section">
-                 
+
            <h3 style="margin-top: 30px;">🕒 Storico</h3>
             <input type="text" id="filtroRicerca" onkeyup="aggiornaApp()" placeholder="🔍 Cerca tra note o categorie...">
             <div id="lista-transazioni"></div>
@@ -704,16 +705,16 @@
 
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; background: #f5f5f5; padding: 10px; border-radius: 8px;">
         <button onclick="navigaMeseCalendario(-1)" class="btn-sm" style="padding: 8px 12px; border-radius: 8px; border: 1px solid #ccc; background: white; cursor: pointer; font-weight: bold;">◀ Mese Prec.</button>
-        
+
         <h3 id="cal-titolo-mese" style="margin: 0; font-size: 1.2rem; font-weight: bold; text-transform: capitalize; color: #333;"></h3>
-        
+
         <button onclick="navigaMeseCalendario(1)" class="btn-sm" style="padding: 8px 12px; border-radius: 8px; border: 1px solid #ccc; background: white; cursor: pointer; font-weight: bold;">Mese Succ. ▶</button>
     </div>
-    
+
     <div style="display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-weight: bold; font-size: 0.8rem; margin-bottom: 5px; opacity: 0.7;">
         <div>Lun</div><div>Mar</div><div>Mer</div><div>Gio</div><div>Ven</div><div>Sab</div><div>Dom</div>
     </div>
-    
+
     <div id="calendario-grid" class="grid-calendario"></div>
 </div>    
 
@@ -728,7 +729,7 @@
             <div style="height: 250px; position: relative;">
                 <canvas id="graficoTorta"></canvas>
             </div>
-    
+
         <div class="section table-container" style="margin-top: 20px;">
         <h3>📅 Dettaglio Mensile</h3>
         <table style="width: 100%; min-width: 800px;">
@@ -747,7 +748,7 @@
 
  </div> <div id="pagina-news" class="container" style="display: none; padding: 20px;">
     <h3>📰 News Finanziarie</h3> 
-   
+
     <div style="display: flex; gap: 8px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 10px;">
         <button onclick="filtraNews('tutte', event)" style="background:var(--primary); color:white; border:none; padding:8px 15px; border-radius:20px; font-size:0.8rem; cursor:pointer; flex-shrink:0;">🌎 Tutte</button>
 <button onclick="filtraNews('italia', event)" style="background:#eee; border:none; padding:8px 15px; border-radius:20px; font-size:0.8rem; cursor:pointer; flex-shrink:0;">🇮🇹 Italia</button>
@@ -773,21 +774,6 @@
 
 <script>
 
-<div id="modalRipristinoTesto" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 9999; justify-content: center; align-items: center; padding: 15px; box-sizing: border-box;">
-    <div style="background: var(--bg, #ffffff); padding: 20px; border-radius: 12px; width: 100%; max-width: 400px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); color: #333;">
-        <h3 style="margin-top: 0;">🔄 Ripristina Dati da Testo</h3>
-        <p style="font-size: 0.9rem; color: #666; margin-bottom: 15px;">
-            Incolla qui sotto il testo di backup che hai esportato precedentemente.
-        </p>
-        <textarea id="textareaRipristino" rows="8" style="width: 100%; border: 1px solid #ccc; border-radius: 8px; padding: 10px; font-family: monospace; font-size: 0.85rem; box-sizing: border-box; resize: vertical;" placeholder='Incolla qui il codice di backup (inizia con {"spese":...)...'></textarea>
-        <div style="display: flex; gap: 10px; margin-top: 15px; justify-content: flex-end;">
-            <button onclick="chiudiModalRipristinoTesto()" style="background: #ccc; color: #333; border: none; padding: 10px 15px; border-radius: 8px; cursor: pointer; font-weight: bold;">Annulla</button>
-            <button onclick="elaboraRipristinoTesto()" style="background: #3498db; color: white; border: none; padding: 10px 15px; border-radius: 8px; cursor: pointer; font-weight: bold;">Avvia Ripristino</button>
-        </div>
-    </div>
-</div>
-
- 
 // ==========================================
 // ☁️ CONFIGURAZIONE E INTEGRAZIONE SUPABASE
 // ==========================================
@@ -805,7 +791,7 @@ function safeGetJSON(key) {
 const originalSetItem = localStorage.setItem;
 localStorage.setItem = function(key, value) {
     originalSetItem.apply(localStorage, arguments);
-    
+
     if (key.startsWith("moneyTrack_") && currentUser) {
         syncDatiSuSupabase();
     }
@@ -875,9 +861,11 @@ async function gestisciLoginOSincronizzazione(user) {
         // Caso A: L'utente si è loggato ma sul cloud non c'è nulla -> È LA PRIMA MIGRAZIONE AUTOMATICA!
         if (localeHaDati) {
             console.log("Rilevati dati locali. Avvio migrazione su Cloud...");
+            syncDatiSuSupabase();
             await syncDatiSuSupabaseImmediato(); // <-- Usa la funzione immediata con await
             alert("🎉 MIGRAZIONE COMPLETATA!\n\nI dati presenti su questo dispositivo sono stati salvati al sicuro sul tuo nuovo spazio Cloud.");
         }
+    } else if (data && data.payload) {
     }
 
  else if (data && data.payload) {
@@ -897,7 +885,7 @@ async function gestisciLoginOSincronizzazione(user) {
                 console.log("☁️ Dati locali e Cloud già allineati. Nessun popup mostrato.");
                 applicaDatiCloud(data.payload); // Carica semplicemente in memoria i dati
             } else {
-               
+
  // Controlla se l'utente ha già risposto a questa domanda in passato
 const conflittoCloudRisolto = localStorage.getItem('conflitto_cloud_risolto');
 
@@ -906,6 +894,7 @@ if (!conflittoCloudRisolto) {
     if (confirm("Abbiamo trovato un salvataggio Cloud per questo account.\n\nVuoi CARICARE i dati dal Cloud sostituendo quelli di questo dispositivo?\n\n[OK] Carica dal Cloud\n[Annulla] Mantieni i dati del telefono e sovrascrivi il Cloud")) {
         applicaDatiCloud(data.payload);
     } else {
+        syncDatiSuSupabase();
        await syncDatiSuSupabaseImmediato();
     }
     // Salva la scelta: non mostrare MAI PIÙ questo popup su questo dispositivo
@@ -946,7 +935,7 @@ async function syncDatiSuSupabaseImmediato() {
 
 function applicaDatiCloud(payload) {
     if (!payload) return;
-    
+
     if (payload.spese) spese = payload.spese;
     if (payload.future) future = payload.future;
     if (payload.customCats) customCats = payload.customCats;
@@ -1105,7 +1094,7 @@ let budgets = JSON.parse(localStorage.getItem("moneyTrack_budgets")) || {};
 
   function mostraPagina(p) {
     const pagine = ["pagina-home", "pagina-analisi", "pagina-news"];
-    
+
     // 1. Nascondi tutte le pagine principali
     pagine.forEach(id => {
         const elemento = document.getElementById(id);
@@ -1131,7 +1120,7 @@ let budgets = JSON.parse(localStorage.getItem("moneyTrack_budgets")) || {};
     else if (p === 'news') {
         caricaNews();
     }
-    
+
    else if (p === 'analisi') {
     setTimeout(() => {
         generaReport();
@@ -1139,7 +1128,7 @@ let budgets = JSON.parse(localStorage.getItem("moneyTrack_budgets")) || {};
     }
 , 50);
 }
- 
+
     // 5. Se la pagina è scadenze, mostra il calendario
     if (p === 'scadenze') {
         if (sezioneScadenze) {
@@ -1149,7 +1138,7 @@ let budgets = JSON.parse(localStorage.getItem("moneyTrack_budgets")) || {};
             disegnaCalendario(); 
         }
     }
-   
+
     window.scrollTo(0,0);
 }
 
@@ -1172,22 +1161,16 @@ let budgets = JSON.parse(localStorage.getItem("moneyTrack_budgets")) || {};
         }
     }
 
-    
-function eliminaCategoria() {
-    const t = document.getElementById("tipo").value;
-    const sel = document.getElementById("categoria").value;
-    
-    if (!sel) return;
-
-    if(confirm(`Sei sicuro di voler rimuovere la categoria "${sel}" dalla lista?\n\nI vecchi movimenti registrati con questa categoria NON verranno eliminati per non sballare il saldo.`)) {
-        customCats[t] = customCats[t].filter(c => c !== sel);
-        if(customCats[t].length === 0) customCats[t] = ["Generica"];
-        saveCats();
-        aggiornaCategorie();
+    function eliminarCategoria() {
+        const t = document.getElementById("tipo").value;
+        const sel = document.getElementById("categoria").value;
+        if(confirm(`Eliminare "${sel}"?`)) {
+            customCats[t] = customCats[t].filter(c => c !== sel);
+            if(customCats[t].length === 0) customCats[t] = ["Generica"];
+            saveCats();
+            aggiornaCategorie();
+        }
     }
-}   
-
-
 function modificaCategoria() {
     const t = document.getElementById("tipo").value;
     const select = document.getElementById('categoria');
@@ -1203,7 +1186,7 @@ function modificaCategoria() {
 
     if (nuovoNome !== null && nuovoNome.trim() !== "" && nuovoNome !== vecchioNome) {
         const nuovo = nuovoNome.trim();
-        
+
         const index = customCats[t].indexOf(vecchioNome);
         if (index !== -1) {
             customCats[t][index] = nuovo;
@@ -1228,6 +1211,19 @@ function modificaCategoria() {
     }
 }
 
+function eliminaCategoria() {
+    const t = document.getElementById("tipo").value;
+    const sel = document.getElementById("categoria").value;
+
+    if (!sel) return;
+
+    if(confirm(`Sei sicuro di voler rimuovere la categoria "${sel}" dalla lista?\n\nI vecchi movimenti registrati con questa categoria NON verranno eliminati per non sballare il saldo.`)) {
+        customCats[t] = customCats[t].filter(c => c !== sel);
+        if(customCats[t].length === 0) customCats[t] = ["Generica"];
+        saveCats();
+        aggiornaCategorie();
+    }
+}   
 function inizializzaSelectBudget() {
     const select = document.getElementById("budget-categoria");
     if (select) {
@@ -1239,7 +1235,7 @@ function impostaBudget() {
     const cat = document.getElementById("budget-categoria").value;
     const imp = parseFloat(document.getElementById("budget-importo").value);
     if (!cat || isNaN(imp) || imp <= 0) return alert("Inserisci un importo valido!");
-    
+
     budgets[cat] = imp;
     localStorage.setItem("moneyTrack_budgets", JSON.stringify(budgets));
     document.getElementById("budget-importo").value = "";
@@ -1271,7 +1267,7 @@ function aggiornaBudgetProgress(catsUscita) {
         const speso = catsUscita[cat] || 0;
         let percentuale = (speso / limite) * 100;
         const superato = speso > limite;
-        
+
         const larghezzaBarra = percentuale > 100 ? 100 : percentuale;
 
         container.innerHTML += `
@@ -1296,6 +1292,7 @@ function aggiornaBudgetProgress(catsUscita) {
         const l = document.getElementById("lista-transazioni");
         const box = document.getElementById("boxSaldo");
         const query = document.getElementById("filtroRicerca").value.toLowerCase();
+       
         
         l.innerHTML = "";
         let saldo = 0, catsUscita = {}, totUsciteMese = 0;
@@ -1316,7 +1313,7 @@ function aggiornaBudgetProgress(catsUscita) {
 
         // 2. Mappiamo le spese per salvare l'ID originale (fondamentale per modifica/elimina) e filtriamo
         let speseOrdinate = spese.map((s, index) => ({ ...s, indexOrig: index }));
-        
+
         if (query) {
             speseOrdinate = speseOrdinate.filter(s => s.nota.toLowerCase().includes(query) || s.cat.toLowerCase().includes(query));
         }
@@ -1330,9 +1327,9 @@ function aggiornaBudgetProgress(catsUscita) {
         speseOrdinate.forEach(s => {
             const dataS = new Date(s.data);
             const chiaveMese = `${mesiEstesi[dataS.getMonth()]} ${dataS.getFullYear()}`;
-            
+
             if (!mappaGruppi.has(chiaveMese)) mappaGruppi.set(chiaveMese, []);
-            
+
             mappaGruppi.get(chiaveMese).push(`
                 <tr>
                     <td><small>${s.data}</small><br><strong>${s.cat}</strong><br><small>${s.nota || ''}</small></td>
@@ -1347,16 +1344,16 @@ function aggiornaBudgetProgress(catsUscita) {
         // 5. Generiamo l'interfaccia grafica
         document.getElementById("saldo-cifra").innerText = privacy ? "*** €" : saldo.toFixed(2) + " €";
         box.style.backgroundColor = saldo >= 0 ? "var(--success)" : "var(--danger)";
-       
+
         mappaGruppi.forEach((righeHtml, meseStr) => {
             const div = document.createElement('div');
             div.className = 'mese-container';
-            
+
             // Apriamo di default solo il mese/anno corrente
             if (meseStr.includes(mesiEstesi[oggi.getMonth()]) && meseStr.includes(oggi.getFullYear().toString())) {
                 div.classList.add('attivo');
             }
-            
+
             div.innerHTML = `
                 <div class="mese-header" onclick="this.parentElement.classList.toggle('attivo')">
                     <span>📅 ${meseStr}</span>
@@ -1458,7 +1455,7 @@ function aggiornaBudgetProgress(catsUscita) {
             msg += "Ottimo inizio mese! Non hai ancora registrato spese. Mantieni questo controllo! 🎯";
         } else {
             msg += `Questo mese la tua spesa maggiore è in <b>${maxCat}</b> con un totale di <b>${maxImp.toFixed(2)}€</b>. `;
-            
+
             if (maxCat.includes("Cibo") || maxCat.includes("Spesa") || maxCat.includes("🍕") || maxCat.includes("🛒")) {
                 msg += "Pianificare i pasti settimanali e fare la spesa a stomaco pieno riduce gli sprechi del 20%! 🛒";
             } else if (maxCat.includes("Auto") || maxCat.includes("🚗")) {
@@ -1484,7 +1481,7 @@ function aggiornaBudgetProgress(catsUscita) {
         div.innerHTML = msg;
     }
 
-    
+
 
     function aggiungiOperazione() {
         const d = document.getElementById("data").value, i = parseFloat(document.getElementById("importo").value);
@@ -1524,12 +1521,12 @@ function aggiornaBudgetProgress(catsUscita) {
 
     function aggiungiSpesaFutura() {
         const d = document.getElementById("data-futura").value, desc = document.getElementById("desc-futura").value, i = parseFloat(document.getElementById("imp-futura").value);
-        
+
         // Legge lo stato della casella di spunta
         const impatta = document.getElementById("impatta-saldo-futura") ? document.getElementById("impatta-saldo-futura").checked : true;
 
         if(!d || !desc || isNaN(i)) return alert("Compila tutti i campi!");
-        
+
         if (editFutureIdx === -1) {
             future.push({data: d, desc: desc, imp: i, impattaSaldo: impatta});
         } else {
@@ -1537,13 +1534,13 @@ function aggiornaBudgetProgress(catsUscita) {
             editFutureIdx = -1;
             document.getElementById("btn-salva-futura").innerText = "Inserisci Spesa Futura";
         }
-        
+
         localStorage.setItem("moneyTrack_future", JSON.stringify(future));
         document.getElementById("data-futura").value = "";
         document.getElementById("desc-futura").value = "";
         document.getElementById("imp-futura").value = "";
         if(document.getElementById("impatta-saldo-futura")) document.getElementById("impatta-saldo-futura").checked = true; // resetta la spunta
-        
+
         aggiornaListaFuture();
         aggiornaApp();
     }
@@ -1553,7 +1550,7 @@ function preparaModificaFutura(idx) {
         document.getElementById("data-futura").value = s.data;
         document.getElementById("desc-futura").value = s.desc;
         document.getElementById("imp-futura").value = s.imp;
-        
+
         if(document.getElementById("impatta-saldo-futura")) {
             document.getElementById("impatta-saldo-futura").checked = s.impattaSaldo !== false;
         }
@@ -1567,7 +1564,7 @@ function aggiornaListaFuture() {
     const c = document.getElementById("lista-future");
     if(!c) return;
     c.innerHTML = "";
-   
+
     future.sort((a,b) => new Date(a.data) - new Date(b.data)).forEach((s, idx) => {
         const valore = parseFloat(s.imp) || 0;
         c.innerHTML += `
@@ -1612,13 +1609,13 @@ function eliminaFutura(idx) {
             reader.onload = async function () {
                 try {
                     const typedarray = new Uint8Array(this.result);
-                   
+
                     const loadingTask = pdfjsLib.getDocument({
                         data: typedarray,
                         disableWorker: true,
                         verbosity: 0
                     });
-                   
+
                     const pdf = await loadingTask.promise;
                     let fullText = "";
 
@@ -1630,9 +1627,9 @@ function eliminaFutura(idx) {
                     }
 
                     console.log("Testo estratto dal PDF:", fullText);
-                   
+
                     const matchImporto = fullText.match(/(?:TOTAL|IMPORTO|€|EUR|TOTALE)\s*[:]*\s*([0-9]+[\.,][0-9]{2})/i) || fullText.match(/([0-9]+[\.,][0-9]{2})/);
-                   
+
                     if (matchImporto) {
                         let importoEstratto = matchImporto[1].replace(',', '.');
                         document.getElementById("importo").value = parseFloat(importoEstratto).toFixed(2);
@@ -1661,7 +1658,7 @@ function analizzaTestoEstratto(testo) {
     for (let i = 0; i < righe.length; i++) {
         let riga = righe[i].trim();
         let matchData = riga.match(regexData);
-       
+
         if (matchData) {
             let giorno = matchData[1];
             let mese = matchData[2];
@@ -1720,9 +1717,9 @@ function analizzaTestoEstratto(testo) {
     function disegnaTorta(dati, totale) {
     const ctx = document.getElementById('graficoTorta').getContext('2d');
     if(graficoTorta) graficoTorta.destroy();
-   
+
     const colori = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40', '#32CD32', '#EA80FC'];
-    
+
     // Otteniamo il nome del mese attuale
     const nomeMese = mesiEstesi[new Date().getMonth()];
 
@@ -1742,17 +1739,17 @@ function analizzaTestoEstratto(testo) {
                 const { ctx, width, height } = chart; 
                 ctx.save(); 
                 ctx.textAlign = 'center';
-                
+
                 // Scritta "Uscite [Nome Mese]"
                 ctx.font = '20px Segoe UI'; 
                 ctx.fillStyle = '#888'; 
                 ctx.fillText('Uscite ' + nomeMese, width/2, height/2 - 10);
-                
+
                 // Totale in Euro
                 ctx.font = 'bold 16px Segoe UI'; 
                 ctx.fillStyle = '#444'; 
                 ctx.fillText((privacy ? "***" : totale.toFixed(0)) + "€", width/2, height/2 + 15);
-                
+
                 ctx.restore();
             }
         }]
@@ -1771,12 +1768,12 @@ function initYearSelect() {
 function generaReport() {
     initYearSelect();
     const anno = parseInt(document.getElementById("anno-selezionato").value);
-    
+
     const ctx = document.getElementById('graficoAnnuale').getContext('2d');
     if (graficoBarre) graficoBarre.destroy();
 
     let entrate = new Array(12).fill(0), uscite = new Array(12).fill(0);
-    
+
     spese.forEach(s => {
         const d = new Date(s.data);
         if(d.getFullYear() === anno) {
@@ -1807,10 +1804,10 @@ function aggiornaMatrice(anno) {
 
     // Aggiungiamo l'intestazione
     head.innerHTML = "<th class='sticky-col'>Categoria</th>" + ["Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic"].map(m => `<th>${m}</th>`).join("") + "<th>Totale</th>";
-   
+
     body.innerHTML = "";
     const categorieUniche = [...new Set(spese.map(s => s.cat))];
-   
+
     if(categorieUniche.length === 0) {
         body.innerHTML = "<tr><td colspan='14' style='text-align:center'>Nessun dato per l'anno selezionato</td></tr>";
         return;
@@ -1823,19 +1820,19 @@ function aggiornaMatrice(anno) {
     categorieUniche.forEach(cat => {
         let r = `<tr><td class='sticky-col'>${cat}</td>`;
         let totaleRiga = 0;
-        
+
         for(let i=0; i<12; i++) {
             let v = spese.filter(s =>
                 s.cat === cat &&
                 new Date(s.data).getMonth() === i &&
                 new Date(s.data).getFullYear() === anno
             ).reduce((a,b) => a + (b.tipo === 'Entrata' ? b.imp : -b.imp), 0);
-            
+
             totaleRiga += v;
             totaliMensili[i] += v; // Aggiorna il totale del mese
             r += `<td>${v !== 0 ? v.toFixed(0) + '€' : '-'}</td>`;
         }
-        
+
         totaleGeneraleAnnuale += totaleRiga;
         r += `<td style="font-weight:bold">${totaleRiga !== 0 ? totaleRiga.toFixed(0) + '€' : '-'}</td></tr>`;
         body.innerHTML += r;
@@ -1847,12 +1844,12 @@ function aggiornaMatrice(anno) {
         rigaTotali += `<td>${totMese !== 0 ? totMese.toFixed(0) + '€' : '-'}</td>`;
     });
     rigaTotali += `<td>${totaleGeneraleAnnuale.toFixed(0)}€</td></tr>`;
-    
+
     body.innerHTML += rigaTotali;
 }
     // --- UTILS ---
     function togglePrivacy() { privacy = !privacy; aggiornaApp(); }
-    
+
 function esportaDati() {
     const backupData = {};
     for (let i = 0; i < localStorage.length; i++) {
@@ -1929,83 +1926,16 @@ function esportaDati() {
     // Inizializzazione
     document.getElementById('data').value = new Date().toISOString().split('T')[0];
     aggiornaCategorie(); aggiornaApp();
-   
+
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js');
   }
 
-function mostraModalRipristinoTesto() {
-    // 1. Chiude il menu a tendina in modo sicuro (solo se lo trova)
-    const menu = document.getElementById('dropdownContent');
-    if (menu) {
-        menu.classList.remove('show');
-    }
-    
-    // 2. Pulisce la casella di testo
-    const textArea = document.getElementById('textareaRipristino');
-    if (textArea) {
-        textArea.value = ''; 
-    }
-    
-    // 3. Mostra il modale forzando il display a 'flex' per centrarlo
-    const modale = document.getElementById('modalRipristinoTesto');
-    if (modale) {
-        modale.style.display = 'flex';
-    } else {
-        alert("Errore: Impossibile trovare il modale nell'HTML. Verifica di aver incollato il blocco HTML.");
-    }
-}
-function chiudiModalRipristinoTesto() {
-    document.getElementById('modalRipristinoTesto').style.display = 'none';
-}
-
-async function elaboraRipristinoTesto() {
-    const testoInput = document.getElementById('textareaRipristino').value.trim();
-    
-    if (!testoInput) {
-        alert("⚠️ Per favore, incolla del testo prima di procedere.");
-        return;
-    }
-
-    try {
-        // Tenta di decodificare il testo incollato
-        const backupData = JSON.parse(testoInput);
-        
-        // Controllo validità minimo della struttura
-        if (!backupData.spese && !backupData.future && !backupData.customCats) {
-            alert("❌ Il testo inserito non sembra essere un backup valido di questa applicazione.");
-            return;
-        }
-
-        if (confirm("⚠️ Attenzione!\n\nIl ripristino sovrascriverà tutti i dati attualmente presenti sul dispositivo. Vuoi procedere?")) {
-            
-            // Ripristina i singoli pezzi nel LocalStorage
-            if (backupData.spese) localStorage.setItem('moneyTrack_db', JSON.stringify(backupData.spese));
-            if (backupData.future) localStorage.setItem('moneyTrack_future', JSON.stringify(backupData.future));
-            if (backupData.customCats) localStorage.setItem('moneyTrack_cats', JSON.stringify(backupData.customCats));
-            if (backupData.budgets) localStorage.setItem('moneyTrack_budgets', JSON.stringify(backupData.budgets));
-            if (backupData.preferitiNews) localStorage.setItem('moneyTrack_fav_news', JSON.stringify(backupData.preferitiNews));
-
-            chiudiModalRipristinoTesto();
-            
-            // Se l'utente è loggato, lancia il sync automatico su Supabase
-            if (currentUser) {
-                alert("🔄 Dati ripristinati localmente! Ora avvio la sincronizzazione con il Cloud...");
-                await syncDatiSuSupabaseImmediato();
-            }
-            
-            alert("🎉 Ripristino completato con successo! L'applicazione verrà ricaricata.");
-            window.location.reload();
-        }
-    } catch (e) {
-        console.error(e);
-        alert("❌ Errore nel formato del testo. Assicurati di aver copiato l'intero codice di backup senza modificarlo.");
-    }
-}
-  
 
 const MY_FINANCE_API_KEY = "26XHJPF20BYLQZWP";
 let preferitiNews = JSON.parse(localStorage.getItem("moneyTrack_fav_news")) || [];
+
+
 
 async function caricaNews() {
     const container = document.getElementById("news-container");
@@ -2022,7 +1952,7 @@ async function caricaNews() {
 
     loader.style.display = "block";
     container.innerHTML = "";
-    
+
     let notizieTrovate = 0; // Traccia se almeno un'API va a buon fine
 
     // Eseguiamo le chiamate in sequenza per aggirare il blocco anti-spam
@@ -2065,14 +1995,14 @@ async function caricaNews() {
                                 <p style="margin: 0; font-size: 0.75rem; color: #888;">${new Date(item.pubDate).toLocaleDateString('it-IT')} - Apri notizia</p>
                             </a>
                         </div>`;
-                   
+
                     container.appendChild(card);
                 });
             }
         } catch (error) {
             console.warn("Errore fetch news:", fonte.nome);
         }
-        
+
         // Pausa di 500ms tra una chiamata e l'altra per proteggere l'IP
         await new Promise(resolve => setTimeout(resolve, 500));
     }
@@ -2088,12 +2018,12 @@ async function caricaNews() {
 function filtraNews(catScelta, evt) {
     const cards = document.querySelectorAll('.news-card');
     const bottoni = document.querySelectorAll('#pagina-news button');
-   
+
     bottoni.forEach(btn => {
         btn.style.background = "#eee";
         btn.style.color = "#333";
     });
-   
+
     if (evt && evt.target) {
         evt.target.style.background = "var(--primary)";
         evt.target.style.color = "white";
@@ -2101,7 +2031,7 @@ function filtraNews(catScelta, evt) {
 
     cards.forEach(card => {
         const categoriaCard = card.getAttribute('data-categoria');
-       
+
         if (catScelta === 'tutte') {
             card.style.display = 'block';
         } else if (catScelta === 'italia') {
@@ -2139,12 +2069,12 @@ function clearScreen() {
 function calculate() {
     const screen = document.getElementById('calc-screen');
     const espressione = screen.value;
-    
+
     try {
         if (espressione) {
             // Esegue il calcolo
             let risultato = eval(espressione);
-            
+
             // Sostituisce il punto con la virgola per la visualizzazione finale
             // .toString().replace('.', ',') serve a trasformare il numero in stringa formattata
             screen.value = risultato.toString().replace('.', ',');
@@ -2156,9 +2086,9 @@ function calculate() {
 
 function togglePreferito(event, safeItem) {
     event.stopPropagation();
-   
+
     const articolo = JSON.parse(decodeURIComponent(escape(atob(safeItem))));
-   
+
     const index = preferitiNews.findIndex(f => f.link === articolo.link);
     const stella = event.currentTarget.querySelector('span');
 
@@ -2171,7 +2101,7 @@ function togglePreferito(event, safeItem) {
         stella.innerText = '⭐';
         stella.style.color = '#ffc107';
     }
-   
+
     localStorage.setItem("moneyTrack_fav_news", JSON.stringify(preferitiNews));
 }
 
@@ -2187,7 +2117,7 @@ function cambiaSezione(idSezione) {
         const el = document.getElementById(id);
         if(el) el.style.display = 'none';
     });
-    
+
     // Mostra la sezione selezionata
     const sezioneDaMostrare = document.getElementById('sezione-' + idSezione);
     if(sezioneDaMostrare) {
@@ -2203,7 +2133,7 @@ let meseCorrente = new Date().getMonth();
 
   function navigaMeseCalendario(direzione) {
       meseCorrente += direzione;
-      
+
       // Gestione del cambio d'anno
       if (meseCorrente > 11) {
           meseCorrente = 0;
@@ -2212,7 +2142,7 @@ let meseCorrente = new Date().getMonth();
           meseCorrente = 11;
           annoCorrente--;
       }
-      
+
       // Ora richiama la funzione corretta!
       disegnaCalendario(); 
   }
@@ -2220,7 +2150,7 @@ let meseCorrente = new Date().getMonth();
 function disegnaCalendario() {
     const grid = document.getElementById("calendario-grid");
     const titoloMese = document.getElementById("cal-titolo-mese");
-           
+
     if (!grid) return;
     grid.innerHTML = "";
 
@@ -2238,7 +2168,7 @@ function disegnaCalendario() {
     // Calcolo del primo giorno del mese e del totale dei giorni
     const primoGiorno = new Date(anno, mese, 1).getDay();
     const giorniMese = new Date(anno, mese + 1, 0).getDate();
-    
+
     // Allinea il calendario per iniziare di lunedì (Domenica in JS è 0, la trasformiamo in 6)
     let offset = primoGiorno === 0 ? 6 : primoGiorno - 1;
 
@@ -2252,9 +2182,9 @@ function disegnaCalendario() {
         // Controlla se il giorno che stiamo disegnando corrisponde esattamente a OGGI (giorno, mese e anno corretti)
         let isOggi = (giorno === oggi.getDate() && mese === oggi.getMonth() && anno === oggi.getFullYear()) ? "oggi" : "";
         let dataStr = `${anno}-${String(mese + 1).padStart(2, '0')}-${String(giorno).padStart(2, '0')}`;
-        
+
         let scadenzeHtml = "";
-        
+
         // Cerca se ci sono spese future in questa data
         if (typeof future !== 'undefined') {
             future.forEach(f => {
@@ -2288,11 +2218,11 @@ function inizializzaNotifiche() {
 function verificaScadenzeDomani() {
         if (!("Notification" in window) || Notification.permission !== "granted") return;
         const oggi = new Date(); oggi.setHours(0, 0, 0, 0);
-    
+
     // Creiamo la data di "domani"
     const domani = new Date(oggi);
     domani.setDate(domani.getDate() + 1);
-    
+
     const anno = domani.getFullYear();
     const mese = String(domani.getMonth() + 1).padStart(2, '0');
     const giorno = String(domani.getDate()).padStart(2, '0');
@@ -2303,7 +2233,7 @@ function verificaScadenzeDomani() {
             if (s.data === dataDomaniStr) {
                 // Chiave univoca per non inviare due volte la stessa notifica
                 const chiaveNotifica = `notificato_scadenza_${idx}_${s.data}`;
-                
+
                 if (!localStorage.getItem(chiaveNotifica)) {
                     let messaggio = `Domani scade: ${s.desc}`;
                     if(s.imp > 0) messaggio += ` di ${parseFloat(s.imp).toFixed(2)}€`;
@@ -2312,7 +2242,7 @@ function verificaScadenzeDomani() {
                         body: messaggio,
                         icon: "icona-512.png" // Assicurati che l'icona esista nella cartella
                     });
-                    
+
                     localStorage.setItem(chiaveNotifica, "true");
                 }
             }
@@ -2332,5 +2262,4 @@ window.addEventListener('DOMContentLoaded', () => {
 <script src="script.js"></script>
 
 </body>
-
 </html>
