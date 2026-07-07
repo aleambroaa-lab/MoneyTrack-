@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://query1.finance.yahoo.com https://api.rss2json.com https://cdn.jsdelivr.net https://*.supabase.co; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: https: http:; connect-src 'self' https://query1.finance.yahoo.com https://api.rss2json.com https://*.supabase.co wss://*.supabase.co;">
+   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; https://query1.finance.yahoo.com https://api.rss2json.com https://cdn.jsdelivr.net https://*.supabase.co; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: https: http:; connect-src 'self' https://query1.finance.yahoo.com https://api.rss2json.com https://*.supabase.co wss://*.supabase.co;">
                 <link rel="manifest" href="manifest.json">
 <meta name="apple-mobile-web-app-capable" content="yes">
 
@@ -14,7 +14,6 @@
 <link rel="apple-touch-icon" href="icona-512.png">
 <title>MoneyTrack - Versione 1.0</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -508,8 +507,28 @@
     box-sizing: border-box;
 }
 
+.modal-backdrop-cloud {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6); display: flex; justify-content: center;
+    align-items: center; z-index: 9999;
+}
+.modal-card-cloud {
+    background: white; padding: 30px; border-radius: 20px;
+    max-width: 400px; width: 90%; text-align: center;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2); animation: popUpCloud 0.3s ease;
+}
+@keyframes popUpCloud { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.modal-icon-cloud { font-size: 3.5rem; margin-bottom: 15px; }
+.modal-card-cloud h3 { margin: 0 0 10px 0; font-size: 1.4rem; color: #333; font-weight: bold; display: flex; justify-content: center; }
+.modal-card-cloud p { font-size: 0.95rem; color: #666; line-height: 1.5; margin-bottom: 25px; margin-top: 0; }
+.modal-buttons-cloud { display: flex; flex-direction: column; gap: 10px; }
+.modal-buttons-cloud .btn-primary-cloud { background: #28a745; color: white; border: none; padding: 14px; border-radius: 12px; font-weight: bold; font-size: 1rem; cursor: pointer; transition: 0.2s; }
+.modal-buttons-cloud .btn-primary-cloud:hover { background: #218838; }
+.modal-buttons-cloud .btn-secondary-cloud { background: none; color: #888; border: none; padding: 10px; font-size: 0.9rem; cursor: pointer; text-decoration: underline; }
+
 </style>
 </head>
+
 <body>
 
 <datalist id="lista-assets">
@@ -554,10 +573,7 @@
     </div>
  
 <div class="nav-buttons-container">
-    <button class="btn-modern" onclick="alert('Presto disponibile!')">
-        📊 INVESTIMENTI
-    </button>
-
+  
    <button class="btn-modern" onclick="mostraPagina('news')">
     📰 NEWS
 </button>
@@ -582,14 +598,11 @@
    
     <h3 id="form-label" style="margin: 0; white-space: nowrap; flex-shrink: 0;">✍️ Nuova Operazione</h3>
    
-    <div style="display: flex; gap: 8px; align-items: center; width: 100%;" class="cat-row">
-        <button type="button" onclick="document.getElementById('cameraInput').click()" style="background: #f4f4f4; border: none; border-radius: 12px; padding: 0 15px; cursor: pointer; height: 46px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); display: flex; align-items: center; gap: 6px; font-weight: 600; color: #444; transition: all 0.25s ease;">
-            📷 <span style="font-size: 0.8rem; font-weight: bold;">SCONTRINO</span>
-        </button>
-        <button class="small-btn" onclick="apriCalcolatrice()" title="Calcolatrice">🧮<span style="font-size: 0.8rem; font-weight: bold;">CAL</span></button>
-        <button type="button" onclick="document.getElementById('pdfInput').click()" style="background: #f4f4f4; border: none; border-radius: 12px; padding: 0 15px; cursor: pointer; height: 46px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); display: flex; align-items: center; gap: 6px; font-weight: 600; color: #444; transition: all 0.25s ease;">
-            📄 <span style="font-size: 0.8rem; font-weight: bold;">PDF</span>
-        </button>
+<div style="display: flex; gap: 8px; align-items: center; width: 100%;" class="cat-row">
+    <button class="small-btn" onclick="apriCalcolatrice()" title="Calcolatrice">🧮<span style="font-size: 0.8rem; font-weight: bold;">CAL</span></button>
+    <button type="button" onclick="document.getElementById('pdfInput').click()" style="background: #f4f4f4; border: none; border-radius: 12px; padding: 0 15px; cursor: pointer; height: 46px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); display: flex; align-items: center; gap: 6px; font-weight: 600; color: #444; transition: all 0.25s ease;">
+        📄 <span style="font-size: 0.8rem; font-weight: bold;">PDF</span>
+    </button>
 </div>
 <input type="file" id="pdfInput" style="display:none" accept=".pdf" onchange="elaboraPDFBancario(event)">
 
@@ -620,8 +633,6 @@
         </div>
     </div>
 </div>
-<input type="file" id="cameraInput" accept="image/*" capture="camera" style="display:none" onchange="elaboraScontrino(event)">
-
             <input type="hidden" id="edit-index" value="-1">
             <select id="tipo" onchange="aggiornaCategorie()">
                 <option value="Uscita">📉 Uscita</option>
@@ -685,16 +696,25 @@
 
 
 <div id="sezione-scadenze" class="container" style="display: none; padding: 20px;">
-    <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 20px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
         <button onclick="mostraPagina('home')" class="btn-back-home">⬅ Torna alla Home</button>
+        <h3 style="margin: 0;">📅 Calendario Scadenze</h3>
+    </div>
+
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; background: #f5f5f5; padding: 10px; border-radius: 8px;">
+        <button onclick="navigaMeseCalendario(-1)" class="btn-sm" style="padding: 8px 12px; border-radius: 8px; border: 1px solid #ccc; background: white; cursor: pointer; font-weight: bold;">◀ Mese Prec.</button>
+        
+        <h3 id="cal-titolo-mese" style="margin: 0; font-size: 1.2rem; font-weight: bold; text-transform: capitalize; color: #333;"></h3>
+        
+        <button onclick="navigaMeseCalendario(1)" class="btn-sm" style="padding: 8px 12px; border-radius: 8px; border: 1px solid #ccc; background: white; cursor: pointer; font-weight: bold;">Mese Succ. ▶</button>
     </div>
     
-    <h3 style="margin-bottom: 15px;">📅 Calendario Scadenze</h3>
+    <div style="display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-weight: bold; font-size: 0.8rem; margin-bottom: 5px; opacity: 0.7;">
+        <div>Lun</div><div>Mar</div><div>Mer</div><div>Gio</div><div>Ven</div><div>Sab</div><div>Dom</div>
+    </div>
     
-    <!-- Qui è dove Javascript disegnerà i giorni -->
     <div id="calendario-grid" class="grid-calendario"></div>
-</div>
-
+</div>    
 
 <div id="pagina-analisi" class="container" style="display: none; padding: 20px;">
     <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 20px;">
@@ -736,45 +756,19 @@
 
 <div id="loading-news" style="text-align: center; padding: 20px;">Caricamento notizie...</div>
     <div id="news-container" class="desktop-grid"></div>
-</div> <div id="pagina-investimenti" class="container" style="display: none; padding: 20px;">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-        <h3 style="margin:0;">📈 Portafoglio</h3>
-        <div style="text-align: right;">
-            <div id="totale-portafoglio" style="font-weight: bold; font-size: 1.2rem; color: var(--success);">0.00 €</div>
-            <button onclick="aggiornaTuttiIPrezzi()" class="btn-refresh-inv" style="font-size: 0.75rem; cursor: pointer; border: 1px solid #ddd; background: #f9f9f9; padding: 4px 8px; border-radius: 6px; color: #666; margin-top: 5px;">
-                🔄 AGGIORNA PREZZI
-            </button>
-        </div>
-    </div>
 
-    <div class="desktop-grid">
-        <div class="section section-divider" style="background: #f9f9f9; border-radius: 15px; padding: 15px;">
-            <h4 style="margin-top:0;">➕ Aggiungi Asset</h4>
-            <input type="text" id="inv-nome" list="lista-assets" placeholder="Inserisci Ticker o ISIN (es. IE00B4L5Y983...)" onchange="cercaPrezzoAutomatico()">
-            <input type="number" id="inv-quantita" placeholder="Quantità posseduta" step="0.00001">
-            <input type="number" id="inv-prezzo-carico" placeholder="Prezzo d'acquisto (€)" step="0.01">
-            <input type="number" id="inv-prezzo-attuale" placeholder="Prezzo attuale (€)" step="0.01">
-            <button class="add-btn" onclick="aggiungiInvestimento()">AGGIUNGI AL PORTAFOGLIO</button>
-        </div>
-
-        <div class="section">
-            <div class="table-container">
-                <table style="font-size: 0.9rem;">
-                    <thead>
-                        <tr style="text-align: left; border-bottom: 2px solid var(--border);">
-                            <th>Asset</th>
-                            <th>Valore</th>
-                            <th>Profitto</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody id="lista-investimenti">
-                        </tbody>
-                </table>
-            </div>
-        </div>
+<div id="cloud-modal" class="modal-backdrop-cloud" style="display: none;">
+    <div class="modal-card-cloud">
+        <div class="modal-icon-cloud">☁️</div>
+        <h3>Metti al sicuro i tuoi dati!</h3>
+        <p>Non rischiare di perdere le tue spese se cambi o smarrisci il telefono. Attiva il salvataggio automatico nel Cloud gratuito.</p>
+        <div class="modal-buttons-cloud">
+    <button id="modal-login-btn" class="btn-primary-cloud">🔐 Accedi / Registrati</button>
+    <button id="modal-close-btn" class="btn-secondary-cloud">Magari più tardi</button>
+</div>
     </div>
 </div>
+
 
 <script>
  
@@ -836,7 +830,6 @@ function syncDatiSuSupabase() {
                 future: safeGetJSON("moneyTrack_future") || [],
                 customCats: safeGetJSON("moneyTrack_cats") || {},
                 budgets: safeGetJSON("moneyTrack_budgets") || {},
-                investimenti: safeGetJSON("moneyTrack_inv") || [],
                 preferitiNews: safeGetJSON("moneyTrack_fav_news") || []
             };
             await _supabase.from('userdata').upsert({
@@ -878,7 +871,6 @@ async function gestisciLoginOSincronizzazione(user) {
                 future: safeGetJSON("moneyTrack_future") || [],
                 customCats: safeGetJSON("moneyTrack_cats") || {},
                 budgets: safeGetJSON("moneyTrack_budgets") || {},
-                investimenti: safeGetJSON("moneyTrack_inv") || [],
                 preferitiNews: safeGetJSON("moneyTrack_fav_news") || []
             };
 
@@ -920,19 +912,16 @@ function applicaDatiCloud(payload) {
     if (payload.future) future = payload.future;
     if (payload.customCats) customCats = payload.customCats;
     if (payload.budgets) budgets = payload.budgets;
-    if (payload.investimenti) investimenti = payload.investimenti;
     if (payload.preferitiNews) preferitiNews = payload.preferitiNews;
 
     originalSetItem.call(localStorage, "moneyTrack_db", JSON.stringify(spese));
     originalSetItem.call(localStorage, "moneyTrack_future", JSON.stringify(future));
     originalSetItem.call(localStorage, "moneyTrack_cats", JSON.stringify(customCats));
     originalSetItem.call(localStorage, "moneyTrack_budgets", JSON.stringify(budgets));
-    originalSetItem.call(localStorage, "moneyTrack_inv", JSON.stringify(investimenti));
     originalSetItem.call(localStorage, "moneyTrack_fav_news", JSON.stringify(preferitiNews));
 
     if (typeof aggiornaApp === "function") aggiornaApp();
-    if (typeof aggiornaInvestimenti === "function") aggiornaInvestimenti();
-}
+    }
 
 function injectAuthModal() {
     if (document.getElementById("auth-modal")) return;
@@ -1076,7 +1065,7 @@ let budgets = JSON.parse(localStorage.getItem("moneyTrack_budgets")) || {};
     window.onclick = (e) => { if (!e.target.matches('.menu-dots')) document.getElementById("myDropdown").classList.remove('show'); }
 
   function mostraPagina(p) {
-    const pagine = ["pagina-home", "pagina-analisi", "pagina-news", "pagina-investimenti"];
+    const pagine = ["pagina-home", "pagina-analisi", "pagina-news"];
     
     // 1. Nascondi tutte le pagine principali
     pagine.forEach(id => {
@@ -1103,9 +1092,7 @@ let budgets = JSON.parse(localStorage.getItem("moneyTrack_budgets")) || {};
     else if (p === 'news') {
         caricaNews();
     }
-    else if (p === 'investimenti') {
-        aggiornaInvestimenti();
-    }
+    
    else if (p === 'analisi') {
     setTimeout(() => {
         generaReport();
@@ -1914,179 +1901,12 @@ function esportaDati() {
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js');
   }
-  async function elaboraScontrino(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    const btn = document.getElementById("btn-salva");
-    const originaleText = btn.innerText;
-    btn.innerText = "⏳ ANALISI IN CORSO...";
-    btn.disabled = true;
-
-    try {
-        const { data: { text } } = await Tesseract.recognize(file, 'ita');
-        console.log("Testo estratto:", text);
-       
-        const regexPrezzo = /(\d+[\.,]\d{2})/g;
-        const match = text.match(regexPrezzo);
-
-        if (match) {
-            const totale = match[match.length - 1].replace(',', '.');
-            document.getElementById("importo").value = totale;
-            document.getElementById("nota").value = "Scontrino " + new Date().toLocaleTimeString();
-            alert("Ottimo! Ho trovato l'importo: " + totale + "€");
-        } else {
-            alert("Foto caricata, ma non ho trovato un importo chiaro. Prova a rifarla più da vicino.");
-        }
-    } catch (err) {
-        console.error(err);
-        alert("Errore tecnico durante l'analisi.");
-    } finally {
-        btn.innerText = originaleText;
-        btn.disabled = false;
-    }
-}
+  
 
 const MY_FINANCE_API_KEY = "26XHJPF20BYLQZWP";
-let investimenti = JSON.parse(localStorage.getItem("moneyTrack_inv")) || [];
 let preferitiNews = JSON.parse(localStorage.getItem("moneyTrack_fav_news")) || [];
 
 
-async function cercaPrezzoAutomatico() {
-    const nomeInput = document.getElementById("inv-nome").value.toUpperCase().trim();
-    const campoPrezzo = document.getElementById("inv-prezzo-attuale");
-   
-    const query = nomeInput.includes('(') ? nomeInput.split('(')[1].replace(')', '').trim() : nomeInput;
-    if (!query) return;
-
-    campoPrezzo.placeholder = "⌛ Ricerca...";
-
-    const regexIsin = /^[A-Z]{2}[A-Z0-9]{9}\d$/;
-    if (regexIsin.test(query)) {
-        try {
-            const resIsin = await fetch(`https://query1.finance.yahoo.com/v7/finance/download/` + query);
-            const resAlt = await fetch(`https://api.openfigi.com/v1/mapping`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify([{ idType: "ID_ISIN", idValue: query }])
-            });
-            const dataAlt = await resAlt.json();
-           
-            if (dataAlt[0] && dataAlt[0].data && dataAlt[0].data[0]) {
-                const tickerFigi = dataAlt[0].data[0].ticker;
-                const resPrice = await fetch(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${tickerFigi}&apikey=${MY_FINANCE_API_KEY}`);
-                const dataPrice = await resPrice.json();
-                if (dataPrice["Global Quote"] && dataPrice["Global Quote"]["05. price"]) {
-                    campoPrezzo.value = parseFloat(dataPrice["Global Quote"]["05. price"]).toFixed(2);
-                    return;
-                }
-            }
-        } catch (e) {
-            console.warn("Errore recupero tramite ISIN:", e);
-        }
-    }
-
-    try {
-        const resCrypto = await fetch(`https://api.binance.com/api/v3/ticker/price?symbol=${query}USDT`);
-        const dataCrypto = await resCrypto.json();
-
-        if (dataCrypto.price) {
-            campoPrezzo.value = (parseFloat(dataCrypto.price) * 0.92).toFixed(2);
-            return;
-        }
-
-        const resStocks = await fetch(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${query}&apikey=${MY_FINANCE_API_KEY}`);
-        const dataStocks = await resStocks.json();
-
-        if (dataStocks["Global Quote"] && dataStocks["Global Quote"]["05. price"]) {
-            const prezzoUsd = dataStocks["Global Quote"]["05. price"];
-            campoPrezzo.value = (parseFloat(prezzoUsd) * 0.92).toFixed(2);
-        }
-    } catch (e) {
-        console.warn("Errore recupero prezzo:", e);
-    } finally {
-        campoPrezzo.placeholder = "Prezzo attuale (€)";
-    }
-}
-
-function aggiungiInvestimento() {
-    const nome = document.getElementById("inv-nome").value;
-    const qta = parseFloat(document.getElementById("inv-quantita").value);
-    const carico = parseFloat(document.getElementById("inv-prezzo-carico").value);
-    const attuale = parseFloat(document.getElementById("inv-prezzo-attuale").value);
-
-    if(!nome || isNaN(qta) || isNaN(carico) || isNaN(attuale)) return alert("Compila tutti i campi!");
-
-    investimenti.push({ nome, qta, carico, attuale });
-    salvaInvestimenti();
-    aggiornaInvestimenti();
-    ["inv-nome", "inv-quantita", "inv-prezzo-carico", "inv-prezzo-attuale"].forEach(id => document.getElementById(id).value = "");
-}
-
-async function aggiornaTuttiIPrezzi() {
-    const btn = document.querySelector(".btn-refresh-inv");
-    if(btn) btn.innerText = "⌛...";
-
-    for (let inv of investimenti) {
-        const ticker = inv.nome.includes('(') ? inv.nome.split('(')[1].replace(')', '').trim() : inv.nome.trim();
-        try {
-            const resC = await fetch(`https://api.binance.com/api/v3/ticker/price?symbol=${ticker}USDT`);
-            const dataC = await resC.json();
-            if(dataC.price) {
-                inv.attuale = parseFloat(dataC.price) * 0.92;
-            } else {
-                const resS = await fetch(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${ticker}&apikey=${MY_FINANCE_API_KEY}`);
-                const dataS = await resS.json();
-                if(dataS["Global Quote"] && dataS["Global Quote"]["05. price"]) {
-                    inv.attuale = parseFloat(dataS["Global Quote"]["05. price"]) * 0.92;
-                }
-            }
-        } catch(e) { console.error("Errore update per " + ticker); }
-        await new Promise(r => setTimeout(r, 1000));
-    }
-   
-    salvaInvestimenti();
-    aggiornaInvestimenti();
-    if(btn) btn.innerText = "🔄 AGGIORNA PREZZI";
-}
-
-function aggiornaInvestimenti() {
-    const container = document.getElementById("lista-investimenti");
-    const displayTotale = document.getElementById("totale-portafoglio");
-    if(!container) return;
-    container.innerHTML = "";
-    let totaleValore = 0;
-
-    investimenti.forEach((inv, idx) => {
-        const valoreAttuale = inv.qta * inv.attuale;
-        const profitto = valoreAttuale - (inv.qta * inv.carico);
-        const perc = (((inv.attuale - inv.carico) / inv.carico) * 100).toFixed(2);
-        totaleValore += valoreAttuale;
-
-        container.innerHTML += `
-            <tr>
-                <td><strong>${inv.nome}</strong><br><small>${inv.qta} pz</small></td>
-                <td>${valoreAttuale.toFixed(2)}€<br><small>${inv.attuale.toFixed(2)}/pz</small></td>
-                <td class="${profitto >= 0 ? 'positivo' : 'negativo'}">
-                    ${profitto >= 0 ? '+' : ''}${profitto.toFixed(2)}€<br><small>${perc}%</small>
-                </td>
-                <td><span class="action-icon" onclick="eliminaInvestimento(${idx})">🗑️</span></td>
-            </tr>`;
-    });
-    displayTotale.innerText = totaleValore.toFixed(2) + " €";
-}
-
-function eliminaInvestimento(idx) {
-    if(confirm("Eliminare questo asset?")) {
-        investimenti.splice(idx, 1);
-        salvaInvestimenti();
-        aggiornaInvestimenti();
-    }
-}
-
-function salvaInvestimenti() {
-    localStorage.setItem("moneyTrack_inv", JSON.stringify(investimenti));
-}
 
 async function caricaNews() {
     const container = document.getElementById("news-container");
@@ -2256,35 +2076,6 @@ function togglePreferito(event, safeItem) {
     localStorage.setItem("moneyTrack_fav_news", JSON.stringify(preferitiNews));
 }
 
-window.onload = () => {
-    investimenti = JSON.parse(localStorage.getItem("moneyTrack_inv")) || [];
-};
-
-function aggiornaTickerHome() {
-    const ticker = document.getElementById("investimenti-ticker");
-    if (!ticker) return;
-
-    if (!investimenti || investimenti.length === 0) {
-        ticker.innerHTML = "Nessun investimento attivo — Aggiungi un asset per vederlo qui";
-        return;
-    }
-
-    let testoTicker = "";
-    investimenti.forEach(inv => {
-        const variazione = (((inv.attuale - inv.carico) / inv.carico) * 100).toFixed(2);
-        const colore = variazione >= 0 ? "ticker-pos" : "ticker-neg";
-        const freccia = variazione >= 0 ? "▲" : "▼";
-
-        testoTicker += `
-            <span class="ticker-item">
-                ${inv.nome.toUpperCase()}
-                <span class="${colore}">${freccia} ${Math.abs(variazione)}%</span>
-            </span>
-            <span style="color: #444; margin: 0 15px;">•</span>`;
-    });
-
-    ticker.innerHTML = testoTicker + testoTicker + testoTicker;
-}
 
 let dataCalCorrente = new Date(); // Mantiene traccia del mese visualizzato nel calendario
 
@@ -2308,24 +2099,48 @@ function cambiaSezione(idSezione) {
     }
 }
 
-function navigaMeseCalendario(direzione) {
-    dataCalCorrente.setMonth(dataCalCorrente.getMonth() + direzione);
-    disegnaCalendario();
-}
+let meseCorrente = new Date().getMonth();
+  let annoCorrente = new Date().getFullYear();
+
+  function navigaMeseCalendario(direzione) {
+      meseCorrente += direzione;
+      
+      // Gestione del cambio d'anno
+      if (meseCorrente > 11) {
+          meseCorrente = 0;
+          annoCorrente++;
+      } else if (meseCorrente < 0) {
+          meseCorrente = 11;
+          annoCorrente--;
+      }
+      
+      // Ora richiama la funzione corretta!
+      disegnaCalendario(); 
+  }
 
 function disegnaCalendario() {
     const grid = document.getElementById("calendario-grid");
+    const titoloMese = document.getElementById("cal-titolo-mese");
+           
     if (!grid) return;
     grid.innerHTML = "";
 
-    const oggi = new Date();
-    const anno = oggi.getFullYear();
-    const mese = oggi.getMonth();
+    // 1. CORREZIONE: Usiamo le variabili dinamiche (meseCorrente e annoCorrente) invece di quelle fisse di oggi!
+    const anno = annoCorrente;
+    const mese = meseCorrente;
+    const oggi = new Date(); // Ci serve ancora per colorare il quadratino di "oggi"
 
+    // 2. CORREZIONE: Impostiamo il titolo subito all'inizio (fuori dai cicli)
+    const nomiMesi = ["gennaio", "febbraio", "marzo", "aprile", "maggio", "giugno", "luglio", "agosto", "settembre", "ottobre", "novembre", "dicembre"];
+    if (titoloMese) {
+        titoloMese.textContent = `${nomiMesi[mese]} ${anno}`;
+    }
+
+    // Calcolo del primo giorno del mese e del totale dei giorni
     const primoGiorno = new Date(anno, mese, 1).getDay();
     const giorniMese = new Date(anno, mese + 1, 0).getDate();
     
-    // Allinea il calendario per iniziare di lunedì (opzionale)
+    // Allinea il calendario per iniziare di lunedì (Domenica in JS è 0, la trasformiamo in 6)
     let offset = primoGiorno === 0 ? 6 : primoGiorno - 1;
 
     // Celle vuote prima dell'inizio del mese
@@ -2333,9 +2148,10 @@ function disegnaCalendario() {
         grid.innerHTML += `<div class="cal-giorno vuoto"></div>`;
     }
 
-    // Genera i giorni
+    // Genera i giorni effettivi del mese selezionato
     for (let giorno = 1; giorno <= giorniMese; giorno++) {
-        let isOggi = (giorno === oggi.getDate()) ? "oggi" : "";
+        // Controlla se il giorno che stiamo disegnando corrisponde esattamente a OGGI (giorno, mese e anno corretti)
+        let isOggi = (giorno === oggi.getDate() && mese === oggi.getMonth() && anno === oggi.getFullYear()) ? "oggi" : "";
         let dataStr = `${anno}-${String(mese + 1).padStart(2, '0')}-${String(giorno).padStart(2, '0')}`;
         
         let scadenzeHtml = "";
@@ -2350,6 +2166,7 @@ function disegnaCalendario() {
             });
         }
 
+        // Aggiunge la cella del giorno alla griglia
         grid.innerHTML += `
             <div class="cal-giorno ${isOggi}">
                 <span class="cal-numero-giorno">${giorno}</span>
@@ -2413,53 +2230,8 @@ window.addEventListener('DOMContentLoaded', () => {
 
 </script>
 
-<style>
-.modal-backdrop-cloud {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.6); display: flex; justify-content: center;
-    align-items: center; z-index: 9999;
-}
-.modal-card-cloud {
-    background: white; padding: 30px; border-radius: 20px;
-    max-width: 400px; width: 90%; text-align: center;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.2); animation: popUpCloud 0.3s ease;
-}
-@keyframes popUpCloud { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-.modal-icon-cloud { font-size: 3.5rem; margin-bottom: 15px; }
-.modal-card-cloud h3 { margin: 0 0 10px 0; font-size: 1.4rem; color: #333; font-weight: bold; display: flex; justify-content: center; }
-.modal-card-cloud p { font-size: 0.95rem; color: #666; line-height: 1.5; margin-bottom: 25px; margin-top: 0; }
-.modal-buttons-cloud { display: flex; flex-direction: column; gap: 10px; }
-.modal-buttons-cloud .btn-primary-cloud { background: #28a745; color: white; border: none; padding: 14px; border-radius: 12px; font-weight: bold; font-size: 1rem; cursor: pointer; transition: 0.2s; }
-.modal-buttons-cloud .btn-primary-cloud:hover { background: #218838; }
-.modal-buttons-cloud .btn-secondary-cloud { background: none; color: #888; border: none; padding: 10px; font-size: 0.9rem; cursor: pointer; text-decoration: underline; }
-</style>
-
-<div id="cloud-modal" class="modal-backdrop-cloud" style="display: none;">
-    <div class="modal-card-cloud">
-        <div class="modal-icon-cloud">☁️</div>
-        <h3>Metti al sicuro i tuoi dati!</h3>
-        <p>Non rischiare di perdere le tue spese se cambi o smarrisci il telefono. Attiva il salvataggio automatico nel Cloud gratuito.</p>
-        <div class="modal-buttons-cloud">
-    <button id="modal-login-btn" class="btn-primary-cloud">🔐 Accedi / Registrati</button>
-    <button id="modal-close-btn" class="btn-secondary-cloud">Magari più tardi</button>
-</div>
-    </div>
-</div>
-
-<div id="sezione-scadenze" class="sezione-app" style="display: none; padding: 15px;">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-        <button onclick="navigaMeseCalendario(-1)" class="btn-sm" style="padding: 8px 12px; border-radius: 8px; border: 1px solid #ccc; background: white; cursor: pointer;">◀ Mese Prec.</button>
-        <h3 id="cal-titolo-mese" style="margin: 0; font-size: 1.2rem; font-weight: bold; text-transform: capitalize;"></h3>
-        <button onclick="navigaMeseCalendario(1)" class="btn-sm" style="padding: 8px 12px; border-radius: 8px; border: 1px solid #ccc; background: white; cursor: pointer;">Mese Succ. ▶</button>
-    </div>
-    
-    <div style="display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-weight: bold; font-size: 0.8rem; margin-bottom: 5px; opacity: 0.7;">
-        <div>Lun</div><div>Mar</div><div>Mer</div><div>Gio</div><div>Ven</div><div>Sab</div><div>Dom</div>
-    </div>
-    
-    <div id="cal-griglia" class="grid-calendario"></div>
-</div>
+<script src="script.js"></script>
 
 </body>
-<script src="script.js"></script>
+
 </html>
