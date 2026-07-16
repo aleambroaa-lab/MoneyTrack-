@@ -10,12 +10,6 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="MoneyTrack">
     <link rel="apple-touch-icon" href="icona-512.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-    
-    <meta name="theme-color" content="#b5c3b6">
-    <meta name="msapplication-TileColor" content="#b5c3b6">
     
     <title>MoneyTrack - Versione 2.0</title>
     
@@ -30,6 +24,8 @@
             --bg: #ffffff;
             --success: #28a745;
             --danger: #dc3545;
+            --warning: #ffc107;
+            --info: #17a2b8;
             --border: #eeeeee;
             --text-primary: #333333;
             --text-secondary: #666666;
@@ -54,42 +50,27 @@
                 --border: #333333;
                 --primary: #8aa08b;
                 --secondary: #6a7a6b;
-                --shadow-sm: 0 2px 6px rgba(0,0,0,0.3);
-                --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
-                --shadow-lg: 0 8px 24px rgba(0,0,0,0.5);
             }
-            
             body { background: var(--bg); color: var(--text-primary); }
-            .center-title div, .center-title h1 { color: var(--text-primary) !important; }
-            .center-title small { color: var(--text-secondary) !important; }
             .modal-content.auth { background: #2a2a2a; color: var(--text-primary); border-color: #444; }
             .modal-content.auth input { background: #333; color: var(--text-primary); border-color: #555; }
             .modal-card-cloud { background: #2a2a2a; color: var(--text-primary); }
-            .modal-card-cloud h3 { color: var(--text-primary); }
-            .modal-card-cloud p { color: var(--text-secondary); }
             .news-card { background: #2a2a2a; border-color: #444; }
-            .news-title { color: var(--text-primary); }
             .budget-container { background: #2a2a2a; border-color: #444; }
             .mese-header { background: #222; color: var(--text-secondary); border-color: #333; }
             .mese-container.attivo .mese-header { background: #333; }
             .info-previsione { background: #2a2a2a; }
-            .stats-card { background: #2a2a2a; }
-            .btn-back-home { background: #333; color: var(--text-secondary); }
-            .btn-back-home:hover { background: #444; }
             .btn-modern { background: #333; color: var(--text-secondary); }
             .btn-modern:hover { background: #444; color: var(--text-primary); }
             input, select { background: #333; color: var(--text-primary); border-color: #555; }
             input:focus, select:focus { border-color: var(--primary); background: #3a3a3a; }
             .cat-row .small-btn { background: #333; color: var(--text-secondary); }
             .cat-row .small-btn:hover { background: #444; color: var(--text-primary); }
-            .table-container table { color: var(--text-primary); }
             td { border-color: #333; }
             .dropdown-content { background: #2a2a2a; border-color: #444; }
             .dropdown-content a { color: var(--text-secondary); }
             .dropdown-content a:hover { background: #333; color: var(--primary); }
-            .nav-buttons button { background: #333; color: var(--text-secondary); }
             .header-saldo { background: var(--primary); }
-            .insights-box { background: #1a2a3a; border-left-color: #36a2eb; color: #7ab8e0; }
             .stella-pref { background: #333; }
             .modal-content { background: #2a2a2a; }
             #calc-screen { background: #333; color: var(--text-primary); }
@@ -97,7 +78,15 @@
             .calc-buttons button:active { background: #555; }
             .budget-info span { color: var(--text-secondary); }
             .budget-info span:first-child { color: var(--text-primary); }
-            .nav { background: var(--bg); border-color: var(--border); }
+            .utenza-card { background: #2a2a2a; border-color: #444; }
+            .utenza-stat { background: #333; }
+            .utenza-stat-value { color: var(--text-primary); }
+            .utenza-stat-label { color: var(--text-secondary); }
+            .popup-content { background: #2a2a2a; }
+            .popup-title { color: var(--text-primary); }
+            .popup-body { color: var(--text-secondary); }
+            .popup-close { color: var(--text-muted); }
+            .popup-close:hover { color: var(--danger); }
         }
 
         * {
@@ -120,7 +109,6 @@
             -moz-osx-font-smoothing: grayscale;
         }
 
-        /* ===== NAVIGATION - CORRETTA ===== */
         nav {
             display: flex;
             justify-content: space-between;
@@ -254,80 +242,33 @@
             display: block !important;
         }
 
-        /* ===== RESPONSIVE NAV ===== */
         @media (max-width: 600px) {
-            nav {
-                padding: 8px 10px;
-                min-height: 60px;
-            }
-            .nav-inner {
-                gap: 5px;
-            }
-            .logo-box img {
-                height: 35px;
-            }
-            .center-title .title-main {
-                font-size: 0.95rem;
-            }
-            .center-title .title-sub {
-                font-size: 0.5rem;
-            }
-            .menu-dots {
-                font-size: 1.3rem;
-                padding: 4px 6px;
-            }
-            .dropdown-content {
-                min-width: 150px;
-                right: -10px;
-                top: 36px;
-            }
-            .dropdown-content a {
-                padding: 10px 14px;
-                font-size: 0.8rem;
-            }
+            nav { padding: 8px 10px; min-height: 60px; }
+            .nav-inner { gap: 5px; }
+            .logo-box img { height: 35px; }
+            .center-title .title-main { font-size: 0.95rem; }
+            .center-title .title-sub { font-size: 0.5rem; }
+            .menu-dots { font-size: 1.3rem; padding: 4px 6px; }
+            .dropdown-content { min-width: 150px; right: -10px; top: 36px; }
+            .dropdown-content a { padding: 10px 14px; font-size: 0.8rem; }
         }
 
         @media (max-width: 400px) {
-            .center-title .title-main {
-                font-size: 0.8rem;
-            }
-            .center-title .title-sub {
-                font-size: 0.45rem;
-            }
-            .logo-box img {
-                height: 30px;
-            }
-            .menu-dots {
-                font-size: 1.1rem;
-                padding: 3px 5px;
-            }
-            nav {
-                min-height: 50px;
-                padding: 5px 8px;
-            }
+            .center-title .title-main { font-size: 0.8rem; }
+            .center-title .title-sub { font-size: 0.45rem; }
+            .logo-box img { height: 30px; }
+            .menu-dots { font-size: 1.1rem; padding: 3px 5px; }
+            nav { min-height: 50px; padding: 5px 8px; }
         }
 
         @media (min-width: 768px) {
-            nav {
-                padding: 12px 20px;
-                min-height: 80px;
-            }
-            .logo-box img {
-                height: 50px;
-            }
-            .center-title .title-main {
-                font-size: 1.4rem;
-            }
-            .center-title .title-sub {
-                font-size: 0.7rem;
-            }
-            .menu-dots {
-                font-size: 1.8rem;
-                padding: 5px 12px;
-            }
+            nav { padding: 12px 20px; min-height: 80px; }
+            .logo-box img { height: 50px; }
+            .center-title .title-main { font-size: 1.4rem; }
+            .center-title .title-sub { font-size: 0.7rem; }
+            .menu-dots { font-size: 1.8rem; padding: 5px 12px; }
         }
 
-        /* ===== RESTO DEL CSS (invariato) ===== */
         .container {
             max-width: 900px;
             margin: 0 auto;
@@ -443,62 +384,6 @@
             background: white;
         }
 
-        .cat-row {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            width: 100%;
-            margin-bottom: 10px;
-        }
-
-        #categoria {
-            flex: 1;
-            min-width: 0;
-            margin-bottom: 0;
-        }
-
-        .cat-row .small-btn {
-            flex-shrink: 0;
-            border: none;
-            padding: 12px;
-            border-radius: var(--radius-md);
-            font-size: 14px;
-            cursor: pointer;
-            background: #f4f4f4;
-            color: #444;
-            box-shadow: var(--shadow-sm);
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 46px;
-            width: 46px;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        .cat-row .small-btn:hover {
-            transform: translateY(-2px);
-            background: #eaeaea;
-            box-shadow: var(--shadow-md);
-            color: #1a1a1a;
-        }
-
-        .cat-row .small-btn:active {
-            transform: scale(0.94);
-            background: #e0e0e0;
-        }
-
-        .cat-row .small-btn.btn-danger {
-            background: #fde8e8;
-            color: var(--danger);
-        }
-
-        .cat-row .small-btn.btn-danger:hover {
-            background: #fcd5d5;
-            color: #b91c1c;
-        }
-
         .btn-modern {
             flex: 1;
             max-width: 140px;
@@ -564,6 +449,34 @@
             background: var(--secondary);
         }
 
+        .btn-modern.btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-modern.btn-success:hover {
+            background: var(--success-dark, #1e7e34);
+        }
+
+        .btn-modern.btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-modern.btn-danger:hover {
+            background: var(--danger-dark, #bd2130);
+        }
+
+        .btn-modern.btn-warning {
+            background: var(--warning);
+            color: #333;
+        }
+
+        .btn-modern.btn-warning:hover {
+            background: #e0a800;
+            color: #222;
+        }
+
         .btn-modern#btn-salva {
             background: var(--primary);
             color: white;
@@ -574,30 +487,9 @@
             background: var(--secondary);
         }
 
-        .add-btn {
-            background: var(--primary);
-            color: white;
-            border: none;
-            font-weight: bold;
-            padding: 16px;
-            border-radius: var(--radius-md);
-            cursor: pointer;
-            width: 100%;
-            font-size: 1rem;
-            box-shadow: 0 5px var(--secondary);
-            margin-top: 5px;
-            transition: 0.1s;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        .add-btn:active {
-            transform: translateY(3px);
-            box-shadow: 0 2px var(--secondary);
-        }
-
         .nav-buttons-container {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             justify-content: center;
             max-width: 900px;
             margin: 15px auto;
@@ -608,15 +500,30 @@
 
         .nav-buttons-container .btn-modern {
             flex: 1;
-            min-width: 80px;
-            max-width: 140px;
+            min-width: 50px;
+            max-width: 100px;
+            font-size: 9px;
+            padding: 10px 4px;
+            min-height: 38px;
         }
 
-        @media (max-width: 400px) {
+        @media (min-width: 600px) {
             .nav-buttons-container .btn-modern {
-                font-size: 9px;
-                padding: 10px 5px;
-                min-height: 38px;
+                min-width: 70px;
+                max-width: 120px;
+                font-size: 10px;
+                padding: 12px 6px;
+                min-height: 42px;
+            }
+        }
+
+        @media (min-width: 900px) {
+            .nav-buttons-container .btn-modern {
+                min-width: 80px;
+                max-width: 140px;
+                font-size: 11px;
+                padding: 14px 8px;
+                min-height: 46px;
             }
         }
 
@@ -647,28 +554,60 @@
             transform: scale(0.96);
         }
 
-        .btn-sm {
-            padding: 8px 12px;
-            border-radius: var(--radius-sm);
-            border: 1px solid #ccc;
-            background: white;
+        .cat-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        #categoria {
+            flex: 1;
+            min-width: 0;
+            margin-bottom: 0;
+        }
+
+        .cat-row .small-btn {
+            flex-shrink: 0;
+            border: none;
+            padding: 12px;
+            border-radius: var(--radius-md);
+            font-size: 14px;
             cursor: pointer;
-            font-weight: bold;
+            background: #f4f4f4;
+            color: #444;
+            box-shadow: var(--shadow-sm);
             transition: var(--transition);
-            -webkit-tap-highlight-color: transparent;
-            min-height: 36px;
-            display: inline-flex;
+            display: flex;
             align-items: center;
             justify-content: center;
+            height: 46px;
+            width: 46px;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        .btn-sm:hover {
-            background: var(--border);
-            border-color: var(--primary);
+        .cat-row .small-btn:hover {
+            transform: translateY(-2px);
+            background: #eaeaea;
+            box-shadow: var(--shadow-md);
+            color: #1a1a1a;
         }
 
-        .btn-sm:active {
-            transform: scale(0.95);
+        .cat-row .small-btn:active {
+            transform: scale(0.94);
+            background: #e0e0e0;
+        }
+
+        .cat-row .small-btn.btn-danger {
+            background: #fde8e8;
+            color: var(--danger);
+        }
+
+        .cat-row .small-btn.btn-danger:hover {
+            background: #fcd5d5;
+            color: #b91c1c;
         }
 
         .table-container {
@@ -777,58 +716,193 @@
         }
 
         @media (max-width: 600px) {
-            .center-title h1 {
-                font-size: 1.8rem !important;
-            }
-            .header-saldo h1 {
-                font-size: 1.6rem;
-            }
-            .header-saldo {
-                padding: 15px;
-            }
-            .logo-box img {
-                height: 40px;
-            }
-            .container {
-                padding: 0 10px 30px;
-            }
-            .section {
-                padding: 15px 0;
-            }
-            .info-previsione {
-                padding: 15px;
-                margin: 10px auto;
-            }
-            input, select {
-                padding: 10px;
-                font-size: 16px;
-            }
-            .cat-row .small-btn {
-                height: 42px;
-                width: 42px;
-                padding: 10px;
-            }
-            .modal-content {
-                width: 90%;
-                max-width: 280px;
-                padding: 15px;
-            }
-            .modal-content.auth {
-                padding: 20px;
-            }
-            .grid-calendario {
-                gap: 2px;
-                padding: 2px;
-            }
-            .cal-giorno {
-                min-height: 50px;
-                padding: 2px;
-                font-size: 0.75rem;
-            }
-            .cal-badge-scadenza {
-                font-size: 0.55rem;
-                padding: 1px 3px;
-            }
+            .header-saldo h1 { font-size: 1.6rem; }
+            .header-saldo { padding: 15px; }
+            .container { padding: 0 10px 30px; }
+            .section { padding: 15px 0; }
+            .info-previsione { padding: 15px; margin: 10px auto; }
+            input, select { padding: 10px; font-size: 16px; }
+            .cat-row .small-btn { height: 42px; width: 42px; padding: 10px; }
+            .modal-content { width: 90%; max-width: 280px; padding: 15px; }
+            .modal-content.auth { padding: 20px; }
+            .grid-calendario { gap: 2px; padding: 2px; }
+            .cal-giorno { min-height: 50px; padding: 2px; font-size: 0.75rem; }
+            .cal-badge-scadenza { font-size: 0.55rem; padding: 1px 3px; }
+        }
+
+        .utenza-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            margin-bottom: 15px;
+            transition: var(--transition);
+        }
+
+        .utenza-card:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+        .utenza-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .utenza-nome {
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .utenza-icone {
+            display: flex;
+            gap: 6px;
+        }
+
+        .utenza-icone span {
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: var(--radius-sm);
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+
+        .utenza-icone span:hover {
+            background: var(--border);
+        }
+
+        .utenza-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .utenza-stat {
+            background: var(--bg-light, #f8f9fa);
+            border-radius: var(--radius-sm);
+            padding: 10px;
+            text-align: center;
+        }
+
+        .utenza-stat-value {
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: var(--text-primary);
+        }
+
+        .utenza-stat-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .utenza-stat-value.alert {
+            color: var(--danger);
+        }
+
+        .utenza-stat-value.good {
+            color: var(--success);
+        }
+
+        .utenza-dettagli {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid var(--border);
+        }
+
+        .utenza-dettagli table {
+            width: 100%;
+            font-size: 0.85rem;
+        }
+
+        .utenza-dettagli td {
+            padding: 6px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .utenza-dettagli td:last-child {
+            text-align: right;
+            font-weight: bold;
+        }
+
+        .utenza-chart-container {
+            margin-top: 12px;
+            height: 120px;
+            position: relative;
+        }
+
+        .utenza-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            background: var(--bg-light, #f8f9fa);
+            padding: 15px;
+            border-radius: var(--radius-md);
+            margin-bottom: 15px;
+        }
+
+        .utenza-form .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .utenza-form input {
+            margin-bottom: 0;
+            padding: 10px;
+            font-size: 0.9rem;
+        }
+
+        .utenza-form select {
+            margin-bottom: 0;
+            padding: 10px;
+            font-size: 0.9rem;
+        }
+
+        .utenza-form button {
+            grid-column: 1 / -1;
+            margin-top: 5px;
+        }
+
+        .utenza-empty {
+            text-align: center;
+            padding: 30px;
+            color: var(--text-muted);
+        }
+
+        .utenza-empty .icon {
+            font-size: 3rem;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .utenza-totale {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background: var(--primary);
+            color: white;
+            border-radius: var(--radius-sm);
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .utenza-totale .label {
+            font-size: 0.8rem;
+            opacity: 0.9;
+        }
+
+        .utenza-totale .value {
+            font-weight: bold;
+            font-size: 1.2rem;
         }
 
         #bodyMatrice td {
@@ -857,13 +931,6 @@
             box-shadow: var(--shadow-md);
         }
 
-        .news-img {
-            width: 100%;
-            height: 150px;
-            object-fit: cover;
-            background: #eee;
-        }
-
         .news-content {
             padding: 15px;
         }
@@ -875,15 +942,6 @@
             display: block;
             color: var(--text-primary);
             text-decoration: none;
-        }
-
-        .news-title:hover {
-            color: var(--primary);
-        }
-
-        .news-date {
-            font-size: 0.75rem;
-            color: var(--text-muted);
         }
 
         .stella-pref {
@@ -1245,6 +1303,235 @@
             color: var(--text-primary);
         }
 
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            animation: popupFadeIn 0.3s ease;
+        }
+
+        @keyframes popupFadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .popup-content {
+            background: var(--bg);
+            border-radius: var(--radius-lg);
+            max-width: 500px;
+            width: 92%;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 30px;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            animation: popupSlideIn 0.3s ease;
+        }
+
+        @keyframes popupSlideIn {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .popup-close {
+            position: absolute;
+            top: 12px;
+            right: 16px;
+            font-size: 28px;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: var(--transition);
+            background: none;
+            border: none;
+            line-height: 1;
+            padding: 4px 8px;
+            border-radius: 50%;
+        }
+
+        .popup-close:hover {
+            color: var(--danger);
+            transform: rotate(90deg);
+            background: rgba(0,0,0,0.05);
+        }
+
+        .popup-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-right: 30px;
+        }
+
+        .popup-body {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            font-size: 0.95rem;
+        }
+
+        .popup-body p {
+            margin-bottom: 12px;
+        }
+
+        .popup-body .highlight {
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .popup-body .success-text {
+            color: var(--success);
+            font-weight: bold;
+        }
+
+        .popup-body .danger-text {
+            color: var(--danger);
+            font-weight: bold;
+        }
+
+        .popup-divider {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 15px 0;
+        }
+
+        .popup-footer {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .popup-scroll {
+            max-height: calc(85vh - 140px);
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        .popup-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .popup-scroll::-webkit-scrollbar-track {
+            background: var(--border);
+            border-radius: 2px;
+        }
+
+        .popup-scroll::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 2px;
+        }
+
+        .pdf-extracted-data {
+            background: var(--bg-light, #f8f9fa);
+            border-radius: var(--radius-sm);
+            padding: 12px;
+            margin-top: 10px;
+            border-left: 3px solid var(--success);
+            grid-column: 1 / -1;
+            display: none;
+        }
+
+        .pdf-extracted-data .row {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+            font-size: 0.85rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .pdf-extracted-data .row:last-child {
+            border-bottom: none;
+            font-weight: bold;
+            font-size: 0.95rem;
+            padding-top: 8px;
+            margin-top: 4px;
+            border-top: 2px solid var(--border);
+        }
+
+        .pdf-extracted-data .label {
+            color: var(--text-muted);
+        }
+
+        .pdf-extracted-data .value {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .pdf-extracted-data .value.alert {
+            color: var(--danger);
+        }
+
+        .pdf-extracted-data .value.success {
+            color: var(--success);
+        }
+
+        .btn-import-pdf {
+            background: var(--info);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-import-pdf:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-import-pdf:active {
+            transform: scale(0.95);
+        }
+
+        .import-status {
+            padding: 10px;
+            border-radius: var(--radius-sm);
+            margin-top: 10px;
+            font-size: 0.85rem;
+            display: none;
+            grid-column: 1 / -1;
+        }
+
+        .import-status.success {
+            display: block;
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .import-status.error {
+            display: block;
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .import-status.info {
+            display: block;
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
         .loading-spinner {
             display: inline-block;
             width: 20px;
@@ -1271,91 +1558,33 @@
             margin-left: 5px;
         }
 
-        .stats-card {
-            background: #f4f6f4;
-            border-radius: var(--radius-md);
-            padding: 22px 20px;
-            margin: 35px auto 20px auto;
-            max-width: 900px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-sizing: border-box;
-            flex-wrap: wrap;
-        }
-
-        .stat-item {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            min-width: 120px;
-        }
-
-        .left-side {
-            text-align: center;
-            justify-content: center;
-        }
-
-        .stat-value-big {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: var(--text-primary);
-            margin-top: 6px;
-        }
-
-        .right-side {
-            padding-left: 30px;
-            gap: 10px;
-        }
-
-        .right-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.95rem;
-            flex-wrap: wrap;
-        }
-
-        .stat-label {
-            font-size: 0.95rem;
-            color: var(--text-secondary);
-            font-weight: 500;
-        }
-
-        .stat-label-small {
-            color: var(--text-secondary);
-            font-weight: 500;
-        }
-
-        .stat-value-small {
-            font-weight: bold;
-            color: var(--text-primary);
-        }
-
-        .highlight-saldo {
-            border-top: 1px dashed #d0d4d0;
-            padding-top: 8px;
-            margin-top: 2px;
-        }
-
-        .divider {
-            width: 1px;
-            height: 80px;
-            background: #e0e4e0;
-        }
-
         @media (max-width: 600px) {
-            .stats-card {
-                flex-direction: column;
-                gap: 20px;
+            .popup-content {
+                padding: 20px;
+                max-height: 90vh;
+                width: 95%;
             }
-            .divider {
-                width: 100%;
-                height: 1px;
+            .popup-title {
+                font-size: 1.1rem;
             }
-            .right-side {
-                padding-left: 0;
-                width: 100%;
+            .popup-body {
+                font-size: 0.85rem;
+            }
+            .popup-close {
+                font-size: 22px;
+                top: 8px;
+                right: 12px;
+            }
+            .pdf-extracted-data .row {
+                font-size: 0.75rem;
+                flex-wrap: wrap;
+                gap: 2px;
+            }
+            .utenza-form {
+                grid-template-columns: 1fr;
+            }
+            .utenza-form .full-width {
+                grid-column: 1;
             }
         }
 
@@ -1388,23 +1617,11 @@
                 padding-right: max(15px, env(safe-area-inset-right));
             }
         }
-
-        .text-center { text-align: center; }
-        .text-muted { color: var(--text-muted); }
-        .mt-10 { margin-top: 10px; }
-        .mt-20 { margin-top: 20px; }
-        .mb-10 { margin-bottom: 10px; }
-        .mb-20 { margin-bottom: 20px; }
-        .flex { display: flex; }
-        .flex-between { display: flex; justify-content: space-between; align-items: center; }
-        .gap-10 { gap: 10px; }
-        .gap-8 { gap: 8px; }
     </style>
 </head>
 
 <body>
 
-    <!-- ===== DATALIST ===== -->
     <datalist id="lista-assets">
         <option value="BTC">Bitcoin</option>
         <option value="ETH">Ethereum</option>
@@ -1417,7 +1634,6 @@
         <option value="ENI.MI">Eni</option>
     </datalist>
 
-    <!-- ===== NAVIGAZIONE CORRETTA ===== -->
     <nav>
         <div class="nav-inner">
             <div class="logo-box" onclick="mostraPagina('home')">
@@ -1433,7 +1649,7 @@
                 <div class="menu-container">
                     <div class="menu-dots" onclick="toggleMenu()" aria-label="Apri menu" role="button" tabindex="0">⋮</div>
                     <div id="myDropdown" class="dropdown-content" role="menu">
-                        <a onclick="loginbtn()" role="menuitem">🔐 Login</a>
+                        <a onclick="loginbtn()" role="menuitem" id="login-nav-link">🔐 Login</a>
                         <a onclick="esportaDati()" role="menuitem">💾 Backup (Esporta)</a>
                         <a onclick="document.getElementById('fileInput').click()" role="menuitem">📂 Ripristina (Importa)</a>
                     </div>
@@ -1442,7 +1658,6 @@
         </div>
     </nav>
 
-    <!-- ===== RESTO DEL CODICE (invariato) ===== -->
     <div id="pagina-home" class="container">
         <div class="header-saldo" id="boxSaldo">
             <div>
@@ -1456,10 +1671,11 @@
             <button class="btn-modern" onclick="mostraPagina('news')">📰 NEWS</button>
             <button class="btn-modern" onclick="mostraPagina('analisi')">🧠 ANALISI</button>
             <button class="btn-modern" onclick="mostraPagina('scadenze')">📅 SCADENZE</button>
+            <button class="btn-modern" onclick="mostraPagina('utenze')" style="background:var(--info); color:white;">⚡ UTENZE</button>
+            <button class="btn-modern btn-warning" onclick="apriPopupSuggerimenti()" style="font-size:1.2rem;" title="Consigli finanziari">💡</button>
         </div>
 
         <div id="previsione-fine-mese" class="info-previsione"></div>
-        <div id="insights-finanziari" class="info-previsione" style="background: #edf4fe; border-left: 4px solid #36a2eb; margin-top: -5px; color: #2b4c7e;"></div>
 
         <div class="desktop-grid">
             <div class="section section-divider">
@@ -1475,7 +1691,6 @@
                     <input type="file" id="pdfInput" style="display:none" accept=".pdf" onchange="elaboraPDFBancario(event)" aria-label="Carica file PDF">
                 </div>
 
-                <!-- ===== MODAL CALCOLATRICE ===== -->
                 <div id="calc-modal" class="modal" role="dialog" aria-label="Calcolatrice">
                     <div class="modal-content">
                         <span class="close-btn" onclick="chiudiCalcolatrice()" aria-label="Chiudi calcolatrice" role="button">&times;</span>
@@ -1557,7 +1772,6 @@
         </div>
     </div>
 
-    <!-- ===== PAGINA SCADENZE ===== -->
     <div id="sezione-scadenze" class="container" style="display: none; padding: 20px;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
             <button onclick="mostraPagina('home')" class="btn-back-home">⬅ Torna alla Home</button>
@@ -1565,9 +1779,9 @@
         </div>
 
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; background: #f5f5f5; padding: 10px; border-radius: var(--radius-sm); flex-wrap: wrap; gap: 8px;">
-            <button onclick="navigaMeseCalendario(-1)" class="btn-sm" aria-label="Mese precedente">◀ Mese Prec.</button>
+            <button onclick="navigaMeseCalendario(-1)" class="btn-sm" style="padding: 8px 12px; border-radius: 8px; border: 1px solid #ccc; background: white; cursor: pointer; font-weight: bold;">◀ Mese Prec.</button>
             <h3 id="cal-titolo-mese" style="margin: 0; font-size: 1.2rem; font-weight: bold; text-transform: capitalize; color: var(--text-primary);"></h3>
-            <button onclick="navigaMeseCalendario(1)" class="btn-sm" aria-label="Mese successivo">Mese Succ. ▶</button>
+            <button onclick="navigaMeseCalendario(1)" class="btn-sm" style="padding: 8px 12px; border-radius: 8px; border: 1px solid #ccc; background: white; cursor: pointer; font-weight: bold;">Mese Succ. ▶</button>
         </div>
 
         <div style="display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-weight: bold; font-size: 0.8rem; margin-bottom: 5px; opacity: 0.7;">
@@ -1577,7 +1791,6 @@
         <div id="calendario-grid" class="grid-calendario"></div>
     </div>
 
-    <!-- ===== PAGINA ANALISI ===== -->
     <div id="pagina-analisi" class="container" style="display: none; padding: 20px;">
         <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 20px; flex-wrap: wrap;">
             <button onclick="mostraPagina('home')" class="btn-back-home">⬅ Torna alla Home</button>
@@ -1609,7 +1822,6 @@
         </div>
     </div>
 
-    <!-- ===== PAGINA NEWS ===== -->
     <div id="pagina-news" class="container" style="display: none; padding: 20px;">
         <h3>📰 News Finanziarie</h3>
 
@@ -1624,7 +1836,53 @@
         <div id="news-container" class="desktop-grid"></div>
     </div>
 
-    <!-- ===== CLOUD MODAL ===== -->
+    <div id="pagina-utenze" class="container" style="display: none; padding: 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
+            <button onclick="mostraPagina('home')" class="btn-back-home">⬅ Torna alla Home</button>
+            <h3 style="margin: 0;">⚡ Gestione Utenze</h3>
+        </div>
+
+        <div class="utenza-form" id="utenza-form">
+            <select id="utenza-nome" style="grid-column: 1 / -1;">
+                <option value="">➕ Seleziona o aggiungi utenza...</option>
+                <option value="Enel Energia Elettrica">⚡ Enel - Energia Elettrica</option>
+                <option value="Enel Gas">🔥 Enel - Gas</option>
+                <option value="Acqua">💧 Acqua</option>
+                <option value="Fibra/Internet">🌐 Fibra/Internet</option>
+                <option value="Telefono">📱 Telefono</option>
+                <option value="Rifiuti">🗑️ Rifiuti</option>
+                <option value="Condominio">🏢 Condominio</option>
+                <option value="Altro">📌 Altro</option>
+            </select>
+            <input type="date" id="utenza-data" aria-label="Data rilevazione">
+            <input type="number" id="utenza-consumo" placeholder="Consumo (kWh/m³/GB)" step="0.01" aria-label="Consumo" inputmode="decimal">
+            <input type="number" id="utenza-costo" placeholder="Costo (€)" step="0.01" aria-label="Costo" inputmode="decimal">
+            <input type="text" id="utenza-note" placeholder="Note (es. lettura contatore)" aria-label="Note" style="grid-column: 1 / -1;">
+            
+            <div style="grid-column: 1 / -1; display: flex; gap: 10px; flex-wrap: wrap;">
+                <button class="btn-import-pdf" onclick="document.getElementById('pdfBollettaInput').click()">
+                    📄 Importa PDF Bolletta
+                </button>
+                <span style="font-size: 0.8rem; color: var(--text-muted); display: flex; align-items: center;">
+                    Supporta Enel, Eni, Acea, ecc.
+                </span>
+            </div>
+            <input type="file" id="pdfBollettaInput" style="display:none" accept=".pdf" onchange="elaboraPDFBolletta(event)">
+            
+            <div id="import-status" class="import-status"></div>
+            <div id="pdf-extracted-data" class="pdf-extracted-data"></div>
+
+            <button class="btn-modern btn-success full-width" onclick="salvaRilevazioneUtenza()" style="grid-column: 1 / -1;">💾 Salva Rilevazione</button>
+        </div>
+
+        <div class="utenza-totale" id="utenza-totale">
+            <span><span class="label">💰 Costo Totale Mese</span></span>
+            <span class="value" id="utenza-totale-costo">0.00 €</span>
+        </div>
+
+        <div id="utenza-lista"></div>
+    </div>
+
     <div id="cloud-modal" class="modal-backdrop-cloud" style="display: none;">
         <div class="modal-card-cloud">
             <div class="modal-icon-cloud">☁️</div>
@@ -1637,9 +1895,6 @@
         </div>
     </div>
 
-    <!-- ========================================================== -->
-    <!-- ===== JAVASCRIPT (INVARIATO) ===== -->
-    <!-- ========================================================== -->
     <script>
         // ==========================================
         // ☁️ CONFIGURAZIONE SUPABASE
@@ -1649,8 +1904,20 @@
         const SUPABASE_ANON_KEY =
             "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRmZ2lydXFteGN5amhlcHN4b2x3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI3MzQ4NjksImV4cCI6MjA5ODMxMDg2OX0.aAF964CLJwWg-b2TKVkanTCGjKFyNKyBXEIu8go95ls";
 
-        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+            auth: {
+                persistSession: true,
+                storage: localStorage,
+                storageKey: 'supabase_auth_token',
+                autoRefreshToken: true,
+                detectSessionInUrl: true
+            }
+        });
+
+        const _supabase = supabaseClient;
         let currentUser = null;
+        let syncInProgress = false;
+        let lastSyncAttempt = 0;
 
         // ==========================================
         // 🔒 FUNZIONI DI SICUREZZA
@@ -1706,7 +1973,10 @@
             originalSetItem.apply(localStorage, arguments);
 
             if (key.startsWith("moneyTrack_") && currentUser) {
-                syncDatiSuSupabase();
+                clearTimeout(window._syncDebounceTimer);
+                window._syncDebounceTimer = setTimeout(() => {
+                    syncDatiSuSupabase();
+                }, 1500);
             }
 
             if (key === "moneyTrack_db" && !currentUser) {
@@ -1732,117 +2002,64 @@
             }
         };
 
-        let syncTimeout = null;
+        // ==========================================
+        // ☁️ SYNC CLOUD
+        // ==========================================
 
-        function syncDatiSuSupabase() {
-            if (!currentUser) return;
-            clearTimeout(syncTimeout);
-            syncTimeout = setTimeout(async () => {
-                try {
-                    const payload = {
-                        spese: safeGetJSON("moneyTrack_db") || [],
-                        future: safeGetJSON("moneyTrack_future") || [],
-                        customCats: safeGetJSON("moneyTrack_cats") || {},
-                        budgets: safeGetJSON("moneyTrack_budgets") || {},
-                        preferitiNews: safeGetJSON("moneyTrack_fav_news") || []
-                    };
-                    await _supabase.from('userdata').upsert({
-                        id: currentUser.id,
-                        payload: payload,
-                        updated_at: new Date().toISOString()
-                    });
-                    console.log("☁️ Cloud Sync completato");
-                } catch (e) {
-                    console.error("❌ Errore Cloud Sync:", e);
-                }
-            }, 600);
-        }
+        async function syncDatiSuSupabase() {
+            if (!currentUser || syncInProgress) return;
 
-        async function syncDatiSuSupabaseImmediato() {
-            if (!currentUser) return;
+            const now = Date.now();
+            if (now - lastSyncAttempt < 2000) return;
+
+            syncInProgress = true;
+            lastSyncAttempt = now;
+
             try {
                 const payload = {
                     spese: safeGetJSON("moneyTrack_db") || [],
                     future: safeGetJSON("moneyTrack_future") || [],
                     customCats: safeGetJSON("moneyTrack_cats") || {},
                     budgets: safeGetJSON("moneyTrack_budgets") || {},
-                    preferitiNews: safeGetJSON("moneyTrack_fav_news") || []
+                    preferitiNews: safeGetJSON("moneyTrack_fav_news") || [],
+                    utenze: safeGetJSON("moneyTrack_utenze") || [],
+                    lastUpdated: new Date().toISOString()
                 };
-                await _supabase.from('userdata').upsert({
-                    id: currentUser.id,
-                    payload: payload,
-                    updated_at: new Date().toISOString()
-                });
-                console.log("☁️ Cloud Sync immediato completato");
-            } catch (e) {
-                console.error("❌ Errore Cloud Sync immediato:", e);
-            }
-        }
 
-        function applicaDatiCloud(payload) {
-            if (!payload) return;
-            if (payload.spese) spese = payload.spese;
-            if (payload.future) future = payload.future;
-            if (payload.customCats) customCats = payload.customCats;
-            if (payload.budgets) budgets = payload.budgets;
-            if (payload.preferitiNews) preferitiNews = payload.preferitiNews;
+                let tentativi = 0;
+                const maxTentativi = 3;
+                let successo = false;
 
-            originalSetItem.call(localStorage, "moneyTrack_db", JSON.stringify(spese));
-            originalSetItem.call(localStorage, "moneyTrack_future", JSON.stringify(future));
-            originalSetItem.call(localStorage, "moneyTrack_cats", JSON.stringify(customCats));
-            originalSetItem.call(localStorage, "moneyTrack_budgets", JSON.stringify(budgets));
-            originalSetItem.call(localStorage, "moneyTrack_fav_news", JSON.stringify(preferitiNews));
+                while (tentativi < maxTentativi && !successo) {
+                    try {
+                        const result = await _supabase.from('userdata').upsert({
+                            id: currentUser.id,
+                            payload: payload,
+                            updated_at: new Date().toISOString()
+                        }, { onConflict: 'id' });
 
-            if (typeof aggiornaApp === "function") aggiornaApp();
-        }
+                        if (result.error) throw result.error;
+                        successo = true;
+                        console.log('☁️ Sync completato!');
 
-        async function gestisciLoginOSincronizzazione(user) {
-            currentUser = user;
-            if (!user) return;
-            mostraStatoUtenteLoggato(user.email);
-
-            const { data, error } = await _supabase.from('userdata').select('payload').eq('id', user.id).single();
-            const localeHaDati = (localStorage.getItem("moneyTrack_db") && safeGetJSON("moneyTrack_db").length > 0);
-
-            if (error && error.code === 'PGRST116') {
-                if (localeHaDati) {
-                    console.log("Rilevati dati locali. Avvio migrazione su Cloud...");
-                    syncDatiSuSupabase();
-                    await syncDatiSuSupabaseImmediato();
-                    alert("🎉 MIGRAZIONE COMPLETATA!\n\nI tuoi dati sono stati salvati al sicuro nel Cloud.");
-                }
-            } else if (data && data.payload) {
-                if (localeHaDati) {
-                    const localPayload = {
-                        spese: safeGetJSON("moneyTrack_db") || [],
-                        future: safeGetJSON("moneyTrack_future") || [],
-                        customCats: safeGetJSON("moneyTrack_cats") || {},
-                        budgets: safeGetJSON("moneyTrack_budgets") || {},
-                        preferitiNews: safeGetJSON("moneyTrack_fav_news") || []
-                    };
-
-                    if (JSON.stringify(localPayload) === JSON.stringify(data.payload)) {
-                        console.log("☁️ Dati locali e Cloud già allineati.");
-                        applicaDatiCloud(data.payload);
-                    } else {
-                        const conflittoCloudRisolto = localStorage.getItem('conflitto_cloud_risolto');
-                        if (!conflittoCloudRisolto) {
-                            if (confirm(
-                                    "Abbiamo trovato un salvataggio Cloud per questo account.\n\nVuoi CARICARE i dati dal Cloud sostituendo quelli di questo dispositivo?\n\n[OK] Carica dal Cloud\n[Annulla] Mantieni i dati del telefono"
-                                    )) {
-                                applicaDatiCloud(data.payload);
-                            } else {
-                                syncDatiSuSupabase();
-                                await syncDatiSuSupabaseImmediato();
-                            }
-                            localStorage.setItem('conflitto_cloud_risolto', 'true');
+                    } catch (err) {
+                        tentativi++;
+                        console.warn(`⚠️ Tentativo ${tentativi} fallito`);
+                        if (tentativi < maxTentativi) {
+                            await new Promise(r => setTimeout(r, 1000 * Math.pow(2, tentativi - 1)));
                         } else {
-                            applicaDatiCloud(data.payload);
+                            throw err;
                         }
                     }
-                } else {
-                    applicaDatiCloud(data.payload);
                 }
+
+                if (!successo) throw new Error('Sync fallito');
+
+            } catch (e) {
+                console.error('❌ Errore Cloud Sync:', e);
+                localStorage.setItem('pending_sync', 'true');
+            } finally {
+                syncInProgress = false;
             }
         }
 
@@ -1891,12 +2108,20 @@
 
         window.addEventListener('load', () => {
             injectAuthModal();
-            _supabase.auth.onAuthStateChange((event, session) => {
-                if (session && session.user) {
-                    gestisciLoginOSincronizzazione(session.user);
-                } else {
+            _supabase.auth.onAuthStateChange(async (event, session) => {
+                if (event === 'SIGNED_IN' && session && session.user) {
+                    await gestisciLoginOSincronizzazione(session.user);
+                } else if (event === 'SIGNED_OUT') {
                     currentUser = null;
                     mostraStatoUtenteDisconnesso();
+                } else if (session && session.user && !currentUser) {
+                    await gestisciLoginOSincronizzazione(session.user);
+                }
+            });
+
+            _supabase.auth.getSession().then(({ data }) => {
+                if (data && data.session && data.session.user) {
+                    gestisciLoginOSincronizzazione(data.session.user);
                 }
             });
         });
@@ -1928,37 +2153,42 @@
             btn.innerText = "ELABORAZIONE...";
             btn.disabled = true;
 
-            let res = authMode === "login" ?
-                await _supabase.auth.signInWithPassword({ email, password }) :
-                await _supabase.auth.signUp({ email, password });
+            try {
+                let res = authMode === "login" ?
+                    await _supabase.auth.signInWithPassword({ email, password }) :
+                    await _supabase.auth.signUp({ email, password });
 
-            btn.disabled = false;
-            btn.innerText = authMode === "login" ? "ACCEDI" : "REGISTRATI";
+                btn.disabled = false;
+                btn.innerText = authMode === "login" ? "ACCEDI" : "REGISTRATI";
 
-            if (res.error) {
-                errBox.innerText = "Errore: " + res.error.message;
-                errBox.style.display = "block";
-            } else {
-                if (authMode === "signup") {
-                    alert("✉️ Account creato! Controlla la tua email per confermare.");
+                if (res.error) {
+                    errBox.innerText = "Errore: " + res.error.message;
+                    errBox.style.display = "block";
+                } else {
+                    if (authMode === "signup") {
+                        alert("✉️ Account creato! Controlla la tua email per confermare.");
+                    }
+                    chiudiAuthModal();
                 }
-                chiudiAuthModal();
+            } catch (error) {
+                btn.disabled = false;
+                btn.innerText = authMode === "login" ? "ACCEDI" : "REGISTRATI";
+                errBox.innerText = "Errore di connessione. Riprova.";
+                errBox.style.display = "block";
             }
         }
 
         function mostraStatoUtenteLoggato(email) {
-            const link = document.querySelector("a[onclick='loginbtn()']") || document.getElementById("login-nav-link");
+            const link = document.getElementById("login-nav-link");
             if (link) {
-                link.id = "login-nav-link";
                 link.innerHTML = `🚪 Esci (${email.split('@')[0]})`;
                 link.setAttribute("onclick", "eseguiLogout()");
             }
         }
 
         function mostraStatoUtenteDisconnesso() {
-            const link = document.getElementById("login-nav-link") || document.querySelector("a[onclick='eseguiLogout()']");
+            const link = document.getElementById("login-nav-link");
             if (link) {
-                link.id = "login-nav-link";
                 link.innerHTML = "🔐 Login";
                 link.setAttribute("onclick", "loginbtn()");
             }
@@ -1966,9 +2196,15 @@
 
         async function eseguiLogout() {
             if (confirm("Vuoi disconnetterti dal Cloud?")) {
-                await _supabase.auth.signOut();
-                alert("Disconnesso con successo.");
-                location.reload();
+                try {
+                    await _supabase.auth.signOut();
+                    currentUser = null;
+                    alert("Disconnesso con successo.");
+                    mostraStatoUtenteDisconnesso();
+                } catch (error) {
+                    console.error('Errore logout:', error);
+                    alert("Errore durante il logout.");
+                }
             }
         }
 
@@ -1982,6 +2218,8 @@
             "Uscita": ["🏠 Casa", "🍕 Cibo", "🚗 Auto", "🛒 Spesa", "⏳ Programmata"],
             "Entrata": ["💰 Stipendio", "➕ Altro"]
         };
+        let budgets = JSON.parse(localStorage.getItem("moneyTrack_budgets")) || {};
+        let utenze = JSON.parse(localStorage.getItem("moneyTrack_utenze")) || [];
 
         let graficoTorta, graficoBarre, privacy = false;
         const mesiNomi = ["Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic"];
@@ -1989,10 +2227,9 @@
             "Ottobre", "Novembre", "Dicembre"
         ];
         let editFutureIdx = -1;
-        let budgets = JSON.parse(localStorage.getItem("moneyTrack_budgets")) || {};
 
         // ==========================================
-        // 🧭 NAVIGAZIONE & MENU
+        // 🧭 NAVIGAZIONE
         // ==========================================
 
         function toggleMenu() { document.getElementById("myDropdown").classList.toggle("show"); }
@@ -2000,7 +2237,7 @@
                 'show'); }
 
         function mostraPagina(p) {
-            const pagine = ["pagina-home", "pagina-analisi", "pagina-news"];
+            const pagine = ["pagina-home", "pagina-analisi", "pagina-news", "pagina-utenze"];
             pagine.forEach(id => {
                 const elemento = document.getElementById(id);
                 if (elemento) elemento.style.display = 'none';
@@ -2015,10 +2252,11 @@
             if (p === 'home') aggiornaApp();
             else if (p === 'news') caricaNews();
             else if (p === 'analisi') setTimeout(() => { generaReport(); if (graficoTorta) graficoTorta.resize(); }, 50);
+            else if (p === 'utenze') renderizzaUtenze();
 
             if (p === 'scadenze') {
                 if (sezioneScadenze) sezioneScadenze.style.display = 'block';
-                if (typeof disegnaCalendario === "function") disegnaCalendario();
+                disegnaCalendario();
             }
             window.scrollTo(0, 0);
         }
@@ -2076,9 +2314,7 @@
             const sel = document.getElementById("categoria").value;
             if (!sel) return;
 
-            if (confirm(
-                    `Rimuovere la categoria "${sel}" dalla lista?\n\nI vecchi movimenti NON verranno eliminati.`
-                    )) {
+            if (confirm(`Rimuovere la categoria "${sel}" dalla lista?\n\nI vecchi movimenti NON verranno eliminati.`)) {
                 customCats[t] = customCats[t].filter(c => c !== sel);
                 if (customCats[t].length === 0) customCats[t] = ["Generica"];
                 saveCats();
@@ -2232,7 +2468,6 @@
             });
 
             calcolaPrevisione(saldo);
-            aggiornaInsights();
             disegnaTorta(catsUscita, totUsciteMese);
             aggiornaListaFuture();
             aggiornaBudgetProgress(catsUscita);
@@ -2242,22 +2477,30 @@
         document.getElementById('filtroRicerca').addEventListener('keyup', debouncedAggiorna);
 
         // ==========================================
-        // 💡 CONSIGLI FINANZIARI DINAMICI
+        // 💡 POPUP SUGGERIMENTI
         // ==========================================
 
-        function aggiornaInsights() {
-            const div = document.getElementById("insights-finanziari");
-            if (!div) return;
-
+        function generaContenutoSuggerimenti() {
             if (spese.length === 0) {
-                div.innerHTML =
-                    "💡 <b>Il tuo Assistente:</b> Inizia a inserire qualche movimento per ricevere analisi personalizzate!";
-                return;
+                return {
+                    titolo: '💡 Inizia a tracciare le tue spese!',
+                    corpo: `
+                        <p>📊 Non hai ancora registrato nessuna transazione.</p>
+                        <p>Inizia a inserire le tue <b>entrate</b> e <b>uscite</b> per ricevere analisi personalizzate e consigli utili per migliorare le tue finanze!</p>
+                        <br>
+                        <p style="text-align:center;font-size:1.5rem;">🚀</p>
+                    `
+                };
             }
 
             if (privacy) {
-                div.innerHTML = "💡 <b>Il tuo Assistente:</b> Analisi nascoste in modalità privacy. 👁️";
-                return;
+                return {
+                    titolo: '🔒 Modalità Privacy Attiva',
+                    corpo: `
+                        <p>I suggerimenti finanziari sono nascosti in modalità privacy.</p>
+                        <p>Clicca sull'icona 👁️ nella home per disattivare la privacy e visualizzare le analisi.</p>
+                    `
+                };
             }
 
             const oggi = new Date();
@@ -2267,15 +2510,7 @@
             let totEntrate = 0,
                 totUscite = 0;
             let categorieUscite = {};
-            let entrateMensili = [];
             let speseMensili = [];
-            let transazioniTotali = spese.length;
-
-            const ultimi6Mesi = [];
-            for (let i = 0; i < 6; i++) {
-                const mese = new Date(oggi.getFullYear(), oggi.getMonth() - i, 1);
-                ultimi6Mesi.push(mese);
-            }
 
             spese.forEach(s => {
                 if (!s.data || typeof s.imp !== 'number') return;
@@ -2283,25 +2518,12 @@
                 const isMeseCorrente = d.getMonth() === meseCorrente && d.getFullYear() === annoCorrente;
 
                 if (isMeseCorrente) {
-                    if (s.tipo === 'Entrata') {
-                        totEntrate += s.imp;
-                    } else {
+                    if (s.tipo === 'Entrata') totEntrate += s.imp;
+                    else {
                         totUscite += s.imp;
                         categorieUscite[s.cat] = (categorieUscite[s.cat] || 0) + s.imp;
                     }
                 }
-
-                ultimi6Mesi.forEach((mese, idx) => {
-                    if (d.getMonth() === mese.getMonth() && d.getFullYear() === mese.getFullYear()) {
-                        if (s.tipo === 'Entrata') {
-                            if (!entrateMensili[idx]) entrateMensili[idx] = 0;
-                            entrateMensili[idx] += s.imp;
-                        } else {
-                            if (!speseMensili[idx]) speseMensili[idx] = 0;
-                            speseMensili[idx] += s.imp;
-                        }
-                    }
-                });
             });
 
             const saldoMese = totEntrate - totUscite;
@@ -2315,122 +2537,87 @@
                 }
             }
 
-            const percUscite = totEntrate > 0 ? (totUscite / totEntrate) * 100 : 0;
+            let corpo = '';
 
-            const ultimi3Mesi = speseMensili.slice(0, 3).filter(v => v !== undefined && v > 0);
-            let trendMsg = '';
-            if (ultimi3Mesi.length >= 2) {
-                const mediaUltimi3 = ultimi3Mesi.reduce((a, b) => a + b, 0) / ultimi3Mesi.length;
-                const diffPercent = ((totUscite - mediaUltimi3) / mediaUltimi3) * 100;
-
-                if (Math.abs(diffPercent) > 15) {
-                    if (diffPercent > 0) {
-                        trendMsg =
-                            `<br>📈 <span style="color:var(--danger);">Attenzione: le spese di questo mese sono del ${diffPercent.toFixed(0)}% superiori alla media degli ultimi 3 mesi.</span>`;
-                    } else {
-                        trendMsg =
-                            `<br>📉 <span style="color:var(--success);">Ottimo! Le spese di questo mese sono del ${Math.abs(diffPercent).toFixed(0)}% inferiori alla media degli ultimi 3 mesi.</span>`;
-                    }
-                }
-            }
-
-            let msg = '💡 <b>Analisi Finanziaria</b><br><br>';
-
-            msg += `📊 <b>Riepilogo Mese:</b> `;
+            corpo += `<p><b>📊 Riepilogo Mese:</b> `;
             if (totEntrate > 0) {
-                msg += `${totEntrate.toFixed(2)}€ entrate, ${totUscite.toFixed(2)}€ uscite, `;
-                msg +=
-                    `<span style="color:${saldoMese >= 0 ? 'var(--success)' : 'var(--danger)'};">saldo ${saldoMese >= 0 ? 'positivo' : 'negativo'} di ${Math.abs(saldoMese).toFixed(2)}€</span>`;
+                corpo += `${totEntrate.toFixed(2)}€ entrate, ${totUscite.toFixed(2)}€ uscite, `;
+                corpo += `<span style="color:${saldoMese >= 0 ? 'var(--success)' : 'var(--danger)'};font-weight:bold;">saldo ${saldoMese >= 0 ? 'positivo' : 'negativo'} di ${Math.abs(saldoMese).toFixed(2)}€</span>`;
             } else {
-                msg += `nessuna entrata registrata.`;
+                corpo += `nessuna entrata registrata.`;
             }
-            msg += `<br>`;
+            corpo += `</p>`;
 
             if (maxCat) {
                 const pctCat = totUscite > 0 ? (maxImp / totUscite) * 100 : 0;
-                msg += `🎯 <b>Spesa principale:</b> ${maxCat} (${maxImp.toFixed(2)}€, ${pctCat.toFixed(0)}% del totale) `;
+                corpo += `<p><b>🎯 Spesa principale:</b> ${maxCat} (${maxImp.toFixed(2)}€, ${pctCat.toFixed(0)}% del totale) `;
 
                 if (pctCat > 40) {
-                    msg += `⚠️ Questa categoria pesa molto sul bilancio. `;
+                    corpo += `<span class="danger-text">⚠️ Questa categoria pesa molto sul bilancio.</span> `;
                     if (maxCat.includes('Cibo') || maxCat.includes('Spesa')) {
-                        msg += 'Prova a fare la spesa con una lista e a confrontare i prezzi tra diversi supermercati. 🛒';
+                        corpo += `🍽️ Prova a fare la spesa con una lista e a confrontare i prezzi.`;
                     } else if (maxCat.includes('Auto')) {
-                        msg += 'Valuta se puoi ridurre gli spostamenti o condividere il tragitto con colleghi. 🚗';
+                        corpo += `🚗 Valuta se puoi ridurre gli spostamenti.`;
                     } else if (maxCat.includes('Casa')) {
-                        msg += 'Rivedi i contratti di luce, gas e internet per eventuali offerte migliori. 🏠';
+                        corpo += `🏠 Rivedi i contratti di luce, gas e internet.`;
                     } else {
-                        msg += 'Prova a stabilire un budget mensile per questa categoria. 💰';
+                        corpo += `💡 Prova a stabilire un budget mensile per questa categoria.`;
                     }
                 } else {
-                    msg += `✅ Gestione equilibrata della categoria principale.`;
+                    corpo += `✅ Gestione equilibrata.`;
                 }
-                msg += `<br>`;
+                corpo += `</p>`;
             }
 
-            if (totEntrate > 0) {
-                const risparmio = totEntrate - totUscite;
-                const pctRisparmio = (risparmio / totEntrate) * 100;
+            return { titolo: '💡 Consigli Finanziari', corpo: corpo };
+        }
 
-                if (risparmio > 0) {
-                    if (pctRisparmio > 30) {
-                        msg += `💰 <b>Ottimo risparmio!</b> Hai risparmiato il ${pctRisparmio.toFixed(0)}% delle tue entrate. Sei sulla strada giusta! 🚀<br>`;
-                    } else if (pctRisparmio > 15) {
-                        msg +=
-                            `💪 <b>Buon risparmio!</b> Hai risparmiato il ${pctRisparmio.toFixed(0)}% delle entrate. Puoi puntare al 30% per accelerare i tuoi obiettivi.<br>`;
-                    } else if (pctRisparmio > 5) {
-                        msg +=
-                            `📈 <b>Piccolo risparmio</b> (${pctRisparmio.toFixed(0)}%). Prova a ridurre le spese superflue per aumentare il risparmio.<br>`;
-                    } else {
-                        msg +=
-                            `⚠️ <b>Risparmio minimo</b> (${pctRisparmio.toFixed(0)}%). Rivedi le tue uscite per trovare aree di miglioramento.<br>`;
-                    }
-                } else {
-                    msg += `🔴 <b>Attenzione:</b> Stai spendendo più di quanto guadagni. Rivedi le spese fisse e riduci quelle variabili. <br>`;
-                }
-            }
+        function apriPopupSuggerimenti() {
+            const contenuto = generaContenutoSuggerimenti();
 
-            if (trendMsg) {
-                msg += trendMsg;
-            }
+            let popup = document.getElementById('popup-suggerimenti');
+            if (!popup) {
+                popup = document.createElement('div');
+                popup.id = 'popup-suggerimenti';
+                popup.className = 'popup-overlay';
+                popup.innerHTML = `
+                    <div class="popup-content">
+                        <button class="popup-close" onclick="chiudiPopupSuggerimenti()" aria-label="Chiudi suggerimenti">✕</button>
+                        <div class="popup-title" id="popup-titolo">💡 Consigli Finanziari</div>
+                        <div class="popup-scroll">
+                            <div class="popup-body" id="popup-corpo"></div>
+                        </div>
+                        <div class="popup-footer">💰 MoneyTrack - I tuoi consigli personalizzati</div>
+                    </div>
+                `;
+                document.body.appendChild(popup);
 
-            if (transazioniTotali > 0) {
-                const categorieFrequenti = {};
-                spese.forEach(s => {
-                    if (s.tipo === 'Uscita') {
-                        const key = `${s.cat}|${Math.round(s.imp)}`;
-                        if (!categorieFrequenti[key]) categorieFrequenti[key] = { count: 0, cat: s.cat, imp: s.imp };
-                        categorieFrequenti[key].count++;
-                    }
+                popup.addEventListener('click', function(e) {
+                    if (e.target === this) chiudiPopupSuggerimenti();
                 });
 
-                let spesaRicorrente = null;
-                for (let key in categorieFrequenti) {
-                    if (categorieFrequenti[key].count >= 3) {
-                        spesaRicorrente = categorieFrequenti[key];
-                        break;
-                    }
-                }
-
-                if (spesaRicorrente) {
-                    msg +=
-                        `<br>🔄 <b>Spesa ricorrente rilevata:</b> ${spesaRicorrente.cat} (${spesaRicorrente.imp.toFixed(2)}€ x ${spesaRicorrente.count} volte). `;
-                    msg += `Considera se puoi ottimizzare o ridurre questa spesa fissa.`;
-                }
+                document.addEventListener('keydown', function(e) {
+                    if (e.key === 'Escape') chiudiPopupSuggerimenti();
+                });
             }
 
-            if (totUscite > 0 && totEntrate > 0 && percUscite > 70) {
-                msg +=
-                    `<br><br>🎯 <b>Suggerimento:</b> Le tue spese superano il 70% delle entrate. Prova a tracciare ogni spesa per 30 giorni per identificare gli sprechi.`;
-            } else if (totUscite > 0 && totEntrate > 0 && percUscite < 50 && saldoMese > 0) {
-                msg +=
-                    `<br><br>🎯 <b>Suggerimento:</b> Hai un buon margine di risparmio! Considera di investire la differenza in un fondo di emergenza o in investimenti a basso rischio.`;
-            }
+            document.getElementById('popup-titolo').textContent = contenuto.titolo;
+            document.getElementById('popup-corpo').innerHTML = contenuto.corpo;
 
-            div.innerHTML = msg;
+            popup.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function chiudiPopupSuggerimenti() {
+            const popup = document.getElementById('popup-suggerimenti');
+            if (popup) {
+                popup.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
         }
 
         // ==========================================
-        // ✏️ OPERAZIONI CON RATE LIMITING
+        // ✏️ OPERAZIONI
         // ==========================================
 
         function aggiungiOperazione() {
@@ -2555,7 +2742,7 @@
 
             if (future.length === 0) {
                 c.innerHTML =
-                    `<small style="color: var(--text-muted); display: block; text-align: center; padding: 10px;">Nessuna spesa futura programmata.</small>`;
+                    `<small style="color: var(--text-muted); display: block; text-align: center; padding: 10px;">Nessuna spesa futura.</small>`;
                 return;
             }
 
@@ -2605,15 +2792,529 @@
         }
 
         // ==========================================
-        // 📄 PDF PARSER
+        // ⚡ GESTIONE UTENZE
+        // ==========================================
+
+        function salvaRilevazioneUtenza() {
+            const nomeSelect = document.getElementById('utenza-nome');
+            const nome = nomeSelect.value;
+            const data = document.getElementById('utenza-data').value;
+            const consumo = parseFloat(document.getElementById('utenza-consumo').value);
+            const costo = parseFloat(document.getElementById('utenza-costo').value);
+            const note = sanitizeHTML(document.getElementById('utenza-note').value);
+
+            if (!nome || !data) {
+                alert('Seleziona un\'utenza e una data!');
+                return;
+            }
+
+            if (isNaN(consumo) || consumo < 0) {
+                alert('Inserisci un consumo valido!');
+                return;
+            }
+
+            if (isNaN(costo) || costo < 0) {
+                alert('Inserisci un costo valido!');
+                return;
+            }
+
+            const selectOptions = Array.from(nomeSelect.options).map(o => o.value);
+            if (!selectOptions.includes(nome)) {
+                const option = document.createElement('option');
+                option.value = nome;
+                option.textContent = nome;
+                nomeSelect.appendChild(option);
+            }
+
+            const rilevazione = {
+                id: Date.now(),
+                nome: nome,
+                data: data,
+                consumo: consumo,
+                costo: costo,
+                note: note || ''
+            };
+
+            utenze.push(rilevazione);
+            localStorage.setItem('moneyTrack_utenze', JSON.stringify(utenze));
+
+            document.getElementById('utenza-data').value = '';
+            document.getElementById('utenza-consumo').value = '';
+            document.getElementById('utenza-costo').value = '';
+            document.getElementById('utenza-note').value = '';
+
+            renderizzaUtenze();
+            alert('✅ Rilevazione salvata con successo!');
+
+            if (currentUser) syncDatiSuSupabase();
+        }
+
+        function eliminaRilevazioneUtenza(id) {
+            if (confirm('Eliminare questa rilevazione?')) {
+                utenze = utenze.filter(u => u.id !== id);
+                localStorage.setItem('moneyTrack_utenze', JSON.stringify(utenze));
+                renderizzaUtenze();
+                if (currentUser) syncDatiSuSupabase();
+            }
+        }
+
+        function renderizzaUtenze() {
+            const container = document.getElementById('utenza-lista');
+            const totaleCosto = document.getElementById('utenza-totale-costo');
+            if (!container) return;
+
+            const utenzeOrdinate = [...utenze].sort((a, b) => new Date(b.data) - new Date(a.data));
+
+            const oggi = new Date();
+            const meseCorrente = oggi.getMonth();
+            const annoCorrente = oggi.getFullYear();
+            let totCostoMese = 0;
+
+            utenzeOrdinate.forEach(u => {
+                const d = new Date(u.data);
+                if (d.getMonth() === meseCorrente && d.getFullYear() === annoCorrente) {
+                    totCostoMese += u.costo || 0;
+                }
+            });
+
+            totaleCosto.textContent = totCostoMese.toFixed(2) + ' €';
+
+            if (utenzeOrdinate.length === 0) {
+                container.innerHTML = `
+                <div class="utenza-empty">
+                    <span class="icon">⚡</span>
+                    <p>Nessuna utenza registrata.</p>
+                    <p style="font-size:0.8rem;">Inserisci la prima rilevazione qui sopra!</p>
+                </div>`;
+                return;
+            }
+
+            const gruppi = {};
+            utenzeOrdinate.forEach(u => {
+                if (!gruppi[u.nome]) gruppi[u.nome] = [];
+                gruppi[u.nome].push(u);
+            });
+
+            let html = '';
+
+            Object.keys(gruppi).forEach(nome => {
+                const rilevazioni = gruppi[nome].sort((a, b) => new Date(b.data) - new Date(a.data));
+                const ultima = rilevazioni[0];
+
+                const consumi = rilevazioni.map(r => r.consumo || 0);
+                const mediaConsumi = consumi.reduce((a, b) => a + b, 0) / consumi.length;
+                const ultimoConsumo = consumi[0] || 0;
+                const variazione = mediaConsumi > 0 ? ((ultimoConsumo - mediaConsumi) / mediaConsumi) * 100 : 0;
+
+                let icona = '⚡';
+                if (nome.includes('Enel') && nome.includes('Elettrica')) icona = '⚡';
+                else if (nome.includes('Gas')) icona = '🔥';
+                else if (nome.includes('Acqua')) icona = '💧';
+                else if (nome.includes('Internet') || nome.includes('Fibra')) icona = '🌐';
+                else if (nome.includes('Telefono')) icona = '📱';
+                else if (nome.includes('Rifiuti')) icona = '🗑️';
+                else if (nome.includes('Condominio')) icona = '🏢';
+
+                html += `
+                <div class="utenza-card">
+                    <div class="utenza-header">
+                        <div class="utenza-nome">
+                            <span>${icona}</span>
+                            ${sanitizeHTML(nome)}
+                            <small style="font-weight:normal;font-size:0.7rem;color:var(--text-muted);">
+                                ${rilevazioni.length} rilevazioni
+                            </small>
+                        </div>
+                        <div class="utenza-icone">
+                            <span onclick="aggiungiRilevazioneVeloce('${sanitizeHTML(nome)}')" title="Aggiungi rilevazione rapida">➕</span>
+                        </div>
+                    </div>
+
+                    <div class="utenza-stats">
+                        <div class="utenza-stat">
+                            <div class="utenza-stat-value">${ultimoConsumo.toFixed(1)}</div>
+                            <div class="utenza-stat-label">Ultimo consumo</div>
+                        </div>
+                        <div class="utenza-stat">
+                            <div class="utenza-stat-value ${Math.abs(variazione) > 15 ? (variazione > 0 ? 'alert' : 'good') : ''}">
+                                ${variazione > 0 ? '+' : ''}${variazione.toFixed(1)}%
+                            </div>
+                            <div class="utenza-stat-label">vs media</div>
+                        </div>
+                        <div class="utenza-stat">
+                            <div class="utenza-stat-value">${mediaConsumi.toFixed(1)}</div>
+                            <div class="utenza-stat-label">Media consumi</div>
+                        </div>
+                        <div class="utenza-stat">
+                            <div class="utenza-stat-value">${ultima.costo ? ultima.costo.toFixed(2) + '€' : 'N/D'}</div>
+                            <div class="utenza-stat-label">Ultimo costo</div>
+                        </div>
+                    </div>
+
+                    <div class="utenza-chart-container">
+                        <canvas id="chart-${nome.replace(/[^a-zA-Z0-9]/g, '_')}" aria-label="Andamento consumi ${sanitizeHTML(nome)}"></canvas>
+                    </div>
+
+                    <div class="utenza-dettagli">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Data</th>
+                                    <th>Consumo</th>
+                                    <th>Costo</th>
+                                    <th>Note</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${rilevazioni.slice(0, 10).map(r => `
+                                    <tr>
+                                        <td>${r.data}</td>
+                                        <td>${r.consumo ? r.consumo.toFixed(1) : '-'}</td>
+                                        <td>${r.costo ? r.costo.toFixed(2) + '€' : '-'}</td>
+                                        <td style="font-size:0.8rem;color:var(--text-muted);">${sanitizeHTML(r.note || '')}</td>
+                                        <td><span onclick="eliminaRilevazioneUtenza(${r.id})" style="cursor:pointer;opacity:0.4;" title="Elimina">🗑️</span></td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                        ${rilevazioni.length > 10 ? `<div style="text-align:center;font-size:0.8rem;color:var(--text-muted);padding:5px;">Mostrate le ultime 10 rilevazioni</div>` : ''}
+                    </div>
+                </div>`;
+            });
+
+            container.innerHTML = html;
+
+            setTimeout(() => {
+                Object.keys(gruppi).forEach(nome => {
+                    const canvasId = `chart-${nome.replace(/[^a-zA-Z0-9]/g, '_')}`;
+                    const canvas = document.getElementById(canvasId);
+                    if (canvas) {
+                        const ctx = canvas.getContext('2d');
+                        const rilevazioni = gruppi[nome].sort((a, b) => new Date(a.data) - new Date(b.data));
+                        const labels = rilevazioni.map(r => r.data.substring(5));
+                        const data = rilevazioni.map(r => r.consumo || 0);
+
+                        new Chart(ctx, {
+                            type: 'line',
+                            data: {
+                                labels: labels,
+                                datasets: [{
+                                    label: 'Consumo',
+                                    data: data,
+                                    borderColor: '#36a2eb',
+                                    backgroundColor: 'rgba(54,162,235,0.1)',
+                                    fill: true,
+                                    tension: 0.3,
+                                    pointRadius: 3
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                plugins: {
+                                    legend: { display: false }
+                                },
+                                scales: {
+                                    y: {
+                                        beginAtZero: true,
+                                        grid: { color: 'rgba(0,0,0,0.05)' }
+                                    },
+                                    x: {
+                                        grid: { display: false }
+                                    }
+                                }
+                            }
+                        });
+                    }
+                });
+            }, 100);
+        }
+
+        function aggiungiRilevazioneVeloce(nome) {
+            document.getElementById('utenza-nome').value = nome;
+            document.getElementById('utenza-data').value = new Date().toISOString().split('T')[0];
+            document.getElementById('utenza-consumo').focus();
+            window.scrollTo({ top: document.getElementById('utenza-form').offsetTop - 100, behavior: 'smooth' });
+        }
+
+        // ==========================================
+        // 📄 IMPORT PDF BOLLETTA (NUOVA FUNZIONE)
+        // ==========================================
+
+        async function elaboraPDFBolletta(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const statusDiv = document.getElementById('import-status');
+            const extractedDiv = document.getElementById('pdf-extracted-data');
+
+            statusDiv.className = 'import-status';
+            statusDiv.style.display = 'none';
+            extractedDiv.style.display = 'none';
+            extractedDiv.innerHTML = '';
+
+            if (file.type !== 'application/pdf') {
+                mostraStatus('Solo file PDF sono supportati!', 'error');
+                event.target.value = '';
+                return;
+            }
+
+            if (file.size > 10 * 1024 * 1024) {
+                mostraStatus('Il file è troppo grande (max 10MB)', 'error');
+                event.target.value = '';
+                return;
+            }
+
+            mostraStatus('⏳ Analisi del PDF in corso...', 'info');
+
+            try {
+                const reader = new FileReader();
+                reader.onload = async function() {
+                    try {
+                        const typedarray = new Uint8Array(this.result);
+                        const loadingTask = pdfjsLib.getDocument({
+                            data: typedarray,
+                            disableWorker: true,
+                            verbosity: 0
+                        });
+
+                        const pdf = await loadingTask.promise;
+                        let fullText = '';
+
+                        for (let i = 1; i <= pdf.numPages; i++) {
+                            const page = await pdf.getPage(i);
+                            const textContent = await page.getTextContent();
+                            const pageText = textContent.items.map(item => item.str).join(' ');
+                            fullText += pageText + '\n';
+                        }
+
+                        console.log('📄 Testo estratto dal PDF:', fullText);
+
+                        const datiBolletta = estraiDatiBolletta(fullText);
+
+                        if (!datiBolletta) {
+                            mostraStatus('❌ Impossibile estrarre i dati dalla bolletta. Verifica che sia una bolletta valida.',
+                                'error');
+                            event.target.value = '';
+                            return;
+                        }
+
+                        mostraDatiEstratti(datiBolletta);
+
+                        document.getElementById('utenza-data').value = datiBolletta.data || new Date().toISOString().split(
+                            'T')[0];
+                        document.getElementById('utenza-consumo').value = datiBolletta.consumo || '';
+                        document.getElementById('utenza-costo').value = datiBolletta.totale || '';
+
+                        let note = '';
+                        if (datiBolletta.canone) note += `Canone TV: ${datiBolletta.canone.toFixed(2)}€ `;
+                        if (datiBolletta.imposte) note += `| Imposte: ${datiBolletta.imposte.toFixed(2)}€`;
+                        if (datiBolletta.periodo) note += ` | Periodo: ${datiBolletta.periodo}`;
+                        if (datiBolletta.fornitore) note += ` | Fornitore: ${datiBolletta.fornitore}`;
+                        document.getElementById('utenza-note').value = note.trim();
+
+                        mostraStatus('✅ Dati estratti con successo! Controlla i valori e salva.', 'success');
+
+                    } catch (pdfError) {
+                        console.error('Errore PDF.js:', pdfError);
+                        mostraStatus('❌ Impossibile leggere il PDF. Assicurati che sia una bolletta in formato PDF nativo.',
+                            'error');
+                    }
+                };
+                reader.readAsArrayBuffer(file);
+
+            } catch (error) {
+                console.error('Errore:', error);
+                mostraStatus('❌ Errore durante la lettura del file.', 'error');
+            }
+            event.target.value = '';
+        }
+
+        function estraiDatiBolletta(testo) {
+            try {
+                const dati = {};
+
+                // Periodo di fatturazione
+                const periodoMatch = testo.match(/(?:Periodo|dal|dal\s*)\s*(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4})\s*(?:al|a|)\s*(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4})/i) ||
+                    testo.match(/(\d{2}[\/\-]\d{2}[\/\-]\d{4})\s*(?:al|a|)\s*(\d{2}[\/\-]\d{2}[\/\-]\d{4})/i);
+                if (periodoMatch) {
+                    dati.periodo = `${periodoMatch[1]} - ${periodoMatch[2]}`;
+                }
+
+                // Data fattura
+                const dataMatch = testo.match(
+                    /(?:Data\s*(?:fattura|emissione|documento)|emessa il)\s*[:]*\s*(\d{2}[\/\-]\d{2}[\/\-]\d{4}|\d{2}[\/\-]\d{2}[\/\-]\d{2})/i
+                );
+                if (dataMatch) {
+                    let data = dataMatch[1];
+                    const parts = data.split(/[\/\-]/);
+                    if (parts.length === 3) {
+                        if (parts[2].length === 2) parts[2] = '20' + parts[2];
+                        dati.data = `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
+                    }
+                }
+
+                // Consumo
+                const consumoPatterns = [
+                    /(?:consumo|energia)\s*(?:attiva|)|(?:totale\s*energia)\s*[:]*\s*([\d\.,]+)\s*(?:kWh|kwh|KWH)/i,
+                    /([\d\.,]+)\s*(?:kWh|kwh|KWH)\s*(?:di\s*consumo|consumati)/i,
+                    /consumo\s*[:]*\s*([\d\.,]+)/i
+                ];
+                for (const pattern of consumoPatterns) {
+                    const match = testo.match(pattern);
+                    if (match) {
+                        dati.consumo = parseFloat(match[1].replace(/\./g, '').replace(',', '.'));
+                        break;
+                    }
+                }
+
+                // Costo energia
+                const costoPatterns = [
+                    /(?:spesa\s*energia|energia\s*elettrica|totale\s*energia)\s*[:]*\s*([\d\.,]+)\s*€/i,
+                    /(?:importo\s*energia|totale\s*consumo)\s*[:]*\s*([\d\.,]+)\s*€/i,
+                    /(?:spesa\s*materia\s*energia)\s*[:]*\s*([\d\.,]+)\s*€/i
+                ];
+                for (const pattern of costoPatterns) {
+                    const match = testo.match(pattern);
+                    if (match) {
+                        dati.costoEnergia = parseFloat(match[1].replace(/\./g, '').replace(',', '.'));
+                        break;
+                    }
+                }
+
+                // Canone televisivo
+                const canonePatterns = [
+                    /canone\s*(?:ra|televisivo|tv)\s*[:]*\s*([\d\.,]+)\s*€/i,
+                    /(?:canone\s*ra|canone\s*tv)\s*[:]*\s*([\d\.,]+)/i,
+                    /(?:canone)\s*[:]*\s*([\d\.,]+)\s*€/i
+                ];
+                for (const pattern of canonePatterns) {
+                    const match = testo.match(pattern);
+                    if (match) {
+                        dati.canone = parseFloat(match[1].replace(/\./g, '').replace(',', '.'));
+                        break;
+                    }
+                }
+
+                // Imposte e accise
+                const impostePatterns = [
+                    /(?:imposte|accise|iva)\s*[:]*\s*([\d\.,]+)\s*€/i,
+                    /(?:totale\s*imposte|oneri\s*di\s*sistema)\s*[:]*\s*([\d\.,]+)\s*€/i
+                ];
+                for (const pattern of impostePatterns) {
+                    const match = testo.match(pattern);
+                    if (match) {
+                        dati.imposte = parseFloat(match[1].replace(/\./g, '').replace(',', '.'));
+                        break;
+                    }
+                }
+
+                // Totale bolletta
+                const totalePatterns = [
+                    /(?:totale\s*(?:bolletta|fattura|documento)|importo\s*totale)\s*[:]*\s*([\d\.,]+)\s*€/i,
+                    /(?:totale\s*a\s*pagare)\s*[:]*\s*([\d\.,]+)\s*€/i,
+                    /(?:importo\s*complessivo)\s*[:]*\s*([\d\.,]+)\s*€/i,
+                    /(?:totale)\s*[:]*\s*([\d\.,]+)\s*€/i,
+                    /€\s*([\d\.,]+)\s*(?:totale|da\s*pagare)/i
+                ];
+                for (const pattern of totalePatterns) {
+                    const match = testo.match(pattern);
+                    if (match) {
+                        dati.totale = parseFloat(match[1].replace(/\./g, '').replace(',', '.'));
+                        break;
+                    }
+                }
+
+                // Fornitore
+                const fornitorePatterns = [
+                    /(?:fornitore|societ[àa])\s*[:]*\s*([A-Za-z\s]+)(?:\s|$)/i,
+                    /(?:Enel|Eni|Acea|Iren|A2A|E\.On|Edison|Sorgenia|Hera|Dolomiti|Energia)\s*(?:S\.p\.A|Srl|energia|Servizi|gas|luce)/i
+                ];
+                for (const pattern of fornitorePatterns) {
+                    const match = testo.match(pattern);
+                    if (match) {
+                        dati.fornitore = match[1]?.trim() || match[0]?.trim();
+                        break;
+                    }
+                }
+
+                if (dati.consumo || dati.totale || dati.costoEnergia) {
+                    if (!dati.costoEnergia && dati.canone) {
+                        dati.costoEnergia = dati.totale - dati.canone - (dati.imposte || 0);
+                    }
+                    if (!dati.totale && dati.costoEnergia) {
+                        dati.totale = dati.costoEnergia + (dati.canone || 0) + (dati.imposte || 0);
+                    }
+                    return dati;
+                }
+
+                return null;
+
+            } catch (e) {
+                console.error('Errore estrazione dati:', e);
+                return null;
+            }
+        }
+
+        function mostraStatus(messaggio, tipo) {
+            const statusDiv = document.getElementById('import-status');
+            statusDiv.className = 'import-status ' + tipo;
+            statusDiv.textContent = messaggio;
+            statusDiv.style.display = 'block';
+        }
+
+        function mostraDatiEstratti(dati) {
+            const div = document.getElementById('pdf-extracted-data');
+            div.style.display = 'block';
+
+            let html = '<div class="pdf-extracted-data">';
+            html += '<div style="font-weight:bold;margin-bottom:8px;font-size:0.9rem;">📊 Dati estratti dalla bolletta:</div>';
+
+            if (dati.fornitore) {
+                html +=
+                    `<div class="row"><span class="label">Fornitore</span><span class="value">${dati.fornitore}</span></div>`;
+            }
+            if (dati.periodo) {
+                html += `<div class="row"><span class="label">Periodo</span><span class="value">${dati.periodo}</span></div>`;
+            }
+            if (dati.data) {
+                html += `<div class="row"><span class="label">Data fattura</span><span class="value">${dati.data}</span></div>`;
+            }
+            if (dati.consumo) {
+                html +=
+                    `<div class="row"><span class="label">Consumo</span><span class="value">${dati.consumo.toFixed(1)} kWh</span></div>`;
+            }
+            if (dati.costoEnergia) {
+                html +=
+                    `<div class="row"><span class="label">Costo energia</span><span class="value">${dati.costoEnergia.toFixed(2)} €</span></div>`;
+            }
+            if (dati.canone) {
+                html +=
+                    `<div class="row"><span class="label">Canone televisivo</span><span class="value alert">${dati.canone.toFixed(2)} €</span></div>`;
+            }
+            if (dati.imposte) {
+                html +=
+                    `<div class="row"><span class="label">Imposte / Accise</span><span class="value">${dati.imposte.toFixed(2)} €</span></div>`;
+            }
+            if (dati.totale) {
+                html +=
+                    `<div class="row"><span class="label">💰 Totale bolletta</span><span class="value success" style="font-size:1.1rem;">${dati.totale.toFixed(2)} €</span></div>`;
+            }
+
+            html += '</div>';
+            div.innerHTML = html;
+        }
+
+        // ==========================================
+        // 📄 PDF BANCARIO (esistente)
         // ==========================================
 
         async function elaboraPDFBancario(event) {
             const file = event.target.files[0];
             if (!file) return;
 
-            const allowedTypes = ['application/pdf'];
-            if (!allowedTypes.includes(file.type)) {
+            if (file.type !== 'application/pdf') {
                 alert('Solo file PDF sono supportati!');
                 event.target.value = '';
                 return;
@@ -2638,8 +3339,7 @@
                         for (let i = 1; i <= pdf.numPages; i++) {
                             const page = await pdf.getPage(i);
                             const textContent = await page.getTextContent();
-                            const pageText = textContent.items.map(item => item.str).join(" ");
-                            fullText += pageText + "\n";
+                            fullText += textContent.items.map(item => item.str).join(" ") + "\n";
                         }
 
                         const matchImporto = fullText.match(
@@ -2789,7 +3489,7 @@
 
             if (categorieUniche.length === 0) {
                 body.innerHTML =
-                    "<tr><td colspan='14' style='text-align:center;color:var(--text-muted);padding:20px;'>Nessun dato per l'anno selezionato</td></tr>";
+                    "<tr><td colspan='14' style='text-align:center;color:var(--text-muted);padding:20px;'>Nessun dato</td></tr>";
                 return;
             }
 
@@ -2879,14 +3579,19 @@
         function togglePrivacy() { privacy = !privacy;
             aggiornaApp(); }
 
+        // ==========================================
+        // 💾 BACKUP
+        // ==========================================
+
         function esportaDati() {
             const backupData = {};
-            for (let i = 0; i < localStorage.length; i++) {
-                const key = localStorage.key(i);
-                if (key && key.startsWith("moneyTrack_")) {
-                    backupData[key] = localStorage.getItem(key);
-                }
-            }
+            const keys = ['moneyTrack_db', 'moneyTrack_future', 'moneyTrack_cats', 'moneyTrack_budgets',
+                'moneyTrack_fav_news', 'moneyTrack_utenze'
+            ];
+            keys.forEach(key => {
+                const value = localStorage.getItem(key);
+                if (value) backupData[key] = value;
+            });
 
             if (Object.keys(backupData).length === 0) {
                 alert("Nessun dato trovato!");
@@ -2898,9 +3603,7 @@
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(jsonString)
                     .then(() => {
-                        alert(
-                            "✅ Dati copiati negli appunti!\n\nApri le NOTE del telefono e fai 'INCOLLA' per salvarli."
-                            );
+                        alert("✅ Dati copiati negli appunti!\n\nApri le NOTE del telefono e fai 'INCOLLA' per salvarli.");
                     })
                     .catch(() => { fallbackCopy(jsonString); });
             } else {
@@ -2962,10 +3665,12 @@
                     future = JSON.parse(localStorage.getItem("moneyTrack_future")) || [];
                     customCats = JSON.parse(localStorage.getItem("moneyTrack_cats")) || {};
                     budgets = JSON.parse(localStorage.getItem("moneyTrack_budgets")) || {};
+                    utenze = JSON.parse(localStorage.getItem("moneyTrack_utenze")) || [];
 
                     alert("✅ Ripristino completato!");
                     aggiornaApp();
-                    if (currentUser) syncDatiSuSupabaseImmediato();
+                    renderizzaUtenze();
+                    if (currentUser) syncDatiSuSupabase();
 
                 } catch (error) {
                     console.error(error);
@@ -3061,12 +3766,12 @@
 
                 if (notizieTrovate === 0) {
                     container.innerHTML =
-                        `<div style="text-align: center; width: 100%; padding: 20px; color: var(--danger); font-weight: bold;">⚠️ Impossibile caricare le notizie.</div>`;
+                        `<div style="text-align: center; padding: 20px; color: var(--text-muted);">⚠️ Impossibile caricare le notizie.</div>`;
                 }
             } catch (error) {
                 console.error('Errore caricamento news:', error);
                 container.innerHTML =
-                    `<div style="text-align:center; padding:20px; color: var(--text-muted);">⚠️ Impossibile caricare le news in questo momento.</div>`;
+                    `<div style="text-align:center; padding:20px; color: var(--text-muted);">⚠️ Impossibile caricare le news.</div>`;
             }
 
             loader.style.display = "none";
@@ -3214,15 +3919,13 @@
 
                 let scadenzeHtml = "";
 
-                if (typeof future !== 'undefined') {
-                    future.forEach(f => {
-                        if (f.data === dataStr) {
-                            let classeBadge = f.impattaSaldo !== false ? "badge-impatta" : "badge-neutro";
-                            scadenzeHtml +=
-                                `<div class="cal-badge-scadenza ${classeBadge}">${sanitizeHTML(f.desc)} (${f.imp}€)</div>`;
-                        }
-                    });
-                }
+                future.forEach(f => {
+                    if (f.data === dataStr) {
+                        let classeBadge = f.impattaSaldo !== false ? "badge-impatta" : "badge-neutro";
+                        scadenzeHtml +=
+                            `<div class="cal-badge-scadenza ${classeBadge}">${sanitizeHTML(f.desc)} (${f.imp}€)</div>`;
+                    }
+                });
 
                 grid.innerHTML += `
                 <div class="cal-giorno ${isOggi}">
@@ -3257,29 +3960,27 @@
             const giorno = String(domani.getDate()).padStart(2, '0');
             const dataDomaniStr = `${anno}-${mese}-${giorno}`;
 
-            if (typeof future !== 'undefined') {
-                future.forEach((s, idx) => {
-                    if (s.data === dataDomaniStr) {
-                        const chiaveNotifica = `notificato_scadenza_${idx}_${s.data}`;
+            future.forEach((s, idx) => {
+                if (s.data === dataDomaniStr) {
+                    const chiaveNotifica = `notificato_scadenza_${idx}_${s.data}`;
 
-                        if (!localStorage.getItem(chiaveNotifica)) {
-                            let messaggio = `Domani scade: ${s.desc}`;
-                            if (s.imp > 0) messaggio += ` di ${parseFloat(s.imp).toFixed(2)}€`;
+                    if (!localStorage.getItem(chiaveNotifica)) {
+                        let messaggio = `Domani scade: ${s.desc}`;
+                        if (s.imp > 0) messaggio += ` di ${parseFloat(s.imp).toFixed(2)}€`;
 
-                            new Notification("📌 Promemoria Scadenza", {
-                                body: messaggio,
-                                icon: "icona-512.png"
-                            });
+                        new Notification("📌 Promemoria Scadenza", {
+                            body: messaggio,
+                            icon: "icona-512.png"
+                        });
 
-                            localStorage.setItem(chiaveNotifica, "true");
-                        }
+                        localStorage.setItem(chiaveNotifica, "true");
                     }
-                });
-            }
+                }
+            });
         }
 
         // ==========================================
-        // ⌨️ SHORTCUT DA TASTIERA
+        // ⌨️ SHORTCUT
         // ==========================================
 
         document.addEventListener('keydown', function(e) {
@@ -3301,6 +4002,8 @@
                 if (authModal && authModal.style.display === 'flex') { chiudiAuthModal(); }
                 const cloudModal = document.getElementById('cloud-modal');
                 if (cloudModal && cloudModal.style.display === 'flex') { cloudModal.style.display = 'none'; }
+                const popup = document.getElementById('popup-suggerimenti');
+                if (popup && popup.style.display === 'flex') { chiudiPopupSuggerimenti(); }
             }
         });
 
@@ -3311,9 +4014,12 @@
         document.getElementById('data').value = new Date().toISOString().split('T')[0];
         aggiornaCategorie();
         aggiornaApp();
+        renderizzaUtenze();
 
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js');
+            navigator.serviceWorker.register('sw.js').catch(err => {
+                console.log('Service Worker non registrato:', err);
+            });
         }
 
         window.addEventListener('DOMContentLoaded', () => {
@@ -3357,6 +4063,7 @@
         window.navigaMeseCalendario = navigaMeseCalendario;
         window.generaReport = generaReport;
         window.elaboraPDFBancario = elaboraPDFBancario;
+        window.elaboraPDFBolletta = elaboraPDFBolletta;
         window.toggleMenu = toggleMenu;
         window.loginbtn = loginbtn;
         window.eseguiAuth = eseguiAuth;
@@ -3366,12 +4073,22 @@
         window.sanitizeHTML = sanitizeHTML;
         window.safeCalculate = safeCalculate;
         window.debounce = debounce;
+        window.syncDatiSuSupabase = syncDatiSuSupabase;
+        window.salvaRilevazioneUtenza = salvaRilevazioneUtenza;
+        window.eliminaRilevazioneUtenza = eliminaRilevazioneUtenza;
+        window.aggiungiRilevazioneVeloce = aggiungiRilevazioneVeloce;
+        window.renderizzaUtenze = renderizzaUtenze;
+        window.apriPopupSuggerimenti = apriPopupSuggerimenti;
+        window.chiudiPopupSuggerimenti = chiudiPopupSuggerimenti;
 
         console.log('🚀 MoneyTrack 2.0 avviato!');
         console.log('📊 Transazioni:', spese.length);
         console.log('📅 Spese future:', future.length);
+        console.log('⚡ Utenze registrate:', utenze.length);
         console.log('📱 Compatibile con Android, iOS e PC');
-        console.log('⌨️ Shortcut: Ctrl+Enter per salvare, ESC per chiudere modali');
+        console.log('💡 Suggerimenti disponibili con il pulsante 💡');
+        console.log('📄 Import PDF bollette attivo');
+        console.log('⌨️ Shortcut: Ctrl+Enter per salvare, ESC per chiudere');
     </script>
 
 </body>
