@@ -17,11 +17,12 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
-        /* ... (tutti gli stili come prima) ... */
         :root {
             --primary: #b5c3b6;
             --secondary: #9aa89b;
             --bg: #ffffff;
+            --bg-light: #f8f9fa;
+            --bg-dark: #f4f6f4;
             --success: #28a745;
             --danger: #dc3545;
             --warning: #ffc107;
@@ -41,59 +42,74 @@
             --safe-bottom: env(safe-area-inset-bottom, 0px);
         }
 
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --bg: #1a1a1a;
-                --text-primary: #e0e0e0;
-                --text-secondary: #aaaaaa;
-                --text-muted: #888888;
-                --border: #333333;
-                --primary: #8aa08b;
-                --secondary: #6a7a6b;
-            }
-            body { background: var(--bg); color: var(--text-primary); }
-            .modal-content.auth { background: #2a2a2a; color: var(--text-primary); border-color: #444; }
-            .modal-content.auth input { background: #333; color: var(--text-primary); border-color: #555; }
-            .modal-card-cloud { background: #2a2a2a; color: var(--text-primary); }
-            .news-card { background: #2a2a2a; border-color: #444; }
-            .budget-container { background: #2a2a2a; border-color: #444; }
-            .mese-header { background: #222; color: var(--text-secondary); border-color: #333; }
-            .mese-container.attivo .mese-header { background: #333; }
-            .info-previsione { background: #2a2a2a; }
-            .btn-modern { background: #333; color: var(--text-secondary); }
-            .btn-modern:hover { background: #444; color: var(--text-primary); }
-            input, select { background: #333; color: var(--text-primary); border-color: #555; }
-            input:focus, select:focus { border-color: var(--primary); background: #3a3a3a; }
-            .cat-row .small-btn { background: #333; color: var(--text-secondary); }
-            .cat-row .small-btn:hover { background: #444; color: var(--text-primary); }
-            td { border-color: #333; }
-            .dropdown-content { background: #2a2a2a; border-color: #444; }
-            .dropdown-content a { color: var(--text-secondary); }
-            .dropdown-content a:hover { background: #333; color: var(--primary); }
-            .header-saldo { background: var(--primary); }
-            .stella-pref { background: #333; }
-            .modal-content { background: #2a2a2a; }
-            #calc-screen { background: #333; color: var(--text-primary); }
-            .calc-buttons button { background: #444; color: var(--text-primary); }
-            .calc-buttons button:active { background: #555; }
-            .budget-info span { color: var(--text-secondary); }
-            .budget-info span:first-child { color: var(--text-primary); }
-            .utenza-card { background: #2a2a2a; border-color: #444; }
-            .utenza-stat { background: #333; }
-            .utenza-stat-value { color: var(--text-primary); }
-            .utenza-stat-label { color: var(--text-secondary); }
-            .popup-content { background: #2a2a2a; }
-            .popup-title { color: var(--text-primary); }
-            .popup-body { color: var(--text-secondary); }
-            .popup-close { color: var(--text-muted); }
-            .popup-close:hover { color: var(--danger); }
-            .utenza-form { background: #2a2a2a; }
-            .utenza-riepilogo { background: #333; }
-            .dash-item { background: #2a2a2a !important; }
-            .filtri-container { background: #2a2a2a !important; }
-            .filtro-mobile { background: #2a2a2a !important; border-color: #444 !important; }
-            .filtro-mobile input, .filtro-mobile select { background: #333 !important; color: var(--text-primary) !important; border-color: #555 !important; }
+        /* ===== TEMA SCURO (ATTIVATO DALLA CLASSE .dark-theme) ===== */
+        .dark-theme {
+            --bg: #1a1a1a;
+            --bg-light: #2a2a2a;
+            --bg-dark: #222222;
+            --text-primary: #e0e0e0;
+            --text-secondary: #aaaaaa;
+            --text-muted: #888888;
+            --border: #333333;
+            --primary: #8aa08b;
+            --secondary: #6a7a6b;
+            --shadow-sm: 0 2px 6px rgba(0,0,0,0.3);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+            --shadow-lg: 0 8px 24px rgba(0,0,0,0.5);
         }
+
+        .dark-theme body { background: var(--bg); color: var(--text-primary); }
+        .dark-theme .modal-content.auth { background: #2a2a2a; color: var(--text-primary); border-color: #444; }
+        .dark-theme .modal-content.auth input { background: #333; color: var(--text-primary); border-color: #555; }
+        .dark-theme .modal-card-cloud { background: #2a2a2a; color: var(--text-primary); }
+        .dark-theme .news-card { background: #2a2a2a; border-color: #444; }
+        .dark-theme .budget-container { background: #2a2a2a; border-color: #444; }
+        .dark-theme .mese-header { background: #222; color: var(--text-secondary); border-color: #333; }
+        .dark-theme .mese-container.attivo .mese-header { background: #333; }
+        .dark-theme .info-previsione { background: #2a2a2a; }
+        .dark-theme .btn-modern { background: #333; color: var(--text-secondary); }
+        .dark-theme .btn-modern:hover { background: #444; color: var(--text-primary); }
+        .dark-theme input, .dark-theme select { background: #333; color: var(--text-primary); border-color: #555; }
+        .dark-theme input:focus, .dark-theme select:focus { border-color: var(--primary); background: #3a3a3a; }
+        .dark-theme .cat-row .small-btn { background: #333; color: var(--text-secondary); }
+        .dark-theme .cat-row .small-btn:hover { background: #444; color: var(--text-primary); }
+        .dark-theme td { border-color: #333; }
+        .dark-theme .dropdown-content { background: #2a2a2a; border-color: #444; }
+        .dark-theme .dropdown-content a { color: var(--text-secondary); }
+        .dark-theme .dropdown-content a:hover { background: #333; color: var(--primary); }
+        .dark-theme .header-saldo { background: var(--primary); }
+        .dark-theme .stella-pref { background: #333; }
+        .dark-theme .modal-content { background: #2a2a2a; }
+        .dark-theme #calc-screen { background: #333; color: var(--text-primary); }
+        .dark-theme .calc-buttons button { background: #444; color: var(--text-primary); }
+        .dark-theme .calc-buttons button:active { background: #555; }
+        .dark-theme .budget-info span { color: var(--text-secondary); }
+        .dark-theme .budget-info span:first-child { color: var(--text-primary); }
+        .dark-theme .utenza-card { background: #2a2a2a; border-color: #444; }
+        .dark-theme .utenza-stat { background: #333; }
+        .dark-theme .utenza-stat-value { color: var(--text-primary); }
+        .dark-theme .utenza-stat-label { color: var(--text-secondary); }
+        .dark-theme .popup-content { background: #2a2a2a; }
+        .dark-theme .popup-title { color: var(--text-primary); }
+        .dark-theme .popup-body { color: var(--text-secondary); }
+        .dark-theme .popup-close { color: var(--text-muted); }
+        .dark-theme .popup-close:hover { color: var(--danger); }
+        .dark-theme .utenza-form { background: #2a2a2a; }
+        .dark-theme .utenza-riepilogo { background: #333; }
+        .dark-theme .dash-item { background: #2a2a2a !important; }
+        .dark-theme .filtro-mobile { background: #2a2a2a !important; border-color: #444 !important; }
+        .dark-theme .filtro-mobile input, .dark-theme .filtro-mobile select { background: #333 !important; color: var(--text-primary) !important; border-color: #555 !important; }
+        .dark-theme .filtro-mobile .filtro-gruppo { background: #333 !important; border-color: #555 !important; }
+        .dark-theme .cal-giorno { background: #2a2a2a; border-color: #444; }
+        .dark-theme .cal-giorno.vuoto { background: #1a1a1a; }
+        .dark-theme .grid-calendario { background: #333; }
+        .dark-theme .mese-content { background: #1a1a1a; }
+        .dark-theme details { background: #2a2a2a !important; border-color: #444 !important; }
+        .dark-theme details summary { color: var(--text-secondary) !important; }
+        .dark-theme .utenza-totale { background: var(--primary); }
+        .dark-theme .budget-row button { background: var(--primary); color: white; }
+        .dark-theme .progress-bar-bg { background: #444; }
+        .dark-theme .sticky-col { background: var(--bg); }
 
         * {
             box-sizing: border-box;
@@ -113,6 +129,7 @@
             overscroll-behavior-y: none;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+            transition: background-color 0.3s, color 0.3s;
         }
 
         nav {
@@ -128,6 +145,7 @@
             min-height: 70px;
             box-sizing: border-box;
             flex-wrap: nowrap;
+            transition: background-color 0.3s, border-color 0.3s;
         }
 
         .nav-inner {
@@ -214,12 +232,13 @@
             right: 0;
             top: 42px;
             background-color: var(--bg);
-            min-width: 180px;
+            min-width: 200px;
             box-shadow: var(--shadow-md);
             z-index: 101;
             border-radius: var(--radius-md);
             border: 1px solid var(--border);
             overflow: hidden;
+            transition: background-color 0.3s, border-color 0.3s;
         }
 
         .dropdown-content a {
@@ -255,7 +274,7 @@
             .center-title .title-main { font-size: 0.95rem; }
             .center-title .title-sub { font-size: 0.5rem; }
             .menu-dots { font-size: 1.3rem; padding: 4px 6px; }
-            .dropdown-content { min-width: 150px; right: -10px; top: 36px; }
+            .dropdown-content { min-width: 170px; right: -10px; top: 36px; }
             .dropdown-content a { padding: 10px 14px; font-size: 0.8rem; }
         }
 
@@ -330,7 +349,7 @@
         }
 
         .dash-item {
-            background: var(--bg-light, #f8f9fa);
+            background: var(--bg-light);
             padding: 12px;
             border-radius: var(--radius-sm);
             text-align: center;
@@ -361,13 +380,13 @@
         .dash-item .value.primary { color: var(--primary); }
         .dash-item .value.info { color: var(--info); }
 
-        /* ===== NUOVO FILTRO MOBILE COMPATTO ===== */
         .filtro-mobile {
-            background: var(--bg-light, #f8f9fa);
+            background: var(--bg-light);
             border-radius: var(--radius-md);
             border: 1px solid var(--border);
             padding: 12px;
             margin-bottom: 12px;
+            transition: background-color 0.3s, border-color 0.3s;
         }
 
         .filtro-mobile .filtro-riga {
@@ -387,6 +406,7 @@
             border-radius: var(--radius-sm);
             padding: 2px 6px;
             border: 1px solid var(--border);
+            transition: background-color 0.3s, border-color 0.3s;
         }
 
         .filtro-mobile .filtro-riga .filtro-gruppo label {
@@ -488,17 +508,19 @@
         }
 
         .info-previsione {
-            background: var(--bg-dark, #f4f6f4);
+            background: var(--bg-dark);
             border-radius: var(--radius-md);
             padding: 20px;
             margin: 15px auto;
             max-width: 900px;
             box-sizing: border-box;
+            transition: background-color 0.3s;
         }
 
         .section {
             padding: 20px 0;
             border-bottom: 1px solid var(--border);
+            transition: border-color 0.3s;
         }
 
         .section:last-child {
@@ -870,41 +892,86 @@
             background: #f1f3f5;
         }
 
-        @media (min-width: 768px) {
-            .desktop-grid {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 20px;
-            }
-            .section-divider {
-                border-right: 1px solid var(--border);
-                border-bottom: none;
-                padding-right: 20px;
-            }
-            .table-container table {
-                min-width: 600px;
-            }
+        /* ===== BUDGET CONTAINER - Spostato dopo la lista ===== */
+        .budget-container {
+            margin-top: 20px;
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 15px;
+            transition: background-color 0.3s, border-color 0.3s;
         }
 
-        @media (max-width: 600px) {
-            .header-saldo h1 { font-size: 1.6rem; }
-            .header-saldo { padding: 15px; }
-            .container { padding: 0 10px 30px; }
-            .section { padding: 15px 0; }
-            .info-previsione { padding: 15px; margin: 10px auto; }
-            input, select { padding: 10px; font-size: 16px; }
-            .cat-row .small-btn { height: 42px; width: 42px; padding: 10px; }
-            .modal-content { width: 90%; max-width: 280px; padding: 15px; }
-            .modal-content.auth { padding: 20px; }
-            .grid-calendario { gap: 2px; padding: 2px; }
-            .cal-giorno { min-height: 50px; padding: 2px; font-size: 0.75rem; }
-            .cal-badge-scadenza { font-size: 0.55rem; padding: 1px 3px; }
-            .dashboard-rapido { grid-template-columns: repeat(3, 1fr); gap: 6px; }
-            .dash-item { padding: 8px; }
-            .dash-item .value { font-size: 0.9rem; }
-            .filtro-mobile .filtro-riga { flex-direction: column; }
-            .filtro-mobile .filtro-riga .filtro-gruppo { min-width: 100%; }
-            .filtro-mobile .filtro-azioni button { min-width: 45%; flex: 1; }
+        .budget-item {
+            margin-bottom: 15px;
+        }
+
+        .budget-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+            font-weight: 500;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+
+        .progress-bar-bg {
+            background: #e9ecef;
+            border-radius: var(--radius-sm);
+            height: 10px;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: var(--primary);
+            transition: width 0.3s ease, background-color 0.3s;
+            border-radius: var(--radius-sm);
+        }
+
+        .progress-bar-fill.danger {
+            background: var(--danger);
+        }
+
+        .budget-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        .budget-row select, .budget-row input {
+            margin-bottom: 0;
+            padding: 10px;
+            font-size: 0.9rem;
+            flex: 1;
+            min-width: 80px;
+        }
+
+        .budget-row button {
+            padding: 10px 15px;
+            font-size: 0.85rem;
+            max-width: 120px;
+            height: 42px;
+            margin-top: 0;
+            flex-shrink: 0;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+        }
+
+        .budget-row button:hover {
+            opacity: 0.85;
+        }
+
+        .budget-row button:active {
+            transform: scale(0.95);
         }
 
         .utenza-card {
@@ -963,7 +1030,7 @@
         }
 
         .utenza-stat {
-            background: var(--bg-light, #f8f9fa);
+            background: var(--bg-light);
             border-radius: var(--radius-sm);
             padding: 8px;
             text-align: center;
@@ -1020,10 +1087,11 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 10px;
-            background: var(--bg-light, #f8f9fa);
+            background: var(--bg-light);
             padding: 15px;
             border-radius: var(--radius-md);
             margin-bottom: 15px;
+            transition: background-color 0.3s;
         }
 
         .utenza-form .full-width {
@@ -1083,13 +1151,14 @@
         }
 
         .utenza-riepilogo {
-            background: var(--bg-light, #f8f9fa);
+            background: var(--bg-light);
             border-radius: var(--radius-sm);
             padding: 12px;
             grid-column: 1 / -1;
             display: none;
             font-size: 0.85rem;
             border: 1px solid var(--border);
+            transition: background-color 0.3s, border-color 0.3s;
         }
 
         .utenza-riepilogo-dettagli {
@@ -1139,6 +1208,7 @@
             left: 0;
             background: var(--bg);
             z-index: 1;
+            transition: background-color 0.3s;
         }
 
         .news-card {
@@ -1194,71 +1264,7 @@
             transform: scale(0.9);
         }
 
-        .budget-container {
-            margin-top: 25px;
-            background: #fdfdfd;
-            border: 1px solid var(--border);
-            border-radius: var(--radius-md);
-            padding: 15px;
-        }
-
-        .budget-item {
-            margin-bottom: 15px;
-        }
-
-        .budget-info {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.9rem;
-            margin-bottom: 5px;
-            font-weight: 500;
-            flex-wrap: wrap;
-            gap: 4px;
-        }
-
-        .progress-bar-bg {
-            background: #e9ecef;
-            border-radius: var(--radius-sm);
-            height: 10px;
-            width: 100%;
-            overflow: hidden;
-        }
-
-        .progress-bar-fill {
-            height: 100%;
-            background: var(--primary);
-            transition: width 0.3s ease, background-color 0.3s;
-            border-radius: var(--radius-sm);
-        }
-
-        .progress-bar-fill.danger {
-            background: var(--danger);
-        }
-
-        .budget-row {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 12px;
-            flex-wrap: wrap;
-        }
-
-        .budget-row select, .budget-row input {
-            margin-bottom: 0;
-            padding: 10px;
-            font-size: 0.9rem;
-            flex: 1;
-            min-width: 80px;
-        }
-
-        .budget-row button {
-            padding: 10px;
-            font-size: 0.85rem;
-            max-width: 100px;
-            height: 42px;
-            margin-top: 0;
-            flex-shrink: 0;
-        }
-
+        /* ===== GRAFICI ===== */
         .grid-calendario {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
@@ -1278,6 +1284,7 @@
             justify-content: flex-start;
             font-size: 0.85rem;
             position: relative;
+            transition: background-color 0.3s;
         }
 
         .cal-giorno.vuoto {
@@ -1314,6 +1321,7 @@
             background-color: #6c757d;
         }
 
+        /* ===== MODALI ===== */
         .modal {
             display: none;
             position: fixed;
@@ -1685,6 +1693,24 @@
         }
 
         @media (max-width: 600px) {
+            .header-saldo h1 { font-size: 1.6rem; }
+            .header-saldo { padding: 15px; }
+            .container { padding: 0 10px 30px; }
+            .section { padding: 15px 0; }
+            .info-previsione { padding: 15px; margin: 10px auto; }
+            input, select { padding: 10px; font-size: 16px; }
+            .cat-row .small-btn { height: 42px; width: 42px; padding: 10px; }
+            .modal-content { width: 90%; max-width: 280px; padding: 15px; }
+            .modal-content.auth { padding: 20px; }
+            .grid-calendario { gap: 2px; padding: 2px; }
+            .cal-giorno { min-height: 50px; padding: 2px; font-size: 0.75rem; }
+            .cal-badge-scadenza { font-size: 0.55rem; padding: 1px 3px; }
+            .dashboard-rapido { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+            .dash-item { padding: 8px; }
+            .dash-item .value { font-size: 0.9rem; }
+            .filtro-mobile .filtro-riga { flex-direction: column; }
+            .filtro-mobile .filtro-riga .filtro-gruppo { min-width: 100%; }
+            .filtro-mobile .filtro-azioni button { min-width: 45%; flex: 1; }
             .popup-content {
                 padding: 20px;
                 max-height: 90vh;
@@ -1712,6 +1738,67 @@
             }
             .utenza-stats {
                 grid-template-columns: repeat(2, 1fr);
+            }
+            .budget-container {
+                margin-top: 15px;
+                padding: 12px;
+            }
+            .budget-row {
+                flex-direction: column;
+            }
+            .budget-row select, .budget-row input {
+                min-width: 100%;
+            }
+            .budget-row button {
+                max-width: 100%;
+                width: 100%;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .desktop-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 20px;
+            }
+            .section-divider {
+                border-right: 1px solid var(--border);
+                border-bottom: none;
+                padding-right: 20px;
+            }
+            .table-container table {
+                min-width: 600px;
+            }
+            /* Su desktop il budget rimane nella colonna di destra */
+            .budget-container-desktop {
+                display: block;
+            }
+        }
+
+        @media (max-width: 767px) {
+            /* Su mobile il budget va dopo la lista */
+            .budget-container-mobile {
+                display: block;
+                margin-top: 20px;
+                order: 10;
+            }
+            .desktop-grid {
+                display: flex;
+                flex-direction: column;
+            }
+            .section-divider {
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+                padding-right: 0;
+            }
+            .budget-container-desktop {
+                display: none;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .budget-container-mobile {
+                display: none;
             }
         }
 
@@ -1743,6 +1830,83 @@
                 padding-left: max(15px, env(safe-area-inset-left));
                 padding-right: max(15px, env(safe-area-inset-right));
             }
+        }
+
+        /* ===== TOGGLE TEMA NEL MENU ===== */
+        .theme-toggle-item {
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+            padding: 12px 16px !important;
+        }
+
+        .theme-toggle-item span {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 48px;
+            height: 26px;
+            flex-shrink: 0;
+            margin-left: 10px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.3s;
+            border-radius: 26px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "🌙";
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.3s;
+            border-radius: 50%;
+            font-size: 12px;
+        }
+
+        .toggle-switch input:checked + .toggle-slider {
+            background-color: var(--primary);
+        }
+
+        .toggle-switch input:checked + .toggle-slider:before {
+            content: "☀️";
+            transform: translateX(22px);
+        }
+
+        .dark-theme .toggle-slider {
+            background-color: #555;
+        }
+
+        .dark-theme .toggle-slider:before {
+            content: "☀️";
+            background-color: #444;
+        }
+
+        .dark-theme .toggle-switch input:checked + .toggle-slider:before {
+            content: "🌙";
         }
     </style>
 </head>
@@ -1776,6 +1940,14 @@
                 <div class="menu-container">
                     <div class="menu-dots" onclick="toggleMenu()" aria-label="Apri menu" role="button" tabindex="0">⋮</div>
                     <div id="myDropdown" class="dropdown-content" role="menu">
+                        <!-- Toggle Tema Scuro -->
+                        <div class="theme-toggle-item" role="menuitem">
+                            <span>🌙 Tema Scuro</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="themeToggle" onchange="toggleTheme()">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
                         <a onclick="loginbtn()" role="menuitem" id="login-nav-link">🔐 Login</a>
                         <a onclick="esportaDati()" role="menuitem">💾 Backup (Esporta)</a>
                         <a onclick="esportaCSV()" role="menuitem">📊 Esporta CSV</a>
@@ -1885,7 +2057,6 @@
                 <input type="text" id="desc-futura" placeholder="Descrizione (es. Affitto)" aria-label="Descrizione scadenza">
                 <input type="number" id="imp-futura" placeholder="Importo stimato (€)" aria-label="Importo scadenza" inputmode="decimal">
                 
-                <!-- CHECKBOX - Includi nel calcolo del saldo futuro -->
                 <div style="margin: 10px 0; text-align: left;">
                     <label style="display: flex; align-items: center; gap: 8px; font-size: 0.9rem; cursor: pointer; color: var(--text-secondary);">
                         <input type="checkbox" id="impatta-saldo-futura" checked style="width: 16px; height: 16px;">
@@ -1894,28 +2065,30 @@
                 </div>
                 
                 <button class="btn-modern full-width btn-accent" id="btn-salva-futura" onclick="aggiungiSpesaFutura()">Inserisci Spesa Futura</button>
-                <details style="margin-top: 15px; background: #fdfdfd; border: 1px solid var(--border); border-radius: var(--radius-md); padding: 10px;">
+                <details style="margin-top: 15px; background: var(--bg-light); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 10px; transition: background-color 0.3s, border-color 0.3s;">
                     <summary style="cursor: pointer; font-weight: bold; color: var(--text-secondary); outline: none; user-select: none;">
                         📋 Mostra / Nascondi Lista Spese Future
                     </summary>
                     <div id="lista-future" style="margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border);"></div>
                 </details>
 
-                <div class="budget-container">
-                    <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text-secondary); display: flex; align-items: center; gap: 6px;">🎯 Budget Mensili</h4>
-                    <div class="budget-row">
-                        <select id="budget-categoria" aria-label="Categoria budget"></select>
-                        <input type="number" id="budget-importo" placeholder="Limite (€)" step="1" aria-label="Limite budget" inputmode="decimal">
-                        <button class="btn-modern" onclick="impostaBudget()" style="background: var(--primary); color: white; border: none;">Imposta</button>
+                <!-- ===== BUDGET DESKTOP (solo su schermi grandi) ===== -->
+                <div class="budget-container-desktop">
+                    <div class="budget-container">
+                        <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text-secondary); display: flex; align-items: center; gap: 6px;">🎯 Budget Mensili</h4>
+                        <div class="budget-row">
+                            <select id="budget-categoria" aria-label="Categoria budget"></select>
+                            <input type="number" id="budget-importo" placeholder="Limite (€)" step="1" aria-label="Limite budget" inputmode="decimal">
+                            <button onclick="impostaBudget()">Imposta</button>
+                        </div>
+                        <div id="lista-budget"></div>
                     </div>
-                    <div id="lista-budget"></div>
                 </div>
             </div>
 
             <div class="section">
                 <h3 style="margin-top: 30px;">🕒 Storico</h3>
                 
-                <!-- NUOVO FILTRO MOBILE COMPATTO -->
                 <div class="filtro-mobile">
                     <div class="filtro-riga">
                         <div class="filtro-gruppo">
@@ -1948,6 +2121,19 @@
                 </div>
 
                 <div id="lista-transazioni"></div>
+
+                <!-- ===== BUDGET MOBILE (dopo la lista, solo su mobile) ===== -->
+                <div class="budget-container-mobile">
+                    <div class="budget-container">
+                        <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text-secondary); display: flex; align-items: center; gap: 6px;">🎯 Budget Mensili</h4>
+                        <div class="budget-row">
+                            <select id="budget-categoria-mobile" aria-label="Categoria budget"></select>
+                            <input type="number" id="budget-importo-mobile" placeholder="Limite (€)" step="1" aria-label="Limite budget" inputmode="decimal">
+                            <button onclick="impostaBudgetMobile()">Imposta</button>
+                        </div>
+                        <div id="lista-budget-mobile"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -1959,10 +2145,10 @@
             <h3 style="margin: 0;">📅 Calendario Scadenze</h3>
         </div>
 
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; background: #f5f5f5; padding: 10px; border-radius: var(--radius-sm); flex-wrap: wrap; gap: 8px;">
-            <button onclick="navigaMeseCalendario(-1)" class="btn-sm" style="padding: 8px 12px; border-radius: 8px; border: 1px solid #ccc; background: white; cursor: pointer; font-weight: bold;">◀ Mese Prec.</button>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; background: var(--bg-light); padding: 10px; border-radius: var(--radius-sm); flex-wrap: wrap; gap: 8px; transition: background-color 0.3s;">
+            <button onclick="navigaMeseCalendario(-1)" class="btn-sm" style="padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); cursor: pointer; font-weight: bold; color: var(--text-primary); transition: background-color 0.3s, border-color 0.3s, color 0.3s;">◀ Mese Prec.</button>
             <h3 id="cal-titolo-mese" style="margin: 0; font-size: 1.2rem; font-weight: bold; text-transform: capitalize; color: var(--text-primary);"></h3>
-            <button onclick="navigaMeseCalendario(1)" class="btn-sm" style="padding: 8px 12px; border-radius: 8px; border: 1px solid #ccc; background: white; cursor: pointer; font-weight: bold;">Mese Succ. ▶</button>
+            <button onclick="navigaMeseCalendario(1)" class="btn-sm" style="padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); cursor: pointer; font-weight: bold; color: var(--text-primary); transition: background-color 0.3s, border-color 0.3s, color 0.3s;">Mese Succ. ▶</button>
         </div>
 
         <div style="display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-weight: bold; font-size: 0.8rem; margin-bottom: 5px; opacity: 0.7;">
@@ -2010,9 +2196,9 @@
 
         <div style="display: flex; gap: 8px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 10px; -webkit-overflow-scrolling: touch;" role="tablist">
             <button onclick="filtraNews('tutte', event)" role="tab" aria-selected="true" style="background:var(--primary); color:white; border:none; padding:8px 15px; border-radius:20px; font-size:0.8rem; cursor:pointer; flex-shrink:0; transition:var(--transition);">🌎 Tutte</button>
-            <button onclick="filtraNews('italia', event)" role="tab" aria-selected="false" style="background:#eee; border:none; padding:8px 15px; border-radius:20px; font-size:0.8rem; cursor:pointer; flex-shrink:0; transition:var(--transition);">🇮🇹 Italia</button>
-            <button onclick="filtraNews('mondo', event)" role="tab" aria-selected="false" style="background:#eee; border:none; padding:8px 15px; border-radius:20px; font-size:0.8rem; cursor:pointer; flex-shrink:0; transition:var(--transition);">🌐 Global</button>
-            <button onclick="filtraNews('tech', event)" role="tab" aria-selected="false" style="background:#eee; border:none; padding:8px 15px; border-radius:20px; font-size:0.8rem; cursor:pointer; flex-shrink:0; transition:var(--transition);">💻 Tech</button>
+            <button onclick="filtraNews('italia', event)" role="tab" aria-selected="false" style="background:var(--bg-light); border:1px solid var(--border); padding:8px 15px; border-radius:20px; font-size:0.8rem; cursor:pointer; flex-shrink:0; transition:var(--transition); color:var(--text-secondary);">🇮🇹 Italia</button>
+            <button onclick="filtraNews('mondo', event)" role="tab" aria-selected="false" style="background:var(--bg-light); border:1px solid var(--border); padding:8px 15px; border-radius:20px; font-size:0.8rem; cursor:pointer; flex-shrink:0; transition:var(--transition); color:var(--text-secondary);">🌐 Global</button>
+            <button onclick="filtraNews('tech', event)" role="tab" aria-selected="false" style="background:var(--bg-light); border:1px solid var(--border); padding:8px 15px; border-radius:20px; font-size:0.8rem; cursor:pointer; flex-shrink:0; transition:var(--transition); color:var(--text-secondary);">💻 Tech</button>
         </div>
 
         <div id="loading-news" style="text-align: center; padding: 20px; color: var(--text-muted);">Caricamento notizie...</div>
@@ -2129,6 +2315,34 @@
         let editFutureIdx = -1;
 
         // ==========================================
+        // 🌙 GESTIONE TEMA SCURO
+        // ==========================================
+
+        // Controlla se il tema scuro è salvato
+        let darkThemeEnabled = localStorage.getItem('moneyTrack_darkTheme') === 'true';
+
+        function toggleTheme() {
+            darkThemeEnabled = !darkThemeEnabled;
+            localStorage.setItem('moneyTrack_darkTheme', darkThemeEnabled);
+            applyTheme();
+        }
+
+        function applyTheme() {
+            if (darkThemeEnabled) {
+                document.documentElement.classList.add('dark-theme');
+                document.getElementById('themeToggle').checked = true;
+            } else {
+                document.documentElement.classList.remove('dark-theme');
+                document.getElementById('themeToggle').checked = false;
+            }
+        }
+
+        // Applica il tema all'avvio
+        document.addEventListener('DOMContentLoaded', function() {
+            applyTheme();
+        });
+
+        // ==========================================
         // 🔒 FUNZIONI DI SICUREZZA
         // ==========================================
 
@@ -2232,6 +2446,7 @@
                     budgets: safeGetJSON("moneyTrack_budgets") || {},
                     preferitiNews: safeGetJSON("moneyTrack_fav_news") || [],
                     utenze: safeGetJSON("moneyTrack_utenze") || [],
+                    darkTheme: localStorage.getItem('moneyTrack_darkTheme') === 'true',
                     lastUpdated: new Date().toISOString()
                 };
 
@@ -2285,6 +2500,13 @@
                 const result = await _supabase.from('userdata').select('payload').eq('id', user.id);
                 if (result.data && result.data.length > 0 && result.data[0].payload) {
                     const datiCloud = result.data[0].payload;
+                    
+                    // Ripristina il tema dal cloud
+                    if (datiCloud.darkTheme !== undefined) {
+                        darkThemeEnabled = datiCloud.darkTheme;
+                        localStorage.setItem('moneyTrack_darkTheme', darkThemeEnabled);
+                        applyTheme();
+                    }
                     
                     if (firstLogin) {
                         const datiLocaliEsistono = localStorage.getItem('moneyTrack_db') !== null && JSON.parse(localStorage.getItem('moneyTrack_db')).length > 0;
@@ -2525,6 +2747,7 @@
             const s = document.getElementById("categoria");
             s.innerHTML = customCats[t].map(c => `<option value="${c}">${c}</option>`).join("");
             inizializzaSelectBudget();
+            inizializzaSelectBudgetMobile();
         }
 
         function creaCategoria() {
@@ -2590,6 +2813,13 @@
             }
         }
 
+        function inizializzaSelectBudgetMobile() {
+            const select = document.getElementById("budget-categoria-mobile");
+            if (select) {
+                select.innerHTML = customCats["Uscita"].map(c => `<option value="${c}">${c}</option>`).join("");
+            }
+        }
+
         function impostaBudget() {
             const cat = document.getElementById("budget-categoria").value;
             const imp = parseFloat(document.getElementById("budget-importo").value);
@@ -2598,6 +2828,17 @@
             budgets[cat] = imp;
             localStorage.setItem("moneyTrack_budgets", JSON.stringify(budgets));
             document.getElementById("budget-importo").value = "";
+            aggiornaApp();
+        }
+
+        function impostaBudgetMobile() {
+            const cat = document.getElementById("budget-categoria-mobile").value;
+            const imp = parseFloat(document.getElementById("budget-importo-mobile").value);
+            if (!cat || isNaN(imp) || imp <= 0) return alert("Inserisci un importo valido!");
+
+            budgets[cat] = imp;
+            localStorage.setItem("moneyTrack_budgets", JSON.stringify(budgets));
+            document.getElementById("budget-importo-mobile").value = "";
             aggiornaApp();
         }
 
@@ -2610,8 +2851,13 @@
         }
 
         function aggiornaBudgetProgress(catsUscita) {
-            inizializzaSelectBudget();
-            const container = document.getElementById("lista-budget");
+            // Aggiorna sia desktop che mobile
+            aggiornaBudgetProgressContainer("lista-budget", catsUscita);
+            aggiornaBudgetProgressContainer("lista-budget-mobile", catsUscita);
+        }
+
+        function aggiornaBudgetProgressContainer(containerId, catsUscita) {
+            const container = document.getElementById(containerId);
             if (!container) return;
             container.innerHTML = "";
 
@@ -2724,7 +2970,7 @@
         }
 
         // ==========================================
-        // 📊 FUNZIONE CALCOLA PREVISIONE - CORRETTA CON CHECKBOX
+        // 📊 FUNZIONE CALCOLA PREVISIONE
         // ==========================================
 
         function calcolaPrevisione(saldoAttuale) {
@@ -2734,21 +2980,17 @@
             const fineMese = new Date(oggi.getFullYear(), oggi.getMonth() + 1, 0);
             fineMese.setHours(23, 59, 59, 999);
 
-            // Filtra le spese future che sono ancora valide (non passate) e che impattano il saldo
             const speseFutureValide = future.filter(f => {
                 const df = new Date(f.data);
-                // Controlla che impattaSaldo sia true (default se non specificato)
                 const impatta = f.impattaSaldo !== undefined ? f.impattaSaldo : true;
                 return df >= oggi && impatta;
             });
 
-            // Calcola impegni del mese corrente
             let impegniMese = speseFutureValide.filter(f => {
                 const df = new Date(f.data);
                 return df <= fineMese;
             }).reduce((acc, curr) => acc + (parseFloat(curr.imp) || 0), 0);
 
-            // Calcola TUTTI gli impegni futuri
             let tuttiImpegniFuturi = speseFutureValide.reduce((acc, curr) => acc + (parseFloat(curr.imp) || 0), 0);
 
             const previstoFineMese = saldoAttuale - impegniMese;
@@ -3083,7 +3325,7 @@
         }
 
         // ==========================================
-        // 📅 SPESE FUTURE - CORRETTE CON CHECKBOX
+        // 📅 SPESE FUTURE
         // ==========================================
 
         function aggiungiSpesaFutura() {
@@ -3091,7 +3333,6 @@
             const desc = sanitizeHTML(document.getElementById("desc-futura").value);
             const i = parseFloat(document.getElementById("imp-futura").value);
             
-            // Leggi il checkbox in modo sicuro
             const checkbox = document.getElementById("impatta-saldo-futura");
             const impatta = checkbox ? checkbox.checked : true;
 
@@ -3124,7 +3365,6 @@
             document.getElementById("desc-futura").value = s.desc;
             document.getElementById("imp-futura").value = s.imp;
             
-            // Leggi il checkbox in modo sicuro
             const checkbox = document.getElementById("impatta-saldo-futura");
             if (checkbox) {
                 checkbox.checked = s.impattaSaldo !== false;
@@ -3690,7 +3930,7 @@
         }
 
         // ==========================================
-        // 📊 ESPORTA CSV (TUTTI I DATI, NON SOLO MESE CORRENTE)
+        // 📊 ESPORTA CSV
         // ==========================================
 
         function esportaCSV() {
@@ -3754,7 +3994,7 @@
         function esportaDati() {
             const backupData = {};
             const keys = ['moneyTrack_db', 'moneyTrack_future', 'moneyTrack_cats', 'moneyTrack_budgets',
-                'moneyTrack_fav_news', 'moneyTrack_utenze'
+                'moneyTrack_fav_news', 'moneyTrack_utenze', 'moneyTrack_darkTheme'
             ];
             keys.forEach(key => {
                 const value = localStorage.getItem(key);
@@ -3834,6 +4074,13 @@
                     customCats = JSON.parse(localStorage.getItem("moneyTrack_cats")) || {};
                     budgets = JSON.parse(localStorage.getItem("moneyTrack_budgets")) || {};
                     utenze = JSON.parse(localStorage.getItem("moneyTrack_utenze")) || [];
+                    
+                    if (localStorage.getItem('moneyTrack_darkTheme') === 'true') {
+                        darkThemeEnabled = true;
+                    } else {
+                        darkThemeEnabled = false;
+                    }
+                    applyTheme();
 
                     alert("✅ Ripristino completato!");
                     aggiornaApp();
@@ -3950,14 +4197,16 @@
             const bottoni = document.querySelectorAll('#pagina-news button[role="tab"]');
 
             bottoni.forEach(btn => {
-                btn.style.background = "#eee";
-                btn.style.color = "#333";
+                btn.style.background = "var(--bg-light)";
+                btn.style.color = "var(--text-secondary)";
+                btn.style.border = "1px solid var(--border)";
                 btn.setAttribute('aria-selected', 'false');
             });
 
             if (evt && evt.target) {
                 evt.target.style.background = "var(--primary)";
                 evt.target.style.color = "white";
+                evt.target.style.border = "none";
                 evt.target.setAttribute('aria-selected', 'true');
             }
 
@@ -4219,7 +4468,9 @@
         window.modificaCategoria = modificaCategoria;
         window.eliminaCategoria = eliminaCategoria;
         window.inizializzaSelectBudget = inizializzaSelectBudget;
+        window.inizializzaSelectBudgetMobile = inizializzaSelectBudgetMobile;
         window.impostaBudget = impostaBudget;
+        window.impostaBudgetMobile = impostaBudgetMobile;
         window.rimuoviBudget = rimuoviBudget;
         window.togglePrivacy = togglePrivacy;
         window.esportaDati = esportaDati;
@@ -4258,20 +4509,19 @@
         window.resetFiltri = resetFiltri;
         window.gestisciLoginOSincronizzazione = gestisciLoginOSincronizzazione;
         window.ripristinaDatiCloud = ripristinaDatiCloud;
+        window.toggleTheme = toggleTheme;
+        window.applyTheme = applyTheme;
 
         console.log('🚀 MoneyTrack 2.0 avviato!');
         console.log('📊 Transazioni:', spese.length);
         console.log('📅 Spese future:', future.length);
         console.log('⚡ Utenze registrate:', utenze.length);
+        console.log('🌙 Tema scuro:', darkThemeEnabled ? 'attivo' : 'disattivo');
         console.log('📱 Compatibile con Android, iOS e PC');
         console.log('💡 Suggerimenti disponibili con il pulsante 💡');
         console.log('⌨️ Shortcut: Ctrl+Enter per salvare, ESC per chiudere');
-        console.log('📊 Dashboard: uscite mese calcolate correttamente!');
-        console.log('📊 CSV: esporta TUTTI i dati, non solo il mese corrente!');
-        console.log('📊 PROSPETTIVA TOTALE: calcola TUTTE le spese future valide!');
-        console.log('🔐 Login Supabase: funzionante e messaggi mostrati solo al primo login!');
-        console.log('✅ Checkbox "Includi nel calcolo del saldo futuro": funzionante!');
-        console.log('📱 Filtro storico: ottimizzato per mobile!');
+        console.log('📱 Budget mensili: su mobile appaiono DOPO la lista movimenti');
+        console.log('🌙 Tema scuro: selezionabile dal menu (⋮)');
     </script>
 
 </body>
