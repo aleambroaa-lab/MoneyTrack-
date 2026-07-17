@@ -14,10 +14,10 @@
     <title>MoneyTrack - Versione 2.0</title>
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
+        /* ... (tutti gli stili come prima) ... */
         :root {
             --primary: #b5c3b6;
             --secondary: #9aa89b;
@@ -90,8 +90,9 @@
             .utenza-form { background: #2a2a2a; }
             .utenza-riepilogo { background: #333; }
             .dash-item { background: #2a2a2a !important; }
-            .obiettivi-container { background: #2a2a2a !important; }
             .filtri-container { background: #2a2a2a !important; }
+            .filtro-mobile { background: #2a2a2a !important; border-color: #444 !important; }
+            .filtro-mobile input, .filtro-mobile select { background: #333 !important; color: var(--text-primary) !important; border-color: #555 !important; }
         }
 
         * {
@@ -360,154 +361,130 @@
         .dash-item .value.primary { color: var(--primary); }
         .dash-item .value.info { color: var(--info); }
 
-        .filtri-container {
-            background: var(--bg-light, #f8f9fa);
-            padding: 12px;
-            border-radius: var(--radius-sm);
-            margin-bottom: 15px;
-            border: 1px solid var(--border);
-        }
-
-        .filtri-container .filtri-row {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-
-        .filtri-container input, 
-        .filtri-container select {
-            margin-bottom: 0;
-            padding: 8px 10px;
-            font-size: 0.85rem;
-            flex: 1;
-            min-width: 80px;
-        }
-
-        .filtri-container button {
-            padding: 8px 15px;
-            flex: 0;
-            min-height: 38px;
-            font-size: 0.8rem;
-        }
-
-        .filtri-container .btn-reset {
-            background: var(--danger);
-            color: white;
-            border: none;
-            border-radius: var(--radius-sm);
-            cursor: pointer;
-            padding: 8px 12px;
-            font-size: 0.8rem;
-            font-weight: bold;
-            transition: var(--transition);
-        }
-
-        .filtri-container .btn-reset:hover {
-            opacity: 0.8;
-            transform: scale(0.97);
-        }
-
-        .obiettivi-container {
-            margin-top: 20px;
-            padding: 15px;
+        /* ===== NUOVO FILTRO MOBILE COMPATTO ===== */
+        .filtro-mobile {
             background: var(--bg-light, #f8f9fa);
             border-radius: var(--radius-md);
             border: 1px solid var(--border);
+            padding: 12px;
+            margin-bottom: 12px;
         }
 
-        .obiettivi-container .obiettivo-row {
+        .filtro-mobile .filtro-riga {
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
             align-items: center;
         }
 
-        .obiettivi-container input {
-            margin-bottom: 0;
-            padding: 8px 10px;
-            font-size: 0.85rem;
-            flex: 1;
-            min-width: 80px;
-        }
-
-        .obiettivi-container button {
-            padding: 8px 15px;
-            flex: 0;
-            min-height: 38px;
-            font-size: 0.8rem;
-        }
-
-        .obiettivo-item {
+        .filtro-mobile .filtro-riga .filtro-gruppo {
             display: flex;
-            justify-content: space-between;
+            gap: 4px;
+            flex: 1;
+            min-width: 120px;
             align-items: center;
-            padding: 10px 12px;
             background: var(--bg);
             border-radius: var(--radius-sm);
+            padding: 2px 6px;
             border: 1px solid var(--border);
+        }
+
+        .filtro-mobile .filtro-riga .filtro-gruppo label {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+            padding-right: 4px;
+        }
+
+        .filtro-mobile .filtro-riga .filtro-gruppo input,
+        .filtro-mobile .filtro-riga .filtro-gruppo select {
+            border: none;
+            background: transparent;
+            padding: 8px 4px;
+            font-size: 0.8rem;
+            flex: 1;
+            min-width: 60px;
+            margin-bottom: 0;
+            outline: none;
+        }
+
+        .filtro-mobile .filtro-riga .filtro-gruppo input:focus,
+        .filtro-mobile .filtro-riga .filtro-gruppo select:focus {
+            box-shadow: none;
+            background: transparent;
+        }
+
+        .filtro-mobile .filtro-azioni {
+            display: flex;
+            gap: 6px;
+            align-items: center;
             margin-top: 8px;
-            gap: 10px;
             flex-wrap: wrap;
         }
 
-        .obiettivo-item .info {
-            flex: 2;
-            min-width: 150px;
-        }
-
-        .obiettivo-item .nome {
-            font-weight: bold;
-            font-size: 0.95rem;
-        }
-
-        .obiettivo-item .dettagli {
+        .filtro-mobile .filtro-azioni button {
+            padding: 6px 14px;
+            border-radius: var(--radius-sm);
+            border: none;
             font-size: 0.75rem;
-            color: var(--text-muted);
-            line-height: 1.4;
-        }
-
-        .obiettivo-item .progresso {
-            width: 120px;
-            text-align: right;
-            flex-shrink: 0;
-        }
-
-        .obiettivo-item .progresso .barra {
-            width: 100%;
-            height: 6px;
-            background: var(--border);
-            border-radius: 3px;
-            overflow: hidden;
-            margin-top: 4px;
-        }
-
-        .obiettivo-item .progresso .barra .fill {
-            height: 100%;
-            background: var(--success);
-            border-radius: 3px;
-            transition: width 0.5s ease;
-        }
-
-        .obiettivo-item .progresso .barra .fill.warning {
-            background: var(--warning);
-        }
-
-        .obiettivo-item .progresso .barra .fill.danger {
-            background: var(--danger);
-        }
-
-        .obiettivo-item .delete-btn {
+            font-weight: 600;
             cursor: pointer;
-            opacity: 0.4;
-            padding: 4px 8px;
             transition: var(--transition);
-            flex-shrink: 0;
+            min-height: 34px;
+            flex: 1;
+            min-width: 60px;
         }
 
-        .obiettivo-item .delete-btn:hover {
-            opacity: 1;
-            color: var(--danger);
+        .filtro-mobile .filtro-azioni .btn-filtra {
+            background: var(--primary);
+            color: white;
+        }
+
+        .filtro-mobile .filtro-azioni .btn-filtra:active {
+            transform: scale(0.95);
+        }
+
+        .filtro-mobile .filtro-azioni .btn-reset-filtro {
+            background: var(--danger);
+            color: white;
+        }
+
+        .filtro-mobile .filtro-azioni .btn-reset-filtro:active {
+            transform: scale(0.95);
+        }
+
+        .filtro-mobile .filtro-ricerca {
+            margin-top: 8px;
+            position: relative;
+        }
+
+        .filtro-mobile .filtro-ricerca input {
+            width: 100%;
+            padding: 8px 12px 8px 32px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            background: var(--bg);
+            color: var(--text-primary);
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .filtro-mobile .filtro-ricerca input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(181, 195, 182, 0.2);
+        }
+
+        .filtro-mobile .filtro-ricerca .lente {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.9rem;
+            opacity: 0.5;
         }
 
         .info-previsione {
@@ -925,12 +902,9 @@
             .dashboard-rapido { grid-template-columns: repeat(3, 1fr); gap: 6px; }
             .dash-item { padding: 8px; }
             .dash-item .value { font-size: 0.9rem; }
-            .filtri-container .filtri-row { flex-direction: column; }
-            .filtri-container input, .filtri-container select { min-width: 100%; }
-            .obiettivi-container .obiettivo-row { flex-direction: column; }
-            .obiettivi-container input { min-width: 100%; }
-            .obiettivo-item { flex-direction: column; text-align: center; gap: 8px; }
-            .obiettivo-item .progresso { width: 100%; }
+            .filtro-mobile .filtro-riga { flex-direction: column; }
+            .filtro-mobile .filtro-riga .filtro-gruppo { min-width: 100%; }
+            .filtro-mobile .filtro-azioni button { min-width: 45%; flex: 1; }
         }
 
         .utenza-card {
@@ -1839,10 +1813,6 @@
                 <div class="label">⚡ Utenze</div>
                 <div class="value info" id="dash-utenze">0</div>
             </div>
-            <div class="dash-item">
-                <div class="label">🎯 Obiettivi</div>
-                <div class="value primary" id="dash-obiettivi">0</div>
-            </div>
         </div>
 
         <div class="nav-buttons-container">
@@ -1862,11 +1832,7 @@
 
                     <div style="display: flex; gap: 8px; align-items: center; width: 100%;" class="cat-row">
                         <button class="small-btn" onclick="apriCalcolatrice()" title="Calcolatrice" aria-label="Apri calcolatrice">🧮<span style="font-size: 0.8rem; font-weight: bold;">CAL</span></button>
-                        <button type="button" onclick="document.getElementById('pdfInput').click()" aria-label="Carica PDF bancario" style="background: #f4f4f4; border: none; border-radius: var(--radius-md); padding: 0 15px; cursor: pointer; height: 46px; box-shadow: var(--shadow-sm); display: flex; align-items: center; gap: 6px; font-weight: 600; color: var(--text-secondary); transition: var(--transition);">
-                            📄 <span style="font-size: 0.8rem; font-weight: bold;">PDF</span>
-                        </button>
                     </div>
-                    <input type="file" id="pdfInput" style="display:none" accept=".pdf" onchange="elaboraPDFBancario(event)" aria-label="Carica file PDF">
                 </div>
 
                 <div id="calc-modal" class="modal" role="dialog" aria-label="Calcolatrice">
@@ -1913,16 +1879,20 @@
 
                 <button class="btn-modern full-width" id="btn-salva" onclick="aggiungiOperazione()">SALVA MOVIMENTO</button>
 
+                <!-- ===== SEZIONE SPESE FUTURE CON CHECKBOX ===== -->
                 <h3 style="margin-top: 35px;">📅 Scadenze Future</h3>
                 <input type="date" id="data-futura" aria-label="Data scadenza">
                 <input type="text" id="desc-futura" placeholder="Descrizione (es. Affitto)" aria-label="Descrizione scadenza">
                 <input type="number" id="imp-futura" placeholder="Importo stimato (€)" aria-label="Importo scadenza" inputmode="decimal">
+                
+                <!-- CHECKBOX - Includi nel calcolo del saldo futuro -->
                 <div style="margin: 10px 0; text-align: left;">
                     <label style="display: flex; align-items: center; gap: 8px; font-size: 0.9rem; cursor: pointer; color: var(--text-secondary);">
                         <input type="checkbox" id="impatta-saldo-futura" checked style="width: 16px; height: 16px;">
                         Includi nel calcolo del saldo futuro
                     </label>
                 </div>
+                
                 <button class="btn-modern full-width btn-accent" id="btn-salva-futura" onclick="aggiungiSpesaFutura()">Inserisci Spesa Futura</button>
                 <details style="margin-top: 15px; background: #fdfdfd; border: 1px solid var(--border); border-radius: var(--radius-md); padding: 10px;">
                     <summary style="cursor: pointer; font-weight: bold; color: var(--text-secondary); outline: none; user-select: none;">
@@ -1931,47 +1901,53 @@
                     <div id="lista-future" style="margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border);"></div>
                 </details>
 
-                <div class="obiettivi-container">
-                    <h4 style="margin-top:0;">🎯 Obiettivi di Risparmio</h4>
-                    <div class="obiettivo-row">
-                        <input type="text" id="obiettivo-nome" placeholder="Nome obiettivo (es. Vacanza)" style="flex:2; min-width:120px;">
-                        <input type="number" id="obiettivo-importo" placeholder="Importo (€)" style="flex:1; min-width:100px;" inputmode="decimal">
-                        <input type="date" id="obiettivo-data" style="flex:1; min-width:100px;">
-                        <button onclick="salvaObiettivo()" class="btn-modern btn-success" style="flex:0; padding:8px 15px; min-height:38px;">Salva</button>
+                <div class="budget-container">
+                    <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text-secondary); display: flex; align-items: center; gap: 6px;">🎯 Budget Mensili</h4>
+                    <div class="budget-row">
+                        <select id="budget-categoria" aria-label="Categoria budget"></select>
+                        <input type="number" id="budget-importo" placeholder="Limite (€)" step="1" aria-label="Limite budget" inputmode="decimal">
+                        <button class="btn-modern" onclick="impostaBudget()" style="background: var(--primary); color: white; border: none;">Imposta</button>
                     </div>
-                    <div id="lista-obiettivi" style="margin-top:10px;"></div>
+                    <div id="lista-budget"></div>
                 </div>
             </div>
 
             <div class="section">
                 <h3 style="margin-top: 30px;">🕒 Storico</h3>
                 
-                <div class="filtri-container">
-                    <div class="filtri-row">
-                        <input type="date" id="filtro-data-da" placeholder="Da">
-                        <input type="date" id="filtro-data-a" placeholder="A">
-                        <select id="filtro-tipo">
-                            <option value="">📊 Tutti</option>
-                            <option value="Entrata">📈 Entrate</option>
-                            <option value="Uscita">📉 Uscite</option>
-                        </select>
-                        <button onclick="applicaFiltri()" class="btn-modern" style="flex:0; padding:8px 15px; min-height:38px;">🔍 Filtra</button>
-                        <button onclick="resetFiltri()" class="btn-reset" style="flex:0;">✕ Reset</button>
+                <!-- NUOVO FILTRO MOBILE COMPATTO -->
+                <div class="filtro-mobile">
+                    <div class="filtro-riga">
+                        <div class="filtro-gruppo">
+                            <label>📅 Da</label>
+                            <input type="date" id="filtro-data-da" placeholder="Da">
+                        </div>
+                        <div class="filtro-gruppo">
+                            <label>📅 A</label>
+                            <input type="date" id="filtro-data-a" placeholder="A">
+                        </div>
+                    </div>
+                    <div class="filtro-riga">
+                        <div class="filtro-gruppo">
+                            <label>📊</label>
+                            <select id="filtro-tipo">
+                                <option value="">Tutti</option>
+                                <option value="Entrata">📈 Entrate</option>
+                                <option value="Uscita">📉 Uscite</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="filtro-azioni">
+                        <button class="btn-filtra" onclick="applicaFiltri()">🔍 Filtra</button>
+                        <button class="btn-reset-filtro" onclick="resetFiltri()">✕ Reset</button>
+                    </div>
+                    <div class="filtro-ricerca">
+                        <span class="lente">🔍</span>
+                        <input type="text" id="filtroRicerca" placeholder="Cerca tra note o categorie...">
                     </div>
                 </div>
-                
-                <input type="text" id="filtroRicerca" placeholder="🔍 Cerca tra note o categorie..." aria-label="Cerca transazioni">
-                <div id="lista-transazioni"></div>
-            </div>
 
-            <div class="budget-container">
-                <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text-secondary); display: flex; align-items: center; gap: 6px;">🎯 Budget Mensili</h4>
-                <div class="budget-row">
-                    <select id="budget-categoria" aria-label="Categoria budget"></select>
-                    <input type="number" id="budget-importo" placeholder="Limite (€)" step="1" aria-label="Limite budget" inputmode="decimal">
-                    <button class="btn-modern" onclick="impostaBudget()" style="background: var(--primary); color: white; border: none;">Imposta</button>
-                </div>
-                <div id="lista-budget"></div>
+                <div id="lista-transazioni"></div>
             </div>
         </div>
     </div>
@@ -2133,6 +2109,26 @@
         let firstLogin = true;
 
         // ==========================================
+        // 📦 DATABASE & STATO
+        // ==========================================
+
+        let spese = JSON.parse(localStorage.getItem("moneyTrack_db")) || [];
+        let future = JSON.parse(localStorage.getItem("moneyTrack_future")) || [];
+        let customCats = JSON.parse(localStorage.getItem("moneyTrack_cats")) || {
+            "Uscita": ["🏠 Casa", "🍕 Cibo", "🚗 Auto", "🛒 Spesa", "⏳ Programmata"],
+            "Entrata": ["💰 Stipendio", "➕ Altro"]
+        };
+        let budgets = JSON.parse(localStorage.getItem("moneyTrack_budgets")) || {};
+        let utenze = JSON.parse(localStorage.getItem("moneyTrack_utenze")) || [];
+
+        let graficoTorta, graficoBarre, privacy = false;
+        const mesiNomi = ["Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic"];
+        const mesiEstesi = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre",
+            "Ottobre", "Novembre", "Dicembre"
+        ];
+        let editFutureIdx = -1;
+
+        // ==========================================
         // 🔒 FUNZIONI DI SICUREZZA
         // ==========================================
 
@@ -2236,7 +2232,6 @@
                     budgets: safeGetJSON("moneyTrack_budgets") || {},
                     preferitiNews: safeGetJSON("moneyTrack_fav_news") || [],
                     utenze: safeGetJSON("moneyTrack_utenze") || [],
-                    obiettivi: safeGetJSON("moneyTrack_obiettivi") || [],
                     lastUpdated: new Date().toISOString()
                 };
 
@@ -2333,18 +2328,15 @@
             localStorage.setItem('moneyTrack_budgets', JSON.stringify(datiCloud.budgets || {}));
             localStorage.setItem('moneyTrack_fav_news', JSON.stringify(datiCloud.preferitiNews || []));
             localStorage.setItem('moneyTrack_utenze', JSON.stringify(datiCloud.utenze || []));
-            localStorage.setItem('moneyTrack_obiettivi', JSON.stringify(datiCloud.obiettivi || []));
 
             spese = JSON.parse(localStorage.getItem("moneyTrack_db")) || [];
             future = JSON.parse(localStorage.getItem("moneyTrack_future")) || [];
             customCats = JSON.parse(localStorage.getItem("moneyTrack_cats")) || {};
             budgets = JSON.parse(localStorage.getItem("moneyTrack_budgets")) || {};
             utenze = JSON.parse(localStorage.getItem("moneyTrack_utenze")) || [];
-            obiettivi = JSON.parse(localStorage.getItem("moneyTrack_obiettivi")) || [];
 
             aggiornaApp();
             renderizzaUtenze();
-            renderizzaObiettivi();
         }
 
         function injectAuthModal() {
@@ -2490,27 +2482,6 @@
                 }
             }
         }
-
-        // ==========================================
-        // 📦 DATABASE & STATO
-        // ==========================================
-
-        let spese = JSON.parse(localStorage.getItem("moneyTrack_db")) || [];
-        let future = JSON.parse(localStorage.getItem("moneyTrack_future")) || [];
-        let customCats = JSON.parse(localStorage.getItem("moneyTrack_cats")) || {
-            "Uscita": ["🏠 Casa", "🍕 Cibo", "🚗 Auto", "🛒 Spesa", "⏳ Programmata"],
-            "Entrata": ["💰 Stipendio", "➕ Altro"]
-        };
-        let budgets = JSON.parse(localStorage.getItem("moneyTrack_budgets")) || {};
-        let utenze = JSON.parse(localStorage.getItem("moneyTrack_utenze")) || [];
-        let obiettivi = JSON.parse(localStorage.getItem("moneyTrack_obiettivi")) || [];
-
-        let graficoTorta, graficoBarre, privacy = false;
-        const mesiNomi = ["Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic"];
-        const mesiEstesi = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre",
-            "Ottobre", "Novembre", "Dicembre"
-        ];
-        let editFutureIdx = -1;
 
         // ==========================================
         // 🧭 NAVIGAZIONE
@@ -2674,160 +2645,6 @@
         }
 
         // ==========================================
-        // 🎯 OBIETTIVI DI RISPARMIO
-        // ==========================================
-
-        function salvaObiettivo() {
-            const nome = document.getElementById('obiettivo-nome').value.trim();
-            const importo = parseFloat(document.getElementById('obiettivo-importo').value);
-            const data = document.getElementById('obiettivo-data').value;
-
-            if (!nome) { alert('Inserisci un nome per l\'obiettivo!'); return; }
-            if (isNaN(importo) || importo <= 0) { alert('Inserisci un importo valido!'); return; }
-            if (!data) { alert('Seleziona una data!'); return; }
-
-            const oggi = new Date();
-            const ultimi3Mesi = [];
-            for (let i = 0; i < 3; i++) {
-                const mese = new Date(oggi.getFullYear(), oggi.getMonth() - i, 1);
-                const meseFine = new Date(oggi.getFullYear(), oggi.getMonth() - i + 1, 0);
-                let entrateMese = 0,
-                    usciteMese = 0;
-                spese.forEach(s => {
-                    const d = new Date(s.data);
-                    if (d >= mese && d <= meseFine) {
-                        if (s.tipo === 'Entrata') entrateMese += s.imp;
-                        else usciteMese += s.imp;
-                    }
-                });
-                ultimi3Mesi.push(entrateMese - usciteMese);
-            }
-            const risparmioMedioMensile = ultimi3Mesi.filter(r => r > 0).length > 0 ?
-                ultimi3Mesi.filter(r => r > 0).reduce((a, b) => a + b, 0) / ultimi3Mesi.filter(r => r > 0).length : 0;
-
-            const speseTotali = spese.reduce((acc, s) => acc + (s.tipo === 'Entrata' ? s.imp : 0), 0);
-            const speseUscite = spese.reduce((acc, s) => acc + (s.tipo === 'Uscita' ? s.imp : 0), 0);
-            const risparmioAttuale = speseTotali - speseUscite;
-
-            const mesiStimati = risparmioMedioMensile > 0 ? Math.ceil(importo / risparmioMedioMensile) : 0;
-
-            const dataCompletamento = new Date();
-            dataCompletamento.setMonth(dataCompletamento.getMonth() + mesiStimati);
-
-            const obiettivo = {
-                id: Date.now(),
-                nome: nome,
-                importo: importo,
-                dataScadenza: data,
-                dataCreazione: new Date().toISOString().split('T')[0],
-                risparmioAttuale: risparmioAttuale,
-                risparmioMedioMensile: risparmioMedioMensile,
-                mesiStimati: mesiStimati,
-                dataCompletamentoStimata: dataCompletamento.toISOString().split('T')[0],
-                progresso: Math.min((risparmioAttuale / importo) * 100, 100),
-                completato: risparmioAttuale >= importo
-            };
-
-            obiettivi.push(obiettivo);
-            localStorage.setItem('moneyTrack_obiettivi', JSON.stringify(obiettivi));
-
-            document.getElementById('obiettivo-nome').value = '';
-            document.getElementById('obiettivo-importo').value = '';
-            document.getElementById('obiettivo-data').value = '';
-
-            renderizzaObiettivi();
-            aggiornaDashboard();
-            if (currentUser) syncDatiSuSupabase();
-
-            alert(
-                `✅ Obiettivo "${nome}" salvato!\n\n📊 Risparmio medio mensile: ${risparmioMedioMensile.toFixed(2)}€\n📅 Completamento stimato: ${dataCompletamento.toISOString().split('T')[0]} (${mesiStimati} mesi)`);
-        }
-
-        function eliminaObiettivo(id) {
-            if (confirm('Eliminare questo obiettivo?')) {
-                obiettivi = obiettivi.filter(o => o.id !== id);
-                localStorage.setItem('moneyTrack_obiettivi', JSON.stringify(obiettivi));
-                renderizzaObiettivi();
-                aggiornaDashboard();
-                if (currentUser) syncDatiSuSupabase();
-            }
-        }
-
-        function renderizzaObiettivi() {
-            const container = document.getElementById('lista-obiettivi');
-            if (!container) return;
-
-            if (obiettivi.length === 0) {
-                container.innerHTML = `
-                    <small style="color: var(--text-muted); display: block; text-align: center; padding: 10px;">
-                        💡 Imposta un obiettivo di risparmio! <br>
-                        <span style="font-size:0.8rem;">Es: "Vacanza" 1000€ entro 31/12/2024</span>
-                    </small>`;
-                return;
-            }
-
-            let html = '';
-            obiettivi.forEach(o => {
-                const progresso = Math.min(o.progresso || 0, 100);
-                let classeFill = 'fill';
-                let stato = '';
-                let colore = '';
-
-                if (o.completato) {
-                    classeFill += ' success';
-                    stato = '✅ COMPLETATO! 🎉';
-                    colore = 'var(--success)';
-                } else if (progresso > 80) {
-                    classeFill += ' warning';
-                    stato = '🏁 Quasi finito!';
-                    colore = 'var(--warning)';
-                } else if (progresso > 50) {
-                    classeFill += ' warning';
-                    stato = '💪 A buon punto!';
-                    colore = 'var(--primary)';
-                } else {
-                    classeFill += ' danger';
-                    stato = '📈 Inizia a risparmiare!';
-                    colore = 'var(--danger)';
-                }
-
-                const oggi = new Date();
-                const scadenza = new Date(o.dataScadenza);
-                const giorniMancanti = Math.ceil((scadenza - oggi) / (1000 * 60 * 60 * 24));
-                let scadenzaText = '';
-                if (giorniMancanti < 0) {
-                    scadenzaText = '⏰ SCADUTO!';
-                } else if (giorniMancanti < 30) {
-                    scadenzaText = `⏳ ${giorniMancanti} giorni rimasti`;
-                } else {
-                    scadenzaText = `📅 Scade il ${o.dataScadenza}`;
-                }
-
-                html += `
-                <div class="obiettivo-item">
-                    <div class="info">
-                        <div class="nome" style="color:${colore};">${sanitizeHTML(o.nome)} ${stato}</div>
-                        <div class="dettagli">
-                            🎯 ${o.importo.toFixed(0)}€ · Risparmiato: ${o.risparmioAttuale.toFixed(2)}€
-                            ${o.mesiStimati > 0 ? `· 💰 ${o.risparmioMedioMensile.toFixed(2)}€/mese` : ''}
-                            <br>${scadenzaText}
-                            ${o.dataCompletamentoStimata && !o.completato ? `· 📈 Completamento stimato: ${o.dataCompletamentoStimata}` : ''}
-                        </div>
-                    </div>
-                    <div class="progresso">
-                        <div style="font-weight:bold;font-size:0.9rem;">${progresso.toFixed(0)}%</div>
-                        <div class="barra">
-                            <div class="${classeFill}" style="width: ${progresso}%;"></div>
-                        </div>
-                    </div>
-                    <span class="delete-btn" onclick="eliminaObiettivo(${o.id})" title="Elimina">🗑️</span>
-                </div>`;
-            });
-
-            container.innerHTML = html;
-        }
-
-        // ==========================================
         // 📊 DASHBOARD + FILTRI
         // ==========================================
 
@@ -2857,7 +2674,6 @@
             document.getElementById('dash-uscite').textContent = usciteMese.toFixed(2) + ' €';
             document.getElementById('dash-transazioni').textContent = transazioniMese;
             document.getElementById('dash-utenze').textContent = utenze.length;
-            document.getElementById('dash-obiettivi').textContent = obiettivi.length;
         }
 
         function applicaFiltri() {
@@ -3052,18 +2868,6 @@
             aggiornaListaFuture();
             aggiornaBudgetProgress(catsUscita);
             aggiornaDashboard();
-            renderizzaObiettivi();
-
-            const speseTotali = spese.reduce((acc, s) => acc + (s.tipo === 'Entrata' ? s.imp : 0), 0);
-            const speseUscite = spese.reduce((acc, s) => acc + (s.tipo === 'Uscita' ? s.imp : 0), 0);
-            const risparmioAttuale = speseTotali - speseUscite;
-
-            obiettivi.forEach(o => {
-                o.progresso = Math.min((risparmioAttuale / o.importo) * 100, 100);
-                o.risparmioAttuale = risparmioAttuale;
-                o.completato = risparmioAttuale >= o.importo;
-            });
-            localStorage.setItem('moneyTrack_obiettivi', JSON.stringify(obiettivi));
         }
 
         const debouncedAggiorna = debounce(aggiornaApp, 300);
@@ -3727,67 +3531,6 @@
         }
 
         // ==========================================
-        // 📄 PDF BANCARIO
-        // ==========================================
-
-        async function elaboraPDFBancario(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            if (file.type !== 'application/pdf') {
-                alert('Solo file PDF sono supportati!');
-                event.target.value = '';
-                return;
-            }
-
-            if (file.size > 10 * 1024 * 1024) {
-                alert('Il file è troppo grande (max 10MB)');
-                event.target.value = '';
-                return;
-            }
-
-            try {
-                const reader = new FileReader();
-                reader.onload = async function() {
-                    try {
-                        const typedarray = new Uint8Array(this.result);
-                        const loadingTask = pdfjsLib.getDocument({ data: typedarray, disableWorker: true,
-                            verbosity: 0 });
-                        const pdf = await loadingTask.promise;
-                        let fullText = "";
-
-                        for (let i = 1; i <= pdf.numPages; i++) {
-                            const page = await pdf.getPage(i);
-                            const textContent = await page.getTextContent();
-                            fullText += textContent.items.map(item => item.str).join(" ") + "\n";
-                        }
-
-                        const matchImporto = fullText.match(
-                            /(?:TOTAL|IMPORTO|€|EUR|TOTALE)\s*[:]*\s*([0-9]+[\.,][0-9]{2})/i) || fullText.match(
-                            /([0-9]+[\.,][0-9]{2})/);
-
-                        if (matchImporto) {
-                            let importoEstratto = matchImporto[1].replace(',', '.');
-                            document.getElementById("importo").value = parseFloat(importoEstratto).toFixed(2);
-                            document.getElementById("nota").value = "Importato da PDF Bancario";
-                            alert("✅ Dati estratti con successo!");
-                        } else {
-                            alert("PDF letto, ma nessun importo trovato.");
-                        }
-                    } catch (pdfError) {
-                        console.error("Errore PDF.js:", pdfError);
-                        alert("Impossibile leggere questo PDF.");
-                    }
-                };
-                reader.readAsArrayBuffer(file);
-            } catch (error) {
-                console.error(error);
-                alert("Errore durante la lettura del file.");
-            }
-            event.target.value = '';
-        }
-
-        // ==========================================
         // 📊 GRAFICI
         // ==========================================
 
@@ -4011,7 +3754,7 @@
         function esportaDati() {
             const backupData = {};
             const keys = ['moneyTrack_db', 'moneyTrack_future', 'moneyTrack_cats', 'moneyTrack_budgets',
-                'moneyTrack_fav_news', 'moneyTrack_utenze', 'moneyTrack_obiettivi'
+                'moneyTrack_fav_news', 'moneyTrack_utenze'
             ];
             keys.forEach(key => {
                 const value = localStorage.getItem(key);
@@ -4091,12 +3834,10 @@
                     customCats = JSON.parse(localStorage.getItem("moneyTrack_cats")) || {};
                     budgets = JSON.parse(localStorage.getItem("moneyTrack_budgets")) || {};
                     utenze = JSON.parse(localStorage.getItem("moneyTrack_utenze")) || [];
-                    obiettivi = JSON.parse(localStorage.getItem("moneyTrack_obiettivi")) || [];
 
                     alert("✅ Ripristino completato!");
                     aggiornaApp();
                     renderizzaUtenze();
-                    renderizzaObiettivi();
                     if (currentUser) syncDatiSuSupabase();
 
                 } catch (error) {
@@ -4233,7 +3974,8 @@
             event.stopPropagation();
 
             try {
-                const articolo = JSON.parse(decodeURIComponent(escape(atob(safeItem))));
+                const jsonString = decodeURIComponent(escape(atob(safeItem)));
+                const articolo = JSON.parse(jsonString);
 
                 const index = preferitiNews.findIndex(f => f.link === articolo.link);
                 const stella = event.currentTarget.querySelector('span');
@@ -4442,7 +4184,6 @@
         aggiornaCategorie();
         aggiornaApp();
         renderizzaUtenze();
-        renderizzaObiettivi();
 
         setTimeout(() => {
             calcolaRiepilogoUtenza();
@@ -4495,7 +4236,6 @@
         window.disegnaCalendario = disegnaCalendario;
         window.navigaMeseCalendario = navigaMeseCalendario;
         window.generaReport = generaReport;
-        window.elaboraPDFBancario = elaboraPDFBancario;
         window.toggleMenu = toggleMenu;
         window.loginbtn = loginbtn;
         window.eseguiAuth = eseguiAuth;
@@ -4513,9 +4253,6 @@
         window.apriPopupSuggerimenti = apriPopupSuggerimenti;
         window.chiudiPopupSuggerimenti = chiudiPopupSuggerimenti;
         window.calcolaRiepilogoUtenza = calcolaRiepilogoUtenza;
-        window.salvaObiettivo = salvaObiettivo;
-        window.eliminaObiettivo = eliminaObiettivo;
-        window.renderizzaObiettivi = renderizzaObiettivi;
         window.aggiornaDashboard = aggiornaDashboard;
         window.applicaFiltri = applicaFiltri;
         window.resetFiltri = resetFiltri;
@@ -4526,7 +4263,6 @@
         console.log('📊 Transazioni:', spese.length);
         console.log('📅 Spese future:', future.length);
         console.log('⚡ Utenze registrate:', utenze.length);
-        console.log('🎯 Obiettivi:', obiettivi.length);
         console.log('📱 Compatibile con Android, iOS e PC');
         console.log('💡 Suggerimenti disponibili con il pulsante 💡');
         console.log('⌨️ Shortcut: Ctrl+Enter per salvare, ESC per chiudere');
@@ -4535,6 +4271,7 @@
         console.log('📊 PROSPETTIVA TOTALE: calcola TUTTE le spese future valide!');
         console.log('🔐 Login Supabase: funzionante e messaggi mostrati solo al primo login!');
         console.log('✅ Checkbox "Includi nel calcolo del saldo futuro": funzionante!');
+        console.log('📱 Filtro storico: ottimizzato per mobile!');
     </script>
 
 </body>
