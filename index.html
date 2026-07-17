@@ -2293,6 +2293,9 @@
         let syncInProgress = false;
         let lastSyncAttempt = 0;
         let firstLogin = true;
+        let lastSyncUserId = localStorage.getItem('moneyTrack_lastSyncUserId') || null;
+        let lastDataHash = '';
+        let lastSyncTimestamp = 0;
 
         // ==========================================
         // 📦 DATABASE & STATO
@@ -2315,35 +2318,7 @@
         let editFutureIdx = -1;
 
         // ==========================================
-        // 🌙 GESTIONE TEMA SCURO
-        // ==========================================
-
-        // Controlla se il tema scuro è salvato
-        let darkThemeEnabled = localStorage.getItem('moneyTrack_darkTheme') === 'true';
-
-        function toggleTheme() {
-            darkThemeEnabled = !darkThemeEnabled;
-            localStorage.setItem('moneyTrack_darkTheme', darkThemeEnabled);
-            applyTheme();
-        }
-
-        function applyTheme() {
-            if (darkThemeEnabled) {
-                document.documentElement.classList.add('dark-theme');
-                document.getElementById('themeToggle').checked = true;
-            } else {
-                document.documentElement.classList.remove('dark-theme');
-                document.getElementById('themeToggle').checked = false;
-            }
-        }
-
-        // Applica il tema all'avvio
-        document.addEventListener('DOMContentLoaded', function() {
-            applyTheme();
-        });
-
-        // ==========================================
-        // 🔒 FUNZIONI DI SICUREZZA
+        // 🔒 FUNZIONI DI SICUREZZA (CORRETTE)
         // ==========================================
 
         function sanitizeHTML(str) {
@@ -2371,7 +2346,12 @@
         }
 
         function safeGetJSON(key) {
-            try { return JSON.parse(localStorage.getItem(key)) || null; } catch (e) { return null; }
+            try {
+                const value = localStorage.getItem(key);
+                return value ? JSON.parse(value) : null;
+            } catch (e) { 
+                return null; 
+            }
         }
 
         let lastOperationTime = 0;
@@ -2426,18 +2406,52 @@
         };
 
         // ==========================================
-        // ☁️ SYNC CLOUD
+        // 📊 FUNZIONE HASH DATI PER EVITARE SYNC INUTILI
+        // ==========================================
+
+        function getDataHash() {
+            const data = {
+                spese: safeGetJSON("moneyTrack_db") || [],
+                future: safeGetJSON("moneyTrack_future") || [],
+                customCats: safeGetJSON("moneyTrack_cats") || {},
+                budgets: safeGetJSON("moneyTrack_budgets") || {},
+                utenze: safeGetJSON("moneyTrack_utenze") || [],
+                darkTheme: localStorage.getItem('moneyTrack_darkTheme') === 'true'
+            };
+            return JSON.stringify(data);
+        }
+
+        // ==========================================
+        // ☁️ SYNC CLOUD (CORRETTO)
         // ==========================================
 
         async function syncDatiSuSupabase() {
-            if (!currentUser || syncInProgress) return;
-
+            if (!currentUser) {
+                console.log('⏭️ Sync saltato: utente non loggato');
+                return;
+            }
+            
+            if (syncInProgress) {
+                console.log('⏭️ Sync già in corso');
+                return;
+            }
+            
             const now = Date.now();
-            if (now - lastSyncAttempt < 2000) return;
-
+            if (now - lastSyncTimestamp < 2000) {
+                console.log('⏭️ Sync troppo frequente, attendere');
+                return;
+            }
+            
+            // Verifica se i dati sono cambiati
+            const currentHash = getDataHash();
+            if (currentHash === lastDataHash && lastDataHash !== '') {
+                console.log('⏭️ Dati invariati, sync saltato');
+                return;
+            }
+            
             syncInProgress = true;
-            lastSyncAttempt = now;
-
+            lastSyncTimestamp = now;
+            
             try {
                 const payload = {
                     spese: safeGetJSON("moneyTrack_db") || [],
@@ -2462,13 +2476,21 @@
                             updated_at: new Date().toISOString()
                         }, { onConflict: 'id' });
 
-                        if (result.error) throw result.error;
+                        if (result.error) {
+                            // Se l'errore è 404, la tabella potrebbe non esistere
+                            if (result.error.code === '42P01') {
+                                console.warn('⚠️ Tabella userdata non trovata. Verifica che sia stata creata su Supabase.');
+                                console.warn('📝 Dettaglio errore:', result.error.message);
+                            }
+                            throw result.error;
+                        }
                         successo = true;
+                        lastDataHash = currentHash;
                         console.log('☁️ Sync completato!');
 
                     } catch (err) {
                         tentativi++;
-                        console.warn(`⚠️ Tentativo ${tentativi} fallito`);
+                        console.warn(`⚠️ Tentativo ${tentativi} fallito:`, err.message);
                         if (tentativi < maxTentativi) {
                             await new Promise(r => setTimeout(r, 1000 * Math.pow(2, tentativi - 1)));
                         } else {
@@ -2477,7 +2499,7 @@
                     }
                 }
 
-                if (!successo) throw new Error('Sync fallito');
+                if (!successo) throw new Error('Sync fallito dopo ' + maxTentativi + ' tentativi');
 
             } catch (e) {
                 console.error('❌ Errore Cloud Sync:', e);
@@ -2488,7 +2510,7 @@
         }
 
         // ==========================================
-        // 🔐 AUTH
+        // 🔐 AUTH (CORRETTO)
         // ==========================================
 
         async function gestisciLoginOSincronizzazione(user) {
@@ -2497,13 +2519,20 @@
             mostraStatoUtenteLoggato(user.email);
 
             try {
+                // Verifica se è lo stesso utente di prima
+                if (lastSyncUserId === user.id) {
+                    console.log('☁️ Stesso utente di prima, sync silenzioso');
+                    await syncDatiSuSupabase();
+                    return;
+                }
+
                 const result = await _supabase.from('userdata').select('payload').eq('id', user.id);
                 if (result.data && result.data.length > 0 && result.data[0].payload) {
                     const datiCloud = result.data[0].payload;
                     
                     // Ripristina il tema dal cloud
                     if (datiCloud.darkTheme !== undefined) {
-                        darkThemeEnabled = datiCloud.darkTheme;
+                        let darkThemeEnabled = datiCloud.darkTheme;
                         localStorage.setItem('moneyTrack_darkTheme', darkThemeEnabled);
                         applyTheme();
                     }
@@ -2523,6 +2552,8 @@
                             alert('✅ Dati ripristinati dal cloud!');
                         }
                         firstLogin = false;
+                        lastSyncUserId = user.id;
+                        localStorage.setItem('moneyTrack_lastSyncUserId', user.id);
                     } else {
                         console.log('☁️ Sync silenzioso con il cloud...');
                         await syncDatiSuSupabase();
@@ -2532,6 +2563,8 @@
                     if (firstLogin) {
                         alert('☁️ Dati sincronizzati con il cloud!');
                         firstLogin = false;
+                        lastSyncUserId = user.id;
+                        localStorage.setItem('moneyTrack_lastSyncUserId', user.id);
                     }
                 }
             } catch (error) {
@@ -2544,6 +2577,11 @@
         }
 
         function ripristinaDatiCloud(datiCloud) {
+            if (!datiCloud) {
+                console.warn('⚠️ Nessun dato cloud da ripristinare');
+                return;
+            }
+            
             localStorage.setItem('moneyTrack_db', JSON.stringify(datiCloud.spese || []));
             localStorage.setItem('moneyTrack_future', JSON.stringify(datiCloud.future || []));
             localStorage.setItem('moneyTrack_cats', JSON.stringify(datiCloud.customCats || {}));
@@ -2696,6 +2734,8 @@
                     await _supabase.auth.signOut();
                     currentUser = null;
                     firstLogin = true;
+                    lastSyncUserId = null;
+                    localStorage.removeItem('moneyTrack_lastSyncUserId');
                     alert("Disconnesso con successo.");
                     mostraStatoUtenteDisconnesso();
                 } catch (error) {
@@ -2704,6 +2744,34 @@
                 }
             }
         }
+
+        // ==========================================
+        // 🌙 GESTIONE TEMA SCURO
+        // ==========================================
+
+        // Controlla se il tema scuro è salvato
+        let darkThemeEnabled = localStorage.getItem('moneyTrack_darkTheme') === 'true';
+
+        function toggleTheme() {
+            darkThemeEnabled = !darkThemeEnabled;
+            localStorage.setItem('moneyTrack_darkTheme', darkThemeEnabled);
+            applyTheme();
+        }
+
+        function applyTheme() {
+            if (darkThemeEnabled) {
+                document.documentElement.classList.add('dark-theme');
+                document.getElementById('themeToggle').checked = true;
+            } else {
+                document.documentElement.classList.remove('dark-theme');
+                document.getElementById('themeToggle').checked = false;
+            }
+        }
+
+        // Applica il tema all'avvio
+        document.addEventListener('DOMContentLoaded', function() {
+            applyTheme();
+        });
 
         // ==========================================
         // 🧭 NAVIGAZIONE
@@ -3988,7 +4056,7 @@
             aggiornaApp(); }
 
         // ==========================================
-        // 💾 BACKUP
+        // 💾 BACKUP (CORRETTO - NON CANCELLA IL TOKEN)
         // ==========================================
 
         function esportaDati() {
@@ -4063,7 +4131,10 @@
                     const contenuto = e.target.result;
                     const dati = JSON.parse(contenuto);
 
-                    localStorage.clear();
+                    // NON cancellare tutto localStorage, ma solo le chiavi di MoneyTrack
+                    const keys = ['moneyTrack_db', 'moneyTrack_future', 'moneyTrack_cats', 'moneyTrack_budgets', 
+                                  'moneyTrack_fav_news', 'moneyTrack_utenze', 'moneyTrack_darkTheme'];
+                    keys.forEach(key => localStorage.removeItem(key));
 
                     Object.keys(dati).forEach(key => {
                         localStorage.setItem(key, dati[key]);
@@ -4511,6 +4582,7 @@
         window.ripristinaDatiCloud = ripristinaDatiCloud;
         window.toggleTheme = toggleTheme;
         window.applyTheme = applyTheme;
+        window.safeGetJSON = safeGetJSON;
 
         console.log('🚀 MoneyTrack 2.0 avviato!');
         console.log('📊 Transazioni:', spese.length);
@@ -4522,6 +4594,8 @@
         console.log('⌨️ Shortcut: Ctrl+Enter per salvare, ESC per chiudere');
         console.log('📱 Budget mensili: su mobile appaiono DOPO la lista movimenti');
         console.log('🌙 Tema scuro: selezionabile dal menu (⋮)');
+        console.log('☁️ Sync Supabase: ottimizzato con hash dei dati e controllo utente');
+        console.log('🔐 Login: gestisce correttamente lo stesso utente e i token');
     </script>
 
 </body>
