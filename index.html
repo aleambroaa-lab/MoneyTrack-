@@ -87,6 +87,11 @@
             .popup-body { color: var(--text-secondary); }
             .popup-close { color: var(--text-muted); }
             .popup-close:hover { color: var(--danger); }
+            .utenza-form { background: #2a2a2a; }
+            .utenza-riepilogo { background: #333; }
+            .dash-item { background: #2a2a2a !important; }
+            .obiettivi-container { background: #2a2a2a !important; }
+            .filtri-container { background: #2a2a2a !important; }
         }
 
         * {
@@ -314,6 +319,195 @@
 
         .header-saldo button:active {
             transform: scale(0.9);
+        }
+
+        .dashboard-rapido {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 10px;
+            margin: 10px 0 15px 0;
+        }
+
+        .dash-item {
+            background: var(--bg-light, #f8f9fa);
+            padding: 12px;
+            border-radius: var(--radius-sm);
+            text-align: center;
+            border: 1px solid var(--border);
+            transition: var(--transition);
+        }
+
+        .dash-item:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .dash-item .label {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .dash-item .value {
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-top: 2px;
+        }
+
+        .dash-item .value.success { color: var(--success); }
+        .dash-item .value.danger { color: var(--danger); }
+        .dash-item .value.primary { color: var(--primary); }
+        .dash-item .value.info { color: var(--info); }
+
+        .filtri-container {
+            background: var(--bg-light, #f8f9fa);
+            padding: 12px;
+            border-radius: var(--radius-sm);
+            margin-bottom: 15px;
+            border: 1px solid var(--border);
+        }
+
+        .filtri-container .filtri-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filtri-container input, 
+        .filtri-container select {
+            margin-bottom: 0;
+            padding: 8px 10px;
+            font-size: 0.85rem;
+            flex: 1;
+            min-width: 80px;
+        }
+
+        .filtri-container button {
+            padding: 8px 15px;
+            flex: 0;
+            min-height: 38px;
+            font-size: 0.8rem;
+        }
+
+        .filtri-container .btn-reset {
+            background: var(--danger);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            padding: 8px 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            transition: var(--transition);
+        }
+
+        .filtri-container .btn-reset:hover {
+            opacity: 0.8;
+            transform: scale(0.97);
+        }
+
+        .obiettivi-container {
+            margin-top: 20px;
+            padding: 15px;
+            background: var(--bg-light, #f8f9fa);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+        }
+
+        .obiettivi-container .obiettivo-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .obiettivi-container input {
+            margin-bottom: 0;
+            padding: 8px 10px;
+            font-size: 0.85rem;
+            flex: 1;
+            min-width: 80px;
+        }
+
+        .obiettivi-container button {
+            padding: 8px 15px;
+            flex: 0;
+            min-height: 38px;
+            font-size: 0.8rem;
+        }
+
+        .obiettivo-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 12px;
+            background: var(--bg);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            margin-top: 8px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .obiettivo-item .info {
+            flex: 2;
+            min-width: 150px;
+        }
+
+        .obiettivo-item .nome {
+            font-weight: bold;
+            font-size: 0.95rem;
+        }
+
+        .obiettivo-item .dettagli {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        .obiettivo-item .progresso {
+            width: 120px;
+            text-align: right;
+            flex-shrink: 0;
+        }
+
+        .obiettivo-item .progresso .barra {
+            width: 100%;
+            height: 6px;
+            background: var(--border);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 4px;
+        }
+
+        .obiettivo-item .progresso .barra .fill {
+            height: 100%;
+            background: var(--success);
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+
+        .obiettivo-item .progresso .barra .fill.warning {
+            background: var(--warning);
+        }
+
+        .obiettivo-item .progresso .barra .fill.danger {
+            background: var(--danger);
+        }
+
+        .obiettivo-item .delete-btn {
+            cursor: pointer;
+            opacity: 0.4;
+            padding: 4px 8px;
+            transition: var(--transition);
+            flex-shrink: 0;
+        }
+
+        .obiettivo-item .delete-btn:hover {
+            opacity: 1;
+            color: var(--danger);
         }
 
         .info-previsione {
@@ -728,6 +922,15 @@
             .grid-calendario { gap: 2px; padding: 2px; }
             .cal-giorno { min-height: 50px; padding: 2px; font-size: 0.75rem; }
             .cal-badge-scadenza { font-size: 0.55rem; padding: 1px 3px; }
+            .dashboard-rapido { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+            .dash-item { padding: 8px; }
+            .dash-item .value { font-size: 0.9rem; }
+            .filtri-container .filtri-row { flex-direction: column; }
+            .filtri-container input, .filtri-container select { min-width: 100%; }
+            .obiettivi-container .obiettivo-row { flex-direction: column; }
+            .obiettivi-container input { min-width: 100%; }
+            .obiettivo-item { flex-direction: column; text-align: center; gap: 8px; }
+            .obiettivo-item .progresso { width: 100%; }
         }
 
         .utenza-card {
@@ -780,26 +983,26 @@
 
         .utenza-stats {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-            gap: 10px;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 8px;
             margin-bottom: 12px;
         }
 
         .utenza-stat {
             background: var(--bg-light, #f8f9fa);
             border-radius: var(--radius-sm);
-            padding: 10px;
+            padding: 8px;
             text-align: center;
         }
 
         .utenza-stat-value {
             font-weight: bold;
-            font-size: 1.1rem;
+            font-size: 1rem;
             color: var(--text-primary);
         }
 
         .utenza-stat-label {
-            font-size: 0.7rem;
+            font-size: 0.6rem;
             color: var(--text-muted);
             text-transform: uppercase;
         }
@@ -820,11 +1023,11 @@
 
         .utenza-dettagli table {
             width: 100%;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
         }
 
         .utenza-dettagli td {
-            padding: 6px 0;
+            padding: 4px 0;
             border-bottom: 1px solid #f0f0f0;
         }
 
@@ -835,7 +1038,7 @@
 
         .utenza-chart-container {
             margin-top: 12px;
-            height: 120px;
+            height: 100px;
             position: relative;
         }
 
@@ -903,6 +1106,53 @@
         .utenza-totale .value {
             font-weight: bold;
             font-size: 1.2rem;
+        }
+
+        .utenza-riepilogo {
+            background: var(--bg-light, #f8f9fa);
+            border-radius: var(--radius-sm);
+            padding: 12px;
+            grid-column: 1 / -1;
+            display: none;
+            font-size: 0.85rem;
+            border: 1px solid var(--border);
+        }
+
+        .utenza-riepilogo-dettagli {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4px 20px;
+            margin-top: 5px;
+        }
+
+        .utenza-riepilogo-dettagli .item {
+            display: flex;
+            justify-content: space-between;
+            padding: 2px 0;
+            font-size: 0.8rem;
+            border-bottom: 1px dashed var(--border);
+        }
+
+        .utenza-riepilogo-dettagli .item .label {
+            color: var(--text-muted);
+        }
+
+        .utenza-riepilogo-dettagli .item .value {
+            font-weight: 500;
+        }
+
+        .utenza-riepilogo-totale {
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 2px solid var(--primary);
+            font-weight: bold;
+            font-size: 1rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .utenza-riepilogo-totale .value {
+            color: var(--success);
         }
 
         #bodyMatrice td {
@@ -1046,7 +1296,7 @@
 
         .cal-giorno {
             background: white;
-            min-height: 70px;
+            min-height: 60px;
             padding: 4px;
             border-radius: var(--radius-sm);
             display: flex;
@@ -1071,7 +1321,7 @@
         }
 
         .cal-badge-scadenza {
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             padding: 2px 4px;
             border-radius: 4px;
             margin-bottom: 2px;
@@ -1434,104 +1684,6 @@
             border-radius: 2px;
         }
 
-        .pdf-extracted-data {
-            background: var(--bg-light, #f8f9fa);
-            border-radius: var(--radius-sm);
-            padding: 12px;
-            margin-top: 10px;
-            border-left: 3px solid var(--success);
-            grid-column: 1 / -1;
-            display: none;
-        }
-
-        .pdf-extracted-data .row {
-            display: flex;
-            justify-content: space-between;
-            padding: 4px 0;
-            font-size: 0.85rem;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .pdf-extracted-data .row:last-child {
-            border-bottom: none;
-            font-weight: bold;
-            font-size: 0.95rem;
-            padding-top: 8px;
-            margin-top: 4px;
-            border-top: 2px solid var(--border);
-        }
-
-        .pdf-extracted-data .label {
-            color: var(--text-muted);
-        }
-
-        .pdf-extracted-data .value {
-            font-weight: 500;
-            color: var(--text-primary);
-        }
-
-        .pdf-extracted-data .value.alert {
-            color: var(--danger);
-        }
-
-        .pdf-extracted-data .value.success {
-            color: var(--success);
-        }
-
-        .btn-import-pdf {
-            background: var(--info);
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: var(--radius-sm);
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.85rem;
-            transition: var(--transition);
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .btn-import-pdf:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-        }
-
-        .btn-import-pdf:active {
-            transform: scale(0.95);
-        }
-
-        .import-status {
-            padding: 10px;
-            border-radius: var(--radius-sm);
-            margin-top: 10px;
-            font-size: 0.85rem;
-            display: none;
-            grid-column: 1 / -1;
-        }
-
-        .import-status.success {
-            display: block;
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-
-        .import-status.error {
-            display: block;
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-
-        .import-status.info {
-            display: block;
-            background: #d1ecf1;
-            color: #0c5460;
-            border: 1px solid #bee5eb;
-        }
-
         .loading-spinner {
             display: inline-block;
             width: 20px;
@@ -1575,16 +1727,17 @@
                 top: 8px;
                 right: 12px;
             }
-            .pdf-extracted-data .row {
-                font-size: 0.75rem;
-                flex-wrap: wrap;
-                gap: 2px;
-            }
             .utenza-form {
                 grid-template-columns: 1fr;
             }
             .utenza-form .full-width {
                 grid-column: 1;
+            }
+            .utenza-riepilogo-dettagli {
+                grid-template-columns: 1fr;
+            }
+            .utenza-stats {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
 
@@ -1651,6 +1804,7 @@
                     <div id="myDropdown" class="dropdown-content" role="menu">
                         <a onclick="loginbtn()" role="menuitem" id="login-nav-link">🔐 Login</a>
                         <a onclick="esportaDati()" role="menuitem">💾 Backup (Esporta)</a>
+                        <a onclick="esportaCSV()" role="menuitem">📊 Esporta CSV</a>
                         <a onclick="document.getElementById('fileInput').click()" role="menuitem">📂 Ripristina (Importa)</a>
                     </div>
                 </div>
@@ -1658,6 +1812,7 @@
         </div>
     </nav>
 
+    <!-- ===== HOME PAGE ===== -->
     <div id="pagina-home" class="container">
         <div class="header-saldo" id="boxSaldo">
             <div>
@@ -1665,6 +1820,29 @@
                 <h1 id="saldo-cifra">0.00 €</h1>
             </div>
             <button onclick="togglePrivacy()" aria-label="Attiva/disattiva privacy" title="Attiva/disattiva privacy">👁️</button>
+        </div>
+
+        <div class="dashboard-rapido" id="dashboard-rapido">
+            <div class="dash-item">
+                <div class="label">💰 Entrate Mese</div>
+                <div class="value success" id="dash-entrate">0.00 €</div>
+            </div>
+            <div class="dash-item">
+                <div class="label">💸 Uscite Mese</div>
+                <div class="value danger" id="dash-uscite">0.00 €</div>
+            </div>
+            <div class="dash-item">
+                <div class="label">📊 Transazioni</div>
+                <div class="value primary" id="dash-transazioni">0</div>
+            </div>
+            <div class="dash-item">
+                <div class="label">⚡ Utenze</div>
+                <div class="value info" id="dash-utenze">0</div>
+            </div>
+            <div class="dash-item">
+                <div class="label">🎯 Obiettivi</div>
+                <div class="value primary" id="dash-obiettivi">0</div>
+            </div>
         </div>
 
         <div class="nav-buttons-container">
@@ -1719,8 +1897,8 @@
 
                 <input type="hidden" id="edit-index" value="-1">
                 <select id="tipo" onchange="aggiornaCategorie()" aria-label="Tipo operazione">
-                    <option value="Uscita">📉 Uscita</option>
                     <option value="Entrata">📈 Entrata</option>
+                    <option value="Uscita">📉 Uscita</option>
                 </select>
                 <input type="date" id="data" aria-label="Data operazione">
 
@@ -1752,10 +1930,36 @@
                     </summary>
                     <div id="lista-future" style="margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border);"></div>
                 </details>
+
+                <div class="obiettivi-container">
+                    <h4 style="margin-top:0;">🎯 Obiettivi di Risparmio</h4>
+                    <div class="obiettivo-row">
+                        <input type="text" id="obiettivo-nome" placeholder="Nome obiettivo (es. Vacanza)" style="flex:2; min-width:120px;">
+                        <input type="number" id="obiettivo-importo" placeholder="Importo (€)" style="flex:1; min-width:100px;" inputmode="decimal">
+                        <input type="date" id="obiettivo-data" style="flex:1; min-width:100px;">
+                        <button onclick="salvaObiettivo()" class="btn-modern btn-success" style="flex:0; padding:8px 15px; min-height:38px;">Salva</button>
+                    </div>
+                    <div id="lista-obiettivi" style="margin-top:10px;"></div>
+                </div>
             </div>
 
             <div class="section">
                 <h3 style="margin-top: 30px;">🕒 Storico</h3>
+                
+                <div class="filtri-container">
+                    <div class="filtri-row">
+                        <input type="date" id="filtro-data-da" placeholder="Da">
+                        <input type="date" id="filtro-data-a" placeholder="A">
+                        <select id="filtro-tipo">
+                            <option value="">📊 Tutti</option>
+                            <option value="Entrata">📈 Entrate</option>
+                            <option value="Uscita">📉 Uscite</option>
+                        </select>
+                        <button onclick="applicaFiltri()" class="btn-modern" style="flex:0; padding:8px 15px; min-height:38px;">🔍 Filtra</button>
+                        <button onclick="resetFiltri()" class="btn-reset" style="flex:0;">✕ Reset</button>
+                    </div>
+                </div>
+                
                 <input type="text" id="filtroRicerca" placeholder="🔍 Cerca tra note o categorie..." aria-label="Cerca transazioni">
                 <div id="lista-transazioni"></div>
             </div>
@@ -1772,6 +1976,7 @@
         </div>
     </div>
 
+    <!-- ===== PAGINA SCADENZE ===== -->
     <div id="sezione-scadenze" class="container" style="display: none; padding: 20px;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
             <button onclick="mostraPagina('home')" class="btn-back-home">⬅ Torna alla Home</button>
@@ -1791,6 +1996,7 @@
         <div id="calendario-grid" class="grid-calendario"></div>
     </div>
 
+    <!-- ===== PAGINA ANALISI ===== -->
     <div id="pagina-analisi" class="container" style="display: none; padding: 20px;">
         <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 20px; flex-wrap: wrap;">
             <button onclick="mostraPagina('home')" class="btn-back-home">⬅ Torna alla Home</button>
@@ -1822,6 +2028,7 @@
         </div>
     </div>
 
+    <!-- ===== PAGINA NEWS ===== -->
     <div id="pagina-news" class="container" style="display: none; padding: 20px;">
         <h3>📰 News Finanziarie</h3>
 
@@ -1836,6 +2043,7 @@
         <div id="news-container" class="desktop-grid"></div>
     </div>
 
+    <!-- ===== PAGINA UTENZE ===== -->
     <div id="pagina-utenze" class="container" style="display: none; padding: 20px;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
             <button onclick="mostraPagina('home')" class="btn-back-home">⬅ Torna alla Home</button>
@@ -1854,23 +2062,24 @@
                 <option value="Condominio">🏢 Condominio</option>
                 <option value="Altro">📌 Altro</option>
             </select>
-            <input type="date" id="utenza-data" aria-label="Data rilevazione">
+            
+            <input type="date" id="utenza-data" aria-label="Data fattura">
+            <input type="text" id="utenza-periodo" placeholder="Periodo (es. Gen-Feb 2024)" aria-label="Periodo fatturazione">
+            
             <input type="number" id="utenza-consumo" placeholder="Consumo (kWh/m³/GB)" step="0.01" aria-label="Consumo" inputmode="decimal">
-            <input type="number" id="utenza-costo" placeholder="Costo (€)" step="0.01" aria-label="Costo" inputmode="decimal">
-            <input type="text" id="utenza-note" placeholder="Note (es. lettura contatore)" aria-label="Note" style="grid-column: 1 / -1;">
+            <input type="number" id="utenza-costo" placeholder="Costo energia (€)" step="0.01" aria-label="Costo energia" inputmode="decimal">
             
-            <div style="grid-column: 1 / -1; display: flex; gap: 10px; flex-wrap: wrap;">
-                <button class="btn-import-pdf" onclick="document.getElementById('pdfBollettaInput').click()">
-                    📄 Importa PDF Bolletta
-                </button>
-                <span style="font-size: 0.8rem; color: var(--text-muted); display: flex; align-items: center;">
-                    Supporta Enel, Eni, Acea, ecc.
-                </span>
+            <input type="number" id="utenza-canone" placeholder="Canone RAI (€)" step="0.01" aria-label="Canone RAI" inputmode="decimal">
+            <input type="number" id="utenza-imposte" placeholder="Imposte / Accise (€)" step="0.01" aria-label="Imposte" inputmode="decimal">
+            
+            <input type="number" id="utenza-altre" placeholder="Altre spese (€)" step="0.01" aria-label="Altre spese" inputmode="decimal">
+            <input type="number" id="utenza-totale" placeholder="Totale bolletta (€)" step="0.01" aria-label="Totale" inputmode="decimal">
+            
+            <input type="text" id="utenza-note" placeholder="Note (es. numero bolletta, lettura contatore)" aria-label="Note" style="grid-column: 1 / -1;">
+            
+            <div id="utenza-riepilogo" class="utenza-riepilogo">
+                <div id="utenza-riepilogo-text">💡 Inserisci i dati per vedere il riepilogo</div>
             </div>
-            <input type="file" id="pdfBollettaInput" style="display:none" accept=".pdf" onchange="elaboraPDFBolletta(event)">
-            
-            <div id="import-status" class="import-status"></div>
-            <div id="pdf-extracted-data" class="pdf-extracted-data"></div>
 
             <button class="btn-modern btn-success full-width" onclick="salvaRilevazioneUtenza()" style="grid-column: 1 / -1;">💾 Salva Rilevazione</button>
         </div>
@@ -1883,6 +2092,7 @@
         <div id="utenza-lista"></div>
     </div>
 
+    <!-- ===== CLOUD MODAL ===== -->
     <div id="cloud-modal" class="modal-backdrop-cloud" style="display: none;">
         <div class="modal-card-cloud">
             <div class="modal-icon-cloud">☁️</div>
@@ -1894,6 +2104,8 @@
             </div>
         </div>
     </div>
+
+    <input type="file" id="fileInput" style="display:none" accept=".json" onchange="importaDati(event)">
 
     <script>
         // ==========================================
@@ -1918,6 +2130,7 @@
         let currentUser = null;
         let syncInProgress = false;
         let lastSyncAttempt = 0;
+        let firstLogin = true;
 
         // ==========================================
         // 🔒 FUNZIONI DI SICUREZZA
@@ -2023,6 +2236,7 @@
                     budgets: safeGetJSON("moneyTrack_budgets") || {},
                     preferitiNews: safeGetJSON("moneyTrack_fav_news") || [],
                     utenze: safeGetJSON("moneyTrack_utenze") || [],
+                    obiettivi: safeGetJSON("moneyTrack_obiettivi") || [],
                     lastUpdated: new Date().toISOString()
                 };
 
@@ -2066,6 +2280,72 @@
         // ==========================================
         // 🔐 AUTH
         // ==========================================
+
+        async function gestisciLoginOSincronizzazione(user) {
+            console.log('🔐 Utente autenticato:', user.email);
+            currentUser = user;
+            mostraStatoUtenteLoggato(user.email);
+
+            try {
+                const result = await _supabase.from('userdata').select('payload').eq('id', user.id);
+                if (result.data && result.data.length > 0 && result.data[0].payload) {
+                    const datiCloud = result.data[0].payload;
+                    
+                    if (firstLogin) {
+                        const datiLocaliEsistono = localStorage.getItem('moneyTrack_db') !== null && JSON.parse(localStorage.getItem('moneyTrack_db')).length > 0;
+                        
+                        if (datiLocaliEsistono) {
+                            if (confirm('✅ Dati trovati nel cloud! Vuoi ripristinarli sul dispositivo?')) {
+                                ripristinaDatiCloud(datiCloud);
+                            } else {
+                                await syncDatiSuSupabase();
+                                alert('☁️ I tuoi dati locali sono stati sincronizzati con il cloud!');
+                            }
+                        } else {
+                            ripristinaDatiCloud(datiCloud);
+                            alert('✅ Dati ripristinati dal cloud!');
+                        }
+                        firstLogin = false;
+                    } else {
+                        console.log('☁️ Sync silenzioso con il cloud...');
+                        await syncDatiSuSupabase();
+                    }
+                } else {
+                    await syncDatiSuSupabase();
+                    if (firstLogin) {
+                        alert('☁️ Dati sincronizzati con il cloud!');
+                        firstLogin = false;
+                    }
+                }
+            } catch (error) {
+                console.error('Errore durante il sync:', error);
+                if (firstLogin) {
+                    alert('⚠️ Errore durante la sincronizzazione. I dati sono al sicuro in locale.');
+                    firstLogin = false;
+                }
+            }
+        }
+
+        function ripristinaDatiCloud(datiCloud) {
+            localStorage.setItem('moneyTrack_db', JSON.stringify(datiCloud.spese || []));
+            localStorage.setItem('moneyTrack_future', JSON.stringify(datiCloud.future || []));
+            localStorage.setItem('moneyTrack_cats', JSON.stringify(datiCloud.customCats || {}));
+            localStorage.setItem('moneyTrack_budgets', JSON.stringify(datiCloud.budgets || {}));
+            localStorage.setItem('moneyTrack_fav_news', JSON.stringify(datiCloud.preferitiNews || []));
+            localStorage.setItem('moneyTrack_utenze', JSON.stringify(datiCloud.utenze || []));
+            localStorage.setItem('moneyTrack_obiettivi', JSON.stringify(datiCloud.obiettivi || []));
+
+            spese = JSON.parse(localStorage.getItem("moneyTrack_db")) || [];
+            future = JSON.parse(localStorage.getItem("moneyTrack_future")) || [];
+            customCats = JSON.parse(localStorage.getItem("moneyTrack_cats")) || {};
+            budgets = JSON.parse(localStorage.getItem("moneyTrack_budgets")) || {};
+            utenze = JSON.parse(localStorage.getItem("moneyTrack_utenze")) || [];
+            obiettivi = JSON.parse(localStorage.getItem("moneyTrack_obiettivi")) || [];
+
+            aggiornaApp();
+            renderizzaUtenze();
+            renderizzaObiettivi();
+        }
 
         function injectAuthModal() {
             if (document.getElementById("auth-modal")) return;
@@ -2113,6 +2393,7 @@
                     await gestisciLoginOSincronizzazione(session.user);
                 } else if (event === 'SIGNED_OUT') {
                     currentUser = null;
+                    firstLogin = true;
                     mostraStatoUtenteDisconnesso();
                 } else if (session && session.user && !currentUser) {
                     await gestisciLoginOSincronizzazione(session.user);
@@ -2121,6 +2402,7 @@
 
             _supabase.auth.getSession().then(({ data }) => {
                 if (data && data.session && data.session.user) {
+                    firstLogin = false;
                     gestisciLoginOSincronizzazione(data.session.user);
                 }
             });
@@ -2199,6 +2481,7 @@
                 try {
                     await _supabase.auth.signOut();
                     currentUser = null;
+                    firstLogin = true;
                     alert("Disconnesso con successo.");
                     mostraStatoUtenteDisconnesso();
                 } catch (error) {
@@ -2220,6 +2503,7 @@
         };
         let budgets = JSON.parse(localStorage.getItem("moneyTrack_budgets")) || {};
         let utenze = JSON.parse(localStorage.getItem("moneyTrack_utenze")) || [];
+        let obiettivi = JSON.parse(localStorage.getItem("moneyTrack_obiettivi")) || [];
 
         let graficoTorta, graficoBarre, privacy = false;
         const mesiNomi = ["Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic"];
@@ -2390,7 +2674,303 @@
         }
 
         // ==========================================
-        // 📊 LOGICA CORE
+        // 🎯 OBIETTIVI DI RISPARMIO
+        // ==========================================
+
+        function salvaObiettivo() {
+            const nome = document.getElementById('obiettivo-nome').value.trim();
+            const importo = parseFloat(document.getElementById('obiettivo-importo').value);
+            const data = document.getElementById('obiettivo-data').value;
+
+            if (!nome) { alert('Inserisci un nome per l\'obiettivo!'); return; }
+            if (isNaN(importo) || importo <= 0) { alert('Inserisci un importo valido!'); return; }
+            if (!data) { alert('Seleziona una data!'); return; }
+
+            const oggi = new Date();
+            const ultimi3Mesi = [];
+            for (let i = 0; i < 3; i++) {
+                const mese = new Date(oggi.getFullYear(), oggi.getMonth() - i, 1);
+                const meseFine = new Date(oggi.getFullYear(), oggi.getMonth() - i + 1, 0);
+                let entrateMese = 0,
+                    usciteMese = 0;
+                spese.forEach(s => {
+                    const d = new Date(s.data);
+                    if (d >= mese && d <= meseFine) {
+                        if (s.tipo === 'Entrata') entrateMese += s.imp;
+                        else usciteMese += s.imp;
+                    }
+                });
+                ultimi3Mesi.push(entrateMese - usciteMese);
+            }
+            const risparmioMedioMensile = ultimi3Mesi.filter(r => r > 0).length > 0 ?
+                ultimi3Mesi.filter(r => r > 0).reduce((a, b) => a + b, 0) / ultimi3Mesi.filter(r => r > 0).length : 0;
+
+            const speseTotali = spese.reduce((acc, s) => acc + (s.tipo === 'Entrata' ? s.imp : 0), 0);
+            const speseUscite = spese.reduce((acc, s) => acc + (s.tipo === 'Uscita' ? s.imp : 0), 0);
+            const risparmioAttuale = speseTotali - speseUscite;
+
+            const mesiStimati = risparmioMedioMensile > 0 ? Math.ceil(importo / risparmioMedioMensile) : 0;
+
+            const dataCompletamento = new Date();
+            dataCompletamento.setMonth(dataCompletamento.getMonth() + mesiStimati);
+
+            const obiettivo = {
+                id: Date.now(),
+                nome: nome,
+                importo: importo,
+                dataScadenza: data,
+                dataCreazione: new Date().toISOString().split('T')[0],
+                risparmioAttuale: risparmioAttuale,
+                risparmioMedioMensile: risparmioMedioMensile,
+                mesiStimati: mesiStimati,
+                dataCompletamentoStimata: dataCompletamento.toISOString().split('T')[0],
+                progresso: Math.min((risparmioAttuale / importo) * 100, 100),
+                completato: risparmioAttuale >= importo
+            };
+
+            obiettivi.push(obiettivo);
+            localStorage.setItem('moneyTrack_obiettivi', JSON.stringify(obiettivi));
+
+            document.getElementById('obiettivo-nome').value = '';
+            document.getElementById('obiettivo-importo').value = '';
+            document.getElementById('obiettivo-data').value = '';
+
+            renderizzaObiettivi();
+            aggiornaDashboard();
+            if (currentUser) syncDatiSuSupabase();
+
+            alert(
+                `✅ Obiettivo "${nome}" salvato!\n\n📊 Risparmio medio mensile: ${risparmioMedioMensile.toFixed(2)}€\n📅 Completamento stimato: ${dataCompletamento.toISOString().split('T')[0]} (${mesiStimati} mesi)`);
+        }
+
+        function eliminaObiettivo(id) {
+            if (confirm('Eliminare questo obiettivo?')) {
+                obiettivi = obiettivi.filter(o => o.id !== id);
+                localStorage.setItem('moneyTrack_obiettivi', JSON.stringify(obiettivi));
+                renderizzaObiettivi();
+                aggiornaDashboard();
+                if (currentUser) syncDatiSuSupabase();
+            }
+        }
+
+        function renderizzaObiettivi() {
+            const container = document.getElementById('lista-obiettivi');
+            if (!container) return;
+
+            if (obiettivi.length === 0) {
+                container.innerHTML = `
+                    <small style="color: var(--text-muted); display: block; text-align: center; padding: 10px;">
+                        💡 Imposta un obiettivo di risparmio! <br>
+                        <span style="font-size:0.8rem;">Es: "Vacanza" 1000€ entro 31/12/2024</span>
+                    </small>`;
+                return;
+            }
+
+            let html = '';
+            obiettivi.forEach(o => {
+                const progresso = Math.min(o.progresso || 0, 100);
+                let classeFill = 'fill';
+                let stato = '';
+                let colore = '';
+
+                if (o.completato) {
+                    classeFill += ' success';
+                    stato = '✅ COMPLETATO! 🎉';
+                    colore = 'var(--success)';
+                } else if (progresso > 80) {
+                    classeFill += ' warning';
+                    stato = '🏁 Quasi finito!';
+                    colore = 'var(--warning)';
+                } else if (progresso > 50) {
+                    classeFill += ' warning';
+                    stato = '💪 A buon punto!';
+                    colore = 'var(--primary)';
+                } else {
+                    classeFill += ' danger';
+                    stato = '📈 Inizia a risparmiare!';
+                    colore = 'var(--danger)';
+                }
+
+                const oggi = new Date();
+                const scadenza = new Date(o.dataScadenza);
+                const giorniMancanti = Math.ceil((scadenza - oggi) / (1000 * 60 * 60 * 24));
+                let scadenzaText = '';
+                if (giorniMancanti < 0) {
+                    scadenzaText = '⏰ SCADUTO!';
+                } else if (giorniMancanti < 30) {
+                    scadenzaText = `⏳ ${giorniMancanti} giorni rimasti`;
+                } else {
+                    scadenzaText = `📅 Scade il ${o.dataScadenza}`;
+                }
+
+                html += `
+                <div class="obiettivo-item">
+                    <div class="info">
+                        <div class="nome" style="color:${colore};">${sanitizeHTML(o.nome)} ${stato}</div>
+                        <div class="dettagli">
+                            🎯 ${o.importo.toFixed(0)}€ · Risparmiato: ${o.risparmioAttuale.toFixed(2)}€
+                            ${o.mesiStimati > 0 ? `· 💰 ${o.risparmioMedioMensile.toFixed(2)}€/mese` : ''}
+                            <br>${scadenzaText}
+                            ${o.dataCompletamentoStimata && !o.completato ? `· 📈 Completamento stimato: ${o.dataCompletamentoStimata}` : ''}
+                        </div>
+                    </div>
+                    <div class="progresso">
+                        <div style="font-weight:bold;font-size:0.9rem;">${progresso.toFixed(0)}%</div>
+                        <div class="barra">
+                            <div class="${classeFill}" style="width: ${progresso}%;"></div>
+                        </div>
+                    </div>
+                    <span class="delete-btn" onclick="eliminaObiettivo(${o.id})" title="Elimina">🗑️</span>
+                </div>`;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // ==========================================
+        // 📊 DASHBOARD + FILTRI
+        // ==========================================
+
+        function aggiornaDashboard() {
+            const oggi = new Date();
+            const meseCorrente = oggi.getMonth();
+            const annoCorrente = oggi.getFullYear();
+
+            let entrateMese = 0,
+                usciteMese = 0,
+                transazioniMese = 0;
+
+            spese.forEach(s => {
+                if (!s.data || typeof s.imp !== 'number') return;
+
+                const d = new Date(s.data);
+                const isMeseCorrente = d.getMonth() === meseCorrente && d.getFullYear() === annoCorrente;
+
+                if (isMeseCorrente) {
+                    transazioniMese++;
+                    if (s.tipo === 'Entrata') entrateMese += s.imp;
+                    else usciteMese += s.imp;
+                }
+            });
+
+            document.getElementById('dash-entrate').textContent = entrateMese.toFixed(2) + ' €';
+            document.getElementById('dash-uscite').textContent = usciteMese.toFixed(2) + ' €';
+            document.getElementById('dash-transazioni').textContent = transazioniMese;
+            document.getElementById('dash-utenze').textContent = utenze.length;
+            document.getElementById('dash-obiettivi').textContent = obiettivi.length;
+        }
+
+        function applicaFiltri() {
+            const dataDa = document.getElementById('filtro-data-da').value;
+            const dataA = document.getElementById('filtro-data-a').value;
+            const tipo = document.getElementById('filtro-tipo').value;
+
+            const l = document.getElementById('lista-transazioni');
+            const items = l.querySelectorAll('.mese-container');
+
+            items.forEach(container => {
+                let mostraContainer = false;
+                const righe = container.querySelectorAll('table tr');
+
+                righe.forEach(row => {
+                    let mostraRiga = true;
+                    const dataCell = row.querySelector('td small');
+                    const tipoCell = row.querySelector('td .positivo, td .negativo');
+
+                    if (dataCell && dataDa) {
+                        const dataRiga = dataCell.textContent;
+                        if (dataRiga < dataDa) mostraRiga = false;
+                    }
+                    if (dataCell && dataA) {
+                        const dataRiga = dataCell.textContent;
+                        if (dataRiga > dataA) mostraRiga = false;
+                    }
+                    if (tipoCell && tipo) {
+                        const isPositivo = tipoCell.classList.contains('positivo');
+                        if (tipo === 'Entrata' && !isPositivo) mostraRiga = false;
+                        if (tipo === 'Uscita' && isPositivo) mostraRiga = false;
+                    }
+
+                    row.style.display = mostraRiga ? '' : 'none';
+                    if (mostraRiga) mostraContainer = true;
+                });
+
+                container.style.display = mostraContainer ? '' : 'none';
+            });
+        }
+
+        function resetFiltri() {
+            document.getElementById('filtro-data-da').value = '';
+            document.getElementById('filtro-data-a').value = '';
+            document.getElementById('filtro-tipo').value = '';
+            document.getElementById('filtroRicerca').value = '';
+            aggiornaApp();
+        }
+
+        // ==========================================
+        // 📊 FUNZIONE CALCOLA PREVISIONE - CORRETTA CON CHECKBOX
+        // ==========================================
+
+        function calcolaPrevisione(saldoAttuale) {
+            const oggi = new Date();
+            oggi.setHours(0, 0, 0, 0);
+
+            const fineMese = new Date(oggi.getFullYear(), oggi.getMonth() + 1, 0);
+            fineMese.setHours(23, 59, 59, 999);
+
+            // Filtra le spese future che sono ancora valide (non passate) e che impattano il saldo
+            const speseFutureValide = future.filter(f => {
+                const df = new Date(f.data);
+                // Controlla che impattaSaldo sia true (default se non specificato)
+                const impatta = f.impattaSaldo !== undefined ? f.impattaSaldo : true;
+                return df >= oggi && impatta;
+            });
+
+            // Calcola impegni del mese corrente
+            let impegniMese = speseFutureValide.filter(f => {
+                const df = new Date(f.data);
+                return df <= fineMese;
+            }).reduce((acc, curr) => acc + (parseFloat(curr.imp) || 0), 0);
+
+            // Calcola TUTTI gli impegni futuri
+            let tuttiImpegniFuturi = speseFutureValide.reduce((acc, curr) => acc + (parseFloat(curr.imp) || 0), 0);
+
+            const previstoFineMese = saldoAttuale - impegniMese;
+            const saldoFuturo = saldoAttuale - tuttiImpegniFuturi;
+
+            const coloreFineMese = previstoFineMese >= 0 ? "var(--success)" : "var(--danger)";
+            const coloreFuturo = saldoFuturo >= 0 ? "var(--success)" : "var(--danger)";
+
+            const div = document.getElementById("previsione-fine-mese");
+            if (!div) return;
+            div.style.textAlign = "left";
+
+            if (privacy) {
+                div.innerHTML = `<small>Previsione fine mese: *** € | Saldo Futuro: *** €</small>`;
+            } else {
+                const totaleSpeseFuture = speseFutureValide.length;
+                
+                div.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px;">
+                    <div style="flex: 1; min-width: 0; font-size: 0.9rem;">
+                        <div style="color: var(--text-secondary); font-weight: bold; font-size: 0.7rem; margin-bottom: 2px;">ENTRO FINE MESE</div>
+                        <div style="color:var(--danger); font-size: 0.75rem;">Impegni: -${impegniMese.toFixed(2)}€</div>
+                        <div style="margin-top: 2px; white-space: nowrap;">Saldo: <strong style="color: ${coloreFineMese};">${previstoFineMese.toFixed(2)}€</strong></div>
+                    </div>
+                    <div style="flex: 1; min-width: 0; text-align: right; border-left: 1px solid var(--border); padding-left: 8px; font-size: 0.9rem;">
+                        <div style="color: var(--text-secondary); font-weight: bold; font-size: 0.7rem; margin-bottom: 2px;">PROSPETTIVA TOTALE</div>
+                        <div style="color:var(--danger); font-size: 0.75rem;">Impegni: -${tuttiImpegniFuturi.toFixed(2)}€</div>
+                        <div style="margin-top: 2px; white-space: nowrap;">Saldo: <strong style="color: ${coloreFuturo};">${saldoFuturo.toFixed(2)}€</strong></div>
+                        <div style="font-size: 0.6rem; color: var(--text-muted); margin-top: 4px;">
+                            ${totaleSpeseFuture} spese future totali
+                        </div>
+                    </div>
+                </div>`;
+            }
+        }
+
+        // ==========================================
+        // 📊 AGGIORNA APP
         // ==========================================
 
         function aggiornaApp() {
@@ -2471,6 +3051,19 @@
             disegnaTorta(catsUscita, totUsciteMese);
             aggiornaListaFuture();
             aggiornaBudgetProgress(catsUscita);
+            aggiornaDashboard();
+            renderizzaObiettivi();
+
+            const speseTotali = spese.reduce((acc, s) => acc + (s.tipo === 'Entrata' ? s.imp : 0), 0);
+            const speseUscite = spese.reduce((acc, s) => acc + (s.tipo === 'Uscita' ? s.imp : 0), 0);
+            const risparmioAttuale = speseTotali - speseUscite;
+
+            obiettivi.forEach(o => {
+                o.progresso = Math.min((risparmioAttuale / o.importo) * 100, 100);
+                o.risparmioAttuale = risparmioAttuale;
+                o.completato = risparmioAttuale >= o.importo;
+            });
+            localStorage.setItem('moneyTrack_obiettivi', JSON.stringify(obiettivi));
         }
 
         const debouncedAggiorna = debounce(aggiornaApp, 300);
@@ -2510,7 +3103,6 @@
             let totEntrate = 0,
                 totUscite = 0;
             let categorieUscite = {};
-            let speseMensili = [];
 
             spese.forEach(s => {
                 if (!s.data || typeof s.imp !== 'number') return;
@@ -2687,23 +3279,25 @@
         }
 
         // ==========================================
-        // 📅 SPESE FUTURE
+        // 📅 SPESE FUTURE - CORRETTE CON CHECKBOX
         // ==========================================
 
         function aggiungiSpesaFutura() {
             const d = document.getElementById("data-futura").value;
             const desc = sanitizeHTML(document.getElementById("desc-futura").value);
             const i = parseFloat(document.getElementById("imp-futura").value);
-            const impatta = document.getElementById("impatta-saldo-futura") ? document.getElementById("impatta-saldo-futura")
-                .checked : true;
+            
+            // Leggi il checkbox in modo sicuro
+            const checkbox = document.getElementById("impatta-saldo-futura");
+            const impatta = checkbox ? checkbox.checked : true;
 
             if (!d || !desc || isNaN(i)) { alert("Compila tutti i campi!"); return; }
             if (i <= 0) { alert("L'importo deve essere maggiore di zero!"); return; }
 
             if (editFutureIdx === -1) {
-                future.push({ data: d, desc: desc, imp: i, impattaSaldo: impatta });
+                future.push({ data: d, desc: desc, imp: parseFloat(i), impattaSaldo: impatta });
             } else {
-                future[editFutureIdx] = { data: d, desc: desc, imp: i, impattaSaldo: impatta };
+                future[editFutureIdx] = { data: d, desc: desc, imp: parseFloat(i), impattaSaldo: impatta };
                 editFutureIdx = -1;
                 document.getElementById("btn-salva-futura").innerText = "Inserisci Spesa Futura";
             }
@@ -2712,8 +3306,7 @@
             document.getElementById("data-futura").value = "";
             document.getElementById("desc-futura").value = "";
             document.getElementById("imp-futura").value = "";
-            if (document.getElementById("impatta-saldo-futura")) document.getElementById("impatta-saldo-futura").checked =
-                true;
+            if (checkbox) checkbox.checked = true;
 
             aggiornaListaFuture();
             aggiornaApp();
@@ -2726,8 +3319,11 @@
             document.getElementById("data-futura").value = s.data;
             document.getElementById("desc-futura").value = s.desc;
             document.getElementById("imp-futura").value = s.imp;
-            if (document.getElementById("impatta-saldo-futura")) {
-                document.getElementById("impatta-saldo-futura").checked = s.impattaSaldo !== false;
+            
+            // Leggi il checkbox in modo sicuro
+            const checkbox = document.getElementById("impatta-saldo-futura");
+            if (checkbox) {
+                checkbox.checked = s.impattaSaldo !== false;
             }
 
             editFutureIdx = idx;
@@ -2748,11 +3344,18 @@
 
             future.sort((a, b) => new Date(a.data) - new Date(b.data)).forEach((s, idx) => {
                 const valore = parseFloat(s.imp) || 0;
+                const impattaSaldo = s.impattaSaldo !== undefined ? s.impattaSaldo : true;
+                const iconaImpatta = impattaSaldo ? '💰' : '⛔';
+                const tooltipImpatta = impattaSaldo ? 'Inclusa nel calcolo' : 'Esclusa dal calcolo';
+                
                 c.innerHTML += `
                 <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding: 12px 0; gap: 10px;">
                     <div style="flex: 1; min-width: 0;">
                         <small style="color:var(--text-muted)">${s.data}</small><br>
-                        <b style="font-size: 0.9rem; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${sanitizeHTML(s.desc)}">${sanitizeHTML(s.desc)}</b>
+                        <b style="font-size: 0.9rem; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${sanitizeHTML(s.desc)}">
+                            ${sanitizeHTML(s.desc)}
+                        </b>
+                        <small style="color:var(--text-muted); font-size:0.65rem;" title="${tooltipImpatta}">${iconaImpatta} ${impattaSaldo ? 'Inclusa' : 'Esclusa'}</small>
                     </div>
                     <div style="text-align: right; flex-shrink: 0; display: flex; align-items: center; gap: 10px;">
                         <span class="negativo" style="font-weight:bold; white-space: nowrap;">${valore.toFixed(2)}€</span>
@@ -2795,12 +3398,64 @@
         // ⚡ GESTIONE UTENZE
         // ==========================================
 
+        function calcolaRiepilogoUtenza() {
+            const costo = parseFloat(document.getElementById('utenza-costo').value) || 0;
+            const canone = parseFloat(document.getElementById('utenza-canone').value) || 0;
+            const imposte = parseFloat(document.getElementById('utenza-imposte').value) || 0;
+            const altre = parseFloat(document.getElementById('utenza-altre').value) || 0;
+
+            const totale = costo + canone + imposte + altre;
+
+            const riepilogoDiv = document.getElementById('utenza-riepilogo');
+            const riepilogoText = document.getElementById('utenza-riepilogo-text');
+
+            if (costo > 0 || canone > 0 || imposte > 0 || altre > 0) {
+                riepilogoDiv.style.display = 'block';
+
+                let html = `
+                    <div style="font-weight:bold;margin-bottom:5px;">📊 Riepilogo bolletta:</div>
+                    <div class="utenza-riepilogo-dettagli">
+                        <div class="item"><span class="label">Costo energia</span><span class="value">${costo.toFixed(2)} €</span></div>
+                        ${canone > 0 ? `<div class="item"><span class="label">Canone RAI</span><span class="value" style="color:var(--danger);">${canone.toFixed(2)} €</span></div>` : ''}
+                        ${imposte > 0 ? `<div class="item"><span class="label">Imposte / Accise</span><span class="value">${imposte.toFixed(2)} €</span></div>` : ''}
+                        ${altre > 0 ? `<div class="item"><span class="label">Altre spese</span><span class="value">${altre.toFixed(2)} €</span></div>` : ''}
+                    </div>
+                    <div class="utenza-riepilogo-totale">
+                        <span>💰 Totale bolletta</span>
+                        <span class="value">${totale.toFixed(2)} €</span>
+                    </div>
+                `;
+
+                riepilogoText.innerHTML = html;
+                document.getElementById('utenza-totale').value = totale.toFixed(2);
+            } else {
+                riepilogoDiv.style.display = 'none';
+                document.getElementById('utenza-totale').value = '';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const campi = ['utenza-costo', 'utenza-canone', 'utenza-imposte', 'utenza-altre'];
+            campi.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.addEventListener('input', calcolaRiepilogoUtenza);
+                    el.addEventListener('change', calcolaRiepilogoUtenza);
+                }
+            });
+        });
+
         function salvaRilevazioneUtenza() {
             const nomeSelect = document.getElementById('utenza-nome');
             const nome = nomeSelect.value;
             const data = document.getElementById('utenza-data').value;
+            const periodo = document.getElementById('utenza-periodo').value.trim();
             const consumo = parseFloat(document.getElementById('utenza-consumo').value);
             const costo = parseFloat(document.getElementById('utenza-costo').value);
+            const canone = parseFloat(document.getElementById('utenza-canone').value) || 0;
+            const imposte = parseFloat(document.getElementById('utenza-imposte').value) || 0;
+            const altre = parseFloat(document.getElementById('utenza-altre').value) || 0;
+            const totale = parseFloat(document.getElementById('utenza-totale').value);
             const note = sanitizeHTML(document.getElementById('utenza-note').value);
 
             if (!nome || !data) {
@@ -2814,7 +3469,12 @@
             }
 
             if (isNaN(costo) || costo < 0) {
-                alert('Inserisci un costo valido!');
+                alert('Inserisci un costo energia valido!');
+                return;
+            }
+
+            if (isNaN(totale) || totale < 0) {
+                alert('Inserisci un totale valido!');
                 return;
             }
 
@@ -2830,8 +3490,13 @@
                 id: Date.now(),
                 nome: nome,
                 data: data,
+                periodo: periodo || '',
                 consumo: consumo,
                 costo: costo,
+                canone: canone,
+                imposte: imposte,
+                altre: altre,
+                totale: totale,
                 note: note || ''
             };
 
@@ -2839,9 +3504,15 @@
             localStorage.setItem('moneyTrack_utenze', JSON.stringify(utenze));
 
             document.getElementById('utenza-data').value = '';
+            document.getElementById('utenza-periodo').value = '';
             document.getElementById('utenza-consumo').value = '';
             document.getElementById('utenza-costo').value = '';
+            document.getElementById('utenza-canone').value = '';
+            document.getElementById('utenza-imposte').value = '';
+            document.getElementById('utenza-altre').value = '';
+            document.getElementById('utenza-totale').value = '';
             document.getElementById('utenza-note').value = '';
+            document.getElementById('utenza-riepilogo').style.display = 'none';
 
             renderizzaUtenze();
             alert('✅ Rilevazione salvata con successo!');
@@ -2873,7 +3544,7 @@
             utenzeOrdinate.forEach(u => {
                 const d = new Date(u.data);
                 if (d.getMonth() === meseCorrente && d.getFullYear() === annoCorrente) {
-                    totCostoMese += u.costo || 0;
+                    totCostoMese += u.totale || 0;
                 }
             });
 
@@ -2905,6 +3576,12 @@
                 const mediaConsumi = consumi.reduce((a, b) => a + b, 0) / consumi.length;
                 const ultimoConsumo = consumi[0] || 0;
                 const variazione = mediaConsumi > 0 ? ((ultimoConsumo - mediaConsumi) / mediaConsumi) * 100 : 0;
+
+                const costiMedi = rilevazioni.map(r => r.costo > 0 && r.consumo > 0 ? r.costo / r.consumo : 0);
+                const costiMediFiltrati = costiMedi.filter(c => c > 0);
+                const costoMedioKWh = costiMediFiltrati.length > 0 ? costiMediFiltrati.reduce((a, b) => a + b, 0) / costiMediFiltrati
+                    .length : 0;
+                const costoMedioUltimo = ultima.costo > 0 && ultima.consumo > 0 ? ultima.costo / ultima.consumo : 0;
 
                 let icona = '⚡';
                 if (nome.includes('Enel') && nome.includes('Elettrica')) icona = '⚡';
@@ -2946,10 +3623,17 @@
                             <div class="utenza-stat-label">Media consumi</div>
                         </div>
                         <div class="utenza-stat">
-                            <div class="utenza-stat-value">${ultima.costo ? ultima.costo.toFixed(2) + '€' : 'N/D'}</div>
-                            <div class="utenza-stat-label">Ultimo costo</div>
+                            <div class="utenza-stat-value">${ultima.totale ? ultima.totale.toFixed(2) + '€' : 'N/D'}</div>
+                            <div class="utenza-stat-label">Ultimo totale</div>
                         </div>
                     </div>
+
+                    ${costoMedioKWh > 0 ? `
+                    <div style="font-size:0.75rem;color:var(--text-muted);text-align:center;margin-bottom:8px;">
+                        💰 Costo medio energia: ${costoMedioKWh.toFixed(3)} €/kWh
+                        ${costoMedioUltimo > 0 ? `| Ultimo: ${costoMedioUltimo.toFixed(3)} €/kWh` : ''}
+                    </div>
+                    ` : ''}
 
                     <div class="utenza-chart-container">
                         <canvas id="chart-${nome.replace(/[^a-zA-Z0-9]/g, '_')}" aria-label="Andamento consumi ${sanitizeHTML(nome)}"></canvas>
@@ -2960,9 +3644,11 @@
                             <thead>
                                 <tr>
                                     <th>Data</th>
+                                    <th>Periodo</th>
                                     <th>Consumo</th>
                                     <th>Costo</th>
-                                    <th>Note</th>
+                                    <th>Canone</th>
+                                    <th>Totale</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -2970,9 +3656,11 @@
                                 ${rilevazioni.slice(0, 10).map(r => `
                                     <tr>
                                         <td>${r.data}</td>
+                                        <td style="font-size:0.7rem;color:var(--text-muted);">${r.periodo || '-'}</td>
                                         <td>${r.consumo ? r.consumo.toFixed(1) : '-'}</td>
                                         <td>${r.costo ? r.costo.toFixed(2) + '€' : '-'}</td>
-                                        <td style="font-size:0.8rem;color:var(--text-muted);">${sanitizeHTML(r.note || '')}</td>
+                                        <td style="color:var(--danger);">${r.canone > 0 ? r.canone.toFixed(2) + '€' : '-'}</td>
+                                        <td style="font-weight:bold;">${r.totale ? r.totale.toFixed(2) + '€' : '-'}</td>
                                         <td><span onclick="eliminaRilevazioneUtenza(${r.id})" style="cursor:pointer;opacity:0.4;" title="Elimina">🗑️</span></td>
                                     </tr>
                                 `).join('')}
@@ -3039,275 +3727,7 @@
         }
 
         // ==========================================
-        // 📄 IMPORT PDF BOLLETTA (NUOVA FUNZIONE)
-        // ==========================================
-
-        async function elaboraPDFBolletta(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            const statusDiv = document.getElementById('import-status');
-            const extractedDiv = document.getElementById('pdf-extracted-data');
-
-            statusDiv.className = 'import-status';
-            statusDiv.style.display = 'none';
-            extractedDiv.style.display = 'none';
-            extractedDiv.innerHTML = '';
-
-            if (file.type !== 'application/pdf') {
-                mostraStatus('Solo file PDF sono supportati!', 'error');
-                event.target.value = '';
-                return;
-            }
-
-            if (file.size > 10 * 1024 * 1024) {
-                mostraStatus('Il file è troppo grande (max 10MB)', 'error');
-                event.target.value = '';
-                return;
-            }
-
-            mostraStatus('⏳ Analisi del PDF in corso...', 'info');
-
-            try {
-                const reader = new FileReader();
-                reader.onload = async function() {
-                    try {
-                        const typedarray = new Uint8Array(this.result);
-                        const loadingTask = pdfjsLib.getDocument({
-                            data: typedarray,
-                            disableWorker: true,
-                            verbosity: 0
-                        });
-
-                        const pdf = await loadingTask.promise;
-                        let fullText = '';
-
-                        for (let i = 1; i <= pdf.numPages; i++) {
-                            const page = await pdf.getPage(i);
-                            const textContent = await page.getTextContent();
-                            const pageText = textContent.items.map(item => item.str).join(' ');
-                            fullText += pageText + '\n';
-                        }
-
-                        console.log('📄 Testo estratto dal PDF:', fullText);
-
-                        const datiBolletta = estraiDatiBolletta(fullText);
-
-                        if (!datiBolletta) {
-                            mostraStatus('❌ Impossibile estrarre i dati dalla bolletta. Verifica che sia una bolletta valida.',
-                                'error');
-                            event.target.value = '';
-                            return;
-                        }
-
-                        mostraDatiEstratti(datiBolletta);
-
-                        document.getElementById('utenza-data').value = datiBolletta.data || new Date().toISOString().split(
-                            'T')[0];
-                        document.getElementById('utenza-consumo').value = datiBolletta.consumo || '';
-                        document.getElementById('utenza-costo').value = datiBolletta.totale || '';
-
-                        let note = '';
-                        if (datiBolletta.canone) note += `Canone TV: ${datiBolletta.canone.toFixed(2)}€ `;
-                        if (datiBolletta.imposte) note += `| Imposte: ${datiBolletta.imposte.toFixed(2)}€`;
-                        if (datiBolletta.periodo) note += ` | Periodo: ${datiBolletta.periodo}`;
-                        if (datiBolletta.fornitore) note += ` | Fornitore: ${datiBolletta.fornitore}`;
-                        document.getElementById('utenza-note').value = note.trim();
-
-                        mostraStatus('✅ Dati estratti con successo! Controlla i valori e salva.', 'success');
-
-                    } catch (pdfError) {
-                        console.error('Errore PDF.js:', pdfError);
-                        mostraStatus('❌ Impossibile leggere il PDF. Assicurati che sia una bolletta in formato PDF nativo.',
-                            'error');
-                    }
-                };
-                reader.readAsArrayBuffer(file);
-
-            } catch (error) {
-                console.error('Errore:', error);
-                mostraStatus('❌ Errore durante la lettura del file.', 'error');
-            }
-            event.target.value = '';
-        }
-
-        function estraiDatiBolletta(testo) {
-            try {
-                const dati = {};
-
-                // Periodo di fatturazione
-                const periodoMatch = testo.match(/(?:Periodo|dal|dal\s*)\s*(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4})\s*(?:al|a|)\s*(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4})/i) ||
-                    testo.match(/(\d{2}[\/\-]\d{2}[\/\-]\d{4})\s*(?:al|a|)\s*(\d{2}[\/\-]\d{2}[\/\-]\d{4})/i);
-                if (periodoMatch) {
-                    dati.periodo = `${periodoMatch[1]} - ${periodoMatch[2]}`;
-                }
-
-                // Data fattura
-                const dataMatch = testo.match(
-                    /(?:Data\s*(?:fattura|emissione|documento)|emessa il)\s*[:]*\s*(\d{2}[\/\-]\d{2}[\/\-]\d{4}|\d{2}[\/\-]\d{2}[\/\-]\d{2})/i
-                );
-                if (dataMatch) {
-                    let data = dataMatch[1];
-                    const parts = data.split(/[\/\-]/);
-                    if (parts.length === 3) {
-                        if (parts[2].length === 2) parts[2] = '20' + parts[2];
-                        dati.data = `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
-                    }
-                }
-
-                // Consumo
-                const consumoPatterns = [
-                    /(?:consumo|energia)\s*(?:attiva|)|(?:totale\s*energia)\s*[:]*\s*([\d\.,]+)\s*(?:kWh|kwh|KWH)/i,
-                    /([\d\.,]+)\s*(?:kWh|kwh|KWH)\s*(?:di\s*consumo|consumati)/i,
-                    /consumo\s*[:]*\s*([\d\.,]+)/i
-                ];
-                for (const pattern of consumoPatterns) {
-                    const match = testo.match(pattern);
-                    if (match) {
-                        dati.consumo = parseFloat(match[1].replace(/\./g, '').replace(',', '.'));
-                        break;
-                    }
-                }
-
-                // Costo energia
-                const costoPatterns = [
-                    /(?:spesa\s*energia|energia\s*elettrica|totale\s*energia)\s*[:]*\s*([\d\.,]+)\s*€/i,
-                    /(?:importo\s*energia|totale\s*consumo)\s*[:]*\s*([\d\.,]+)\s*€/i,
-                    /(?:spesa\s*materia\s*energia)\s*[:]*\s*([\d\.,]+)\s*€/i
-                ];
-                for (const pattern of costoPatterns) {
-                    const match = testo.match(pattern);
-                    if (match) {
-                        dati.costoEnergia = parseFloat(match[1].replace(/\./g, '').replace(',', '.'));
-                        break;
-                    }
-                }
-
-                // Canone televisivo
-                const canonePatterns = [
-                    /canone\s*(?:ra|televisivo|tv)\s*[:]*\s*([\d\.,]+)\s*€/i,
-                    /(?:canone\s*ra|canone\s*tv)\s*[:]*\s*([\d\.,]+)/i,
-                    /(?:canone)\s*[:]*\s*([\d\.,]+)\s*€/i
-                ];
-                for (const pattern of canonePatterns) {
-                    const match = testo.match(pattern);
-                    if (match) {
-                        dati.canone = parseFloat(match[1].replace(/\./g, '').replace(',', '.'));
-                        break;
-                    }
-                }
-
-                // Imposte e accise
-                const impostePatterns = [
-                    /(?:imposte|accise|iva)\s*[:]*\s*([\d\.,]+)\s*€/i,
-                    /(?:totale\s*imposte|oneri\s*di\s*sistema)\s*[:]*\s*([\d\.,]+)\s*€/i
-                ];
-                for (const pattern of impostePatterns) {
-                    const match = testo.match(pattern);
-                    if (match) {
-                        dati.imposte = parseFloat(match[1].replace(/\./g, '').replace(',', '.'));
-                        break;
-                    }
-                }
-
-                // Totale bolletta
-                const totalePatterns = [
-                    /(?:totale\s*(?:bolletta|fattura|documento)|importo\s*totale)\s*[:]*\s*([\d\.,]+)\s*€/i,
-                    /(?:totale\s*a\s*pagare)\s*[:]*\s*([\d\.,]+)\s*€/i,
-                    /(?:importo\s*complessivo)\s*[:]*\s*([\d\.,]+)\s*€/i,
-                    /(?:totale)\s*[:]*\s*([\d\.,]+)\s*€/i,
-                    /€\s*([\d\.,]+)\s*(?:totale|da\s*pagare)/i
-                ];
-                for (const pattern of totalePatterns) {
-                    const match = testo.match(pattern);
-                    if (match) {
-                        dati.totale = parseFloat(match[1].replace(/\./g, '').replace(',', '.'));
-                        break;
-                    }
-                }
-
-                // Fornitore
-                const fornitorePatterns = [
-                    /(?:fornitore|societ[àa])\s*[:]*\s*([A-Za-z\s]+)(?:\s|$)/i,
-                    /(?:Enel|Eni|Acea|Iren|A2A|E\.On|Edison|Sorgenia|Hera|Dolomiti|Energia)\s*(?:S\.p\.A|Srl|energia|Servizi|gas|luce)/i
-                ];
-                for (const pattern of fornitorePatterns) {
-                    const match = testo.match(pattern);
-                    if (match) {
-                        dati.fornitore = match[1]?.trim() || match[0]?.trim();
-                        break;
-                    }
-                }
-
-                if (dati.consumo || dati.totale || dati.costoEnergia) {
-                    if (!dati.costoEnergia && dati.canone) {
-                        dati.costoEnergia = dati.totale - dati.canone - (dati.imposte || 0);
-                    }
-                    if (!dati.totale && dati.costoEnergia) {
-                        dati.totale = dati.costoEnergia + (dati.canone || 0) + (dati.imposte || 0);
-                    }
-                    return dati;
-                }
-
-                return null;
-
-            } catch (e) {
-                console.error('Errore estrazione dati:', e);
-                return null;
-            }
-        }
-
-        function mostraStatus(messaggio, tipo) {
-            const statusDiv = document.getElementById('import-status');
-            statusDiv.className = 'import-status ' + tipo;
-            statusDiv.textContent = messaggio;
-            statusDiv.style.display = 'block';
-        }
-
-        function mostraDatiEstratti(dati) {
-            const div = document.getElementById('pdf-extracted-data');
-            div.style.display = 'block';
-
-            let html = '<div class="pdf-extracted-data">';
-            html += '<div style="font-weight:bold;margin-bottom:8px;font-size:0.9rem;">📊 Dati estratti dalla bolletta:</div>';
-
-            if (dati.fornitore) {
-                html +=
-                    `<div class="row"><span class="label">Fornitore</span><span class="value">${dati.fornitore}</span></div>`;
-            }
-            if (dati.periodo) {
-                html += `<div class="row"><span class="label">Periodo</span><span class="value">${dati.periodo}</span></div>`;
-            }
-            if (dati.data) {
-                html += `<div class="row"><span class="label">Data fattura</span><span class="value">${dati.data}</span></div>`;
-            }
-            if (dati.consumo) {
-                html +=
-                    `<div class="row"><span class="label">Consumo</span><span class="value">${dati.consumo.toFixed(1)} kWh</span></div>`;
-            }
-            if (dati.costoEnergia) {
-                html +=
-                    `<div class="row"><span class="label">Costo energia</span><span class="value">${dati.costoEnergia.toFixed(2)} €</span></div>`;
-            }
-            if (dati.canone) {
-                html +=
-                    `<div class="row"><span class="label">Canone televisivo</span><span class="value alert">${dati.canone.toFixed(2)} €</span></div>`;
-            }
-            if (dati.imposte) {
-                html +=
-                    `<div class="row"><span class="label">Imposte / Accise</span><span class="value">${dati.imposte.toFixed(2)} €</span></div>`;
-            }
-            if (dati.totale) {
-                html +=
-                    `<div class="row"><span class="label">💰 Totale bolletta</span><span class="value success" style="font-size:1.1rem;">${dati.totale.toFixed(2)} €</span></div>`;
-            }
-
-            html += '</div>';
-            div.innerHTML = html;
-        }
-
-        // ==========================================
-        // 📄 PDF BANCARIO (esistente)
+        // 📄 PDF BANCARIO
         // ==========================================
 
         async function elaboraPDFBancario(event) {
@@ -3527,54 +3947,59 @@
         }
 
         // ==========================================
-        // 🔧 UTILITY
+        // 📊 ESPORTA CSV (TUTTI I DATI, NON SOLO MESE CORRENTE)
         // ==========================================
 
-        function calcolaPrevisione(saldoAttuale) {
-            const oggi = new Date();
-            oggi.setHours(0, 0, 0, 0);
-
-            const fineMese = new Date(oggi.getFullYear(), oggi.getMonth() + 1, 0);
-            fineMese.setHours(23, 59, 59, 999);
-
-            let impegniMese = future.filter(f => {
-                const df = new Date(f.data);
-                return df >= oggi && df <= fineMese && f.impattaSaldo !== false;
-            }).reduce((acc, curr) => acc + curr.imp, 0);
-
-            let tuttiImpegniFuturi = future.filter(f => {
-                const df = new Date(f.data);
-                return df >= oggi && f.impattaSaldo !== false;
-            }).reduce((acc, curr) => acc + curr.imp, 0);
-
-            const previstoFineMese = saldoAttuale - impegniMese;
-            const saldoFuturo = saldoAttuale - tuttiImpegniFuturi;
-
-            const coloreFineMese = previstoFineMese >= 0 ? "var(--success)" : "var(--danger)";
-            const coloreFuturo = saldoFuturo >= 0 ? "var(--success)" : "var(--danger)";
-
-            const div = document.getElementById("previsione-fine-mese");
-            if (!div) return;
-            div.style.textAlign = "left";
-
-            if (privacy) {
-                div.innerHTML = `<small>Previsione fine mese: *** € | Saldo Futuro: *** €</small>`;
-            } else {
-                div.innerHTML = `
-                <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px;">
-                    <div style="flex: 1; min-width: 0; font-size: 0.9rem;">
-                        <div style="color: var(--text-secondary); font-weight: bold; font-size: 0.7rem; margin-bottom: 2px;">ENTRO FINE MESE</div>
-                        <div style="color:var(--danger); font-size: 0.75rem;">Impegni: -${impegniMese.toFixed(2)}€</div>
-                        <div style="margin-top: 2px; white-space: nowrap;">Saldo: <strong style="color: ${coloreFineMese};">${previstoFineMese.toFixed(2)}€</strong></div>
-                    </div>
-                    <div style="flex: 1; min-width: 0; text-align: right; border-left: 1px solid var(--border); padding-left: 8px; font-size: 0.9rem;">
-                        <div style="color: var(--text-secondary); font-weight: bold; font-size: 0.7rem; margin-bottom: 2px;">PROSPETTIVA TOTALE</div>
-                        <div style="color:var(--danger); font-size: 0.75rem;">Impegni: -${tuttiImpegniFuturi.toFixed(2)}€</div>
-                        <div style="margin-top: 2px; white-space: nowrap;">Saldo: <strong style="color: ${coloreFuturo};">${saldoFuturo.toFixed(2)}€</strong></div>
-                    </div>
-                </div>`;
+        function esportaCSV() {
+            if (spese.length === 0) {
+                alert("Nessun dato da esportare!");
+                return;
             }
+
+            const separatore = ';';
+            let csv = "Data" + separatore + "Categoria" + separatore + "Tipo" + separatore + "Importo" + separatore + "Nota\n";
+
+            spese.forEach(s => {
+                const nota = (s.nota || '').replace(/,/g, ';').replace(/"/g, '""');
+                csv += `${s.data}${separatore}${s.cat}${separatore}${s.tipo}${separatore}${s.imp}${separatore}"${nota}"\n`;
+            });
+
+            let totaleEntrate = 0,
+                totaleUscite = 0;
+            spese.forEach(s => {
+                if (s.tipo === 'Entrata') totaleEntrate += s.imp;
+                else if (s.tipo === 'Uscita') totaleUscite += s.imp;
+                else {
+                    const tipoLower = (s.tipo || '').toLowerCase();
+                    if (tipoLower.includes('entrata')) totaleEntrate += s.imp;
+                    else if (tipoLower.includes('uscita')) totaleUscite += s.imp;
+                    else {
+                        if (s.imp > 0) totaleEntrate += s.imp;
+                        else totaleUscite += s.imp;
+                    }
+                }
+            });
+
+            csv += `\n"RIEPILOGO GENERALE"${separatore}${separatore}${separatore}${separatore}\n`;
+            csv += `"TOTALE ENTRATE"${separatore}${separatore}${separatore}${totaleEntrate.toFixed(2)}${separatore}\n`;
+            csv += `"TOTALE USCITE"${separatore}${separatore}${separatore}${totaleUscite.toFixed(2)}${separatore}\n`;
+            csv += `"SALDO"${separatore}${separatore}${separatore}${(totaleEntrate - totaleUscite).toFixed(2)}${separatore}\n`;
+            csv += `"NUMERO TRANSAZIONI"${separatore}${separatore}${separatore}${spese.length}${separatore}\n`;
+
+            const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `MoneyTrack_Tutti_i_Dati_${new Date().toISOString().split('T')[0]}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
         }
+
+        // ==========================================
+        // 🔧 UTILITY
+        // ==========================================
 
         function togglePrivacy() { privacy = !privacy;
             aggiornaApp(); }
@@ -3586,7 +4011,7 @@
         function esportaDati() {
             const backupData = {};
             const keys = ['moneyTrack_db', 'moneyTrack_future', 'moneyTrack_cats', 'moneyTrack_budgets',
-                'moneyTrack_fav_news', 'moneyTrack_utenze'
+                'moneyTrack_fav_news', 'moneyTrack_utenze', 'moneyTrack_obiettivi'
             ];
             keys.forEach(key => {
                 const value = localStorage.getItem(key);
@@ -3666,10 +4091,12 @@
                     customCats = JSON.parse(localStorage.getItem("moneyTrack_cats")) || {};
                     budgets = JSON.parse(localStorage.getItem("moneyTrack_budgets")) || {};
                     utenze = JSON.parse(localStorage.getItem("moneyTrack_utenze")) || [];
+                    obiettivi = JSON.parse(localStorage.getItem("moneyTrack_obiettivi")) || [];
 
                     alert("✅ Ripristino completato!");
                     aggiornaApp();
                     renderizzaUtenze();
+                    renderizzaObiettivi();
                     if (currentUser) syncDatiSuSupabase();
 
                 } catch (error) {
@@ -4015,6 +4442,11 @@
         aggiornaCategorie();
         aggiornaApp();
         renderizzaUtenze();
+        renderizzaObiettivi();
+
+        setTimeout(() => {
+            calcolaRiepilogoUtenza();
+        }, 100);
 
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js').catch(err => {
@@ -4050,6 +4482,7 @@
         window.rimuoviBudget = rimuoviBudget;
         window.togglePrivacy = togglePrivacy;
         window.esportaDati = esportaDati;
+        window.esportaCSV = esportaCSV;
         window.importaDati = importaDati;
         window.caricaNews = caricaNews;
         window.filtraNews = filtraNews;
@@ -4063,7 +4496,6 @@
         window.navigaMeseCalendario = navigaMeseCalendario;
         window.generaReport = generaReport;
         window.elaboraPDFBancario = elaboraPDFBancario;
-        window.elaboraPDFBolletta = elaboraPDFBolletta;
         window.toggleMenu = toggleMenu;
         window.loginbtn = loginbtn;
         window.eseguiAuth = eseguiAuth;
@@ -4080,15 +4512,29 @@
         window.renderizzaUtenze = renderizzaUtenze;
         window.apriPopupSuggerimenti = apriPopupSuggerimenti;
         window.chiudiPopupSuggerimenti = chiudiPopupSuggerimenti;
+        window.calcolaRiepilogoUtenza = calcolaRiepilogoUtenza;
+        window.salvaObiettivo = salvaObiettivo;
+        window.eliminaObiettivo = eliminaObiettivo;
+        window.renderizzaObiettivi = renderizzaObiettivi;
+        window.aggiornaDashboard = aggiornaDashboard;
+        window.applicaFiltri = applicaFiltri;
+        window.resetFiltri = resetFiltri;
+        window.gestisciLoginOSincronizzazione = gestisciLoginOSincronizzazione;
+        window.ripristinaDatiCloud = ripristinaDatiCloud;
 
         console.log('🚀 MoneyTrack 2.0 avviato!');
         console.log('📊 Transazioni:', spese.length);
         console.log('📅 Spese future:', future.length);
         console.log('⚡ Utenze registrate:', utenze.length);
+        console.log('🎯 Obiettivi:', obiettivi.length);
         console.log('📱 Compatibile con Android, iOS e PC');
         console.log('💡 Suggerimenti disponibili con il pulsante 💡');
-        console.log('📄 Import PDF bollette attivo');
         console.log('⌨️ Shortcut: Ctrl+Enter per salvare, ESC per chiudere');
+        console.log('📊 Dashboard: uscite mese calcolate correttamente!');
+        console.log('📊 CSV: esporta TUTTI i dati, non solo il mese corrente!');
+        console.log('📊 PROSPETTIVA TOTALE: calcola TUTTE le spese future valide!');
+        console.log('🔐 Login Supabase: funzionante e messaggi mostrati solo al primo login!');
+        console.log('✅ Checkbox "Includi nel calcolo del saldo futuro": funzionante!');
     </script>
 
 </body>
