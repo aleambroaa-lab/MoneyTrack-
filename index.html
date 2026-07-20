@@ -110,6 +110,11 @@
         .dark-theme .budget-row button { background: var(--primary); color: white; }
         .dark-theme .progress-bar-bg { background: #444; }
         .dark-theme .sticky-col { background: var(--bg); }
+        .dark-theme .lista-spesa-card { background: #2a2a2a; border-color: #444; }
+        .dark-theme .lista-totale-categoria { background: #333; border-color: #444; }
+        .dark-theme #lista-filtri-categorie .btn-filtro-cat { background: #333; border-color: #444; color: var(--text-secondary); }
+        .dark-theme #lista-filtri-categorie .btn-filtro-cat:hover { background: #444; }
+        .dark-theme #lista-filtri-categorie .btn-filtro-cat.attivo { background: var(--primary); color: white; border-color: var(--primary); }
 
         * {
             box-sizing: border-box;
@@ -1753,6 +1758,21 @@
                 max-width: 100%;
                 width: 100%;
             }
+            .lista-spesa-card {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .lista-spesa-card .importo {
+                text-align: right;
+                font-size: 1rem;
+            }
+            .lista-spesa-card .azioni {
+                justify-content: flex-end;
+                margin-top: 5px;
+            }
+            #lista-selezionata {
+                flex: 1 1 100%;
+            }
         }
 
         @media (min-width: 768px) {
@@ -1769,14 +1789,12 @@
             .table-container table {
                 min-width: 600px;
             }
-            /* Su desktop il budget rimane nella colonna di destra */
             .budget-container-desktop {
                 display: block;
             }
         }
 
         @media (max-width: 767px) {
-            /* Su mobile il budget va dopo la lista */
             .budget-container-mobile {
                 display: block;
                 margin-top: 20px;
@@ -1908,6 +1926,148 @@
         .dark-theme .toggle-switch input:checked + .toggle-slider:before {
             content: "🌙";
         }
+
+        /* ===== PAGINA LISTE ===== */
+        .lista-spesa-card {
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 15px;
+            margin-bottom: 10px;
+            transition: var(--transition);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .lista-spesa-card:hover {
+            box-shadow: var(--shadow-sm);
+            transform: translateX(4px);
+        }
+
+        .lista-spesa-card .info {
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .lista-spesa-card .info .data {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        .lista-spesa-card .info .desc {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--text-primary);
+        }
+
+        .lista-spesa-card .info .categoria {
+            font-size: 0.75rem;
+            background: var(--border);
+            padding: 2px 10px;
+            border-radius: 12px;
+            display: inline-block;
+            margin-top: 3px;
+            color: var(--text-secondary);
+        }
+
+        .lista-spesa-card .importo {
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: var(--danger);
+            white-space: nowrap;
+            margin-right: 10px;
+        }
+
+        .lista-spesa-card .azioni {
+            display: flex;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+
+        .lista-spesa-card .azioni span {
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 50%;
+            transition: var(--transition);
+            font-size: 1rem;
+            opacity: 0.5;
+        }
+
+        .lista-spesa-card .azioni span:hover {
+            opacity: 1;
+            background: var(--border);
+        }
+
+        .lista-spesa-card .azioni span:active {
+            transform: scale(0.9);
+        }
+
+        .lista-totale-categoria {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 8px 12px;
+            margin-top: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+        }
+
+        .lista-totale-categoria .label {
+            color: var(--text-secondary);
+        }
+
+        .lista-totale-categoria .value {
+            font-weight: bold;
+            color: var(--danger);
+        }
+
+        .lista-empty {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+        }
+
+        .lista-empty .icon {
+            font-size: 3.5rem;
+            display: block;
+            margin-bottom: 15px;
+        }
+
+        .lista-empty p {
+            margin: 5px 0;
+        }
+
+        #lista-filtri-categorie .btn-filtro-cat {
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+
+        #lista-filtri-categorie .btn-filtro-cat:hover {
+            background: var(--border);
+        }
+
+        #lista-filtri-categorie .btn-filtro-cat.attivo {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .lista-selezionata-label {
+            font-weight: bold;
+            color: var(--text-primary);
+        }
     </style>
 </head>
 
@@ -1940,7 +2100,6 @@
                 <div class="menu-container">
                     <div class="menu-dots" onclick="toggleMenu()" aria-label="Apri menu" role="button" tabindex="0">⋮</div>
                     <div id="myDropdown" class="dropdown-content" role="menu">
-                        <!-- Toggle Tema Scuro -->
                         <div class="theme-toggle-item" role="menuitem">
                             <span>🌙 Tema Scuro</span>
                             <label class="toggle-switch">
@@ -1992,6 +2151,7 @@
             <button class="btn-modern" onclick="mostraPagina('analisi')">🧠 ANALISI</button>
             <button class="btn-modern" onclick="mostraPagina('scadenze')">📅 SCADENZE</button>
             <button class="btn-modern" onclick="mostraPagina('utenze')" style="background:var(--info); color:white;">⚡ UTENZE</button>
+            <button class="btn-modern" onclick="mostraPagina('liste')" style="background:#6c5ce7; color:white;">📋 LISTE</button>
             <button class="btn-modern btn-warning" onclick="apriPopupSuggerimenti()" style="font-size:1.2rem;" title="Consigli finanziari">💡</button>
         </div>
 
@@ -2254,6 +2414,95 @@
         <div id="utenza-lista"></div>
     </div>
 
+    <!-- ===== PAGINA LISTE ===== -->
+    <div id="pagina-liste" class="container" style="display: none; padding: 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
+            <button onclick="mostraPagina('home')" class="btn-back-home">⬅ Torna alla Home</button>
+            <h3 style="margin: 0;">📋 Gestione Liste Spese</h3>
+        </div>
+
+        <!-- Selezione lista o creazione nuova -->
+        <div style="background: var(--bg-light); border-radius: var(--radius-md); padding: 15px; margin-bottom: 20px; border: 1px solid var(--border);">
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+                <select id="lista-selezionata" style="flex: 2; min-width: 150px;" onchange="caricaLista()">
+                    <option value="">➕ Crea nuova lista...</option>
+                </select>
+                <button class="btn-modern btn-success" onclick="creaNuovaLista()" style="flex: 0.5; min-width: 80px;">➕ Nuova</button>
+                <button class="btn-modern btn-danger" onclick="eliminaLista()" style="flex: 0.5; min-width: 80px;">🗑️ Elimina</button>
+            </div>
+            <div id="lista-info" style="margin-top: 10px; font-size: 0.85rem; color: var(--text-muted); display: none;">
+                <span id="lista-info-nome"></span> · 
+                <span id="lista-info-conteggio">0</span> spese · 
+                <span id="lista-info-totale">0.00 €</span>
+            </div>
+        </div>
+
+        <!-- Form per aggiungere spesa alla lista corrente -->
+        <div id="lista-form" style="background: var(--bg-light); border-radius: var(--radius-md); padding: 15px; margin-bottom: 20px; border: 1px solid var(--border); display: none;">
+            <h4 style="margin-top: 0; margin-bottom: 12px;">✏️ Aggiungi Spesa a <span id="lista-nome-corrente" style="color: var(--primary);"></span></h4>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <input type="date" id="lista-data" aria-label="Data spesa" style="grid-column: 1 / -1;">
+                
+                <select id="lista-categoria" aria-label="Categoria spesa" style="grid-column: 1 / -1;">
+                    <option value="🏨 Alloggio">🏨 Alloggio</option>
+                    <option value="🍽️ Ristoranti">🍽️ Ristoranti</option>
+                    <option value="🚗 Trasporti">🚗 Trasporti</option>
+                    <option value="✈️ Voli">✈️ Voli</option>
+                    <option value="🎟️ Attrazioni">🎟️ Attrazioni</option>
+                    <option value="🛍️ Shopping">🛍️ Shopping</option>
+                    <option value="💰 Spese varie">💰 Spese varie</option>
+                    <option value="🏖️ Spiaggia">🏖️ Spiaggia</option>
+                    <option value="🚕 Taxi/Uber">🚕 Taxi/Uber</option>
+                    <option value="🍺 Bevande">🍺 Bevande</option>
+                    <option value="🎁 Regali">🎁 Regali</option>
+                    <option value="📱 Sim/Internet">📱 Sim/Internet</option>
+                    <option value="🏥 Assicurazione">🏥 Assicurazione</option>
+                    <option value="🔧 Manutenzione">🔧 Manutenzione</option>
+                    <option value="🛠️ Materiali">🛠️ Materiali</option>
+                    <option value="👷 Manodopera">👷 Manodopera</option>
+                    <option value="📦 Trasloco">📦 Trasloco</option>
+                    <option value="🎉 Eventi">🎉 Eventi</option>
+                    <option value="🎄 Regali Natale">🎄 Regali Natale</option>
+                    <option value="🎂 Compleanni">🎂 Compleanni</option>
+                </select>
+                
+                <input type="text" id="lista-descrizione" placeholder="Descrizione spesa" aria-label="Descrizione" style="grid-column: 1 / -1;">
+                
+                <input type="number" id="lista-importo" placeholder="Importo (€)" step="0.01" aria-label="Importo" inputmode="decimal" style="grid-column: 1 / -1;">
+                
+                <button class="btn-modern btn-success" onclick="aggiungiSpesaLista()" style="grid-column: 1 / -1;">➕ Aggiungi Spesa</button>
+            </div>
+        </div>
+
+        <!-- Filtri e totali -->
+        <div id="lista-contenuto" style="display: none;">
+            <div class="utenza-totale" id="lista-totale" style="background: var(--primary);">
+                <span><span class="label">💰 Totale Spese Lista</span></span>
+                <span class="value" id="lista-totale-costo">0.00 €</span>
+            </div>
+
+            <!-- Filtri per categoria -->
+            <div style="display: flex; gap: 8px; margin-bottom: 15px; overflow-x: auto; padding-bottom: 10px; -webkit-overflow-scrolling: touch; flex-wrap: wrap;">
+                <button onclick="filtraLista('tutte', event)" role="tab" aria-selected="true" 
+                        style="background:var(--primary); color:white; border:none; padding:8px 15px; border-radius:20px; font-size:0.8rem; cursor:pointer; transition:var(--transition);">
+                    🌎 Tutte
+                </button>
+                <div id="lista-filtri-categorie" style="display: flex; gap: 8px; flex-wrap: wrap;"></div>
+            </div>
+
+            <!-- Lista spese -->
+            <div id="lista-spese-container"></div>
+        </div>
+
+        <!-- Messaggio lista vuota -->
+        <div id="lista-vuota" style="display: none; text-align: center; padding: 40px 20px; color: var(--text-muted);">
+            <span style="font-size: 3.5rem; display: block; margin-bottom: 15px;">📋</span>
+            <p><strong>Nessuna lista creata</strong></p>
+            <p style="font-size: 0.9rem;">Crea una nuova lista per iniziare a tracciare le tue spese!</p>
+        </div>
+    </div>
+
     <!-- ===== CLOUD MODAL ===== -->
     <div id="cloud-modal" class="modal-backdrop-cloud" style="display: none;">
         <div class="modal-card-cloud">
@@ -2309,6 +2558,22 @@
         };
         let budgets = JSON.parse(localStorage.getItem("moneyTrack_budgets")) || {};
         let utenze = JSON.parse(localStorage.getItem("moneyTrack_utenze")) || [];
+        let listeSpese = JSON.parse(localStorage.getItem("moneyTrack_liste")) || {};
+        let listaCorrenteId = localStorage.getItem("moneyTrack_lista_corrente") || null;
+        let filtroListaAttivo = 'tutte';
+
+        // Inizializza le liste se non esistono
+        if (Object.keys(listeSpese).length === 0) {
+            const id = Date.now().toString();
+            listeSpese[id] = {
+                nome: "Vacanze Estate 2024",
+                spese: [],
+                creata: new Date().toISOString()
+            };
+            localStorage.setItem("moneyTrack_liste", JSON.stringify(listeSpese));
+            listaCorrenteId = id;
+            localStorage.setItem("moneyTrack_lista_corrente", listaCorrenteId);
+        }
 
         let graficoTorta, graficoBarre, privacy = false;
         const mesiNomi = ["Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic"];
@@ -2415,6 +2680,7 @@
                 future: safeGetJSON("moneyTrack_future") || [],
                 customCats: safeGetJSON("moneyTrack_cats") || {},
                 budgets: safeGetJSON("moneyTrack_budgets") || {},
+                liste: safeGetJSON("moneyTrack_liste") || {},
                 utenze: safeGetJSON("moneyTrack_utenze") || [],
                 darkTheme: localStorage.getItem('moneyTrack_darkTheme') === 'true'
             };
@@ -2442,7 +2708,6 @@
                 return;
             }
             
-            // Verifica se i dati sono cambiati
             const currentHash = getDataHash();
             if (currentHash === lastDataHash && lastDataHash !== '') {
                 console.log('⏭️ Dati invariati, sync saltato');
@@ -2460,6 +2725,7 @@
                     budgets: safeGetJSON("moneyTrack_budgets") || {},
                     preferitiNews: safeGetJSON("moneyTrack_fav_news") || [],
                     utenze: safeGetJSON("moneyTrack_utenze") || [],
+                    liste: safeGetJSON("moneyTrack_liste") || {},
                     darkTheme: localStorage.getItem('moneyTrack_darkTheme') === 'true',
                     lastUpdated: new Date().toISOString()
                 };
@@ -2477,7 +2743,6 @@
                         }, { onConflict: 'id' });
 
                         if (result.error) {
-                            // Se l'errore è 404, la tabella potrebbe non esistere
                             if (result.error.code === '42P01') {
                                 console.warn('⚠️ Tabella userdata non trovata. Verifica che sia stata creata su Supabase.');
                                 console.warn('📝 Dettaglio errore:', result.error.message);
@@ -2519,7 +2784,6 @@
             mostraStatoUtenteLoggato(user.email);
 
             try {
-                // Verifica se è lo stesso utente di prima
                 if (lastSyncUserId === user.id) {
                     console.log('☁️ Stesso utente di prima, sync silenzioso');
                     await syncDatiSuSupabase();
@@ -2530,7 +2794,6 @@
                 if (result.data && result.data.length > 0 && result.data[0].payload) {
                     const datiCloud = result.data[0].payload;
                     
-                    // Ripristina il tema dal cloud
                     if (datiCloud.darkTheme !== undefined) {
                         let darkThemeEnabled = datiCloud.darkTheme;
                         localStorage.setItem('moneyTrack_darkTheme', darkThemeEnabled);
@@ -2588,15 +2851,18 @@
             localStorage.setItem('moneyTrack_budgets', JSON.stringify(datiCloud.budgets || {}));
             localStorage.setItem('moneyTrack_fav_news', JSON.stringify(datiCloud.preferitiNews || []));
             localStorage.setItem('moneyTrack_utenze', JSON.stringify(datiCloud.utenze || []));
+            localStorage.setItem('moneyTrack_liste', JSON.stringify(datiCloud.liste || {}));
 
             spese = JSON.parse(localStorage.getItem("moneyTrack_db")) || [];
             future = JSON.parse(localStorage.getItem("moneyTrack_future")) || [];
             customCats = JSON.parse(localStorage.getItem("moneyTrack_cats")) || {};
             budgets = JSON.parse(localStorage.getItem("moneyTrack_budgets")) || {};
             utenze = JSON.parse(localStorage.getItem("moneyTrack_utenze")) || [];
+            listeSpese = JSON.parse(localStorage.getItem("moneyTrack_liste")) || {};
 
             aggiornaApp();
             renderizzaUtenze();
+            caricaSelectListe();
         }
 
         function injectAuthModal() {
@@ -2749,7 +3015,6 @@
         // 🌙 GESTIONE TEMA SCURO
         // ==========================================
 
-        // Controlla se il tema scuro è salvato
         let darkThemeEnabled = localStorage.getItem('moneyTrack_darkTheme') === 'true';
 
         function toggleTheme() {
@@ -2768,7 +3033,6 @@
             }
         }
 
-        // Applica il tema all'avvio
         document.addEventListener('DOMContentLoaded', function() {
             applyTheme();
         });
@@ -2782,7 +3046,7 @@
                 'show'); }
 
         function mostraPagina(p) {
-            const pagine = ["pagina-home", "pagina-analisi", "pagina-news", "pagina-utenze"];
+            const pagine = ["pagina-home", "pagina-analisi", "pagina-news", "pagina-utenze", "pagina-liste"];
             pagine.forEach(id => {
                 const elemento = document.getElementById(id);
                 if (elemento) elemento.style.display = 'none';
@@ -2798,6 +3062,7 @@
             else if (p === 'news') caricaNews();
             else if (p === 'analisi') setTimeout(() => { generaReport(); if (graficoTorta) graficoTorta.resize(); }, 50);
             else if (p === 'utenze') renderizzaUtenze();
+            else if (p === 'liste') caricaSelectListe();
 
             if (p === 'scadenze') {
                 if (sezioneScadenze) sezioneScadenze.style.display = 'block';
@@ -2919,7 +3184,6 @@
         }
 
         function aggiornaBudgetProgress(catsUscita) {
-            // Aggiorna sia desktop che mobile
             aggiornaBudgetProgressContainer("lista-budget", catsUscita);
             aggiornaBudgetProgressContainer("lista-budget-mobile", catsUscita);
         }
@@ -4062,7 +4326,7 @@
         function esportaDati() {
             const backupData = {};
             const keys = ['moneyTrack_db', 'moneyTrack_future', 'moneyTrack_cats', 'moneyTrack_budgets',
-                'moneyTrack_fav_news', 'moneyTrack_utenze', 'moneyTrack_darkTheme'
+                'moneyTrack_fav_news', 'moneyTrack_utenze', 'moneyTrack_darkTheme', 'moneyTrack_liste'
             ];
             keys.forEach(key => {
                 const value = localStorage.getItem(key);
@@ -4131,9 +4395,8 @@
                     const contenuto = e.target.result;
                     const dati = JSON.parse(contenuto);
 
-                    // NON cancellare tutto localStorage, ma solo le chiavi di MoneyTrack
                     const keys = ['moneyTrack_db', 'moneyTrack_future', 'moneyTrack_cats', 'moneyTrack_budgets', 
-                                  'moneyTrack_fav_news', 'moneyTrack_utenze', 'moneyTrack_darkTheme'];
+                          'moneyTrack_fav_news', 'moneyTrack_utenze', 'moneyTrack_darkTheme', 'moneyTrack_liste'];
                     keys.forEach(key => localStorage.removeItem(key));
 
                     Object.keys(dati).forEach(key => {
@@ -4145,6 +4408,7 @@
                     customCats = JSON.parse(localStorage.getItem("moneyTrack_cats")) || {};
                     budgets = JSON.parse(localStorage.getItem("moneyTrack_budgets")) || {};
                     utenze = JSON.parse(localStorage.getItem("moneyTrack_utenze")) || [];
+                    listeSpese = JSON.parse(localStorage.getItem("moneyTrack_liste")) || {};
                     
                     if (localStorage.getItem('moneyTrack_darkTheme') === 'true') {
                         darkThemeEnabled = true;
@@ -4156,6 +4420,7 @@
                     alert("✅ Ripristino completato!");
                     aggiornaApp();
                     renderizzaUtenze();
+                    caricaSelectListe();
                     if (currentUser) syncDatiSuSupabase();
 
                 } catch (error) {
@@ -4425,6 +4690,292 @@
         }
 
         // ==========================================
+        // 📋 GESTIONE LISTE SPESE
+        // ==========================================
+
+        function caricaSelectListe() {
+            const select = document.getElementById("lista-selezionata");
+            if (!select) return;
+            
+            const corrente = select.value;
+            select.innerHTML = '<option value="">➕ Crea nuova lista...</option>';
+            
+            Object.keys(listeSpese).forEach(id => {
+                const option = document.createElement('option');
+                option.value = id;
+                option.textContent = listeSpese[id].nome;
+                select.appendChild(option);
+            });
+            
+            if (listaCorrenteId && listeSpese[listaCorrenteId]) {
+                select.value = listaCorrenteId;
+            } else if (Object.keys(listeSpese).length > 0) {
+                const firstKey = Object.keys(listeSpese)[0];
+                select.value = firstKey;
+                listaCorrenteId = firstKey;
+                localStorage.setItem("moneyTrack_lista_corrente", listaCorrenteId);
+            }
+            
+            caricaLista();
+        }
+
+        function caricaLista() {
+            const select = document.getElementById("lista-selezionata");
+            const id = select.value;
+            
+            if (!id || !listeSpese[id]) {
+                document.getElementById("lista-form").style.display = 'none';
+                document.getElementById("lista-contenuto").style.display = 'none';
+                document.getElementById("lista-vuota").style.display = 'block';
+                document.getElementById("lista-info").style.display = 'none';
+                return;
+            }
+            
+            listaCorrenteId = id;
+            localStorage.setItem("moneyTrack_lista_corrente", listaCorrenteId);
+            
+            const lista = listeSpese[id];
+            document.getElementById("lista-form").style.display = 'block';
+            document.getElementById("lista-contenuto").style.display = 'block';
+            document.getElementById("lista-vuota").style.display = 'none';
+            document.getElementById("lista-nome-corrente").textContent = lista.nome;
+            
+            document.getElementById("lista-info").style.display = 'block';
+            document.getElementById("lista-info-nome").textContent = lista.nome;
+            document.getElementById("lista-info-conteggio").textContent = lista.spese.length;
+            
+            const totale = lista.spese.reduce((sum, s) => sum + s.importo, 0);
+            document.getElementById("lista-info-totale").textContent = totale.toFixed(2) + ' €';
+            
+            renderizzaLista();
+        }
+
+        function creaNuovaLista() {
+            const nome = prompt("Inserisci il nome della nuova lista (es. 'Vacanze 2024', 'Ristrutturazione Casa'):");
+            if (!nome || nome.trim() === '') return;
+            
+            const id = Date.now().toString();
+            listeSpese[id] = {
+                nome: nome.trim(),
+                spese: [],
+                creata: new Date().toISOString()
+            };
+            
+            localStorage.setItem("moneyTrack_liste", JSON.stringify(listeSpese));
+            listaCorrenteId = id;
+            localStorage.setItem("moneyTrack_lista_corrente", listaCorrenteId);
+            
+            caricaSelectListe();
+            if (currentUser) syncDatiSuSupabase();
+        }
+
+        function eliminaLista() {
+            const select = document.getElementById("lista-selezionata");
+            const id = select.value;
+            
+            if (!id || !listeSpese[id]) {
+                alert("Seleziona una lista da eliminare!");
+                return;
+            }
+            
+            const nome = listeSpese[id].nome;
+            if (!confirm(`Eliminare la lista "${nome}" e tutte le sue spese?`)) return;
+            
+            delete listeSpese[id];
+            localStorage.setItem("moneyTrack_liste", JSON.stringify(listeSpese));
+            
+            const keys = Object.keys(listeSpese);
+            if (keys.length > 0) {
+                listaCorrenteId = keys[0];
+                localStorage.setItem("moneyTrack_lista_corrente", listaCorrenteId);
+            } else {
+                listaCorrenteId = null;
+                localStorage.removeItem("moneyTrack_lista_corrente");
+            }
+            
+            caricaSelectListe();
+            if (currentUser) syncDatiSuSupabase();
+        }
+
+        function aggiungiSpesaLista() {
+            const id = listaCorrenteId;
+            if (!id || !listeSpese[id]) {
+                alert("Seleziona una lista prima di aggiungere spese!");
+                return;
+            }
+            
+            const data = document.getElementById("lista-data").value;
+            const categoria = document.getElementById("lista-categoria").value;
+            const descrizione = sanitizeHTML(document.getElementById("lista-descrizione").value);
+            const importo = parseFloat(document.getElementById("lista-importo").value);
+            
+            if (!data || !descrizione || isNaN(importo) || importo <= 0) {
+                alert("Compila tutti i campi con valori validi!");
+                return;
+            }
+            
+            listeSpese[id].spese.push({
+                id: Date.now(),
+                data: data,
+                categoria: categoria,
+                descrizione: descrizione,
+                importo: importo
+            });
+            
+            localStorage.setItem("moneyTrack_liste", JSON.stringify(listeSpese));
+            
+            document.getElementById("lista-data").value = '';
+            document.getElementById("lista-descrizione").value = '';
+            document.getElementById("lista-importo").value = '';
+            
+            caricaLista();
+            if (currentUser) syncDatiSuSupabase();
+        }
+
+        function eliminaSpesaLista(idSpesa) {
+            const id = listaCorrenteId;
+            if (!id || !listeSpese[id]) return;
+            
+            if (!confirm("Eliminare questa spesa?")) return;
+            
+            listeSpese[id].spese = listeSpese[id].spese.filter(s => s.id !== idSpesa);
+            localStorage.setItem("moneyTrack_liste", JSON.stringify(listeSpese));
+            
+            caricaLista();
+            if (currentUser) syncDatiSuSupabase();
+        }
+
+        function filtraLista(categoria, evt) {
+            filtroListaAttivo = categoria;
+            
+            const bottoni = document.querySelectorAll('#lista-filtri-categorie .btn-filtro-cat, #pagina-liste button[role="tab"]');
+            bottoni.forEach(btn => {
+                btn.classList.remove('attivo');
+                btn.style.background = "var(--bg-light)";
+                btn.style.color = "var(--text-secondary)";
+                btn.style.border = "1px solid var(--border)";
+            });
+            
+            if (evt && evt.target) {
+                evt.target.classList.add('attivo');
+                evt.target.style.background = "var(--primary)";
+                evt.target.style.color = "white";
+                evt.target.style.border = "none";
+            }
+            
+            if (categoria === 'tutte') {
+                const btnTutte = document.querySelector('#pagina-liste button[role="tab"]');
+                if (btnTutte) {
+                    btnTutte.classList.add('attivo');
+                    btnTutte.style.background = "var(--primary)";
+                    btnTutte.style.color = "white";
+                    btnTutte.style.border = "none";
+                }
+            }
+            
+            renderizzaLista();
+        }
+
+        function renderizzaLista() {
+            const container = document.getElementById("lista-spese-container");
+            const totaleSpan = document.getElementById("lista-totale-costo");
+            const filtriContainer = document.getElementById("lista-filtri-categorie");
+            
+            if (!container) return;
+            
+            const id = listaCorrenteId;
+            if (!id || !listeSpese[id]) {
+                container.innerHTML = '';
+                totaleSpan.textContent = '0.00 €';
+                filtriContainer.innerHTML = '';
+                return;
+            }
+            
+            const lista = listeSpese[id];
+            let spese = lista.spese;
+            
+            if (filtroListaAttivo !== 'tutte') {
+                spese = spese.filter(s => s.categoria === filtroListaAttivo);
+            }
+            
+            spese.sort((a, b) => new Date(b.data) - new Date(a.data));
+            
+            let totale = 0;
+            spese.forEach(s => totale += s.importo);
+            totaleSpan.textContent = totale.toFixed(2) + ' €';
+            
+            const categorieUniche = [...new Set(lista.spese.map(s => s.categoria))];
+            filtriContainer.innerHTML = categorieUniche.map(cat => 
+                `<button class="btn-filtro-cat ${filtroListaAttivo === cat ? 'attivo' : ''}" 
+                         onclick="filtraLista('${cat}', event)" 
+                         style="${filtroListaAttivo === cat ? 'background:var(--primary);color:white;border-color:var(--primary);' : ''}">
+                    ${cat}
+                </button>`
+            ).join('');
+            
+            if (lista.spese.length === 0) {
+                container.innerHTML = `
+                    <div class="lista-empty">
+                        <span class="icon">📋</span>
+                        <p><strong>Nessuna spesa in questa lista</strong></p>
+                        <p style="font-size: 0.8rem;">Aggiungi la prima spesa qui sopra!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            if (spese.length === 0) {
+                container.innerHTML = `
+                    <div class="lista-empty">
+                        <span class="icon">🔍</span>
+                        <p><strong>Nessuna spesa per "${filtroListaAttivo}"</strong></p>
+                        <p style="font-size: 0.8rem;">Prova a cambiare filtro</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            const gruppi = {};
+            spese.forEach(s => {
+                if (!gruppi[s.categoria]) gruppi[s.categoria] = [];
+                gruppi[s.categoria].push(s);
+            });
+            
+            let html = '';
+            Object.keys(gruppi).forEach(cat => {
+                const items = gruppi[cat];
+                let subtotale = 0;
+                items.forEach(s => subtotale += s.importo);
+                
+                html += `<div style="margin-bottom: 15px;">`;
+                html += `<div class="lista-totale-categoria">
+                            <span class="label">📂 ${cat}</span>
+                            <span class="value">${subtotale.toFixed(2)} €</span>
+                        </div>`;
+                
+                items.forEach(s => {
+                    html += `
+                        <div class="lista-spesa-card">
+                            <div class="info">
+                                <div class="data">📅 ${s.data}</div>
+                                <div class="desc">${sanitizeHTML(s.descrizione)}</div>
+                                <span class="categoria">${sanitizeHTML(s.categoria)}</span>
+                            </div>
+                            <div class="importo">${s.importo.toFixed(2)} €</div>
+                            <div class="azioni">
+                                <span onclick="eliminaSpesaLista(${s.id})" title="Elimina">🗑️</span>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                html += `</div>`;
+            });
+            
+            container.innerHTML = html;
+        }
+
+        // ==========================================
         // 🔔 NOTIFICHE
         // ==========================================
 
@@ -4504,6 +5055,7 @@
         aggiornaCategorie();
         aggiornaApp();
         renderizzaUtenze();
+        caricaSelectListe();
 
         setTimeout(() => {
             calcolaRiepilogoUtenza();
@@ -4583,11 +5135,20 @@
         window.toggleTheme = toggleTheme;
         window.applyTheme = applyTheme;
         window.safeGetJSON = safeGetJSON;
+        window.caricaSelectListe = caricaSelectListe;
+        window.caricaLista = caricaLista;
+        window.creaNuovaLista = creaNuovaLista;
+        window.eliminaLista = eliminaLista;
+        window.aggiungiSpesaLista = aggiungiSpesaLista;
+        window.eliminaSpesaLista = eliminaSpesaLista;
+        window.filtraLista = filtraLista;
+        window.renderizzaLista = renderizzaLista;
 
         console.log('🚀 MoneyTrack 2.0 avviato!');
         console.log('📊 Transazioni:', spese.length);
         console.log('📅 Spese future:', future.length);
         console.log('⚡ Utenze registrate:', utenze.length);
+        console.log('📋 Liste create:', Object.keys(listeSpese).length);
         console.log('🌙 Tema scuro:', darkThemeEnabled ? 'attivo' : 'disattivo');
         console.log('📱 Compatibile con Android, iOS e PC');
         console.log('💡 Suggerimenti disponibili con il pulsante 💡');
