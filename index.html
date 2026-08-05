@@ -11,7 +11,7 @@
     <meta name="apple-mobile-web-app-title" content="MoneyTrack">
     <link rel="apple-touch-icon" href="icona-512.png">
     
-    <title>MoneyTrack - Versione 2.0</title>
+    <title>MoneyTrack - Multi Conto</title>
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -40,9 +40,9 @@
             --transition: all 0.25s ease;
             --safe-top: env(safe-area-inset-top, 0px);
             --safe-bottom: env(safe-area-inset-bottom, 0px);
+            --font-family: -apple-system, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        /* ===== TEMA SCURO (ATTIVATO DALLA CLASSE .dark-theme) ===== */
         .dark-theme {
             --bg: #1a1a1a;
             --bg-light: #2a2a2a;
@@ -115,6 +115,7 @@
         .dark-theme #lista-filtri-categorie .btn-filtro-cat { background: #333; border-color: #444; color: var(--text-secondary); }
         .dark-theme #lista-filtri-categorie .btn-filtro-cat:hover { background: #444; }
         .dark-theme #lista-filtri-categorie .btn-filtro-cat.attivo { background: var(--primary); color: white; border-color: var(--primary); }
+        .dark-theme .patrimonio-totale { background: #2a2a2a; border-color: #444; }
 
         * {
             box-sizing: border-box;
@@ -124,7 +125,7 @@
         }
 
         body {
-            font-family: -apple-system, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: var(--font-family);
             background-color: var(--bg);
             margin: 0;
             padding: 0;
@@ -135,6 +136,7 @@
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             transition: background-color 0.3s, color 0.3s;
+            overflow-x: hidden;
         }
 
         nav {
@@ -303,6 +305,186 @@
             max-width: 900px;
             margin: 0 auto;
             padding: 0 15px 40px;
+            transition: opacity 0.3s ease;
+        }
+
+        /* ===== PATRIMONIO TOTALE ===== */
+        .patrimonio-totale {
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 12px 20px;
+            margin: 10px 0 5px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.3s, border-color 0.3s;
+            font-family: var(--font-family);
+        }
+
+        .patrimonio-totale .label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .patrimonio-totale .value {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--text-primary);
+            transition: color 0.3s;
+        }
+
+        .patrimonio-totale .value.positivo { color: var(--success); }
+        .patrimonio-totale .value.negativo { color: var(--danger); }
+
+        .dark-theme .patrimonio-totale .value.positivo { color: #4caf50; }
+        .dark-theme .patrimonio-totale .value.negativo { color: #ef5350; }
+
+        /* ===== CONTI SCROLL ===== */
+        .conti-scroll-container {
+            position: relative;
+            overflow-x: auto;
+            overflow-y: hidden;
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+            scroll-snap-type: x mandatory;
+            padding: 0;
+            margin: 0 -15px;
+            padding: 0 15px;
+            display: flex;
+            gap: 0;
+            scrollbar-width: none;
+        }
+
+        .conti-scroll-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .conto-page {
+            flex: 0 0 100%;
+            min-width: 100%;
+            scroll-snap-align: start;
+            padding: 0 0 20px 0;
+            transition: opacity 0.3s ease;
+        }
+
+        /* ===== INDICATORI CONTI ===== */
+        .conto-indicators {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 0 5px 0;
+            flex-wrap: wrap;
+            margin: 0 -15px;
+            background: var(--bg);
+            border-bottom: 1px solid var(--border);
+            transition: background 0.3s, border-color 0.3s;
+            position: sticky;
+            top: 70px;
+            z-index: 50;
+            min-height: 44px;
+            font-family: var(--font-family);
+        }
+
+        .dark-theme .conto-indicators {
+            background: var(--bg);
+            border-color: var(--border);
+        }
+
+        .conto-indicator {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: 2px solid var(--border);
+            background: var(--bg-light);
+            color: var(--text-secondary);
+            transition: var(--transition);
+            white-space: nowrap;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-family: var(--font-family);
+        }
+
+        .conto-indicator:hover {
+            border-color: var(--primary);
+        }
+
+        .conto-indicator.attivo {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .conto-indicator .badge-saldo {
+            font-size: 0.6rem;
+            opacity: 0.7;
+            font-weight: normal;
+        }
+
+        .conto-indicator .btn-elimina-conto {
+            margin-left: 4px;
+            font-size: 0.6rem;
+            opacity: 0.5;
+            cursor: pointer;
+            transition: var(--transition);
+            background: none;
+            border: none;
+            color: inherit;
+            padding: 0 2px;
+        }
+
+        .conto-indicator .btn-elimina-conto:hover {
+            opacity: 1;
+        }
+
+        .conto-indicator.btn-aggiungi-conto {
+            background: transparent;
+            border: 2px dashed var(--border);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            padding: 6px 12px;
+        }
+
+        .conto-indicator.btn-aggiungi-conto:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        @media (max-width: 600px) {
+            .conto-indicators {
+                top: 60px;
+                gap: 5px;
+                padding: 6px 5px;
+                min-height: 40px;
+                overflow-x: auto;
+                flex-wrap: nowrap;
+                justify-content: flex-start;
+                -webkit-overflow-scrolling: touch;
+            }
+            .conto-indicators::-webkit-scrollbar {
+                display: none;
+            }
+            .conto-indicator {
+                padding: 4px 10px;
+                font-size: 0.65rem;
+                flex-shrink: 0;
+            }
+            .patrimonio-totale {
+                padding: 8px 15px;
+                font-size: 0.85rem;
+            }
+            .patrimonio-totale .value {
+                font-size: 1rem;
+            }
         }
 
         .header-saldo {
@@ -315,6 +497,7 @@
             border-radius: var(--radius-md);
             margin-top: 10px;
             background: var(--success);
+            font-family: var(--font-family);
         }
 
         #saldo-cifra {
@@ -360,6 +543,7 @@
             text-align: center;
             border: 1px solid var(--border);
             transition: var(--transition);
+            font-family: var(--font-family);
         }
 
         .dash-item:hover {
@@ -385,133 +569,6 @@
         .dash-item .value.primary { color: var(--primary); }
         .dash-item .value.info { color: var(--info); }
 
-        .filtro-mobile {
-            background: var(--bg-light);
-            border-radius: var(--radius-md);
-            border: 1px solid var(--border);
-            padding: 12px;
-            margin-bottom: 12px;
-            transition: background-color 0.3s, border-color 0.3s;
-        }
-
-        .filtro-mobile .filtro-riga {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-
-        .filtro-mobile .filtro-riga .filtro-gruppo {
-            display: flex;
-            gap: 4px;
-            flex: 1;
-            min-width: 120px;
-            align-items: center;
-            background: var(--bg);
-            border-radius: var(--radius-sm);
-            padding: 2px 6px;
-            border: 1px solid var(--border);
-            transition: background-color 0.3s, border-color 0.3s;
-        }
-
-        .filtro-mobile .filtro-riga .filtro-gruppo label {
-            font-size: 0.65rem;
-            color: var(--text-muted);
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-            white-space: nowrap;
-            padding-right: 4px;
-        }
-
-        .filtro-mobile .filtro-riga .filtro-gruppo input,
-        .filtro-mobile .filtro-riga .filtro-gruppo select {
-            border: none;
-            background: transparent;
-            padding: 8px 4px;
-            font-size: 0.8rem;
-            flex: 1;
-            min-width: 60px;
-            margin-bottom: 0;
-            outline: none;
-        }
-
-        .filtro-mobile .filtro-riga .filtro-gruppo input:focus,
-        .filtro-mobile .filtro-riga .filtro-gruppo select:focus {
-            box-shadow: none;
-            background: transparent;
-        }
-
-        .filtro-mobile .filtro-azioni {
-            display: flex;
-            gap: 6px;
-            align-items: center;
-            margin-top: 8px;
-            flex-wrap: wrap;
-        }
-
-        .filtro-mobile .filtro-azioni button {
-            padding: 6px 14px;
-            border-radius: var(--radius-sm);
-            border: none;
-            font-size: 0.75rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            min-height: 34px;
-            flex: 1;
-            min-width: 60px;
-        }
-
-        .filtro-mobile .filtro-azioni .btn-filtra {
-            background: var(--primary);
-            color: white;
-        }
-
-        .filtro-mobile .filtro-azioni .btn-filtra:active {
-            transform: scale(0.95);
-        }
-
-        .filtro-mobile .filtro-azioni .btn-reset-filtro {
-            background: var(--danger);
-            color: white;
-        }
-
-        .filtro-mobile .filtro-azioni .btn-reset-filtro:active {
-            transform: scale(0.95);
-        }
-
-        .filtro-mobile .filtro-ricerca {
-            margin-top: 8px;
-            position: relative;
-        }
-
-        .filtro-mobile .filtro-ricerca input {
-            width: 100%;
-            padding: 8px 12px 8px 32px;
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            font-size: 0.85rem;
-            background: var(--bg);
-            color: var(--text-primary);
-            outline: none;
-            transition: var(--transition);
-        }
-
-        .filtro-mobile .filtro-ricerca input:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(181, 195, 182, 0.2);
-        }
-
-        .filtro-mobile .filtro-ricerca .lente {
-            position: absolute;
-            left: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 0.9rem;
-            opacity: 0.5;
-        }
-
         .info-previsione {
             background: var(--bg-dark);
             border-radius: var(--radius-md);
@@ -520,6 +577,7 @@
             max-width: 900px;
             box-sizing: border-box;
             transition: background-color 0.3s;
+            font-family: var(--font-family);
         }
 
         .section {
@@ -541,6 +599,7 @@
             align-items: center;
             gap: 8px;
             flex-wrap: wrap;
+            font-family: var(--font-family);
         }
 
         h4 {
@@ -550,6 +609,7 @@
             display: flex;
             align-items: center;
             gap: 6px;
+            font-family: var(--font-family);
         }
 
         input, select {
@@ -563,9 +623,10 @@
             margin-bottom: 10px;
             outline: none;
             transition: var(--transition);
-            font-family: inherit;
+            font-family: var(--font-family);
             -webkit-appearance: none;
             appearance: none;
+            color: var(--text-primary);
         }
 
         select {
@@ -580,6 +641,17 @@
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(181, 195, 182, 0.2);
             background: white;
+        }
+
+        .dark-theme input, .dark-theme select {
+            background: #333;
+            color: var(--text-primary);
+            border-color: #555;
+        }
+
+        .dark-theme input:focus, .dark-theme select:focus {
+            border-color: var(--primary);
+            background: #3a3a3a;
         }
 
         .btn-modern {
@@ -604,6 +676,7 @@
             align-items: center;
             justify-content: center;
             gap: 4px;
+            font-family: var(--font-family);
         }
 
         .btn-modern:hover {
@@ -653,7 +726,7 @@
         }
 
         .btn-modern.btn-success:hover {
-            background: var(--success-dark, #1e7e34);
+            background: #1e7e34;
         }
 
         .btn-modern.btn-danger {
@@ -662,7 +735,7 @@
         }
 
         .btn-modern.btn-danger:hover {
-            background: var(--danger-dark, #bd2130);
+            background: #bd2130;
         }
 
         .btn-modern.btn-warning {
@@ -741,6 +814,7 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
+            font-family: var(--font-family);
         }
 
         .btn-back-home:hover {
@@ -784,6 +858,7 @@
             width: 46px;
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
+            font-family: var(--font-family);
         }
 
         .cat-row .small-btn:hover {
@@ -822,6 +897,7 @@
         td {
             padding: 12px 0;
             border-bottom: 1px solid #f4f4f4;
+            font-family: var(--font-family);
         }
 
         .positivo {
@@ -874,6 +950,7 @@
             -webkit-user-select: none;
             user-select: none;
             -webkit-tap-highlight-color: transparent;
+            font-family: var(--font-family);
         }
 
         .mese-header:hover {
@@ -897,7 +974,6 @@
             background: #f1f3f5;
         }
 
-        /* ===== BUDGET CONTAINER - Spostato dopo la lista ===== */
         .budget-container {
             margin-top: 20px;
             background: var(--bg-light);
@@ -919,6 +995,7 @@
             font-weight: 500;
             flex-wrap: wrap;
             gap: 4px;
+            font-family: var(--font-family);
         }
 
         .progress-bar-bg {
@@ -969,6 +1046,7 @@
             cursor: pointer;
             transition: var(--transition);
             font-weight: 600;
+            font-family: var(--font-family);
         }
 
         .budget-row button:hover {
@@ -986,6 +1064,7 @@
             padding: 16px;
             margin-bottom: 15px;
             transition: var(--transition);
+            font-family: var(--font-family);
         }
 
         .utenza-card:hover {
@@ -1010,12 +1089,12 @@
             gap: 8px;
         }
 
-        .utenza-icone {
+        .utenza-icones {
             display: flex;
             gap: 6px;
         }
 
-        .utenza-icone span {
+        .utenza-icones span {
             cursor: pointer;
             padding: 4px 8px;
             border-radius: var(--radius-sm);
@@ -1023,7 +1102,7 @@
             font-size: 0.9rem;
         }
 
-        .utenza-icone span:hover {
+        .utenza-icones span:hover {
             background: var(--border);
         }
 
@@ -1269,7 +1348,6 @@
             transform: scale(0.9);
         }
 
-        /* ===== GRAFICI ===== */
         .grid-calendario {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
@@ -1290,6 +1368,7 @@
             font-size: 0.85rem;
             position: relative;
             transition: background-color 0.3s;
+            font-family: var(--font-family);
         }
 
         .cal-giorno.vuoto {
@@ -1326,7 +1405,6 @@
             background-color: #6c757d;
         }
 
-        /* ===== MODALI ===== */
         .modal {
             display: none;
             position: fixed;
@@ -1350,6 +1428,7 @@
             max-width: 90%;
             box-shadow: var(--shadow-lg);
             position: relative;
+            font-family: var(--font-family);
         }
 
         .modal-content.auth {
@@ -1400,6 +1479,7 @@
             font-size: 20px;
             border-radius: 5px;
             box-sizing: border-box;
+            font-family: var(--font-family);
         }
 
         .calc-buttons {
@@ -1417,6 +1497,7 @@
             background-color: #e0e0e0;
             transition: var(--transition);
             -webkit-tap-highlight-color: transparent;
+            font-family: var(--font-family);
         }
 
         .calc-buttons button:active {
@@ -1462,12 +1543,13 @@
         .modal-card-cloud {
             background: white;
             padding: 30px;
-            border-radius: var(--radius-xl, 20px);
+            border-radius: 20px;
             max-width: 400px;
             width: 90%;
             text-align: center;
             box-shadow: var(--shadow-lg);
             animation: popUpCloud 0.3s ease;
+            font-family: var(--font-family);
         }
 
         @keyframes popUpCloud {
@@ -1572,6 +1654,7 @@
             box-shadow: var(--shadow-lg);
             position: relative;
             animation: popupSlideIn 0.3s ease;
+            font-family: var(--font-family);
         }
 
         @keyframes popupSlideIn {
@@ -1850,7 +1933,6 @@
             }
         }
 
-        /* ===== TOGGLE TEMA NEL MENU ===== */
         .theme-toggle-item {
             display: flex !important;
             justify-content: space-between !important;
@@ -1927,7 +2009,6 @@
             content: "🌙";
         }
 
-        /* ===== PAGINA LISTE ===== */
         .lista-spesa-card {
             background: var(--bg-light);
             border: 1px solid var(--border);
@@ -1940,6 +2021,7 @@
             align-items: center;
             flex-wrap: wrap;
             gap: 10px;
+            font-family: var(--font-family);
         }
 
         .lista-spesa-card:hover {
@@ -2052,6 +2134,7 @@
             transition: var(--transition);
             color: var(--text-secondary);
             white-space: nowrap;
+            font-family: var(--font-family);
         }
 
         #lista-filtri-categorie .btn-filtro-cat:hover {
@@ -2067,6 +2150,215 @@
         .lista-selezionata-label {
             font-weight: bold;
             color: var(--text-primary);
+        }
+
+        .modal-conto {
+            display: none;
+            position: fixed;
+            z-index: 1100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+
+        .modal-conto .modal-content {
+            background: var(--bg);
+            padding: 25px;
+            border-radius: var(--radius-lg);
+            max-width: 350px;
+            width: 90%;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border);
+            transition: background 0.3s, border-color 0.3s;
+        }
+
+        .modal-conto .modal-content h3 {
+            margin: 0 0 15px 0;
+            color: var(--text-primary);
+        }
+
+        .modal-conto .modal-content input {
+            margin-bottom: 15px;
+        }
+
+        .modal-conto .modal-content .btn-annulla {
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            padding: 12px 20px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+            flex: 1;
+            font-family: var(--font-family);
+        }
+
+        .modal-conto .modal-content .btn-annulla:hover {
+            background: var(--border);
+        }
+
+        .modal-conto .modal-content .btn-crea {
+            background: var(--primary);
+            border: none;
+            color: white;
+            padding: 12px 20px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+            flex: 1;
+            font-family: var(--font-family);
+        }
+
+        .modal-conto .modal-content .btn-crea:hover {
+            background: var(--secondary);
+        }
+
+        .modal-conto .modal-content .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .conto-icon {
+            font-size: 1rem;
+            margin-right: 4px;
+        }
+
+        .filtro-mobile {
+            background: var(--bg-light);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            padding: 12px;
+            margin-bottom: 12px;
+            transition: background-color 0.3s, border-color 0.3s;
+            font-family: var(--font-family);
+        }
+
+        .filtro-mobile .filtro-riga {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filtro-mobile .filtro-riga .filtro-gruppo {
+            display: flex;
+            gap: 4px;
+            flex: 1;
+            min-width: 120px;
+            align-items: center;
+            background: var(--bg);
+            border-radius: var(--radius-sm);
+            padding: 2px 6px;
+            border: 1px solid var(--border);
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        .filtro-mobile .filtro-riga .filtro-gruppo label {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+            padding-right: 4px;
+        }
+
+        .filtro-mobile .filtro-riga .filtro-gruppo input,
+        .filtro-mobile .filtro-riga .filtro-gruppo select {
+            border: none;
+            background: transparent;
+            padding: 8px 4px;
+            font-size: 0.8rem;
+            flex: 1;
+            min-width: 60px;
+            margin-bottom: 0;
+            outline: none;
+        }
+
+        .filtro-mobile .filtro-riga .filtro-gruppo input:focus,
+        .filtro-mobile .filtro-riga .filtro-gruppo select:focus {
+            box-shadow: none;
+            background: transparent;
+        }
+
+        .filtro-mobile .filtro-azioni {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+
+        .filtro-mobile .filtro-azioni button {
+            padding: 6px 14px;
+            border-radius: var(--radius-sm);
+            border: none;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            min-height: 34px;
+            flex: 1;
+            min-width: 60px;
+            font-family: var(--font-family);
+        }
+
+        .filtro-mobile .filtro-azioni .btn-filtra {
+            background: var(--primary);
+            color: white;
+        }
+
+        .filtro-mobile .filtro-azioni .btn-filtra:active {
+            transform: scale(0.95);
+        }
+
+        .filtro-mobile .filtro-azioni .btn-reset-filtro {
+            background: var(--danger);
+            color: white;
+        }
+
+        .filtro-mobile .filtro-azioni .btn-reset-filtro:active {
+            transform: scale(0.95);
+        }
+
+        .filtro-mobile .filtro-ricerca {
+            margin-top: 8px;
+            position: relative;
+        }
+
+        .filtro-mobile .filtro-ricerca input {
+            width: 100%;
+            padding: 8px 12px 8px 32px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            background: var(--bg);
+            color: var(--text-primary);
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .filtro-mobile .filtro-ricerca input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(181, 195, 182, 0.2);
+        }
+
+        .filtro-mobile .filtro-ricerca .lente {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.9rem;
+            opacity: 0.5;
         }
     </style>
 </head>
@@ -2117,188 +2409,22 @@
         </div>
     </nav>
 
-    <!-- ===== HOME PAGE ===== -->
-    <div id="pagina-home" class="container">
-        <div class="header-saldo" id="boxSaldo">
-            <div>
-                <small>DISPONIBILITÀ ATTUALE</small>
-                <h1 id="saldo-cifra">0.00 €</h1>
-            </div>
-            <button onclick="togglePrivacy()" aria-label="Attiva/disattiva privacy" title="Attiva/disattiva privacy">👁️</button>
-        </div>
-
-        <div class="dashboard-rapido" id="dashboard-rapido">
-            <div class="dash-item">
-                <div class="label">💰 Entrate Mese</div>
-                <div class="value success" id="dash-entrate">0.00 €</div>
-            </div>
-            <div class="dash-item">
-                <div class="label">💸 Uscite Mese</div>
-                <div class="value danger" id="dash-uscite">0.00 €</div>
-            </div>
-            <div class="dash-item">
-                <div class="label">📊 Transazioni</div>
-                <div class="value primary" id="dash-transazioni">0</div>
-            </div>
-            <div class="dash-item">
-                <div class="label">⚡ Utenze</div>
-                <div class="value info" id="dash-utenze">0</div>
-            </div>
-        </div>
-
-        <div class="nav-buttons-container">
-            <button class="btn-modern" onclick="mostraPagina('news')">📰 NEWS</button>
-            <button class="btn-modern" onclick="mostraPagina('analisi')">🧠 ANALISI</button>
-            <button class="btn-modern" onclick="mostraPagina('scadenze')">📅 SCADENZE</button>
-            <button class="btn-modern" onclick="mostraPagina('utenze')" style="background:var(--info); color:white;">⚡ UTENZE</button>
-            <button class="btn-modern" onclick="mostraPagina('liste')" style="background:#6c5ce7; color:white;">📋 LISTE</button>
-            <button class="btn-modern btn-warning" onclick="apriPopupSuggerimenti()" style="font-size:1.2rem;" title="Consigli finanziari">💡</button>
-        </div>
-
-        <div id="previsione-fine-mese" class="info-previsione"></div>
-
-        <div class="desktop-grid">
-            <div class="section section-divider">
-                <div style="display: flex; flex-direction: column; align-items: flex-start; margin-bottom: 20px; width: 100%; gap: 15px;">
-                    <h3 id="form-label" style="margin: 0; white-space: nowrap; flex-shrink: 0;">✍️ Nuova Operazione <span class="shortcut-hint">(Ctrl+Enter)</span></h3>
-
-                    <div style="display: flex; gap: 8px; align-items: center; width: 100%;" class="cat-row">
-                        <button class="small-btn" onclick="apriCalcolatrice()" title="Calcolatrice" aria-label="Apri calcolatrice">🧮<span style="font-size: 0.8rem; font-weight: bold;">CAL</span></button>
-                    </div>
-                </div>
-
-                <div id="calc-modal" class="modal" role="dialog" aria-label="Calcolatrice">
-                    <div class="modal-content">
-                        <span class="close-btn" onclick="chiudiCalcolatrice()" aria-label="Chiudi calcolatrice" role="button">&times;</span>
-                        <input type="text" id="calc-screen" readonly aria-label="Risultato calcolatrice">
-                        <div class="calc-buttons" role="group" aria-label="Tasti calcolatrice">
-                            <button onclick="clearScreen()" class="btn-clear" aria-label="Cancella">C</button>
-                            <button onclick="pressKey('/')" aria-label="Dividi">/</button>
-                            <button onclick="pressKey('*')" aria-label="Moltiplica">*</button>
-                            <button onclick="pressKey('-')" aria-label="Sottrai">-</button>
-                            <button onclick="pressKey('7')">7</button>
-                            <button onclick="pressKey('8')">8</button>
-                            <button onclick="pressKey('9')">9</button>
-                            <button onclick="pressKey('+')" aria-label="Aggiungi">+</button>
-                            <button onclick="pressKey('4')">4</button>
-                            <button onclick="pressKey('5')">5</button>
-                            <button onclick="pressKey('6')">6</button>
-                            <button onclick="calculate()" class="btn-equal" aria-label="Calcola">=</button>
-                            <button onclick="pressKey('1')">1</button>
-                            <button onclick="pressKey('2')">2</button>
-                            <button onclick="pressKey('3')">3</button>
-                            <button onclick="pressKey('0')">0</button>
-                            <button onclick="pressKey(',')" aria-label="Virgola">,</button>
-                        </div>
-                    </div>
-                </div>
-
-                <input type="hidden" id="edit-index" value="-1">
-                <select id="tipo" onchange="aggiornaCategorie()" aria-label="Tipo operazione">
-                    <option value="Entrata">📈 Entrata</option>
-                    <option value="Uscita">📉 Uscita</option>
-                </select>
-                <input type="date" id="data" aria-label="Data operazione">
-
-                <div class="cat-row">
-                    <select id="categoria" aria-label="Categoria"></select>
-                    <button class="small-btn" onclick="creaCategoria()" aria-label="Aggiungi categoria">➕</button>
-                    <button class="small-btn btn-danger" onclick="eliminaCategoria()" aria-label="Elimina categoria">➖</button>
-                    <button class="small-btn" onclick="modificaCategoria()" aria-label="Modifica categoria">✏️</button>
-                </div>
-                <input type="number" id="importo" placeholder="Importo (€)" step="0.01" aria-label="Importo" inputmode="decimal">
-                <input type="text" id="nota" placeholder="Nota (es. Spesa Esselunga)" aria-label="Nota">
-
-                <button class="btn-modern full-width" id="btn-salva" onclick="aggiungiOperazione()">SALVA MOVIMENTO</button>
-
-                <!-- ===== SEZIONE SPESE FUTURE CON CHECKBOX ===== -->
-                <h3 style="margin-top: 35px;">📅 Scadenze Future</h3>
-                <input type="date" id="data-futura" aria-label="Data scadenza">
-                <input type="text" id="desc-futura" placeholder="Descrizione (es. Affitto)" aria-label="Descrizione scadenza">
-                <input type="number" id="imp-futura" placeholder="Importo stimato (€)" aria-label="Importo scadenza" inputmode="decimal">
-                
-                <div style="margin: 10px 0; text-align: left;">
-                    <label style="display: flex; align-items: center; gap: 8px; font-size: 0.9rem; cursor: pointer; color: var(--text-secondary);">
-                        <input type="checkbox" id="impatta-saldo-futura" checked style="width: 16px; height: 16px;">
-                        Includi nel calcolo del saldo futuro
-                    </label>
-                </div>
-                
-                <button class="btn-modern full-width btn-accent" id="btn-salva-futura" onclick="aggiungiSpesaFutura()">Inserisci Spesa Futura</button>
-                <details style="margin-top: 15px; background: var(--bg-light); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 10px; transition: background-color 0.3s, border-color 0.3s;">
-                    <summary style="cursor: pointer; font-weight: bold; color: var(--text-secondary); outline: none; user-select: none;">
-                        📋 Mostra / Nascondi Lista Spese Future
-                    </summary>
-                    <div id="lista-future" style="margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border);"></div>
-                </details>
-
-                <!-- ===== BUDGET DESKTOP (solo su schermi grandi) ===== -->
-                <div class="budget-container-desktop">
-                    <div class="budget-container">
-                        <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text-secondary); display: flex; align-items: center; gap: 6px;">🎯 Budget Mensili</h4>
-                        <div class="budget-row">
-                            <select id="budget-categoria" aria-label="Categoria budget"></select>
-                            <input type="number" id="budget-importo" placeholder="Limite (€)" step="1" aria-label="Limite budget" inputmode="decimal">
-                            <button onclick="impostaBudget()">Imposta</button>
-                        </div>
-                        <div id="lista-budget"></div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="section">
-                <h3 style="margin-top: 30px;">🕒 Storico</h3>
-                
-                <div class="filtro-mobile">
-                    <div class="filtro-riga">
-                        <div class="filtro-gruppo">
-                            <label>📅 Da</label>
-                            <input type="date" id="filtro-data-da" placeholder="Da">
-                        </div>
-                        <div class="filtro-gruppo">
-                            <label>📅 A</label>
-                            <input type="date" id="filtro-data-a" placeholder="A">
-                        </div>
-                    </div>
-                    <div class="filtro-riga">
-                        <div class="filtro-gruppo">
-                            <label>📊</label>
-                            <select id="filtro-tipo">
-                                <option value="">Tutti</option>
-                                <option value="Entrata">📈 Entrate</option>
-                                <option value="Uscita">📉 Uscite</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="filtro-azioni">
-                        <button class="btn-filtra" onclick="applicaFiltri()">🔍 Filtra</button>
-                        <button class="btn-reset-filtro" onclick="resetFiltri()">✕ Reset</button>
-                    </div>
-                    <div class="filtro-ricerca">
-                        <span class="lente">🔍</span>
-                        <input type="text" id="filtroRicerca" placeholder="Cerca tra note o categorie...">
-                    </div>
-                </div>
-
-                <div id="lista-transazioni"></div>
-
-                <!-- ===== BUDGET MOBILE (dopo la lista, solo su mobile) ===== -->
-                <div class="budget-container-mobile">
-                    <div class="budget-container">
-                        <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text-secondary); display: flex; align-items: center; gap: 6px;">🎯 Budget Mensili</h4>
-                        <div class="budget-row">
-                            <select id="budget-categoria-mobile" aria-label="Categoria budget"></select>
-                            <input type="number" id="budget-importo-mobile" placeholder="Limite (€)" step="1" aria-label="Limite budget" inputmode="decimal">
-                            <button onclick="impostaBudgetMobile()">Imposta</button>
-                        </div>
-                        <div id="lista-budget-mobile"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <!-- ===== PATRIMONIO TOTALE ===== -->
+    <div class="patrimonio-totale" id="patrimonioTotale">
+        <span class="label">💰 Patrimonio Totale</span>
+        <span class="value" id="patrimonioValore">0.00 €</span>
     </div>
 
-    <!-- ===== PAGINA SCADENZE ===== -->
+    <!-- ===== INDICATORI CONTI ===== -->
+    <div class="conto-indicators" id="contoIndicators"></div>
+
+    <!-- ===== SCROLL CONTAINER ===== -->
+    <div class="conti-scroll-container" id="contiScrollContainer">
+        <!-- I conti vengono generati dinamicamente qui -->
+    </div>
+
+    <!-- ===== PAGINE CHE NON CAMBIANO PER CONTO ===== -->
+    <!-- PAGINA SCADENZE -->
     <div id="sezione-scadenze" class="container" style="display: none; padding: 20px;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
             <button onclick="mostraPagina('home')" class="btn-back-home">⬅ Torna alla Home</button>
@@ -2306,19 +2432,19 @@
         </div>
 
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; background: var(--bg-light); padding: 10px; border-radius: var(--radius-sm); flex-wrap: wrap; gap: 8px; transition: background-color 0.3s;">
-            <button onclick="navigaMeseCalendario(-1)" class="btn-sm" style="padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); cursor: pointer; font-weight: bold; color: var(--text-primary); transition: background-color 0.3s, border-color 0.3s, color 0.3s;">◀ Mese Prec.</button>
+            <button onclick="navigaMeseCalendario(-1)" class="btn-sm" style="padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); cursor: pointer; font-weight: bold; color: var(--text-primary); transition: background-color 0.3s, border-color 0.3s, color 0.3s; font-family: var(--font-family);">◀ Mese Prec.</button>
             <h3 id="cal-titolo-mese" style="margin: 0; font-size: 1.2rem; font-weight: bold; text-transform: capitalize; color: var(--text-primary);"></h3>
-            <button onclick="navigaMeseCalendario(1)" class="btn-sm" style="padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); cursor: pointer; font-weight: bold; color: var(--text-primary); transition: background-color 0.3s, border-color 0.3s, color 0.3s;">Mese Succ. ▶</button>
+            <button onclick="navigaMeseCalendario(1)" class="btn-sm" style="padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); cursor: pointer; font-weight: bold; color: var(--text-primary); transition: background-color 0.3s, border-color 0.3s, color 0.3s; font-family: var(--font-family);">Mese Succ. ▶</button>
         </div>
 
-        <div style="display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-weight: bold; font-size: 0.8rem; margin-bottom: 5px; opacity: 0.7;">
+        <div style="display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-weight: bold; font-size: 0.8rem; margin-bottom: 5px; opacity: 0.7; font-family: var(--font-family);">
             <div>Lun</div><div>Mar</div><div>Mer</div><div>Gio</div><div>Ven</div><div>Sab</div><div>Dom</div>
         </div>
 
         <div id="calendario-grid" class="grid-calendario"></div>
     </div>
 
-    <!-- ===== PAGINA ANALISI ===== -->
+    <!-- PAGINA ANALISI -->
     <div id="pagina-analisi" class="container" style="display: none; padding: 20px;">
         <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 20px; flex-wrap: wrap;">
             <button onclick="mostraPagina('home')" class="btn-back-home">⬅ Torna alla Home</button>
@@ -2350,78 +2476,28 @@
         </div>
     </div>
 
-    <!-- ===== PAGINA NEWS ===== -->
+    <!-- PAGINA NEWS -->
     <div id="pagina-news" class="container" style="display: none; padding: 20px;">
         <h3>📰 News Finanziarie</h3>
 
         <div style="display: flex; gap: 8px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 10px; -webkit-overflow-scrolling: touch;" role="tablist">
-            <button onclick="filtraNews('tutte', event)" role="tab" aria-selected="true" style="background:var(--primary); color:white; border:none; padding:8px 15px; border-radius:20px; font-size:0.8rem; cursor:pointer; flex-shrink:0; transition:var(--transition);">🌎 Tutte</button>
-            <button onclick="filtraNews('italia', event)" role="tab" aria-selected="false" style="background:var(--bg-light); border:1px solid var(--border); padding:8px 15px; border-radius:20px; font-size:0.8rem; cursor:pointer; flex-shrink:0; transition:var(--transition); color:var(--text-secondary);">🇮🇹 Italia</button>
-            <button onclick="filtraNews('mondo', event)" role="tab" aria-selected="false" style="background:var(--bg-light); border:1px solid var(--border); padding:8px 15px; border-radius:20px; font-size:0.8rem; cursor:pointer; flex-shrink:0; transition:var(--transition); color:var(--text-secondary);">🌐 Global</button>
-            <button onclick="filtraNews('tech', event)" role="tab" aria-selected="false" style="background:var(--bg-light); border:1px solid var(--border); padding:8px 15px; border-radius:20px; font-size:0.8rem; cursor:pointer; flex-shrink:0; transition:var(--transition); color:var(--text-secondary);">💻 Tech</button>
+            <button onclick="filtraNews('tutte', event)" role="tab" aria-selected="true" style="background:var(--primary); color:white; border:none; padding:8px 15px; border-radius:20px; font-size:0.8rem; cursor:pointer; flex-shrink:0; transition:var(--transition); font-family:var(--font-family);">🌎 Tutte</button>
+            <button onclick="filtraNews('italia', event)" role="tab" aria-selected="false" style="background:var(--bg-light); border:1px solid var(--border); padding:8px 15px; border-radius:20px; font-size:0.8rem; cursor:pointer; flex-shrink:0; transition:var(--transition); color:var(--text-secondary); font-family:var(--font-family);">🇮🇹 Italia</button>
+            <button onclick="filtraNews('mondo', event)" role="tab" aria-selected="false" style="background:var(--bg-light); border:1px solid var(--border); padding:8px 15px; border-radius:20px; font-size:0.8rem; cursor:pointer; flex-shrink:0; transition:var(--transition); color:var(--text-secondary); font-family:var(--font-family);">🌐 Global</button>
+            <button onclick="filtraNews('tech', event)" role="tab" aria-selected="false" style="background:var(--bg-light); border:1px solid var(--border); padding:8px 15px; border-radius:20px; font-size:0.8rem; cursor:pointer; flex-shrink:0; transition:var(--transition); color:var(--text-secondary); font-family:var(--font-family);">💻 Tech</button>
         </div>
 
-        <div id="loading-news" style="text-align: center; padding: 20px; color: var(--text-muted);">Caricamento notizie...</div>
+        <div id="loading-news" style="text-align: center; padding: 20px; color: var(--text-muted); font-family: var(--font-family);">Caricamento notizie...</div>
         <div id="news-container" class="desktop-grid"></div>
     </div>
 
-    <!-- ===== PAGINA UTENZE ===== -->
-    <div id="pagina-utenze" class="container" style="display: none; padding: 20px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
-            <button onclick="mostraPagina('home')" class="btn-back-home">⬅ Torna alla Home</button>
-            <h3 style="margin: 0;">⚡ Gestione Utenze</h3>
-        </div>
-
-        <div class="utenza-form" id="utenza-form">
-            <select id="utenza-nome" style="grid-column: 1 / -1;">
-                <option value="">➕ Seleziona o aggiungi utenza...</option>
-                <option value="Enel Energia Elettrica">⚡ Enel - Energia Elettrica</option>
-                <option value="Enel Gas">🔥 Enel - Gas</option>
-                <option value="Acqua">💧 Acqua</option>
-                <option value="Fibra/Internet">🌐 Fibra/Internet</option>
-                <option value="Telefono">📱 Telefono</option>
-                <option value="Rifiuti">🗑️ Rifiuti</option>
-                <option value="Condominio">🏢 Condominio</option>
-                <option value="Altro">📌 Altro</option>
-            </select>
-            
-            <input type="date" id="utenza-data" aria-label="Data fattura">
-            <input type="text" id="utenza-periodo" placeholder="Periodo (es. Gen-Feb 2024)" aria-label="Periodo fatturazione">
-            
-            <input type="number" id="utenza-consumo" placeholder="Consumo (kWh/m³/GB)" step="0.01" aria-label="Consumo" inputmode="decimal">
-            <input type="number" id="utenza-costo" placeholder="Costo energia (€)" step="0.01" aria-label="Costo energia" inputmode="decimal">
-            
-            <input type="number" id="utenza-canone" placeholder="Canone RAI (€)" step="0.01" aria-label="Canone RAI" inputmode="decimal">
-            <input type="number" id="utenza-imposte" placeholder="Imposte / Accise (€)" step="0.01" aria-label="Imposte" inputmode="decimal">
-            
-            <input type="number" id="utenza-altre" placeholder="Altre spese (€)" step="0.01" aria-label="Altre spese" inputmode="decimal">
-            <input type="number" id="utenza-totale" placeholder="Totale bolletta (€)" step="0.01" aria-label="Totale" inputmode="decimal">
-            
-            <input type="text" id="utenza-note" placeholder="Note (es. numero bolletta, lettura contatore)" aria-label="Note" style="grid-column: 1 / -1;">
-            
-            <div id="utenza-riepilogo" class="utenza-riepilogo">
-                <div id="utenza-riepilogo-text">💡 Inserisci i dati per vedere il riepilogo</div>
-            </div>
-
-            <button class="btn-modern btn-success full-width" onclick="salvaRilevazioneUtenza()" style="grid-column: 1 / -1;">💾 Salva Rilevazione</button>
-        </div>
-
-        <div class="utenza-totale" id="utenza-totale">
-            <span><span class="label">💰 Costo Totale Mese</span></span>
-            <span class="value" id="utenza-totale-costo">0.00 €</span>
-        </div>
-
-        <div id="utenza-lista"></div>
-    </div>
-
-    <!-- ===== PAGINA LISTE ===== -->
+    <!-- PAGINA LISTE (UTENZE RIMOSSA) -->
     <div id="pagina-liste" class="container" style="display: none; padding: 20px;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
             <button onclick="mostraPagina('home')" class="btn-back-home">⬅ Torna alla Home</button>
             <h3 style="margin: 0;">📋 Gestione Liste Spese</h3>
         </div>
 
-        <!-- Selezione lista o creazione nuova -->
         <div style="background: var(--bg-light); border-radius: var(--radius-md); padding: 15px; margin-bottom: 20px; border: 1px solid var(--border);">
             <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
                 <select id="lista-selezionata" style="flex: 2; min-width: 150px;" onchange="caricaLista()">
@@ -2430,14 +2506,13 @@
                 <button class="btn-modern btn-success" onclick="creaNuovaLista()" style="flex: 0.5; min-width: 80px;">➕ Nuova</button>
                 <button class="btn-modern btn-danger" onclick="eliminaLista()" style="flex: 0.5; min-width: 80px;">🗑️ Elimina</button>
             </div>
-            <div id="lista-info" style="margin-top: 10px; font-size: 0.85rem; color: var(--text-muted); display: none;">
+            <div id="lista-info" style="margin-top: 10px; font-size: 0.85rem; color: var(--text-muted); display: none; font-family: var(--font-family);">
                 <span id="lista-info-nome"></span> · 
                 <span id="lista-info-conteggio">0</span> spese · 
                 <span id="lista-info-totale">0.00 €</span>
             </div>
         </div>
 
-        <!-- Form per aggiungere spesa alla lista corrente -->
         <div id="lista-form" style="background: var(--bg-light); border-radius: var(--radius-md); padding: 15px; margin-bottom: 20px; border: 1px solid var(--border); display: none;">
             <h4 style="margin-top: 0; margin-bottom: 12px;">✏️ Aggiungi Spesa a <span id="lista-nome-corrente" style="color: var(--primary);"></span></h4>
             
@@ -2475,31 +2550,49 @@
             </div>
         </div>
 
-        <!-- Filtri e totali -->
         <div id="lista-contenuto" style="display: none;">
             <div class="utenza-totale" id="lista-totale" style="background: var(--primary);">
                 <span><span class="label">💰 Totale Spese Lista</span></span>
                 <span class="value" id="lista-totale-costo">0.00 €</span>
             </div>
 
-            <!-- Filtri per categoria -->
             <div style="display: flex; gap: 8px; margin-bottom: 15px; overflow-x: auto; padding-bottom: 10px; -webkit-overflow-scrolling: touch; flex-wrap: wrap;">
                 <button onclick="filtraLista('tutte', event)" role="tab" aria-selected="true" 
-                        style="background:var(--primary); color:white; border:none; padding:8px 15px; border-radius:20px; font-size:0.8rem; cursor:pointer; transition:var(--transition);">
+                        style="background:var(--primary); color:white; border:none; padding:8px 15px; border-radius:20px; font-size:0.8rem; cursor:pointer; transition:var(--transition); font-family:var(--font-family);">
                     🌎 Tutte
                 </button>
                 <div id="lista-filtri-categorie" style="display: flex; gap: 8px; flex-wrap: wrap;"></div>
             </div>
 
-            <!-- Lista spese -->
             <div id="lista-spese-container"></div>
         </div>
 
-        <!-- Messaggio lista vuota -->
-        <div id="lista-vuota" style="display: none; text-align: center; padding: 40px 20px; color: var(--text-muted);">
+        <div id="lista-vuota" style="display: none; text-align: center; padding: 40px 20px; color: var(--text-muted); font-family: var(--font-family);">
             <span style="font-size: 3.5rem; display: block; margin-bottom: 15px;">📋</span>
             <p><strong>Nessuna lista creata</strong></p>
             <p style="font-size: 0.9rem;">Crea una nuova lista per iniziare a tracciare le tue spese!</p>
+        </div>
+    </div>
+
+    <!-- ===== MODALE AGGIUNTA CONTO ===== -->
+    <div id="modalAggiungiConto" class="modal-conto">
+        <div class="modal-content">
+            <h3>➕ Nuovo Conto</h3>
+            <input type="text" id="inputNuovoConto" placeholder="Nome conto (es. Conto Corrente, Contanti, Revolut...)" style="margin-bottom:10px;">
+            <div style="margin-bottom: 15px; display: flex; gap: 8px; flex-wrap: wrap;">
+                <button onclick="setIconaConto('🏦')" class="btn-modern" style="flex:0; padding:8px 12px; font-size:1.2rem; max-width:50px;">🏦</button>
+                <button onclick="setIconaConto('💰')" class="btn-modern" style="flex:0; padding:8px 12px; font-size:1.2rem; max-width:50px;">💰</button>
+                <button onclick="setIconaConto('💳')" class="btn-modern" style="flex:0; padding:8px 12px; font-size:1.2rem; max-width:50px;">💳</button>
+                <button onclick="setIconaConto('🏧')" class="btn-modern" style="flex:0; padding:8px 12px; font-size:1.2rem; max-width:50px;">🏧</button>
+                <button onclick="setIconaConto('📱')" class="btn-modern" style="flex:0; padding:8px 12px; font-size:1.2rem; max-width:50px;">📱</button>
+                <button onclick="setIconaConto('💎')" class="btn-modern" style="flex:0; padding:8px 12px; font-size:1.2rem; max-width:50px;">💎</button>
+                <button onclick="setIconaConto('🪙')" class="btn-modern" style="flex:0; padding:8px 12px; font-size:1.2rem; max-width:50px;">🪙</button>
+            </div>
+            <input type="hidden" id="iconaNuovoConto" value="🏦">
+            <div class="modal-actions">
+                <button class="btn-annulla" onclick="chiudiModalAggiungiConto()">Annulla</button>
+                <button class="btn-crea" onclick="creaNuovoConto()">➕ Crea</button>
+            </div>
         </div>
     </div>
 
@@ -2540,50 +2633,144 @@
         const _supabase = supabaseClient;
         let currentUser = null;
         let syncInProgress = false;
-        let lastSyncAttempt = 0;
         let firstLogin = true;
         let lastSyncUserId = localStorage.getItem('moneyTrack_lastSyncUserId') || null;
         let lastDataHash = '';
         let lastSyncTimestamp = 0;
 
         // ==========================================
-        // 📦 DATABASE & STATO
+        // 📦 DATABASE & STATO MULTI-CONTO
         // ==========================================
 
-        let spese = JSON.parse(localStorage.getItem("moneyTrack_db")) || [];
-        let future = JSON.parse(localStorage.getItem("moneyTrack_future")) || [];
-        let customCats = JSON.parse(localStorage.getItem("moneyTrack_cats")) || {
-            "Uscita": ["🏠 Casa", "🍕 Cibo", "🚗 Auto", "🛒 Spesa", "⏳ Programmata"],
-            "Entrata": ["💰 Stipendio", "➕ Altro"]
-        };
-        let budgets = JSON.parse(localStorage.getItem("moneyTrack_budgets")) || {};
-        let utenze = JSON.parse(localStorage.getItem("moneyTrack_utenze")) || [];
-        let listeSpese = JSON.parse(localStorage.getItem("moneyTrack_liste")) || {};
-        let listaCorrenteId = localStorage.getItem("moneyTrack_lista_corrente") || null;
-        let filtroListaAttivo = 'tutte';
+        let datiApp = JSON.parse(localStorage.getItem("moneyTrack_multi_dati")) || null;
+        let contoAttivoId = localStorage.getItem("moneyTrack_conto_attivo") || null;
 
-        // Inizializza le liste se non esistono
-        if (Object.keys(listeSpese).length === 0) {
-            const id = Date.now().toString();
-            listeSpese[id] = {
-                nome: "Vacanze Estate 2024",
-                spese: [],
-                creata: new Date().toISOString()
-            };
-            localStorage.setItem("moneyTrack_liste", JSON.stringify(listeSpese));
-            listaCorrenteId = id;
-            localStorage.setItem("moneyTrack_lista_corrente", listaCorrenteId);
+        let spese = [];
+        let future = [];
+        let customCats = { "Uscita": ["🏠 Casa", "🍕 Cibo", "🚗 Auto", "🛒 Spesa", "⏳ Programmata"], "Entrata": ["💰 Stipendio", "➕ Altro"] };
+        let budgets = {};
+        let utenze = [];
+        let listeSpese = {};
+
+        function getDatiConto(contoId) {
+            if (!datiApp) datiApp = { conti: {} };
+            if (!datiApp.conti) datiApp.conti = {};
+            
+            if (!contoId) return null;
+            
+            if (!datiApp.conti[contoId]) {
+                datiApp.conti[contoId] = {
+                    nome: "Conto",
+                    icona: "🏦",
+                    spese: [],
+                    future: [],
+                    customCats: { "Uscita": ["🏠 Casa", "🍕 Cibo", "🚗 Auto", "🛒 Spesa", "⏳ Programmata"], "Entrata": ["💰 Stipendio", "➕ Altro"] },
+                    budgets: {},
+                    utenze: [],
+                    liste: {}
+                };
+                salvaDatiApp();
+            }
+            
+            return datiApp.conti[contoId];
         }
 
-        let graficoTorta, graficoBarre, privacy = false;
-        const mesiNomi = ["Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic"];
-        const mesiEstesi = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre",
-            "Ottobre", "Novembre", "Dicembre"
-        ];
-        let editFutureIdx = -1;
+        function getContoAttivo() {
+            if (!contoAttivoId || !datiApp || !datiApp.conti || !datiApp.conti[contoAttivoId]) {
+                const conti = getConti();
+                if (conti.length === 0) {
+                    const id = 'conto_' + Date.now();
+                    datiApp = datiApp || { conti: {} };
+                    datiApp.conti[id] = {
+                        nome: "Conto Principale",
+                        icona: "🏦",
+                        spese: [],
+                        future: [],
+                        customCats: { "Uscita": ["🏠 Casa", "🍕 Cibo", "🚗 Auto", "🛒 Spesa", "⏳ Programmata"], "Entrata": ["💰 Stipendio", "➕ Altro"] },
+                        budgets: {},
+                        utenze: [],
+                        liste: {}
+                    };
+                    contoAttivoId = id;
+                    salvaDatiApp();
+                    localStorage.setItem("moneyTrack_conto_attivo", contoAttivoId);
+                } else {
+                    contoAttivoId = conti[0].id;
+                    localStorage.setItem("moneyTrack_conto_attivo", contoAttivoId);
+                }
+            }
+            
+            const conto = getDatiConto(contoAttivoId);
+            if (conto) {
+                spese = conto.spese || [];
+                future = conto.future || [];
+                customCats = conto.customCats || { "Uscita": ["🏠 Casa", "🍕 Cibo", "🚗 Auto", "🛒 Spesa", "⏳ Programmata"], "Entrata": ["💰 Stipendio", "➕ Altro"] };
+                budgets = conto.budgets || {};
+                utenze = conto.utenze || [];
+                listeSpese = conto.liste || {};
+            }
+            
+            return conto;
+        }
+
+        function getConti() {
+            if (!datiApp) datiApp = { conti: {} };
+            if (!datiApp.conti) datiApp.conti = {};
+            
+            return Object.keys(datiApp.conti).map(id => ({
+                id: id,
+                ...datiApp.conti[id]
+            }));
+        }
+
+        function salvaDatiApp() {
+            localStorage.setItem("moneyTrack_multi_dati", JSON.stringify(datiApp));
+        }
+
+        function salvaContoAttivo() {
+            if (contoAttivoId && datiApp && datiApp.conti && datiApp.conti[contoAttivoId]) {
+                const conto = datiApp.conti[contoAttivoId];
+                conto.spese = spese;
+                conto.future = future;
+                conto.customCats = customCats;
+                conto.budgets = budgets;
+                conto.utenze = utenze;
+                conto.liste = listeSpese;
+                salvaDatiApp();
+            }
+        }
+
+        function cambiaConto(id) {
+            if (id === contoAttivoId) return;
+            
+            if (contoAttivoId) {
+                salvaContoAttivo();
+            }
+            
+            contoAttivoId = id;
+            localStorage.setItem("moneyTrack_conto_attivo", contoAttivoId);
+            
+            getContoAttivo();
+            aggiornaApp();
+            caricaSelectListe();
+            renderizzaIndicatori();
+            aggiornaPatrimonio();
+            scrollToConto(id);
+        }
+
+        function scrollToConto(id) {
+            const container = document.getElementById('contiScrollContainer');
+            const pages = container.querySelectorAll('.conto-page');
+            for (let i = 0; i < pages.length; i++) {
+                if (pages[i].dataset.contoId === id) {
+                    container.scrollLeft = pages[i].offsetLeft;
+                    break;
+                }
+            }
+        }
 
         // ==========================================
-        // 🔒 FUNZIONI DI SICUREZZA (CORRETTE)
+        // 🔒 FUNZIONI DI SICUREZZA
         // ==========================================
 
         function sanitizeHTML(str) {
@@ -2610,15 +2797,6 @@
             }
         }
 
-        function safeGetJSON(key) {
-            try {
-                const value = localStorage.getItem(key);
-                return value ? JSON.parse(value) : null;
-            } catch (e) { 
-                return null; 
-            }
-        }
-
         let lastOperationTime = 0;
         const MIN_OPERATION_INTERVAL = 1000;
 
@@ -2633,62 +2811,7 @@
         }
 
         // ==========================================
-        // 💾 LOCALSTORAGE CON SYNC CLOUD
-        // ==========================================
-
-        const originalSetItem = localStorage.setItem;
-        localStorage.setItem = function(key, value) {
-            originalSetItem.apply(localStorage, arguments);
-
-            if (key.startsWith("moneyTrack_") && currentUser) {
-                clearTimeout(window._syncDebounceTimer);
-                window._syncDebounceTimer = setTimeout(() => {
-                    syncDatiSuSupabase();
-                }, 1500);
-            }
-
-            if (key === "moneyTrack_db" && !currentUser) {
-                let conteggioSpese = parseInt(localStorage.getItem('conteggio_spese_promemoria') || '0');
-                conteggioSpese++;
-                originalSetItem.call(localStorage, 'conteggio_spese_promemoria', conteggioSpese);
-
-                if (conteggioSpese % 5 === 0) {
-                    setTimeout(() => {
-                        const modal = document.getElementById('cloud-modal');
-                        if (modal) {
-                            modal.style.display = 'flex';
-                            document.getElementById('modal-close-btn').onclick = function() {
-                                modal.style.display = 'none';
-                            };
-                            document.getElementById('modal-login-btn').onclick = function() {
-                                modal.style.display = 'none';
-                                if (typeof loginbtn === "function") loginbtn();
-                            };
-                        }
-                    }, 400);
-                }
-            }
-        };
-
-        // ==========================================
-        // 📊 FUNZIONE HASH DATI PER EVITARE SYNC INUTILI
-        // ==========================================
-
-        function getDataHash() {
-            const data = {
-                spese: safeGetJSON("moneyTrack_db") || [],
-                future: safeGetJSON("moneyTrack_future") || [],
-                customCats: safeGetJSON("moneyTrack_cats") || {},
-                budgets: safeGetJSON("moneyTrack_budgets") || {},
-                liste: safeGetJSON("moneyTrack_liste") || {},
-                utenze: safeGetJSON("moneyTrack_utenze") || [],
-                darkTheme: localStorage.getItem('moneyTrack_darkTheme') === 'true'
-            };
-            return JSON.stringify(data);
-        }
-
-        // ==========================================
-        // ☁️ SYNC CLOUD (CORRETTO)
+        // ☁️ SYNC CLOUD
         // ==========================================
 
         async function syncDatiSuSupabase() {
@@ -2708,7 +2831,7 @@
                 return;
             }
             
-            const currentHash = getDataHash();
+            const currentHash = JSON.stringify(datiApp);
             if (currentHash === lastDataHash && lastDataHash !== '') {
                 console.log('⏭️ Dati invariati, sync saltato');
                 return;
@@ -2719,13 +2842,8 @@
             
             try {
                 const payload = {
-                    spese: safeGetJSON("moneyTrack_db") || [],
-                    future: safeGetJSON("moneyTrack_future") || [],
-                    customCats: safeGetJSON("moneyTrack_cats") || {},
-                    budgets: safeGetJSON("moneyTrack_budgets") || {},
-                    preferitiNews: safeGetJSON("moneyTrack_fav_news") || [],
-                    utenze: safeGetJSON("moneyTrack_utenze") || [],
-                    liste: safeGetJSON("moneyTrack_liste") || {},
+                    datiApp: datiApp,
+                    contoAttivoId: contoAttivoId,
                     darkTheme: localStorage.getItem('moneyTrack_darkTheme') === 'true',
                     lastUpdated: new Date().toISOString()
                 };
@@ -2744,8 +2862,7 @@
 
                         if (result.error) {
                             if (result.error.code === '42P01') {
-                                console.warn('⚠️ Tabella userdata non trovata. Verifica che sia stata creata su Supabase.');
-                                console.warn('📝 Dettaglio errore:', result.error.message);
+                                console.warn('⚠️ Tabella userdata non trovata.');
                             }
                             throw result.error;
                         }
@@ -2775,7 +2892,7 @@
         }
 
         // ==========================================
-        // 🔐 AUTH (CORRETTO)
+        // 🔐 AUTH
         // ==========================================
 
         async function gestisciLoginOSincronizzazione(user) {
@@ -2801,18 +2918,23 @@
                     }
                     
                     if (firstLogin) {
-                        const datiLocaliEsistono = localStorage.getItem('moneyTrack_db') !== null && JSON.parse(localStorage.getItem('moneyTrack_db')).length > 0;
+                        const datiLocaliEsistono = datiApp && datiApp.conti && Object.keys(datiApp.conti).length > 0;
                         
-                        if (datiLocaliEsistono) {
+                        if (datiLocaliEsistono && datiCloud.datiApp && datiCloud.datiApp.conti && Object.keys(datiCloud.datiApp.conti).length > 0) {
                             if (confirm('✅ Dati trovati nel cloud! Vuoi ripristinarli sul dispositivo?')) {
                                 ripristinaDatiCloud(datiCloud);
                             } else {
                                 await syncDatiSuSupabase();
                                 alert('☁️ I tuoi dati locali sono stati sincronizzati con il cloud!');
                             }
-                        } else {
+                        } else if (datiCloud.datiApp && datiCloud.datiApp.conti && Object.keys(datiCloud.datiApp.conti).length > 0) {
                             ripristinaDatiCloud(datiCloud);
                             alert('✅ Dati ripristinati dal cloud!');
+                        } else {
+                            await syncDatiSuSupabase();
+                            if (firstLogin) {
+                                alert('☁️ Dati sincronizzati con il cloud!');
+                            }
                         }
                         firstLogin = false;
                         lastSyncUserId = user.id;
@@ -2840,29 +2962,24 @@
         }
 
         function ripristinaDatiCloud(datiCloud) {
-            if (!datiCloud) {
+            if (!datiCloud || !datiCloud.datiApp) {
                 console.warn('⚠️ Nessun dato cloud da ripristinare');
                 return;
             }
             
-            localStorage.setItem('moneyTrack_db', JSON.stringify(datiCloud.spese || []));
-            localStorage.setItem('moneyTrack_future', JSON.stringify(datiCloud.future || []));
-            localStorage.setItem('moneyTrack_cats', JSON.stringify(datiCloud.customCats || {}));
-            localStorage.setItem('moneyTrack_budgets', JSON.stringify(datiCloud.budgets || {}));
-            localStorage.setItem('moneyTrack_fav_news', JSON.stringify(datiCloud.preferitiNews || []));
-            localStorage.setItem('moneyTrack_utenze', JSON.stringify(datiCloud.utenze || []));
-            localStorage.setItem('moneyTrack_liste', JSON.stringify(datiCloud.liste || {}));
-
-            spese = JSON.parse(localStorage.getItem("moneyTrack_db")) || [];
-            future = JSON.parse(localStorage.getItem("moneyTrack_future")) || [];
-            customCats = JSON.parse(localStorage.getItem("moneyTrack_cats")) || {};
-            budgets = JSON.parse(localStorage.getItem("moneyTrack_budgets")) || {};
-            utenze = JSON.parse(localStorage.getItem("moneyTrack_utenze")) || [];
-            listeSpese = JSON.parse(localStorage.getItem("moneyTrack_liste")) || {};
-
+            datiApp = datiCloud.datiApp;
+            if (datiCloud.contoAttivoId) {
+                contoAttivoId = datiCloud.contoAttivoId;
+                localStorage.setItem("moneyTrack_conto_attivo", contoAttivoId);
+            }
+            
+            salvaDatiApp();
+            
+            getContoAttivo();
             aggiornaApp();
-            renderizzaUtenze();
             caricaSelectListe();
+            renderizzaIndicatori();
+            aggiornaPatrimonio();
         }
 
         function injectAuthModal() {
@@ -3046,7 +3163,7 @@
                 'show'); }
 
         function mostraPagina(p) {
-            const pagine = ["pagina-home", "pagina-analisi", "pagina-news", "pagina-utenze", "pagina-liste"];
+            const pagine = ["pagina-home", "pagina-analisi", "pagina-news", "pagina-liste"];
             pagine.forEach(id => {
                 const elemento = document.getElementById(id);
                 if (elemento) elemento.style.display = 'none';
@@ -3055,14 +3172,29 @@
             const sezioneScadenze = document.getElementById('sezione-scadenze');
             if (sezioneScadenze) sezioneScadenze.style.display = 'none';
 
-            const paginaCorrente = document.getElementById('pagina-' + p);
-            if (paginaCorrente) paginaCorrente.style.display = 'block';
-
-            if (p === 'home') aggiornaApp();
-            else if (p === 'news') caricaNews();
-            else if (p === 'analisi') setTimeout(() => { generaReport(); if (graficoTorta) graficoTorta.resize(); }, 50);
-            else if (p === 'utenze') renderizzaUtenze();
-            else if (p === 'liste') caricaSelectListe();
+            const contiScroll = document.getElementById('contiScrollContainer');
+            const indicators = document.getElementById('contoIndicators');
+            const patrimonio = document.getElementById('patrimonioTotale');
+            
+            if (p === 'home') {
+                if (contiScroll) contiScroll.style.display = 'flex';
+                if (indicators) indicators.style.display = 'flex';
+                if (patrimonio) patrimonio.style.display = 'flex';
+                aggiornaApp();
+                renderizzaIndicatori();
+                aggiornaPatrimonio();
+            } else {
+                if (contiScroll) contiScroll.style.display = 'none';
+                if (indicators) indicators.style.display = 'none';
+                if (patrimonio) patrimonio.style.display = 'none';
+                
+                const paginaCorrente = document.getElementById('pagina-' + p);
+                if (paginaCorrente) paginaCorrente.style.display = 'block';
+                
+                if (p === 'news') caricaNews();
+                else if (p === 'analisi') setTimeout(() => { generaReport(); if (graficoTorta) graficoTorta.resize(); }, 50);
+                else if (p === 'liste') caricaSelectListe();
+            }
 
             if (p === 'scadenze') {
                 if (sezioneScadenze) sezioneScadenze.style.display = 'block';
@@ -3072,33 +3204,391 @@
         }
 
         // ==========================================
+        // 🏷️ GESTIONE CONTI
+        // ==========================================
+
+        function aggiornaPatrimonio() {
+            const conti = getConti();
+            let totale = 0;
+            
+            conti.forEach(conto => {
+                if (conto.spese) {
+                    conto.spese.forEach(s => {
+                        if (s.tipo === "Entrata") totale += s.imp;
+                        else totale -= s.imp;
+                    });
+                }
+            });
+            
+            const el = document.getElementById('patrimonioValore');
+            if (el) {
+                el.textContent = (privacy ? '***' : totale.toFixed(2)) + ' €';
+                el.className = 'value ' + (totale >= 0 ? 'positivo' : 'negativo');
+            }
+        }
+
+        function renderizzaIndicatori() {
+            const container = document.getElementById('contoIndicators');
+            if (!container) return;
+            
+            const conti = getConti();
+            
+            let html = '';
+            conti.forEach((conto, index) => {
+                const isAttivo = conto.id === contoAttivoId;
+                let saldo = 0;
+                if (conto.spese) {
+                    conto.spese.forEach(s => {
+                        if (s.tipo === "Entrata") saldo += s.imp;
+                        else saldo -= s.imp;
+                    });
+                }
+                
+                html += `
+                    <div class="conto-indicator ${isAttivo ? 'attivo' : ''}" 
+                         onclick="cambiaConto('${conto.id}')"
+                         data-conto-id="${conto.id}">
+                        <span class="conto-icon">${conto.icona || '🏦'}</span>
+                        ${sanitizeHTML(conto.nome)}
+                        <span class="badge-saldo">${privacy ? '***' : saldo.toFixed(0)}€</span>
+                        ${conti.length > 1 ? `<button class="btn-elimina-conto" onclick="event.stopPropagation(); eliminaConto('${conto.id}')" title="Elimina conto">✕</button>` : ''}
+                    </div>
+                `;
+            });
+            
+            html += `
+                <div class="conto-indicator btn-aggiungi-conto" onclick="apriModalAggiungiConto()">
+                    ➕ Nuovo
+                </div>
+            `;
+            
+            container.innerHTML = html;
+        }
+
+        function renderizzaConti() {
+            const container = document.getElementById('contiScrollContainer');
+            if (!container) return;
+            
+            const conti = getConti();
+            
+            let html = '';
+            conti.forEach(conto => {
+                const contoCorrente = getDatiConto(conto.id);
+                
+                html += `
+                    <div class="conto-page" data-conto-id="${conto.id}" id="conto-page-${conto.id}">
+                        <div class="container" style="padding:0 5px 20px 5px;">
+                            <!-- Header saldo -->
+                            <div class="header-saldo" id="boxSaldo-${conto.id}">
+                                <div>
+                                    <small>${conto.icona || '🏦'} ${sanitizeHTML(conto.nome)}</small>
+                                    <h1 id="saldo-cifra-${conto.id}">0.00 €</h1>
+                                </div>
+                                <button onclick="togglePrivacy()" aria-label="Attiva/disattiva privacy" title="Attiva/disattiva privacy">👁️</button>
+                            </div>
+
+                            <div class="dashboard-rapido" id="dashboard-rapido-${conto.id}">
+                                <div class="dash-item">
+                                    <div class="label">💰 Entrate Mese</div>
+                                    <div class="value success" id="dash-entrate-${conto.id}">0.00 €</div>
+                                </div>
+                                <div class="dash-item">
+                                    <div class="label">💸 Uscite Mese</div>
+                                    <div class="value danger" id="dash-uscite-${conto.id}">0.00 €</div>
+                                </div>
+                                <div class="dash-item">
+                                    <div class="label">📊 Transazioni</div>
+                                    <div class="value primary" id="dash-transazioni-${conto.id}">0</div>
+                                </div>
+                                <div class="dash-item">
+                                    <div class="label">⚡ Utenze</div>
+                                    <div class="value info" id="dash-utenze-${conto.id}">0</div>
+                                </div>
+                            </div>
+
+                            <div class="nav-buttons-container">
+                                <button class="btn-modern" onclick="mostraPagina('news')">📰 NEWS</button>
+                                <button class="btn-modern" onclick="mostraPagina('analisi')">🧠 ANALISI</button>
+                                <button class="btn-modern" onclick="mostraPagina('scadenze')">📅 SCADENZE</button>
+                                <button class="btn-modern" onclick="mostraPagina('liste')" style="background:#6c5ce7; color:white;">📋 LISTE</button>
+                                <button class="btn-modern btn-warning" onclick="apriPopupSuggerimenti()" style="font-size:1.2rem;" title="Consigli finanziari">💡</button>
+                            </div>
+
+                            <div id="previsione-fine-mese-${conto.id}" class="info-previsione"></div>
+
+                            <div class="desktop-grid">
+                                <div class="section section-divider">
+                                    <div style="display: flex; flex-direction: column; align-items: flex-start; margin-bottom: 20px; width: 100%; gap: 15px;">
+                                        <h3 id="form-label-${conto.id}" style="margin: 0; white-space: nowrap; flex-shrink: 0;">✍️ Nuova Operazione <span class="shortcut-hint">(Ctrl+Enter)</span></h3>
+
+                                        <div style="display: flex; gap: 8px; align-items: center; width: 100%;" class="cat-row">
+                                            <button class="small-btn" onclick="apriCalcolatrice()" title="Calcolatrice" aria-label="Apri calcolatrice">🧮<span style="font-size: 0.8rem; font-weight: bold;">CAL</span></button>
+                                        </div>
+                                    </div>
+
+                                    <input type="hidden" id="edit-index-${conto.id}" value="-1">
+                                    <select id="tipo-${conto.id}" onchange="aggiornaCategorie()" aria-label="Tipo operazione">
+                                        <option value="Entrata">📈 Entrata</option>
+                                        <option value="Uscita">📉 Uscita</option>
+                                    </select>
+                                    <input type="date" id="data-${conto.id}" aria-label="Data operazione">
+
+                                    <div class="cat-row">
+                                        <select id="categoria-${conto.id}" aria-label="Categoria"></select>
+                                        <button class="small-btn" onclick="creaCategoria()" aria-label="Aggiungi categoria">➕</button>
+                                        <button class="small-btn btn-danger" onclick="eliminaCategoria()" aria-label="Elimina categoria">➖</button>
+                                        <button class="small-btn" onclick="modificaCategoria()" aria-label="Modifica categoria">✏️</button>
+                                    </div>
+                                    <input type="number" id="importo-${conto.id}" placeholder="Importo (€)" step="0.01" aria-label="Importo" inputmode="decimal">
+                                    <input type="text" id="nota-${conto.id}" placeholder="Nota (es. Spesa Esselunga)" aria-label="Nota">
+
+                                    <button class="btn-modern full-width" id="btn-salva-${conto.id}" onclick="aggiungiOperazione()">SALVA MOVIMENTO</button>
+
+                                    <h3 style="margin-top: 35px;">📅 Scadenze Future</h3>
+                                    <input type="date" id="data-futura-${conto.id}" aria-label="Data scadenza">
+                                    <input type="text" id="desc-futura-${conto.id}" placeholder="Descrizione (es. Affitto)" aria-label="Descrizione scadenza">
+                                    <input type="number" id="imp-futura-${conto.id}" placeholder="Importo stimato (€)" aria-label="Importo scadenza" inputmode="decimal">
+                                    
+                                    <div style="margin: 10px 0; text-align: left;">
+                                        <label style="display: flex; align-items: center; gap: 8px; font-size: 0.9rem; cursor: pointer; color: var(--text-secondary); font-family: var(--font-family);">
+                                            <input type="checkbox" id="impatta-saldo-futura-${conto.id}" checked style="width: 16px; height: 16px;">
+                                            Includi nel calcolo del saldo futuro
+                                        </label>
+                                    </div>
+                                    
+                                    <button class="btn-modern full-width btn-accent" id="btn-salva-futura-${conto.id}" onclick="aggiungiSpesaFutura()">Inserisci Spesa Futura</button>
+                                    <details style="margin-top: 15px; background: var(--bg-light); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 10px; transition: background-color 0.3s, border-color 0.3s;">
+                                        <summary style="cursor: pointer; font-weight: bold; color: var(--text-secondary); outline: none; user-select: none; font-family: var(--font-family);">
+                                            📋 Mostra / Nascondi Lista Spese Future
+                                        </summary>
+                                        <div id="lista-future-${conto.id}" style="margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border);"></div>
+                                    </details>
+
+                                    <div class="budget-container-desktop">
+                                        <div class="budget-container">
+                                            <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text-secondary); display: flex; align-items: center; gap: 6px;">🎯 Budget Mensili</h4>
+                                            <div class="budget-row">
+                                                <select id="budget-categoria-${conto.id}" aria-label="Categoria budget"></select>
+                                                <input type="number" id="budget-importo-${conto.id}" placeholder="Limite (€)" step="1" aria-label="Limite budget" inputmode="decimal">
+                                                <button onclick="impostaBudget()">Imposta</button>
+                                            </div>
+                                            <div id="lista-budget-${conto.id}"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="section">
+                                    <h3 style="margin-top: 30px;">🕒 Storico</h3>
+                                    
+                                    <div class="filtro-mobile">
+                                        <div class="filtro-riga">
+                                            <div class="filtro-gruppo">
+                                                <label>📅 Da</label>
+                                                <input type="date" id="filtro-data-da-${conto.id}" placeholder="Da">
+                                            </div>
+                                            <div class="filtro-gruppo">
+                                                <label>📅 A</label>
+                                                <input type="date" id="filtro-data-a-${conto.id}" placeholder="A">
+                                            </div>
+                                        </div>
+                                        <div class="filtro-riga">
+                                            <div class="filtro-gruppo">
+                                                <label>📊</label>
+                                                <select id="filtro-tipo-${conto.id}">
+                                                    <option value="">Tutti</option>
+                                                    <option value="Entrata">📈 Entrate</option>
+                                                    <option value="Uscita">📉 Uscite</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="filtro-azioni">
+                                            <button class="btn-filtra" onclick="applicaFiltri()">🔍 Filtra</button>
+                                            <button class="btn-reset-filtro" onclick="resetFiltri()">✕ Reset</button>
+                                        </div>
+                                        <div class="filtro-ricerca">
+                                            <span class="lente">🔍</span>
+                                            <input type="text" id="filtroRicerca-${conto.id}" placeholder="Cerca tra note o categorie...">
+                                        </div>
+                                    </div>
+
+                                    <div id="lista-transazioni-${conto.id}"></div>
+
+                                    <div class="budget-container-mobile">
+                                        <div class="budget-container">
+                                            <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text-secondary); display: flex; align-items: center; gap: 6px;">🎯 Budget Mensili</h4>
+                                            <div class="budget-row">
+                                                <select id="budget-categoria-mobile-${conto.id}" aria-label="Categoria budget"></select>
+                                                <input type="number" id="budget-importo-mobile-${conto.id}" placeholder="Limite (€)" step="1" aria-label="Limite budget" inputmode="decimal">
+                                                <button onclick="impostaBudgetMobile()">Imposta</button>
+                                            </div>
+                                            <div id="lista-budget-mobile-${conto.id}"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+            
+            if (contoAttivoId) {
+                getContoAttivo();
+                aggiornaApp();
+                caricaSelectListe();
+                aggiornaPatrimonio();
+            }
+        }
+
+        // ==========================================
+        // ➕ AGGIUNTA ELIMINAZIONE CONTI
+        // ==========================================
+
+        let iconaContoSelezionata = '🏦';
+
+        function setIconaConto(icona) {
+            iconaContoSelezionata = icona;
+            document.getElementById('iconaNuovoConto').value = icona;
+            document.querySelectorAll('#modalAggiungiConto .btn-modern').forEach(btn => {
+                btn.style.background = 'var(--bg-light)';
+                btn.style.border = '1px solid var(--border)';
+                btn.style.color = 'var(--text-secondary)';
+            });
+            if (event && event.target) {
+                event.target.style.background = 'var(--primary)';
+                event.target.style.color = 'white';
+                event.target.style.border = '2px solid var(--primary)';
+            }
+        }
+
+        function apriModalAggiungiConto() {
+            document.getElementById('modalAggiungiConto').style.display = 'flex';
+            document.getElementById('inputNuovoConto').value = '';
+            document.getElementById('inputNuovoConto').focus();
+            iconaContoSelezionata = '🏦';
+            document.getElementById('iconaNuovoConto').value = '🏦';
+            document.querySelectorAll('#modalAggiungiConto .btn-modern').forEach(btn => {
+                btn.style.background = 'var(--bg-light)';
+                btn.style.border = '1px solid var(--border)';
+                btn.style.color = 'var(--text-secondary)';
+            });
+        }
+
+        function chiudiModalAggiungiConto() {
+            document.getElementById('modalAggiungiConto').style.display = 'none';
+        }
+
+        function creaNuovoConto() {
+            const nome = document.getElementById('inputNuovoConto').value.trim();
+            if (!nome) {
+                alert('Inserisci un nome per il conto!');
+                return;
+            }
+            
+            const icona = document.getElementById('iconaNuovoConto').value || '🏦';
+            
+            const id = 'conto_' + Date.now();
+            if (!datiApp) datiApp = { conti: {} };
+            if (!datiApp.conti) datiApp.conti = {};
+            
+            const contoCorrente = getContoAttivo();
+            const customCatsDefault = contoCorrente ? { ...contoCorrente.customCats } : { "Uscita": ["🏠 Casa", "🍕 Cibo", "🚗 Auto", "🛒 Spesa", "⏳ Programmata"], "Entrata": ["💰 Stipendio", "➕ Altro"] };
+            
+            datiApp.conti[id] = {
+                nome: nome,
+                icona: icona,
+                spese: [],
+                future: [],
+                customCats: customCatsDefault,
+                budgets: {},
+                utenze: [],
+                liste: {}
+            };
+            
+            salvaDatiApp();
+            
+            contoAttivoId = id;
+            localStorage.setItem("moneyTrack_conto_attivo", contoAttivoId);
+            
+            getContoAttivo();
+            renderizzaConti();
+            renderizzaIndicatori();
+            aggiornaApp();
+            caricaSelectListe();
+            aggiornaPatrimonio();
+            
+            chiudiModalAggiungiConto();
+            
+            setTimeout(() => {
+                scrollToConto(id);
+            }, 100);
+            
+            if (currentUser) syncDatiSuSupabase();
+        }
+
+        function eliminaConto(id) {
+            if (!datiApp || !datiApp.conti || !datiApp.conti[id]) return;
+            
+            const nome = datiApp.conti[id].nome;
+            if (!confirm(`Eliminare il conto "${nome}" e tutti i suoi dati?`)) return;
+            
+            const conti = getConti();
+            if (conti.length <= 1) {
+                alert('Non puoi eliminare l\'ultimo conto. Crea un nuovo conto prima di eliminare questo.');
+                return;
+            }
+            
+            delete datiApp.conti[id];
+            salvaDatiApp();
+            
+            if (contoAttivoId === id) {
+                const contiRestanti = getConti();
+                if (contiRestanti.length > 0) {
+                    contoAttivoId = contiRestanti[0].id;
+                    localStorage.setItem("moneyTrack_conto_attivo", contoAttivoId);
+                }
+            }
+            
+            getContoAttivo();
+            renderizzaConti();
+            renderizzaIndicatori();
+            aggiornaApp();
+            caricaSelectListe();
+            aggiornaPatrimonio();
+            
+            if (currentUser) syncDatiSuSupabase();
+        }
+
+        // ==========================================
         // 🏷️ GESTIONE CATEGORIE
         // ==========================================
 
         function aggiornaCategorie() {
-            const t = document.getElementById("tipo").value;
-            const s = document.getElementById("categoria");
-            s.innerHTML = customCats[t].map(c => `<option value="${c}">${c}</option>`).join("");
+            const t = document.getElementById("tipo-" + contoAttivoId).value;
+            const s = document.getElementById("categoria-" + contoAttivoId);
+            s.innerHTML = (customCats[t] || ["Generica"]).map(c => `<option value="${c}">${c}</option>`).join("");
             inizializzaSelectBudget();
             inizializzaSelectBudgetMobile();
         }
 
         function creaCategoria() {
-            const t = document.getElementById("tipo").value;
+            const t = document.getElementById("tipo-" + contoAttivoId).value;
             const nuova = prompt("Nome nuova categoria per " + t + ":");
             if (nuova && nuova.trim()) {
                 const nome = nuova.trim();
+                if (!customCats[t]) customCats[t] = [];
                 if (customCats[t].includes(nome)) { alert("Categoria già esistente!"); return; }
                 customCats[t].push(nome);
-                saveCats();
+                salvaContoAttivo();
                 aggiornaCategorie();
-                document.getElementById("categoria").value = nome;
+                document.getElementById("categoria-" + contoAttivoId).value = nome;
             }
         }
 
         function modificaCategoria() {
-            const t = document.getElementById("tipo").value;
-            const select = document.getElementById('categoria');
+            const t = document.getElementById("tipo-" + contoAttivoId).value;
+            const select = document.getElementById('categoria-' + contoAttivoId);
             const opzioneSelezionata = select.options[select.selectedIndex];
             if (!opzioneSelezionata) { alert("Seleziona una categoria!"); return; }
 
@@ -3107,85 +3597,86 @@
 
             if (nuovoNome && nuovoNome.trim() && nuovoNome.trim() !== vecchioNome) {
                 const nuovo = nuovoNome.trim();
-                const index = customCats[t].indexOf(vecchioNome);
+                const index = (customCats[t] || []).indexOf(vecchioNome);
                 if (index !== -1) { customCats[t][index] = nuovo;
-                    saveCats(); }
+                    salvaContoAttivo(); }
 
                 spese.forEach(s => { if (s.cat === vecchioNome && s.tipo === t) { s.cat = nuovo; } });
-                localStorage.setItem("moneyTrack_db", JSON.stringify(spese));
+                salvaContoAttivo();
 
                 aggiornaCategorie();
-                document.getElementById("categoria").value = nuovo;
+                document.getElementById("categoria-" + contoAttivoId).value = nuovo;
                 aggiornaApp();
             }
         }
 
         function eliminaCategoria() {
-            const t = document.getElementById("tipo").value;
-            const sel = document.getElementById("categoria").value;
+            const t = document.getElementById("tipo-" + contoAttivoId).value;
+            const sel = document.getElementById("categoria-" + contoAttivoId).value;
             if (!sel) return;
 
             if (confirm(`Rimuovere la categoria "${sel}" dalla lista?\n\nI vecchi movimenti NON verranno eliminati.`)) {
+                if (!customCats[t]) customCats[t] = ["Generica"];
                 customCats[t] = customCats[t].filter(c => c !== sel);
                 if (customCats[t].length === 0) customCats[t] = ["Generica"];
-                saveCats();
+                salvaContoAttivo();
                 aggiornaCategorie();
             }
         }
-
-        function saveCats() { localStorage.setItem("moneyTrack_cats", JSON.stringify(customCats)); }
 
         // ==========================================
         // 💰 BUDGET
         // ==========================================
 
         function inizializzaSelectBudget() {
-            const select = document.getElementById("budget-categoria");
+            const select = document.getElementById("budget-categoria-" + contoAttivoId);
             if (select) {
-                select.innerHTML = customCats["Uscita"].map(c => `<option value="${c}">${c}</option>`).join("");
+                const cats = customCats["Uscita"] || ["Generica"];
+                select.innerHTML = cats.map(c => `<option value="${c}">${c}</option>`).join("");
             }
         }
 
         function inizializzaSelectBudgetMobile() {
-            const select = document.getElementById("budget-categoria-mobile");
+            const select = document.getElementById("budget-categoria-mobile-" + contoAttivoId);
             if (select) {
-                select.innerHTML = customCats["Uscita"].map(c => `<option value="${c}">${c}</option>`).join("");
+                const cats = customCats["Uscita"] || ["Generica"];
+                select.innerHTML = cats.map(c => `<option value="${c}">${c}</option>`).join("");
             }
         }
 
         function impostaBudget() {
-            const cat = document.getElementById("budget-categoria").value;
-            const imp = parseFloat(document.getElementById("budget-importo").value);
+            const cat = document.getElementById("budget-categoria-" + contoAttivoId).value;
+            const imp = parseFloat(document.getElementById("budget-importo-" + contoAttivoId).value);
             if (!cat || isNaN(imp) || imp <= 0) return alert("Inserisci un importo valido!");
 
             budgets[cat] = imp;
-            localStorage.setItem("moneyTrack_budgets", JSON.stringify(budgets));
-            document.getElementById("budget-importo").value = "";
+            salvaContoAttivo();
+            document.getElementById("budget-importo-" + contoAttivoId).value = "";
             aggiornaApp();
         }
 
         function impostaBudgetMobile() {
-            const cat = document.getElementById("budget-categoria-mobile").value;
-            const imp = parseFloat(document.getElementById("budget-importo-mobile").value);
+            const cat = document.getElementById("budget-categoria-mobile-" + contoAttivoId).value;
+            const imp = parseFloat(document.getElementById("budget-importo-mobile-" + contoAttivoId).value);
             if (!cat || isNaN(imp) || imp <= 0) return alert("Inserisci un importo valido!");
 
             budgets[cat] = imp;
-            localStorage.setItem("moneyTrack_budgets", JSON.stringify(budgets));
-            document.getElementById("budget-importo-mobile").value = "";
+            salvaContoAttivo();
+            document.getElementById("budget-importo-mobile-" + contoAttivoId).value = "";
             aggiornaApp();
         }
 
         function rimuoviBudget(cat) {
             if (confirm(`Rimuovere il budget per "${cat}"?`)) {
                 delete budgets[cat];
-                localStorage.setItem("moneyTrack_budgets", JSON.stringify(budgets));
+                salvaContoAttivo();
                 aggiornaApp();
             }
         }
 
         function aggiornaBudgetProgress(catsUscita) {
-            aggiornaBudgetProgressContainer("lista-budget", catsUscita);
-            aggiornaBudgetProgressContainer("lista-budget-mobile", catsUscita);
+            aggiornaBudgetProgressContainer("lista-budget-" + contoAttivoId, catsUscita);
+            aggiornaBudgetProgressContainer("lista-budget-mobile-" + contoAttivoId, catsUscita);
         }
 
         function aggiornaBudgetProgressContainer(containerId, catsUscita) {
@@ -3248,18 +3739,19 @@
                 }
             });
 
-            document.getElementById('dash-entrate').textContent = entrateMese.toFixed(2) + ' €';
-            document.getElementById('dash-uscite').textContent = usciteMese.toFixed(2) + ' €';
-            document.getElementById('dash-transazioni').textContent = transazioniMese;
-            document.getElementById('dash-utenze').textContent = utenze.length;
+            document.getElementById('dash-entrate-' + contoAttivoId).textContent = entrateMese.toFixed(2) + ' €';
+            document.getElementById('dash-uscite-' + contoAttivoId).textContent = usciteMese.toFixed(2) + ' €';
+            document.getElementById('dash-transazioni-' + contoAttivoId).textContent = transazioniMese;
+            document.getElementById('dash-utenze-' + contoAttivoId).textContent = utenze.length;
         }
 
         function applicaFiltri() {
-            const dataDa = document.getElementById('filtro-data-da').value;
-            const dataA = document.getElementById('filtro-data-a').value;
-            const tipo = document.getElementById('filtro-tipo').value;
+            const dataDa = document.getElementById('filtro-data-da-' + contoAttivoId).value;
+            const dataA = document.getElementById('filtro-data-a-' + contoAttivoId).value;
+            const tipo = document.getElementById('filtro-tipo-' + contoAttivoId).value;
 
-            const l = document.getElementById('lista-transazioni');
+            const l = document.getElementById('lista-transazioni-' + contoAttivoId);
+            if (!l) return;
             const items = l.querySelectorAll('.mese-container');
 
             items.forEach(container => {
@@ -3294,10 +3786,10 @@
         }
 
         function resetFiltri() {
-            document.getElementById('filtro-data-da').value = '';
-            document.getElementById('filtro-data-a').value = '';
-            document.getElementById('filtro-tipo').value = '';
-            document.getElementById('filtroRicerca').value = '';
+            document.getElementById('filtro-data-da-' + contoAttivoId).value = '';
+            document.getElementById('filtro-data-a-' + contoAttivoId).value = '';
+            document.getElementById('filtro-tipo-' + contoAttivoId).value = '';
+            document.getElementById('filtroRicerca-' + contoAttivoId).value = '';
             aggiornaApp();
         }
 
@@ -3331,7 +3823,7 @@
             const coloreFineMese = previstoFineMese >= 0 ? "var(--success)" : "var(--danger)";
             const coloreFuturo = saldoFuturo >= 0 ? "var(--success)" : "var(--danger)";
 
-            const div = document.getElementById("previsione-fine-mese");
+            const div = document.getElementById("previsione-fine-mese-" + contoAttivoId);
             if (!div) return;
             div.style.textAlign = "left";
 
@@ -3364,10 +3856,14 @@
         // ==========================================
 
         function aggiornaApp() {
-            const l = document.getElementById("lista-transazioni");
-            const box = document.getElementById("boxSaldo");
-            const query = document.getElementById("filtroRicerca").value.toLowerCase();
+            const conto = getContoAttivo();
+            if (!conto) return;
+            
+            const l = document.getElementById("lista-transazioni-" + contoAttivoId);
+            const box = document.getElementById("boxSaldo-" + contoAttivoId);
+            const query = document.getElementById("filtroRicerca-" + contoAttivoId).value.toLowerCase();
 
+            if (!l) return;
             l.innerHTML = "";
             let saldo = 0,
                 catsUscita = {},
@@ -3417,8 +3913,8 @@
                 </tr>`);
             });
 
-            document.getElementById("saldo-cifra").innerText = privacy ? "*** €" : saldo.toFixed(2) + " €";
-            box.style.backgroundColor = saldo >= 0 ? "var(--success)" : "var(--danger)";
+            document.getElementById("saldo-cifra-" + contoAttivoId).innerText = privacy ? "*** €" : saldo.toFixed(2) + " €";
+            if (box) box.style.backgroundColor = saldo >= 0 ? "var(--success)" : "var(--danger)";
 
             mappaGruppi.forEach((righeHtml, meseStr) => {
                 const div = document.createElement('div');
@@ -3442,10 +3938,46 @@
             aggiornaListaFuture();
             aggiornaBudgetProgress(catsUscita);
             aggiornaDashboard();
+            renderizzaIndicatori();
+            aggiornaPatrimonio();
         }
 
         const debouncedAggiorna = debounce(aggiornaApp, 300);
-        document.getElementById('filtroRicerca').addEventListener('keyup', debouncedAggiorna);
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!datiApp) {
+                datiApp = { conti: {} };
+                const id = 'conto_' + Date.now();
+                datiApp.conti[id] = {
+                    nome: "Conto Principale",
+                    icona: "🏦",
+                    spese: [],
+                    future: [],
+                    customCats: { "Uscita": ["🏠 Casa", "🍕 Cibo", "🚗 Auto", "🛒 Spesa", "⏳ Programmata"], "Entrata": ["💰 Stipendio", "➕ Altro"] },
+                    budgets: {},
+                    utenze: [],
+                    liste: {}
+                };
+                contoAttivoId = id;
+                localStorage.setItem("moneyTrack_conto_attivo", contoAttivoId);
+                salvaDatiApp();
+            }
+            
+            getContoAttivo();
+            
+            renderizzaConti();
+            renderizzaIndicatori();
+            aggiornaPatrimonio();
+            
+            document.getElementById('data-' + contoAttivoId).value = new Date().toISOString().split('T')[0];
+            
+            aggiornaCategorie();
+            
+            aggiornaApp();
+            caricaSelectListe();
+            
+            document.getElementById('filtroRicerca-' + contoAttivoId).addEventListener('keyup', debouncedAggiorna);
+        });
 
         // ==========================================
         // 💡 POPUP SUGGERIMENTI
@@ -3456,7 +3988,7 @@
                 return {
                     titolo: '💡 Inizia a tracciare le tue spese!',
                     corpo: `
-                        <p>📊 Non hai ancora registrato nessuna transazione.</p>
+                        <p>📊 Non hai ancora registrato nessuna transazione in questo conto.</p>
                         <p>Inizia a inserire le tue <b>entrate</b> e <b>uscite</b> per ricevere analisi personalizzate e consigli utili per migliorare le tue finanze!</p>
                         <br>
                         <p style="text-align:center;font-size:1.5rem;">🚀</p>
@@ -3598,36 +4130,36 @@
             }
             lastOperationTime = now;
 
-            const d = document.getElementById("data").value;
-            const i = parseFloat(document.getElementById("importo").value);
-            const editIdx = parseInt(document.getElementById("edit-index").value);
+            const d = document.getElementById("data-" + contoAttivoId).value;
+            const i = parseFloat(document.getElementById("importo-" + contoAttivoId).value);
+            const editIdx = parseInt(document.getElementById("edit-index-" + contoAttivoId).value);
 
             if (!d || isNaN(i)) { alert("Inserisci data e importo!"); return; }
             if (i <= 0) { alert("L'importo deve essere maggiore di zero!"); return; }
             if (i > 9999999) { alert("Importo troppo grande!"); return; }
 
             const obj = {
-                tipo: document.getElementById("tipo").value,
+                tipo: document.getElementById("tipo-" + contoAttivoId).value,
                 data: d,
-                cat: document.getElementById("categoria").value,
+                cat: document.getElementById("categoria-" + contoAttivoId).value,
                 imp: i,
-                nota: sanitizeHTML(document.getElementById("nota").value)
+                nota: sanitizeHTML(document.getElementById("nota-" + contoAttivoId).value)
             };
 
             if (editIdx === -1) spese.push(obj);
             else {
                 spese[editIdx] = obj;
-                document.getElementById("edit-index").value = "-1";
-                document.getElementById("btn-salva").innerText = "SALVA MOVIMENTO";
-                document.getElementById("form-label").innerText = "✍️ Nuova Operazione";
+                document.getElementById("edit-index-" + contoAttivoId).value = "-1";
+                document.getElementById("btn-salva-" + contoAttivoId).innerText = "SALVA MOVIMENTO";
+                document.getElementById("form-label-" + contoAttivoId).innerText = "✍️ Nuova Operazione";
             }
 
-            localStorage.setItem("moneyTrack_db", JSON.stringify(spese));
-            document.getElementById("importo").value = "";
-            document.getElementById("nota").value = "";
+            salvaContoAttivo();
+            document.getElementById("importo-" + contoAttivoId).value = "";
+            document.getElementById("nota-" + contoAttivoId).value = "";
             aggiornaApp();
 
-            const btn = document.getElementById("btn-salva");
+            const btn = document.getElementById("btn-salva-" + contoAttivoId);
             btn.classList.add('btn-loading');
             setTimeout(() => btn.classList.remove('btn-loading'), 500);
         }
@@ -3636,22 +4168,22 @@
             const s = spese[idx];
             if (!s) return;
 
-            document.getElementById("tipo").value = s.tipo;
+            document.getElementById("tipo-" + contoAttivoId).value = s.tipo;
             aggiornaCategorie();
-            document.getElementById("data").value = s.data;
-            document.getElementById("categoria").value = s.cat;
-            document.getElementById("importo").value = s.imp;
-            document.getElementById("nota").value = s.nota || '';
-            document.getElementById("edit-index").value = idx;
-            document.getElementById("btn-salva").innerText = "AGGIORNA";
-            document.getElementById("form-label").innerText = "✏️ Modifica";
+            document.getElementById("data-" + contoAttivoId).value = s.data;
+            document.getElementById("categoria-" + contoAttivoId).value = s.cat;
+            document.getElementById("importo-" + contoAttivoId).value = s.imp;
+            document.getElementById("nota-" + contoAttivoId).value = s.nota || '';
+            document.getElementById("edit-index-" + contoAttivoId).value = idx;
+            document.getElementById("btn-salva-" + contoAttivoId).innerText = "AGGIORNA";
+            document.getElementById("form-label-" + contoAttivoId).innerText = "✏️ Modifica";
             window.scrollTo(0, 0);
         }
 
         function eliminaRiga(idx) {
             if (confirm("Eliminare questa transazione?")) {
                 spese.splice(idx, 1);
-                localStorage.setItem("moneyTrack_db", JSON.stringify(spese));
+                salvaContoAttivo();
                 aggiornaApp();
             }
         }
@@ -3660,12 +4192,14 @@
         // 📅 SPESE FUTURE
         // ==========================================
 
+        let editFutureIdx = -1;
+
         function aggiungiSpesaFutura() {
-            const d = document.getElementById("data-futura").value;
-            const desc = sanitizeHTML(document.getElementById("desc-futura").value);
-            const i = parseFloat(document.getElementById("imp-futura").value);
+            const d = document.getElementById("data-futura-" + contoAttivoId).value;
+            const desc = sanitizeHTML(document.getElementById("desc-futura-" + contoAttivoId).value);
+            const i = parseFloat(document.getElementById("imp-futura-" + contoAttivoId).value);
             
-            const checkbox = document.getElementById("impatta-saldo-futura");
+            const checkbox = document.getElementById("impatta-saldo-futura-" + contoAttivoId);
             const impatta = checkbox ? checkbox.checked : true;
 
             if (!d || !desc || isNaN(i)) { alert("Compila tutti i campi!"); return; }
@@ -3676,13 +4210,13 @@
             } else {
                 future[editFutureIdx] = { data: d, desc: desc, imp: parseFloat(i), impattaSaldo: impatta };
                 editFutureIdx = -1;
-                document.getElementById("btn-salva-futura").innerText = "Inserisci Spesa Futura";
+                document.getElementById("btn-salva-futura-" + contoAttivoId).innerText = "Inserisci Spesa Futura";
             }
 
-            localStorage.setItem("moneyTrack_future", JSON.stringify(future));
-            document.getElementById("data-futura").value = "";
-            document.getElementById("desc-futura").value = "";
-            document.getElementById("imp-futura").value = "";
+            salvaContoAttivo();
+            document.getElementById("data-futura-" + contoAttivoId).value = "";
+            document.getElementById("desc-futura-" + contoAttivoId).value = "";
+            document.getElementById("imp-futura-" + contoAttivoId).value = "";
             if (checkbox) checkbox.checked = true;
 
             aggiornaListaFuture();
@@ -3693,22 +4227,22 @@
             const s = future[idx];
             if (!s) return;
 
-            document.getElementById("data-futura").value = s.data;
-            document.getElementById("desc-futura").value = s.desc;
-            document.getElementById("imp-futura").value = s.imp;
+            document.getElementById("data-futura-" + contoAttivoId).value = s.data;
+            document.getElementById("desc-futura-" + contoAttivoId).value = s.desc;
+            document.getElementById("imp-futura-" + contoAttivoId).value = s.imp;
             
-            const checkbox = document.getElementById("impatta-saldo-futura");
+            const checkbox = document.getElementById("impatta-saldo-futura-" + contoAttivoId);
             if (checkbox) {
                 checkbox.checked = s.impattaSaldo !== false;
             }
 
             editFutureIdx = idx;
-            document.getElementById("btn-salva-futura").innerText = "AGGIORNA SPESA FUTURA";
-            window.scrollTo({ top: document.getElementById("data-futura").offsetTop - 100, behavior: 'smooth' });
+            document.getElementById("btn-salva-futura-" + contoAttivoId).innerText = "AGGIORNA SPESA FUTURA";
+            window.scrollTo({ top: document.getElementById("data-futura-" + contoAttivoId).offsetTop - 100, behavior: 'smooth' });
         }
 
         function aggiornaListaFuture() {
-            const c = document.getElementById("lista-future");
+            const c = document.getElementById("lista-future-" + contoAttivoId);
             if (!c) return;
             c.innerHTML = "";
 
@@ -3756,355 +4290,38 @@
             });
             future.splice(idx, 1);
 
-            localStorage.setItem("moneyTrack_db", JSON.stringify(spese));
-            localStorage.setItem("moneyTrack_future", JSON.stringify(future));
+            salvaContoAttivo();
             aggiornaApp();
         }
 
         function eliminaFutura(idx) {
             if (confirm("Eliminare questa spesa futura?")) {
                 future.splice(idx, 1);
-                localStorage.setItem("moneyTrack_future", JSON.stringify(future));
+                salvaContoAttivo();
                 aggiornaListaFuture();
                 aggiornaApp();
             }
         }
 
         // ==========================================
-        // ⚡ GESTIONE UTENZE
+        // ⚡ GESTIONE UTENZE (RIMOSSA DALLA UI MA MANTENUTA PER I DATI)
         // ==========================================
 
-        function calcolaRiepilogoUtenza() {
-            const costo = parseFloat(document.getElementById('utenza-costo').value) || 0;
-            const canone = parseFloat(document.getElementById('utenza-canone').value) || 0;
-            const imposte = parseFloat(document.getElementById('utenza-imposte').value) || 0;
-            const altre = parseFloat(document.getElementById('utenza-altre').value) || 0;
-
-            const totale = costo + canone + imposte + altre;
-
-            const riepilogoDiv = document.getElementById('utenza-riepilogo');
-            const riepilogoText = document.getElementById('utenza-riepilogo-text');
-
-            if (costo > 0 || canone > 0 || imposte > 0 || altre > 0) {
-                riepilogoDiv.style.display = 'block';
-
-                let html = `
-                    <div style="font-weight:bold;margin-bottom:5px;">📊 Riepilogo bolletta:</div>
-                    <div class="utenza-riepilogo-dettagli">
-                        <div class="item"><span class="label">Costo energia</span><span class="value">${costo.toFixed(2)} €</span></div>
-                        ${canone > 0 ? `<div class="item"><span class="label">Canone RAI</span><span class="value" style="color:var(--danger);">${canone.toFixed(2)} €</span></div>` : ''}
-                        ${imposte > 0 ? `<div class="item"><span class="label">Imposte / Accise</span><span class="value">${imposte.toFixed(2)} €</span></div>` : ''}
-                        ${altre > 0 ? `<div class="item"><span class="label">Altre spese</span><span class="value">${altre.toFixed(2)} €</span></div>` : ''}
-                    </div>
-                    <div class="utenza-riepilogo-totale">
-                        <span>💰 Totale bolletta</span>
-                        <span class="value">${totale.toFixed(2)} €</span>
-                    </div>
-                `;
-
-                riepilogoText.innerHTML = html;
-                document.getElementById('utenza-totale').value = totale.toFixed(2);
-            } else {
-                riepilogoDiv.style.display = 'none';
-                document.getElementById('utenza-totale').value = '';
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const campi = ['utenza-costo', 'utenza-canone', 'utenza-imposte', 'utenza-altre'];
-            campi.forEach(id => {
-                const el = document.getElementById(id);
-                if (el) {
-                    el.addEventListener('input', calcolaRiepilogoUtenza);
-                    el.addEventListener('change', calcolaRiepilogoUtenza);
-                }
-            });
-        });
-
-        function salvaRilevazioneUtenza() {
-            const nomeSelect = document.getElementById('utenza-nome');
-            const nome = nomeSelect.value;
-            const data = document.getElementById('utenza-data').value;
-            const periodo = document.getElementById('utenza-periodo').value.trim();
-            const consumo = parseFloat(document.getElementById('utenza-consumo').value);
-            const costo = parseFloat(document.getElementById('utenza-costo').value);
-            const canone = parseFloat(document.getElementById('utenza-canone').value) || 0;
-            const imposte = parseFloat(document.getElementById('utenza-imposte').value) || 0;
-            const altre = parseFloat(document.getElementById('utenza-altre').value) || 0;
-            const totale = parseFloat(document.getElementById('utenza-totale').value);
-            const note = sanitizeHTML(document.getElementById('utenza-note').value);
-
-            if (!nome || !data) {
-                alert('Seleziona un\'utenza e una data!');
-                return;
-            }
-
-            if (isNaN(consumo) || consumo < 0) {
-                alert('Inserisci un consumo valido!');
-                return;
-            }
-
-            if (isNaN(costo) || costo < 0) {
-                alert('Inserisci un costo energia valido!');
-                return;
-            }
-
-            if (isNaN(totale) || totale < 0) {
-                alert('Inserisci un totale valido!');
-                return;
-            }
-
-            const selectOptions = Array.from(nomeSelect.options).map(o => o.value);
-            if (!selectOptions.includes(nome)) {
-                const option = document.createElement('option');
-                option.value = nome;
-                option.textContent = nome;
-                nomeSelect.appendChild(option);
-            }
-
-            const rilevazione = {
-                id: Date.now(),
-                nome: nome,
-                data: data,
-                periodo: periodo || '',
-                consumo: consumo,
-                costo: costo,
-                canone: canone,
-                imposte: imposte,
-                altre: altre,
-                totale: totale,
-                note: note || ''
-            };
-
-            utenze.push(rilevazione);
-            localStorage.setItem('moneyTrack_utenze', JSON.stringify(utenze));
-
-            document.getElementById('utenza-data').value = '';
-            document.getElementById('utenza-periodo').value = '';
-            document.getElementById('utenza-consumo').value = '';
-            document.getElementById('utenza-costo').value = '';
-            document.getElementById('utenza-canone').value = '';
-            document.getElementById('utenza-imposte').value = '';
-            document.getElementById('utenza-altre').value = '';
-            document.getElementById('utenza-totale').value = '';
-            document.getElementById('utenza-note').value = '';
-            document.getElementById('utenza-riepilogo').style.display = 'none';
-
-            renderizzaUtenze();
-            alert('✅ Rilevazione salvata con successo!');
-
-            if (currentUser) syncDatiSuSupabase();
-        }
-
-        function eliminaRilevazioneUtenza(id) {
-            if (confirm('Eliminare questa rilevazione?')) {
-                utenze = utenze.filter(u => u.id !== id);
-                localStorage.setItem('moneyTrack_utenze', JSON.stringify(utenze));
-                renderizzaUtenze();
-                if (currentUser) syncDatiSuSupabase();
-            }
-        }
-
-        function renderizzaUtenze() {
-            const container = document.getElementById('utenza-lista');
-            const totaleCosto = document.getElementById('utenza-totale-costo');
-            if (!container) return;
-
-            const utenzeOrdinate = [...utenze].sort((a, b) => new Date(b.data) - new Date(a.data));
-
-            const oggi = new Date();
-            const meseCorrente = oggi.getMonth();
-            const annoCorrente = oggi.getFullYear();
-            let totCostoMese = 0;
-
-            utenzeOrdinate.forEach(u => {
-                const d = new Date(u.data);
-                if (d.getMonth() === meseCorrente && d.getFullYear() === annoCorrente) {
-                    totCostoMese += u.totale || 0;
-                }
-            });
-
-            totaleCosto.textContent = totCostoMese.toFixed(2) + ' €';
-
-            if (utenzeOrdinate.length === 0) {
-                container.innerHTML = `
-                <div class="utenza-empty">
-                    <span class="icon">⚡</span>
-                    <p>Nessuna utenza registrata.</p>
-                    <p style="font-size:0.8rem;">Inserisci la prima rilevazione qui sopra!</p>
-                </div>`;
-                return;
-            }
-
-            const gruppi = {};
-            utenzeOrdinate.forEach(u => {
-                if (!gruppi[u.nome]) gruppi[u.nome] = [];
-                gruppi[u.nome].push(u);
-            });
-
-            let html = '';
-
-            Object.keys(gruppi).forEach(nome => {
-                const rilevazioni = gruppi[nome].sort((a, b) => new Date(b.data) - new Date(a.data));
-                const ultima = rilevazioni[0];
-
-                const consumi = rilevazioni.map(r => r.consumo || 0);
-                const mediaConsumi = consumi.reduce((a, b) => a + b, 0) / consumi.length;
-                const ultimoConsumo = consumi[0] || 0;
-                const variazione = mediaConsumi > 0 ? ((ultimoConsumo - mediaConsumi) / mediaConsumi) * 100 : 0;
-
-                const costiMedi = rilevazioni.map(r => r.costo > 0 && r.consumo > 0 ? r.costo / r.consumo : 0);
-                const costiMediFiltrati = costiMedi.filter(c => c > 0);
-                const costoMedioKWh = costiMediFiltrati.length > 0 ? costiMediFiltrati.reduce((a, b) => a + b, 0) / costiMediFiltrati
-                    .length : 0;
-                const costoMedioUltimo = ultima.costo > 0 && ultima.consumo > 0 ? ultima.costo / ultima.consumo : 0;
-
-                let icona = '⚡';
-                if (nome.includes('Enel') && nome.includes('Elettrica')) icona = '⚡';
-                else if (nome.includes('Gas')) icona = '🔥';
-                else if (nome.includes('Acqua')) icona = '💧';
-                else if (nome.includes('Internet') || nome.includes('Fibra')) icona = '🌐';
-                else if (nome.includes('Telefono')) icona = '📱';
-                else if (nome.includes('Rifiuti')) icona = '🗑️';
-                else if (nome.includes('Condominio')) icona = '🏢';
-
-                html += `
-                <div class="utenza-card">
-                    <div class="utenza-header">
-                        <div class="utenza-nome">
-                            <span>${icona}</span>
-                            ${sanitizeHTML(nome)}
-                            <small style="font-weight:normal;font-size:0.7rem;color:var(--text-muted);">
-                                ${rilevazioni.length} rilevazioni
-                            </small>
-                        </div>
-                        <div class="utenza-icone">
-                            <span onclick="aggiungiRilevazioneVeloce('${sanitizeHTML(nome)}')" title="Aggiungi rilevazione rapida">➕</span>
-                        </div>
-                    </div>
-
-                    <div class="utenza-stats">
-                        <div class="utenza-stat">
-                            <div class="utenza-stat-value">${ultimoConsumo.toFixed(1)}</div>
-                            <div class="utenza-stat-label">Ultimo consumo</div>
-                        </div>
-                        <div class="utenza-stat">
-                            <div class="utenza-stat-value ${Math.abs(variazione) > 15 ? (variazione > 0 ? 'alert' : 'good') : ''}">
-                                ${variazione > 0 ? '+' : ''}${variazione.toFixed(1)}%
-                            </div>
-                            <div class="utenza-stat-label">vs media</div>
-                        </div>
-                        <div class="utenza-stat">
-                            <div class="utenza-stat-value">${mediaConsumi.toFixed(1)}</div>
-                            <div class="utenza-stat-label">Media consumi</div>
-                        </div>
-                        <div class="utenza-stat">
-                            <div class="utenza-stat-value">${ultima.totale ? ultima.totale.toFixed(2) + '€' : 'N/D'}</div>
-                            <div class="utenza-stat-label">Ultimo totale</div>
-                        </div>
-                    </div>
-
-                    ${costoMedioKWh > 0 ? `
-                    <div style="font-size:0.75rem;color:var(--text-muted);text-align:center;margin-bottom:8px;">
-                        💰 Costo medio energia: ${costoMedioKWh.toFixed(3)} €/kWh
-                        ${costoMedioUltimo > 0 ? `| Ultimo: ${costoMedioUltimo.toFixed(3)} €/kWh` : ''}
-                    </div>
-                    ` : ''}
-
-                    <div class="utenza-chart-container">
-                        <canvas id="chart-${nome.replace(/[^a-zA-Z0-9]/g, '_')}" aria-label="Andamento consumi ${sanitizeHTML(nome)}"></canvas>
-                    </div>
-
-                    <div class="utenza-dettagli">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Data</th>
-                                    <th>Periodo</th>
-                                    <th>Consumo</th>
-                                    <th>Costo</th>
-                                    <th>Canone</th>
-                                    <th>Totale</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${rilevazioni.slice(0, 10).map(r => `
-                                    <tr>
-                                        <td>${r.data}</td>
-                                        <td style="font-size:0.7rem;color:var(--text-muted);">${r.periodo || '-'}</td>
-                                        <td>${r.consumo ? r.consumo.toFixed(1) : '-'}</td>
-                                        <td>${r.costo ? r.costo.toFixed(2) + '€' : '-'}</td>
-                                        <td style="color:var(--danger);">${r.canone > 0 ? r.canone.toFixed(2) + '€' : '-'}</td>
-                                        <td style="font-weight:bold;">${r.totale ? r.totale.toFixed(2) + '€' : '-'}</td>
-                                        <td><span onclick="eliminaRilevazioneUtenza(${r.id})" style="cursor:pointer;opacity:0.4;" title="Elimina">🗑️</span></td>
-                                    </tr>
-                                `).join('')}
-                            </tbody>
-                        </table>
-                        ${rilevazioni.length > 10 ? `<div style="text-align:center;font-size:0.8rem;color:var(--text-muted);padding:5px;">Mostrate le ultime 10 rilevazioni</div>` : ''}
-                    </div>
-                </div>`;
-            });
-
-            container.innerHTML = html;
-
-            setTimeout(() => {
-                Object.keys(gruppi).forEach(nome => {
-                    const canvasId = `chart-${nome.replace(/[^a-zA-Z0-9]/g, '_')}`;
-                    const canvas = document.getElementById(canvasId);
-                    if (canvas) {
-                        const ctx = canvas.getContext('2d');
-                        const rilevazioni = gruppi[nome].sort((a, b) => new Date(a.data) - new Date(b.data));
-                        const labels = rilevazioni.map(r => r.data.substring(5));
-                        const data = rilevazioni.map(r => r.consumo || 0);
-
-                        new Chart(ctx, {
-                            type: 'line',
-                            data: {
-                                labels: labels,
-                                datasets: [{
-                                    label: 'Consumo',
-                                    data: data,
-                                    borderColor: '#36a2eb',
-                                    backgroundColor: 'rgba(54,162,235,0.1)',
-                                    fill: true,
-                                    tension: 0.3,
-                                    pointRadius: 3
-                                }]
-                            },
-                            options: {
-                                responsive: true,
-                                maintainAspectRatio: false,
-                                plugins: {
-                                    legend: { display: false }
-                                },
-                                scales: {
-                                    y: {
-                                        beginAtZero: true,
-                                        grid: { color: 'rgba(0,0,0,0.05)' }
-                                    },
-                                    x: {
-                                        grid: { display: false }
-                                    }
-                                }
-                            }
-                        });
-                    }
-                });
-            }, 100);
-        }
-
-        function aggiungiRilevazioneVeloce(nome) {
-            document.getElementById('utenza-nome').value = nome;
-            document.getElementById('utenza-data').value = new Date().toISOString().split('T')[0];
-            document.getElementById('utenza-consumo').focus();
-            window.scrollTo({ top: document.getElementById('utenza-form').offsetTop - 100, behavior: 'smooth' });
-        }
+        // Le funzioni utenze sono mantenute per compatibilità dati ma rimosse dalla UI
 
         // ==========================================
         // 📊 GRAFICI
         // ==========================================
+
+        let graficoTorta, graficoBarre;
+        const mesiNomi = ["Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic"];
+        const mesiEstesi = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre",
+            "Ottobre", "Novembre", "Dicembre"
+        ];
+        let privacy = false;
+
+        function togglePrivacy() { privacy = !privacy;
+            aggiornaApp(); }
 
         function disegnaTorta(dati, totale) {
             const ctx = document.getElementById('graficoTorta');
@@ -4266,46 +4483,39 @@
         // ==========================================
 
         function esportaCSV() {
-            if (spese.length === 0) {
+            const conti = getConti();
+            if (conti.length === 0 || !conti.some(c => c.spese && c.spese.length > 0)) {
                 alert("Nessun dato da esportare!");
                 return;
             }
 
             const separatore = ';';
-            let csv = "Data" + separatore + "Categoria" + separatore + "Tipo" + separatore + "Importo" + separatore + "Nota\n";
+            let csv = "Conto;Data;Categoria;Tipo;Importo;Nota\n";
 
-            spese.forEach(s => {
-                const nota = (s.nota || '').replace(/,/g, ';').replace(/"/g, '""');
-                csv += `${s.data}${separatore}${s.cat}${separatore}${s.tipo}${separatore}${s.imp}${separatore}"${nota}"\n`;
+            conti.forEach(conto => {
+                if (!conto.spese) return;
+                conto.spese.forEach(s => {
+                    const nota = (s.nota || '').replace(/,/g, ';').replace(/"/g, '""');
+                    csv += `${conto.nome};${s.data};${s.cat};${s.tipo};${s.imp};"${nota}"\n`;
+                });
             });
 
-            let totaleEntrate = 0,
-                totaleUscite = 0;
-            spese.forEach(s => {
-                if (s.tipo === 'Entrata') totaleEntrate += s.imp;
-                else if (s.tipo === 'Uscita') totaleUscite += s.imp;
-                else {
-                    const tipoLower = (s.tipo || '').toLowerCase();
-                    if (tipoLower.includes('entrata')) totaleEntrate += s.imp;
-                    else if (tipoLower.includes('uscita')) totaleUscite += s.imp;
-                    else {
-                        if (s.imp > 0) totaleEntrate += s.imp;
-                        else totaleUscite += s.imp;
-                    }
-                }
+            csv += `\n"RIEPILOGO PER CONTO"${separatore}${separatore}${separatore}${separatore}\n`;
+            conti.forEach(conto => {
+                if (!conto.spese) return;
+                let totEntrate = 0, totUscite = 0;
+                conto.spese.forEach(s => {
+                    if (s.tipo === 'Entrata') totEntrate += s.imp;
+                    else totUscite += s.imp;
+                });
+                csv += `"${conto.nome}";"Entrate: ${totEntrate.toFixed(2)}€";"Uscite: ${totUscite.toFixed(2)}€";"Saldo: ${(totEntrate - totUscite).toFixed(2)}€";"${conto.spese.length} transazioni"\n`;
             });
-
-            csv += `\n"RIEPILOGO GENERALE"${separatore}${separatore}${separatore}${separatore}\n`;
-            csv += `"TOTALE ENTRATE"${separatore}${separatore}${separatore}${totaleEntrate.toFixed(2)}${separatore}\n`;
-            csv += `"TOTALE USCITE"${separatore}${separatore}${separatore}${totaleUscite.toFixed(2)}${separatore}\n`;
-            csv += `"SALDO"${separatore}${separatore}${separatore}${(totaleEntrate - totaleUscite).toFixed(2)}${separatore}\n`;
-            csv += `"NUMERO TRANSAZIONI"${separatore}${separatore}${separatore}${spese.length}${separatore}\n`;
 
             const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `MoneyTrack_Tutti_i_Dati_${new Date().toISOString().split('T')[0]}.csv`;
+            a.download = `MoneyTrack_Tutti_i_Conti_${new Date().toISOString().split('T')[0]}.csv`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
@@ -4313,30 +4523,16 @@
         }
 
         // ==========================================
-        // 🔧 UTILITY
-        // ==========================================
-
-        function togglePrivacy() { privacy = !privacy;
-            aggiornaApp(); }
-
-        // ==========================================
-        // 💾 BACKUP (CORRETTO - NON CANCELLA IL TOKEN)
+        // 💾 BACKUP
         // ==========================================
 
         function esportaDati() {
-            const backupData = {};
-            const keys = ['moneyTrack_db', 'moneyTrack_future', 'moneyTrack_cats', 'moneyTrack_budgets',
-                'moneyTrack_fav_news', 'moneyTrack_utenze', 'moneyTrack_darkTheme', 'moneyTrack_liste'
-            ];
-            keys.forEach(key => {
-                const value = localStorage.getItem(key);
-                if (value) backupData[key] = value;
-            });
-
-            if (Object.keys(backupData).length === 0) {
-                alert("Nessun dato trovato!");
-                return;
-            }
+            const backupData = {
+                datiApp: datiApp,
+                contoAttivoId: contoAttivoId,
+                darkTheme: localStorage.getItem('moneyTrack_darkTheme') === 'true',
+                version: '2.0'
+            };
 
             const jsonString = JSON.stringify(backupData);
 
@@ -4395,33 +4591,36 @@
                     const contenuto = e.target.result;
                     const dati = JSON.parse(contenuto);
 
-                    const keys = ['moneyTrack_db', 'moneyTrack_future', 'moneyTrack_cats', 'moneyTrack_budgets', 
-                          'moneyTrack_fav_news', 'moneyTrack_utenze', 'moneyTrack_darkTheme', 'moneyTrack_liste'];
-                    keys.forEach(key => localStorage.removeItem(key));
-
-                    Object.keys(dati).forEach(key => {
-                        localStorage.setItem(key, dati[key]);
-                    });
-
-                    spese = JSON.parse(localStorage.getItem("moneyTrack_db")) || [];
-                    future = JSON.parse(localStorage.getItem("moneyTrack_future")) || [];
-                    customCats = JSON.parse(localStorage.getItem("moneyTrack_cats")) || {};
-                    budgets = JSON.parse(localStorage.getItem("moneyTrack_budgets")) || {};
-                    utenze = JSON.parse(localStorage.getItem("moneyTrack_utenze")) || [];
-                    listeSpese = JSON.parse(localStorage.getItem("moneyTrack_liste")) || {};
-                    
-                    if (localStorage.getItem('moneyTrack_darkTheme') === 'true') {
-                        darkThemeEnabled = true;
-                    } else {
-                        darkThemeEnabled = false;
+                    if (dati.version !== '2.0') {
+                        alert("⚠️ Questo backup sembra essere di una versione precedente. Prova a importarlo nella versione 1.0.");
+                        return;
                     }
-                    applyTheme();
 
-                    alert("✅ Ripristino completato!");
-                    aggiornaApp();
-                    renderizzaUtenze();
-                    caricaSelectListe();
-                    if (currentUser) syncDatiSuSupabase();
+                    if (dati.datiApp) {
+                        datiApp = dati.datiApp;
+                        if (dati.contoAttivoId) {
+                            contoAttivoId = dati.contoAttivoId;
+                            localStorage.setItem("moneyTrack_conto_attivo", contoAttivoId);
+                        }
+                        salvaDatiApp();
+                        
+                        if (dati.darkTheme !== undefined) {
+                            localStorage.setItem('moneyTrack_darkTheme', dati.darkTheme);
+                            applyTheme();
+                        }
+
+                        getContoAttivo();
+                        renderizzaConti();
+                        renderizzaIndicatori();
+                        aggiornaApp();
+                        caricaSelectListe();
+                        aggiornaPatrimonio();
+                        
+                        alert("✅ Ripristino completato!");
+                        if (currentUser) syncDatiSuSupabase();
+                    } else {
+                        alert("❌ Backup non valido o corrotto.");
+                    }
 
                 } catch (error) {
                     console.error(error);
@@ -4693,6 +4892,8 @@
         // 📋 GESTIONE LISTE SPESE
         // ==========================================
 
+        let listaCorrenteId = localStorage.getItem("moneyTrack_lista_corrente") || null;
+
         function caricaSelectListe() {
             const select = document.getElementById("lista-selezionata");
             if (!select) return;
@@ -4761,7 +4962,7 @@
                 creata: new Date().toISOString()
             };
             
-            localStorage.setItem("moneyTrack_liste", JSON.stringify(listeSpese));
+            salvaContoAttivo();
             listaCorrenteId = id;
             localStorage.setItem("moneyTrack_lista_corrente", listaCorrenteId);
             
@@ -4782,7 +4983,7 @@
             if (!confirm(`Eliminare la lista "${nome}" e tutte le sue spese?`)) return;
             
             delete listeSpese[id];
-            localStorage.setItem("moneyTrack_liste", JSON.stringify(listeSpese));
+            salvaContoAttivo();
             
             const keys = Object.keys(listeSpese);
             if (keys.length > 0) {
@@ -4822,7 +5023,7 @@
                 importo: importo
             });
             
-            localStorage.setItem("moneyTrack_liste", JSON.stringify(listeSpese));
+            salvaContoAttivo();
             
             document.getElementById("lista-data").value = '';
             document.getElementById("lista-descrizione").value = '';
@@ -4839,11 +5040,13 @@
             if (!confirm("Eliminare questa spesa?")) return;
             
             listeSpese[id].spese = listeSpese[id].spese.filter(s => s.id !== idSpesa);
-            localStorage.setItem("moneyTrack_liste", JSON.stringify(listeSpese));
+            salvaContoAttivo();
             
             caricaLista();
             if (currentUser) syncDatiSuSupabase();
         }
+
+        let filtroListaAttivo = 'tutte';
 
         function filtraLista(categoria, evt) {
             filtroListaAttivo = categoria;
@@ -4892,16 +5095,16 @@
             }
             
             const lista = listeSpese[id];
-            let spese = lista.spese;
+            let speseLista = lista.spese;
             
             if (filtroListaAttivo !== 'tutte') {
-                spese = spese.filter(s => s.categoria === filtroListaAttivo);
+                speseLista = speseLista.filter(s => s.categoria === filtroListaAttivo);
             }
             
-            spese.sort((a, b) => new Date(b.data) - new Date(a.data));
+            speseLista.sort((a, b) => new Date(b.data) - new Date(a.data));
             
             let totale = 0;
-            spese.forEach(s => totale += s.importo);
+            speseLista.forEach(s => totale += s.importo);
             totaleSpan.textContent = totale.toFixed(2) + ' €';
             
             const categorieUniche = [...new Set(lista.spese.map(s => s.categoria))];
@@ -4924,7 +5127,7 @@
                 return;
             }
             
-            if (spese.length === 0) {
+            if (speseLista.length === 0) {
                 container.innerHTML = `
                     <div class="lista-empty">
                         <span class="icon">🔍</span>
@@ -4936,7 +5139,7 @@
             }
             
             const gruppi = {};
-            spese.forEach(s => {
+            speseLista.forEach(s => {
                 if (!gruppi[s.categoria]) gruppi[s.categoria] = [];
                 gruppi[s.categoria].push(s);
             });
@@ -5027,10 +5230,14 @@
             if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
                 const activeElement = document.activeElement;
                 if (activeElement && ['INPUT', 'SELECT', 'TEXTAREA'].includes(activeElement.tagName)) {
-                    if (activeElement.id === 'importo' || activeElement.id === 'nota' || activeElement.id === 'data' ||
-                        activeElement.closest('.section-divider')) {
-                        aggiungiOperazione();
-                        e.preventDefault();
+                    const id = activeElement.id;
+                    if (id && id.includes('-')) {
+                        const prefix = id.split('-').slice(0, -1).join('-');
+                        if (['importo', 'nota', 'data'].includes(prefix) ||
+                            activeElement.closest('.section-divider')) {
+                            aggiungiOperazione();
+                            e.preventDefault();
+                        }
                     }
                 }
             }
@@ -5044,22 +5251,14 @@
                 if (cloudModal && cloudModal.style.display === 'flex') { cloudModal.style.display = 'none'; }
                 const popup = document.getElementById('popup-suggerimenti');
                 if (popup && popup.style.display === 'flex') { chiudiPopupSuggerimenti(); }
+                const modalConto = document.getElementById('modalAggiungiConto');
+                if (modalConto && modalConto.style.display === 'flex') { chiudiModalAggiungiConto(); }
             }
         });
 
         // ==========================================
         // 🚀 INIZIALIZZAZIONE
         // ==========================================
-
-        document.getElementById('data').value = new Date().toISOString().split('T')[0];
-        aggiornaCategorie();
-        aggiornaApp();
-        renderizzaUtenze();
-        caricaSelectListe();
-
-        setTimeout(() => {
-            calcolaRiepilogoUtenza();
-        }, 100);
 
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js').catch(err => {
@@ -5074,7 +5273,7 @@
         });
 
         // ==========================================
-        // 📌 ESPORTA FUNZIONI
+        // 📌 ESPORTA FUNZIONI GLOBALI
         // ==========================================
 
         window.mostraPagina = mostraPagina;
@@ -5120,13 +5319,9 @@
         window.safeCalculate = safeCalculate;
         window.debounce = debounce;
         window.syncDatiSuSupabase = syncDatiSuSupabase;
-        window.salvaRilevazioneUtenza = salvaRilevazioneUtenza;
-        window.eliminaRilevazioneUtenza = eliminaRilevazioneUtenza;
-        window.aggiungiRilevazioneVeloce = aggiungiRilevazioneVeloce;
-        window.renderizzaUtenze = renderizzaUtenze;
         window.apriPopupSuggerimenti = apriPopupSuggerimenti;
         window.chiudiPopupSuggerimenti = chiudiPopupSuggerimenti;
-        window.calcolaRiepilogoUtenza = calcolaRiepilogoUtenza;
+        window.calcolaRiepilogoUtenza = function() {};
         window.aggiornaDashboard = aggiornaDashboard;
         window.applicaFiltri = applicaFiltri;
         window.resetFiltri = resetFiltri;
@@ -5134,7 +5329,6 @@
         window.ripristinaDatiCloud = ripristinaDatiCloud;
         window.toggleTheme = toggleTheme;
         window.applyTheme = applyTheme;
-        window.safeGetJSON = safeGetJSON;
         window.caricaSelectListe = caricaSelectListe;
         window.caricaLista = caricaLista;
         window.creaNuovaLista = creaNuovaLista;
@@ -5143,20 +5337,26 @@
         window.eliminaSpesaLista = eliminaSpesaLista;
         window.filtraLista = filtraLista;
         window.renderizzaLista = renderizzaLista;
+        window.cambiaConto = cambiaConto;
+        window.eliminaConto = eliminaConto;
+        window.creaNuovoConto = creaNuovoConto;
+        window.apriModalAggiungiConto = apriModalAggiungiConto;
+        window.chiudiModalAggiungiConto = chiudiModalAggiungiConto;
+        window.setIconaConto = setIconaConto;
+        window.aggiornaPatrimonio = aggiornaPatrimonio;
 
-        console.log('🚀 MoneyTrack 2.0 avviato!');
-        console.log('📊 Transazioni:', spese.length);
-        console.log('📅 Spese future:', future.length);
-        console.log('⚡ Utenze registrate:', utenze.length);
-        console.log('📋 Liste create:', Object.keys(listeSpese).length);
+        console.log('🚀 MoneyTrack 2.0 - Multi Conto avviato!');
+        console.log('🏦 Conti:', getConti().length);
+        console.log('📊 Transazioni totali:', getConti().reduce((acc, c) => acc + (c.spese ? c.spese.length : 0), 0));
+        console.log('📅 Spese future:', getConti().reduce((acc, c) => acc + (c.future ? c.future.length : 0), 0));
+        console.log('📋 Liste create:', getConti().reduce((acc, c) => acc + (c.liste ? Object.keys(c.liste).length : 0), 0));
         console.log('🌙 Tema scuro:', darkThemeEnabled ? 'attivo' : 'disattivo');
         console.log('📱 Compatibile con Android, iOS e PC');
         console.log('💡 Suggerimenti disponibili con il pulsante 💡');
         console.log('⌨️ Shortcut: Ctrl+Enter per salvare, ESC per chiudere');
-        console.log('📱 Budget mensili: su mobile appaiono DOPO la lista movimenti');
-        console.log('🌙 Tema scuro: selezionabile dal menu (⋮)');
-        console.log('☁️ Sync Supabase: ottimizzato con hash dei dati e controllo utente');
-        console.log('🔐 Login: gestisce correttamente lo stesso utente e i token');
+        console.log('🏦 Multi-conto: scorri a destra per vedere tutti i conti');
+        console.log('➕ Aggiungi conti: clicca su "➕ Nuovo" negli indicatori');
+        console.log('💰 Patrimonio totale: visibile sopra gli indicatori dei conti');
     </script>
 
 </body>
