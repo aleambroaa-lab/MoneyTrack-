@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; https://query1.finance.yahoo.com https://api.rss2json.com https://cdn.jsdelivr.net https://*.supabase.co; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: https: http:; connect-src 'self' https://query1.finance.yahoo.com https://api.rss2json.com https://*.supabase.co wss://*.supabase.co;">
     
-    <!-- Forza il refresh della cache -->
+    <!-- FORZA IL REFRESH DELLA CACHE -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -2884,10 +2884,56 @@
             .dashboard-grid { grid-template-columns: 1fr; }
             .grid-item-half { grid-column: 1; }
         }
+
+        /* ===== PULSANTE MIGRAZIONE ===== */
+        #migrateBtn {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 99999;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 16px 32px;
+            font-size: 18px;
+            font-weight: bold;
+            box-shadow: 0 4px 20px rgba(40, 167, 69, 0.4);
+            cursor: pointer;
+            display: none;
+            font-family: var(--font-family);
+            animation: pulse 2s infinite;
+        }
+
+        #migrateBtn:active {
+            transform: translateX(-50%) scale(0.95);
+        }
+
+        @keyframes pulse {
+            0% { transform: translateX(-50%) scale(1); box-shadow: 0 4px 20px rgba(40, 167, 69, 0.4); }
+            50% { transform: translateX(-50%) scale(1.03); box-shadow: 0 4px 40px rgba(40, 167, 69, 0.6); }
+            100% { transform: translateX(-50%) scale(1); box-shadow: 0 4px 20px rgba(40, 167, 69, 0.4); }
+        }
+
+        @media (max-width: 600px) {
+            #migrateBtn {
+                bottom: 60px;
+                padding: 14px 24px;
+                font-size: 16px;
+                width: 90%;
+                max-width: 350px;
+            }
+        }
     </style>
 </head>
 
 <body>
+
+    <!-- ===== PULSANTE MIGRAZIONE MANUALE ===== -->
+    <button id="migrateBtn" onclick="forzaMigrazioneManuale()">
+        🔄 Recupera i tuoi dati
+    </button>
 
     <!-- ===== DATALIST ===== -->
     <datalist id="lista-assets">
@@ -3256,7 +3302,7 @@
         ];
 
         // ==========================================
-        // 🚀 MIGRAZIONE AUTOMATICA ROBUSTA
+        // 🔄 MIGRAZIONE DATI DA VERSIONE PRECEDENTE
         // ==========================================
 
         function migraDatiDaVersionePrecedente() {
@@ -3352,6 +3398,80 @@
                 console.error('❌ Errore durante la migrazione:', error);
                 alert('⚠️ Errore durante la migrazione dei dati. I dati originali sono ancora al sicuro.');
                 return false;
+            }
+        }
+
+        // ==========================================
+        // 🔄 MIGRAZIONE MANUALE (per cellulare)
+        // ==========================================
+
+        function forzaMigrazioneManuale() {
+            console.log('🔄 Migrazione manuale avviata...');
+            
+            try {
+                // 1. Recupera tutti i dati vecchi
+                const oldDb = localStorage.getItem("moneyTrack_db");
+                if (!oldDb) {
+                    alert('❌ Nessun dato da recuperare trovato!');
+                    return;
+                }
+                
+                const speseVecchie = JSON.parse(oldDb) || [];
+                if (speseVecchie.length === 0) {
+                    alert('❌ Nessuna spesa trovata nei dati vecchi!');
+                    return;
+                }
+                
+                const futureVecchie = JSON.parse(localStorage.getItem("moneyTrack_future")) || [];
+                const customCatsVecchie = JSON.parse(localStorage.getItem("moneyTrack_cats")) || { 
+                    "Uscita": ["🏠 Casa", "🍕 Cibo", "🚗 Auto", "🛒 Spesa", "⏳ Programmata"], 
+                    "Entrata": ["💰 Stipendio", "➕ Altro"] 
+                };
+                const budgetsVecchi = JSON.parse(localStorage.getItem("moneyTrack_budgets")) || {};
+                const utenzeVecchie = JSON.parse(localStorage.getItem("moneyTrack_utenze")) || [];
+                const listeVecchie = JSON.parse(localStorage.getItem("moneyTrack_liste")) || {};
+                const darkTheme = localStorage.getItem('moneyTrack_darkTheme') === 'true';
+                
+                // 2. Crea il conto
+                const contoId = 'conto_' + Date.now();
+                if (!datiApp) datiApp = { conti: {} };
+                datiApp.conti[contoId] = {
+                    nome: "Conto Principale",
+                    icona: "🏦",
+                    spese: speseVecchie,
+                    future: futureVecchie,
+                    customCats: customCatsVecchie,
+                    budgets: budgetsVecchi,
+                    utenze: utenzeVecchie,
+                    liste: listeVecchie
+                };
+                contoAttivoId = contoId;
+                
+                // 3. Salva
+                salvaDatiApp();
+                localStorage.setItem("moneyTrack_conto_attivo", contoAttivoId);
+                if (darkTheme) localStorage.setItem('moneyTrack_darkTheme', 'true');
+                
+                // 4. Backup per sicurezza
+                localStorage.setItem('moneyTrack_multi_dati_backup', JSON.stringify(datiApp));
+                
+                console.log(`✅ Migrazione manuale completata! ${speseVecchie.length} spese migrate.`);
+                
+                // 5. Nascondi il pulsante
+                const btn = document.getElementById('migrateBtn');
+                if (btn) btn.style.display = 'none';
+                
+                // 6. Mostra messaggio e ricarica
+                alert(`✅ Dati recuperati con successo!\n\n💰 ${speseVecchie.length} movimenti caricati.\n📅 ${futureVecchie.length} spese future.\n📋 ${Object.keys(listeVecchie).length} liste.\n\nL'app verrà ricaricata.`);
+                
+                // Ricarica la pagina dopo 1 secondo
+                setTimeout(() => {
+                    window.location.reload(true);
+                }, 1000);
+                
+            } catch (error) {
+                console.error('❌ Errore migrazione manuale:', error);
+                alert('❌ Errore durante il recupero dei dati: ' + error.message);
             }
         }
 
@@ -6849,57 +6969,34 @@
             const oldDb = localStorage.getItem("moneyTrack_db");
             const hasOldData = oldDb !== null && JSON.parse(oldDb).length > 0;
             
-            // 3. SE CI SONO VECCHI DATI E NON CI SONO NUOVI DATI, FORZA MIGRAZIONE
+            // 3. GESTISCI LA MIGRAZIONE
             if (hasOldData) {
                 const hasNewData = datiApp && datiApp.conti && Object.keys(datiApp.conti).length > 0;
+                
+                // Se NON ci sono nuovi dati, mostra il pulsante di migrazione
                 if (!hasNewData) {
-                    console.log('🔄 Trovati vecchi dati! Forzo la migrazione...');
+                    // Mostra il pulsante
+                    const btn = document.getElementById('migrateBtn');
+                    if (btn) btn.style.display = 'block';
+                    console.log('🔔 Pulsante di migrazione mostrato! Clicca per recuperare i dati.');
                     
-                    // Recupera tutti i vecchi dati
-                    const speseVecchie = JSON.parse(oldDb) || [];
-                    const futureVecchie = JSON.parse(localStorage.getItem("moneyTrack_future")) || [];
-                    const customCatsVecchie = JSON.parse(localStorage.getItem("moneyTrack_cats")) || { 
-                        "Uscita": ["🏠 Casa", "🍕 Cibo", "🚗 Auto", "🛒 Spesa", "⏳ Programmata"], 
-                        "Entrata": ["💰 Stipendio", "➕ Altro"] 
-                    };
-                    const budgetsVecchi = JSON.parse(localStorage.getItem("moneyTrack_budgets")) || {};
-                    const utenzeVecchie = JSON.parse(localStorage.getItem("moneyTrack_utenze")) || [];
-                    const listeVecchie = JSON.parse(localStorage.getItem("moneyTrack_liste")) || {};
-                    const darkTheme = localStorage.getItem('moneyTrack_darkTheme') === 'true';
-                    
-                    // Crea il conto
-                    const contoId = 'conto_' + Date.now();
-                    if (!datiApp) datiApp = { conti: {} };
-                    datiApp.conti[contoId] = {
-                        nome: "Conto Principale",
-                        icona: "🏦",
-                        spese: speseVecchie,
-                        future: futureVecchie,
-                        customCats: customCatsVecchie,
-                        budgets: budgetsVecchi,
-                        utenze: utenzeVecchie,
-                        liste: listeVecchie
-                    };
-                    contoAttivoId = contoId;
-                    
-                    // Salva
-                    salvaDatiApp();
-                    localStorage.setItem("moneyTrack_conto_attivo", contoAttivoId);
-                    if (darkTheme) localStorage.setItem('moneyTrack_darkTheme', 'true');
-                    
-                    console.log(`✅ Migrazione completata! ${speseVecchie.length} spese migrate.`);
-                    
-                    // Mostra un messaggio all'utente
-                    setTimeout(() => {
-                        if (speseVecchie.length > 0) {
-                            alert(`✅ I tuoi dati sono stati migrati con successo!\n\n💰 ${speseVecchie.length} movimenti caricati.\n📅 ${futureVecchie.length} spese future.\n📋 ${Object.keys(listeVecchie).length} liste.`);
-                        }
-                        // Ricarica per applicare i cambiamenti
-                        window.location.reload();
-                    }, 500);
+                    // Tenta la migrazione automatica
+                    console.log('🔄 Tentativo migrazione automatica...');
+                    const migrato = migraDatiDaVersionePrecedente();
+                    if (migrato) {
+                        // Se la migrazione automatica funziona, nascondi il pulsante
+                        const btn2 = document.getElementById('migrateBtn');
+                        if (btn2) btn2.style.display = 'none';
+                        setTimeout(() => {
+                            window.location.reload(true);
+                        }, 500);
+                    }
                 } else if (datiApp && datiApp.conti && Object.keys(datiApp.conti).length > 0) {
-                    // I dati esistono già, ma forse le categorie non sono state migrate correttamente
-                    // Controlla e aggiorna le categorie nel conto attivo
+                    // I dati esistono già, nascondi il pulsante
+                    const btn = document.getElementById('migrateBtn');
+                    if (btn) btn.style.display = 'none';
+                    
+                    // Aggiorna le categorie
                     const conto = getContoAttivo();
                     if (conto && conto.customCats) {
                         customCats = conto.customCats;
@@ -7058,6 +7155,7 @@
         window.apriAR = apriAR;
         window.chiudiAR = chiudiAR;
         window.aggiornaAR = aggiornaAR;
+        window.forzaMigrazioneManuale = forzaMigrazioneManuale;
 
         console.log('🚀 MoneyTrack 2.1 - Multi Conto avviato!');
         console.log('🏦 Conti:', getConti().length);
