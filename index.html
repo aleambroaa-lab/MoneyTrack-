@@ -537,8 +537,6 @@
             transform: scale(0.9);
         }
 
-        /* I riquadri dashboard-rapido sono stati rimossi perché visibili in AR */
-
         .dashboard-widgets {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -2885,7 +2883,7 @@
             .grid-item-half { grid-column: 1; }
         }
 
-        /* ===== PULSANTE MIGRAZIONE ===== */
+        /* ===== PULSANTE MIGRAZIONE (solo se necessario) ===== */
         #migrateBtn {
             position: fixed;
             bottom: 80px;
@@ -2972,8 +2970,9 @@
                             </label>
                         </div>
                         <a onclick="loginbtn()" role="menuitem" id="login-nav-link">🔐 Login</a>
-                        <a onclick="eliminaMieiDati()" role="menuitem" style="color: var(--danger); border-top: 1px solid var(--border); margin-top: 4px; padding-top: 10px;">🗑️ Elimina i miei dati</a>
-                        <a onclick="window.open('https://link-alla-tua-privacy-policy.it', '_blank')" role="menuitem" style="border-top: 1px solid var(--border); margin-top: 4px; padding-top: 10px;">📄 Privacy Policy</a>
+                        <a onclick="sincronizzaDalCloud()" role="menuitem" style="border-top: 1px solid var(--border); margin-top: 4px; padding-top: 10px;">🔄 Sincronizza dal Cloud</a>
+                        <a onclick="eliminaMieiDati()" role="menuitem" style="color: var(--danger);">🗑️ Elimina i miei dati</a>
+                        <a onclick="window.open('https://link-alla-tua-privacy-policy.it', '_blank')" role="menuitem">📄 Privacy Policy</a>
                         <a onclick="esportaDati()" role="menuitem">💾 Backup (Esporta)</a>
                         <a onclick="esportaCSV()" role="menuitem">📊 Esporta CSV</a>
                         <a onclick="document.getElementById('fileInput').click()" role="menuitem">📂 Ripristina (Importa)</a>
@@ -3402,14 +3401,13 @@
         }
 
         // ==========================================
-        // 🔄 MIGRAZIONE MANUALE (per cellulare)
+        // 🔄 MIGRAZIONE MANUALE (per vecchi dati)
         // ==========================================
 
         function forzaMigrazioneManuale() {
             console.log('🔄 Migrazione manuale avviata...');
             
             try {
-                // 1. Recupera tutti i dati vecchi
                 const oldDb = localStorage.getItem("moneyTrack_db");
                 if (!oldDb) {
                     alert('❌ Nessun dato da recuperare trovato!');
@@ -3432,7 +3430,6 @@
                 const listeVecchie = JSON.parse(localStorage.getItem("moneyTrack_liste")) || {};
                 const darkTheme = localStorage.getItem('moneyTrack_darkTheme') === 'true';
                 
-                // 2. Crea il conto
                 const contoId = 'conto_' + Date.now();
                 if (!datiApp) datiApp = { conti: {} };
                 datiApp.conti[contoId] = {
@@ -3447,24 +3444,18 @@
                 };
                 contoAttivoId = contoId;
                 
-                // 3. Salva
                 salvaDatiApp();
                 localStorage.setItem("moneyTrack_conto_attivo", contoAttivoId);
                 if (darkTheme) localStorage.setItem('moneyTrack_darkTheme', 'true');
-                
-                // 4. Backup per sicurezza
                 localStorage.setItem('moneyTrack_multi_dati_backup', JSON.stringify(datiApp));
                 
                 console.log(`✅ Migrazione manuale completata! ${speseVecchie.length} spese migrate.`);
                 
-                // 5. Nascondi il pulsante
                 const btn = document.getElementById('migrateBtn');
                 if (btn) btn.style.display = 'none';
                 
-                // 6. Mostra messaggio e ricarica
                 alert(`✅ Dati recuperati con successo!\n\n💰 ${speseVecchie.length} movimenti caricati.\n📅 ${futureVecchie.length} spese future.\n📋 ${Object.keys(listeVecchie).length} liste.\n\nL'app verrà ricaricata.`);
                 
-                // Ricarica la pagina dopo 1 secondo
                 setTimeout(() => {
                     window.location.reload(true);
                 }, 1000);
@@ -3472,6 +3463,120 @@
             } catch (error) {
                 console.error('❌ Errore migrazione manuale:', error);
                 alert('❌ Errore durante il recupero dei dati: ' + error.message);
+            }
+        }
+
+        // ==========================================
+        // 🔄 SINCRONIZZA DAL CLOUD (dal menu)
+        // ==========================================
+
+        async function sincronizzaDalCloud() {
+            console.log('🔍 Sincronizzazione dal cloud avviata...');
+            
+            // 1. Controlla se l'utente è loggato
+            const { data: session } = await _supabase.auth.getSession();
+            if (!session || !session.session) {
+                alert('❌ Devi fare login prima di sincronizzare!');
+                return;
+            }
+            
+            const user = session.session.user;
+            console.log('✅ Utente loggato:', user.email);
+            
+            try {
+                // 2. Mostra caricamento
+                const btn = document.querySelector('.dropdown-content a[onclick*="sincronizzaDalCloud"]');
+                const testoOriginale = btn ? btn.textContent : '';
+                if (btn) {
+                    btn.textContent = '⏳ Caricamento...';
+                    btn.style.opacity = '0.6';
+                    btn.style.pointerEvents = 'none';
+                }
+                
+                // 3. Recupera i dati dal cloud
+                const { data, error } = await _supabase
+                    .from('userdata')
+                    .select('*')
+                    .eq('id', user.id);
+                
+                if (error) {
+                    console.error('❌ Errore lettura Supabase:', error);
+                    alert('❌ Errore durante il recupero dei dati: ' + error.message);
+                    if (btn) {
+                        btn.textContent = testoOriginale;
+                        btn.style.opacity = '1';
+                        btn.style.pointerEvents = 'auto';
+                    }
+                    return;
+                }
+                
+                if (data && data.length > 0 && data[0].payload) {
+                    const payload = data[0].payload;
+                    const contiCloud = Object.keys(payload.datiApp?.conti || {});
+                    const speseCloud = Object.values(payload.datiApp?.conti || {}).reduce((acc, c) => acc + (c.spese ? c.spese.length : 0), 0);
+                    
+                    console.log(`📊 Dati nel cloud: ${contiCloud.length} conti, ${speseCloud} spese`);
+                    
+                    // 4. Chiedi conferma all'utente
+                    if (!confirm(`✅ Trovati ${speseCloud} movimenti nel cloud!\n\nVuoi ripristinarli sul dispositivo?\n\n⚠️ I dati locali verranno SOSTITUITI.`)) {
+                        if (btn) {
+                            btn.textContent = testoOriginale;
+                            btn.style.opacity = '1';
+                            btn.style.pointerEvents = 'auto';
+                        }
+                        return;
+                    }
+                    
+                    // 5. Ripristina i dati
+                    if (payload.datiApp) {
+                        localStorage.setItem('moneyTrack_multi_dati', JSON.stringify(payload.datiApp));
+                    }
+                    if (payload.contoAttivoId) {
+                        localStorage.setItem('moneyTrack_conto_attivo', payload.contoAttivoId);
+                    }
+                    if (payload.debiti) {
+                        localStorage.setItem('moneyTrack_debiti', JSON.stringify(payload.debiti));
+                    }
+                    if (payload.dashboardLayout) {
+                        localStorage.setItem('moneyTrack_dashboard_layout', JSON.stringify(payload.dashboardLayout));
+                    }
+                    if (payload.darkTheme !== undefined) {
+                        localStorage.setItem('moneyTrack_darkTheme', payload.darkTheme);
+                    }
+                    
+                    // 6. Ricarica i dati in memoria
+                    datiApp = JSON.parse(localStorage.getItem('moneyTrack_multi_dati'));
+                    contoAttivoId = localStorage.getItem('moneyTrack_conto_attivo');
+                    debiti = JSON.parse(localStorage.getItem('moneyTrack_debiti') || '[]');
+                    dashboardLayout = JSON.parse(localStorage.getItem('moneyTrack_dashboard_layout') || '[]');
+                    
+                    // 7. Applica il tema
+                    applyTheme();
+                    
+                    // 8. Ricarica l'app
+                    alert(`✅ Dati ripristinati dal cloud!\n\n📊 ${speseCloud} movimenti caricati.\n📂 ${contiCloud.length} conti.`);
+                    window.location.reload();
+                    
+                } else {
+                    alert('ℹ️ Nessun dato trovato nel cloud per questo utente.\n\nAssicurati di aver fatto il login con lo stesso account usato sul PC.');
+                }
+                
+                if (btn) {
+                    btn.textContent = testoOriginale;
+                    btn.style.opacity = '1';
+                    btn.style.pointerEvents = 'auto';
+                }
+                
+            } catch (error) {
+                console.error('❌ Errore sincronizzazione:', error);
+                alert('❌ Errore durante la sincronizzazione: ' + error.message);
+                
+                const btn = document.querySelector('.dropdown-content a[onclick*="sincronizzaDalCloud"]');
+                if (btn) {
+                    btn.textContent = '🔄 Sincronizza dal Cloud';
+                    btn.style.opacity = '1';
+                    btn.style.pointerEvents = 'auto';
+                }
             }
         }
 
@@ -4693,7 +4798,6 @@
             if (!datiApp) datiApp = { conti: {} };
             if (!datiApp.conti) datiApp.conti = {};
             
-            // Usa le categorie esistenti
             const contoCorrente = getContoAttivo();
             const customCatsDaUsare = contoCorrente && contoCorrente.customCats ? 
                 JSON.parse(JSON.stringify(contoCorrente.customCats)) : 
@@ -6975,16 +7079,12 @@
                 
                 // Se NON ci sono nuovi dati, mostra il pulsante di migrazione
                 if (!hasNewData) {
-                    // Mostra il pulsante
                     const btn = document.getElementById('migrateBtn');
                     if (btn) btn.style.display = 'block';
                     console.log('🔔 Pulsante di migrazione mostrato! Clicca per recuperare i dati.');
                     
-                    // Tenta la migrazione automatica
-                    console.log('🔄 Tentativo migrazione automatica...');
                     const migrato = migraDatiDaVersionePrecedente();
                     if (migrato) {
-                        // Se la migrazione automatica funziona, nascondi il pulsante
                         const btn2 = document.getElementById('migrateBtn');
                         if (btn2) btn2.style.display = 'none';
                         setTimeout(() => {
@@ -6992,11 +7092,9 @@
                         }, 500);
                     }
                 } else if (datiApp && datiApp.conti && Object.keys(datiApp.conti).length > 0) {
-                    // I dati esistono già, nascondi il pulsante
                     const btn = document.getElementById('migrateBtn');
                     if (btn) btn.style.display = 'none';
                     
-                    // Aggiorna le categorie
                     const conto = getContoAttivo();
                     if (conto && conto.customCats) {
                         customCats = conto.customCats;
@@ -7111,6 +7209,7 @@
         window.chiudiAuthModal = chiudiAuthModal;
         window.eseguiLogout = eseguiLogout;
         window.eliminaMieiDati = eliminaMieiDati;
+        window.sincronizzaDalCloud = sincronizzaDalCloud;
         window.sanitizeHTML = sanitizeHTML;
         window.safeCalculate = safeCalculate;
         window.debounce = debounce;
