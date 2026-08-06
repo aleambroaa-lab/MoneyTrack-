@@ -152,6 +152,7 @@
             overflow-x: hidden;
         }
 
+        /* ===== NAV ===== */
         nav {
             display: flex;
             justify-content: space-between;
@@ -314,6 +315,7 @@
             .menu-dots { font-size: 1.8rem; padding: 5px 12px; }
         }
 
+        /* ===== CONTAINER ===== */
         .container {
             max-width: 900px;
             margin: 0 auto;
@@ -321,6 +323,7 @@
             transition: opacity 0.3s ease;
         }
 
+        /* ===== PATRIMONIO TOTALE ===== */
         .patrimonio-totale {
             background: var(--bg-light);
             border: 1px solid var(--border);
@@ -353,19 +356,19 @@
         .patrimonio-totale .value.positivo { color: var(--success); }
         .patrimonio-totale .value.negativo { color: var(--danger); }
 
+        /* ===== CONTI SCROLL CONTAINER - CORRETTO ===== */
         .conti-scroll-container {
-            position: relative;
+            display: flex;
             overflow-x: auto;
             overflow-y: hidden;
             -webkit-overflow-scrolling: touch;
             scroll-behavior: smooth;
             scroll-snap-type: x mandatory;
             padding: 0;
-            margin: 0 -15px;
-            padding: 0 15px;
-            display: flex;
+            margin: 0;
             gap: 0;
             scrollbar-width: none;
+            width: 100%;
         }
 
         .conti-scroll-container::-webkit-scrollbar {
@@ -375,19 +378,22 @@
         .conto-page {
             flex: 0 0 100%;
             min-width: 100%;
+            max-width: 100%;
             scroll-snap-align: start;
-            padding: 0 0 20px 0;
+            padding: 0 15px 20px 15px;
             transition: opacity 0.3s ease;
+            box-sizing: border-box;
         }
 
+        /* ===== CONTI INDICATORS ===== */
         .conto-indicators {
             display: flex;
             justify-content: center;
             align-items: center;
             gap: 8px;
-            padding: 8px 0 5px 0;
+            padding: 8px 15px 5px 15px;
             flex-wrap: wrap;
-            margin: 0 -15px;
+            margin: 0;
             background: var(--bg);
             border-bottom: 1px solid var(--border);
             transition: background 0.3s, border-color 0.3s;
@@ -396,6 +402,8 @@
             z-index: 50;
             min-height: 44px;
             font-family: var(--font-family);
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .dark-theme .conto-indicators {
@@ -467,11 +475,41 @@
             color: var(--primary);
         }
 
+        /* ===== DRAG HANDLE PER CONTI ===== */
+        .conto-drag-handle {
+            cursor: grab;
+            opacity: 0.3;
+            font-size: 0.7rem;
+            margin-left: 4px;
+            transition: var(--transition);
+            user-select: none;
+        }
+
+        .conto-drag-handle:hover {
+            opacity: 0.8;
+        }
+
+        .conto-drag-handle:active {
+            cursor: grabbing;
+        }
+
+        .conto-indicator.dragging {
+            opacity: 0.5;
+            transform: scale(0.95);
+        }
+
+        .conto-indicator.drag-over {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: white;
+            transform: scale(1.05);
+        }
+
         @media (max-width: 600px) {
             .conto-indicators {
                 top: 60px;
                 gap: 5px;
-                padding: 6px 5px;
+                padding: 6px 10px;
                 min-height: 40px;
                 overflow-x: auto;
                 flex-wrap: nowrap;
@@ -493,8 +531,12 @@
             .patrimonio-totale .value {
                 font-size: 1rem;
             }
+            .conto-page {
+                padding: 0 10px 15px 10px;
+            }
         }
 
+        /* ===== HEADER SALDO ===== */
         .header-saldo {
             padding: 20px;
             color: white;
@@ -537,6 +579,7 @@
             transform: scale(0.9);
         }
 
+        /* ===== DASHBOARD WIDGETS ===== */
         .dashboard-widgets {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -667,6 +710,7 @@
             }
         }
 
+        /* ===== DEBITI ===== */
         .debiti-container {
             margin-top: 20px;
         }
@@ -904,6 +948,7 @@
             }
         }
 
+        /* ===== BOTTONI ===== */
         .nav-buttons-container {
             display: flex;
             gap: 6px;
@@ -1102,6 +1147,7 @@
             background: #3a3a3a;
         }
 
+        /* ===== MODALI ===== */
         .modal {
             display: none;
             position: fixed;
@@ -1161,6 +1207,7 @@
             transform: rotate(90deg);
         }
 
+        /* ===== CALCOLATRICE ===== */
         #calc-screen {
             width: 100%;
             height: 50px;
@@ -1315,6 +1362,7 @@
             color: var(--text-primary);
         }
 
+        /* ===== POPUP ===== */
         .popup-overlay {
             position: fixed;
             top: 0;
@@ -1447,6 +1495,7 @@
             border-radius: 2px;
         }
 
+        /* ===== VARIE ===== */
         .loading-spinner {
             display: inline-block;
             width: 20px;
@@ -1651,6 +1700,7 @@
             content: "🌙";
         }
 
+        /* ===== LISTE SPESE ===== */
         .lista-spesa-card {
             background: var(--bg-light);
             border: 1px solid var(--border);
@@ -1874,6 +1924,7 @@
             margin-right: 4px;
         }
 
+        /* ===== FILTRI ===== */
         .filtro-mobile {
             background: var(--bg-light);
             border-radius: var(--radius-md);
@@ -2003,6 +2054,7 @@
             opacity: 0.5;
         }
 
+        /* ===== CALENDARIO ===== */
         .grid-calendario {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
@@ -2202,6 +2254,7 @@
             background: #f1f3f5;
         }
 
+        /* ===== BUDGET ===== */
         .budget-container {
             margin-top: 20px;
             background: var(--bg-light);
@@ -2595,6 +2648,7 @@
             border: 1px solid #f0f0f0;
         }
 
+        /* ===== AR OVERLAY ===== */
         .ar-overlay {
             position: fixed;
             top: 0;
@@ -2883,7 +2937,7 @@
             .grid-item-half { grid-column: 1; }
         }
 
-        /* ===== PULSANTE MIGRAZIONE (solo se necessario) ===== */
+        /* ===== PULSANTE MIGRAZIONE ===== */
         #migrateBtn {
             position: fixed;
             bottom: 80px;
@@ -4489,28 +4543,10 @@
         }
 
         // ==========================================
-        // 🏷️ GESTIONE CONTI
+        // 🏷️ GESTIONE CONTI CON DRAG & DROP
         // ==========================================
 
-        function aggiornaPatrimonio() {
-            const conti = getConti();
-            let totale = 0;
-            
-            conti.forEach(conto => {
-                if (conto.spese) {
-                    conto.spese.forEach(s => {
-                        if (s.tipo === "Entrata") totale += s.imp;
-                        else totale -= s.imp;
-                    });
-                }
-            });
-            
-            const el = document.getElementById('patrimonioValore');
-            if (el) {
-                el.textContent = (privacy ? '***' : totale.toFixed(2)) + ' €';
-                el.className = 'value ' + (totale >= 0 ? 'positivo' : 'negativo');
-            }
-        }
+        let draggedContoId = null;
 
         function renderizzaIndicatori() {
             const container = document.getElementById('contoIndicators');
@@ -4532,10 +4568,16 @@
                 html += `
                     <div class="conto-indicator ${isAttivo ? 'attivo' : ''}" 
                          onclick="cambiaConto('${conto.id}')"
-                         data-conto-id="${conto.id}">
+                         data-conto-id="${conto.id}"
+                         draggable="true"
+                         ondragstart="onContoDragStart(event, '${conto.id}')"
+                         ondragover="onContoDragOver(event)"
+                         ondrop="onContoDrop(event, '${conto.id}')"
+                         ondragend="onContoDragEnd(event)">
                         <span class="conto-icon">${conto.icona || '🏦'}</span>
                         ${sanitizeHTML(conto.nome)}
                         <span class="badge-saldo">${privacy ? '***' : saldo.toFixed(0)}€</span>
+                        <span class="conto-drag-handle" title="Trascina per riordinare">⠿</span>
                         ${conti.length > 1 ? `<button class="btn-elimina-conto" onclick="event.stopPropagation(); eliminaConto('${conto.id}')" title="Elimina conto">✕</button>` : ''}
                     </div>
                 `;
@@ -4548,6 +4590,100 @@
             `;
             
             container.innerHTML = html;
+        }
+
+        function onContoDragStart(e, contoId) {
+            draggedContoId = contoId;
+            e.dataTransfer.effectAllowed = 'move';
+            e.target.classList.add('dragging');
+        }
+
+        function onContoDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            const target = e.currentTarget;
+            if (target.dataset.contoId !== draggedContoId) {
+                target.classList.add('drag-over');
+            }
+        }
+
+        function onContoDrop(e, targetContoId) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('drag-over');
+            
+            if (!draggedContoId || draggedContoId === targetContoId) return;
+
+            // Ottieni la lista dei conti
+            const conti = getConti();
+            const fromIndex = conti.findIndex(c => c.id === draggedContoId);
+            const toIndex = conti.findIndex(c => c.id === targetContoId);
+
+            if (fromIndex === -1 || toIndex === -1) return;
+
+            // Riordina i conti
+            const contiOrdinati = [];
+            const keys = Object.keys(datiApp.conti);
+            
+            // Crea un array ordinato in base alla posizione desiderata
+            const fromKey = draggedContoId;
+            const toKey = targetContoId;
+            
+            // Rimuovi il conto dalla sua posizione e reinseriscilo nella nuova
+            const newKeys = [...keys];
+            newKeys.splice(fromIndex, 1);
+            newKeys.splice(toIndex, 0, fromKey);
+            
+            // Ricostruisci l'oggetto conti con il nuovo ordine
+            const nuovoOrdine = {};
+            newKeys.forEach(key => {
+                nuovoOrdine[key] = datiApp.conti[key];
+            });
+            datiApp.conti = nuovoOrdine;
+            
+            salvaDatiApp();
+            
+            // Ripristina gli indicatori
+            renderizzaIndicatori();
+            renderizzaConti();
+            
+            // Mantieni il conto attivo selezionato
+            if (contoAttivoId) {
+                cambiaConto(contoAttivoId);
+            }
+            
+            // Se l'utente è loggato, sincronizza
+            if (currentUser) syncDatiSuSupabase();
+        }
+
+        function onContoDragEnd(e) {
+            e.target.classList.remove('dragging');
+            document.querySelectorAll('.conto-indicator.drag-over').forEach(el => {
+                el.classList.remove('drag-over');
+            });
+        }
+
+        // ==========================================
+        // 🏦 GESTIONE CONTI
+        // ==========================================
+
+        function aggiornaPatrimonio() {
+            const conti = getConti();
+            let totale = 0;
+            
+            conti.forEach(conto => {
+                if (conto.spese) {
+                    conto.spese.forEach(s => {
+                        if (s.tipo === "Entrata") totale += s.imp;
+                        else totale -= s.imp;
+                    });
+                }
+            });
+            
+            const el = document.getElementById('patrimonioValore');
+            if (el) {
+                el.textContent = (privacy ? '***' : totale.toFixed(2)) + ' €';
+                el.className = 'value ' + (totale >= 0 ? 'positivo' : 'negativo');
+            }
         }
 
         function renderizzaConti() {
@@ -4571,8 +4707,6 @@
                                 </div>
                                 <button onclick="togglePrivacy()" aria-label="Attiva/disattiva privacy" title="Attiva/disattiva privacy">👁️</button>
                             </div>
-
-                            <!-- I riquadri dashboard-rapido sono stati rimossi perché visibili in AR -->
 
                             <div class="nav-buttons-container">
                                 <button class="btn-modern" onclick="mostraPagina('news')">📰 NEWS</button>
@@ -7255,6 +7389,10 @@
         window.chiudiAR = chiudiAR;
         window.aggiornaAR = aggiornaAR;
         window.forzaMigrazioneManuale = forzaMigrazioneManuale;
+        window.onContoDragStart = onContoDragStart;
+        window.onContoDragOver = onContoDragOver;
+        window.onContoDrop = onContoDrop;
+        window.onContoDragEnd = onContoDragEnd;
 
         console.log('🚀 MoneyTrack 2.1 - Multi Conto avviato!');
         console.log('🏦 Conti:', getConti().length);
