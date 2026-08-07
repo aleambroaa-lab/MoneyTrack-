@@ -16,8 +16,10 @@
     <title>MoneyTrack - Multi Conto</title>
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
+        /* ===== VARIABILI ===== */
         :root {
             --primary: #b5c3b6;
             --secondary: #9aa89b;
@@ -82,7 +84,6 @@
             min-height: 70px;
             transition: background-color 0.3s, border-color 0.3s;
         }
-
         .nav-inner {
             display: flex;
             justify-content: space-between;
@@ -92,17 +93,8 @@
             margin: 0 auto;
             gap: 10px;
         }
-
-        .logo-box img {
-            height: 45px;
-            border-radius: 12px;
-            cursor: pointer;
-        }
-
-        .center-title {
-            flex: 1;
-            text-align: center;
-        }
+        .logo-box img { height: 45px; border-radius: 12px; cursor: pointer; }
+        .center-title { flex: 1; text-align: center; }
         .center-title .title-main { font-weight: bold; font-size: 1.2rem; color: var(--text-primary); }
         .center-title .title-sub { font-size: 0.6rem; color: var(--text-secondary); opacity: 0.8; }
 
@@ -129,8 +121,9 @@
             border-radius: var(--radius-md);
             border: 1px solid var(--border);
             overflow: hidden;
+            max-height: 80vh;
+            overflow-y: auto;
         }
-
         .dropdown-content a {
             color: var(--text-secondary);
             padding: 12px 16px;
@@ -157,7 +150,7 @@
         /* ===== CONTAINER ===== */
         .container { max-width: 900px; margin: 0 auto; padding: 0 15px 40px; }
 
-        /* ===== PATRIMONIO TOTALE ===== */
+        /* ===== PATRIMONIO ===== */
         .patrimonio-totale {
             background: var(--bg-light);
             border: 1px solid var(--border);
@@ -212,7 +205,6 @@
             width: 100%;
             box-sizing: border-box;
         }
-
         .conto-indicator {
             padding: 6px 14px;
             border-radius: 20px;
@@ -422,6 +414,11 @@
             position: relative;
             max-height: 90vh;
             overflow-y: auto;
+        }
+        .modal-content.auth {
+            max-width: 340px;
+            padding: 25px;
+            border: 1px solid var(--border);
         }
         .close-btn {
             position: absolute;
@@ -1012,10 +1009,10 @@
             .debito-card .debito-dettagli { grid-template-columns: 1fr 1fr; }
         }
 
-        /* ===== WIDGET DASHBOARD ===== */
+        /* ===== WIDGET DASHBOARD - DRAG & DROP VERTICALE ===== */
         .dashboard-widgets {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
+            display: flex;
+            flex-direction: column;
             gap: 15px;
             margin: 15px 0;
         }
@@ -1026,7 +1023,32 @@
             padding: 15px;
             transition: var(--transition);
             position: relative;
+            cursor: grab;
+            user-select: none;
         }
+        .dashboard-widget:active { cursor: grabbing; }
+        .dashboard-widget.dragging {
+            opacity: 0.5;
+            transform: scale(0.98);
+            box-shadow: var(--shadow-lg);
+        }
+        .dashboard-widget.drag-over {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: white;
+            transform: scale(1.02);
+        }
+        .dashboard-widget .widget-drag-handle {
+            position: absolute;
+            top: 8px;
+            right: 40px;
+            opacity: 0.3;
+            cursor: grab;
+            font-size: 0.8rem;
+            user-select: none;
+        }
+        .dashboard-widget .widget-drag-handle:hover { opacity: 0.8; }
+        .dashboard-widget .widget-drag-handle:active { cursor: grabbing; }
         .dashboard-widget:hover { box-shadow: var(--shadow-sm); }
         .dashboard-widget .widget-header {
             display: flex;
@@ -1049,7 +1071,6 @@
         }
         .dashboard-widget .widget-close:hover { opacity: 1; color: var(--danger); }
         .dashboard-widget .widget-content { font-size: 0.9rem; }
-        .widget-full { grid-column: 1 / -1; }
 
         .widget-salute { text-align: center; padding: 10px; }
         .widget-salute .salute-score { font-size: 2.5rem; font-weight: bold; display: block; }
@@ -1088,7 +1109,7 @@
         .dashboard-grid-edit .btn-add-widget:hover { background: var(--primary); color: white; border-color: var(--primary); }
 
         @media (max-width: 600px) {
-            .dashboard-widgets { grid-template-columns: 1fr; }
+            .dashboard-widgets { gap: 10px; }
         }
 
         /* ===== LISTE SPESE ===== */
@@ -1284,6 +1305,8 @@
                             <span class="toggle-slider"></span>
                         </label>
                     </div>
+                    <a onclick="loginbtn()" id="login-nav-link">🔐 Login</a>
+                    <a onclick="sincronizzaDalCloud()" style="border-top:1px solid var(--border);margin-top:4px;padding-top:10px;">🔄 Sincronizza dal Cloud</a>
                     <a onclick="mostraPagina('backup')">💾 Gestione Backup</a>
                     <a onclick="esportaDati()">📋 Backup rapido</a>
                     <a onclick="esportaCSV()">📊 Esporta CSV</a>
@@ -1455,6 +1478,21 @@
         </div>
     </div>
 
+    <!-- ===== MODALE LOGIN ===== -->
+    <div id="auth-modal" class="modal" style="display:none;">
+        <div class="modal-content auth">
+            <button class="close-btn" onclick="chiudiAuthModal()">&times;</button>
+            <h3 style="margin-bottom:20px; text-align:center; font-size:1.25rem;" id="auth-title">🔐 Cloud Sync Login</h3>
+            <div id="auth-error" style="color:var(--danger); font-size:0.85rem; margin-bottom:12px; display:none; text-align:center; font-weight:bold;"></div>
+            <input type="email" id="auth-email" placeholder="La tua Email" style="margin-bottom:12px; background:#f9f9f9; border:1px solid #ddd;">
+            <input type="password" id="auth-password" placeholder="Password (min. 6 caratteri)" style="margin-bottom:15px; background:#f9f9f9; border:1px solid #ddd;">
+            <button class="btn-modern btn-success" id="btn-auth-primary" onclick="eseguiAuth()" style="max-width:none; width:100%; margin-top:5px;">ACCEDI</button>
+            <div style="text-align:center; margin-top:18px; font-size:0.85rem;">
+                <a id="auth-toggle-link" onclick="toggleAuthMode()" style="color:var(--secondary); font-weight:bold; cursor:pointer; text-decoration:underline;">Non hai un account? Registrati</a>
+            </div>
+        </div>
+    </div>
+
     <!-- ===== CALCOLATRICE ===== -->
     <div id="calc-modal" class="modal">
         <div class="modal-content" style="max-width:350px;">
@@ -1486,7 +1524,34 @@
     <input type="file" id="fileInput" style="display:none" accept=".json" onchange="importaDati(event)">
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
+    // ==========================================
+    // ☁️ CONFIGURAZIONE SUPABASE
+    // ==========================================
+
+    const SUPABASE_URL = "https://tfgiruqmxcyjhepsxolw.supabase.co";
+    const SUPABASE_ANON_KEY =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRmZ2lydXFteGN5amhlcHN4b2x3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI3MzQ4NjksImV4cCI6MjA5ODMxMDg2OX0.aAF964CLJwWg-b2TKVkanTCGjKFyNKyBXEIu8go95ls";
+
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+        auth: {
+            persistSession: true,
+            storage: localStorage,
+            storageKey: 'supabase_auth_token',
+            autoRefreshToken: true,
+            detectSessionInUrl: true
+        }
+    });
+
+    const _supabase = supabaseClient;
+    let currentUser = null;
+    let syncInProgress = false;
+    let firstLogin = true;
+    let lastSyncUserId = localStorage.getItem('moneyTrack_lastSyncUserId') || null;
+    let lastDataHash = '';
+    let lastSyncTimestamp = 0;
+
     // ==========================================
     // 📦 DATABASE E STATO
     // ==========================================
@@ -1513,12 +1578,16 @@
     let graficoTorta = null;
     let graficoBarre = null;
     let draggedContoId = null;
+    let draggedWidgetId = null;
     let listaCorrenteId = localStorage.getItem("moneyTrack_lista_corrente") || null;
     let filtroListaAttivo = 'tutte';
     let meseCorrente = new Date().getMonth();
     let annoCorrente = new Date().getFullYear();
     let darkThemeEnabled = localStorage.getItem('moneyTrack_darkTheme') === 'true';
     let debouncedAggiorna = null;
+    let authMode = "login";
+    let lastOperationTime = 0;
+    const MIN_OPERATION_INTERVAL = 1000;
 
     const mesiEstesi = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"];
 
@@ -1789,7 +1858,7 @@
                 icona: "🏦",
                 spese: [],
                 future: [],
-                customCats: { "Uscita": ["🏠 Casa", "🍕 Cibo", "🚗 Auto", "🛒 Spesa", "⏳ Programmata"], "Entrata": ["💰 Stipendio", "➕ Altro"] },
+                customCats: JSON.parse(JSON.stringify(customCats)),
                 budgets: {},
                 utenze: [],
                 liste: {}
@@ -1810,7 +1879,7 @@
                     icona: "🏦",
                     spese: [],
                     future: [],
-                    customCats: { "Uscita": ["🏠 Casa", "🍕 Cibo", "🚗 Auto", "🛒 Spesa", "⏳ Programmata"], "Entrata": ["💰 Stipendio", "➕ Altro"] },
+                    customCats: JSON.parse(JSON.stringify(customCats)),
                     budgets: {},
                     utenze: [],
                     liste: {}
@@ -1859,6 +1928,293 @@
     }
 
     function salvaDebiti() { localStorage.setItem("moneyTrack_debiti", JSON.stringify(debiti)); }
+
+    // ==========================================
+    // 🔐 AUTH
+    // ==========================================
+
+    function toggleAuthMode() {
+        const title = document.getElementById("auth-title");
+        const btn = document.getElementById("btn-auth-primary");
+        const link = document.getElementById("auth-toggle-link");
+        document.getElementById("auth-error").style.display = "none";
+        if (authMode === "login") {
+            authMode = "signup";
+            title.innerText = "📝 Registra Nuovo Account";
+            btn.innerText = "REGISTRATI";
+            link.innerText = "Hai già un account? Accedi";
+        } else {
+            authMode = "login";
+            title.innerText = "🔐 Cloud Sync Login";
+            btn.innerText = "ACCEDI";
+            link.innerText = "Non hai un account? Registrati";
+        }
+    }
+
+    function loginbtn() {
+        document.getElementById("auth-modal").style.display = "flex";
+        document.getElementById("auth-error").style.display = "none";
+    }
+
+    function chiudiAuthModal() {
+        document.getElementById("auth-modal").style.display = "none";
+    }
+
+    async function eseguiAuth() {
+        const email = document.getElementById("auth-email").value.trim();
+        const password = document.getElementById("auth-password").value;
+        const errBox = document.getElementById("auth-error");
+        errBox.style.display = "none";
+
+        if (!email || !password) {
+            errBox.innerText = "Compila tutti i campi!";
+            errBox.style.display = "block";
+            return;
+        }
+
+        const btn = document.getElementById("btn-auth-primary");
+        btn.innerText = "ELABORAZIONE...";
+        btn.disabled = true;
+
+        try {
+            let res = authMode === "login" ?
+                await _supabase.auth.signInWithPassword({ email, password }) :
+                await _supabase.auth.signUp({ email, password });
+
+            btn.disabled = false;
+            btn.innerText = authMode === "login" ? "ACCEDI" : "REGISTRATI";
+
+            if (res.error) {
+                errBox.innerText = "Errore: " + res.error.message;
+                errBox.style.display = "block";
+            } else {
+                if (authMode === "signup") {
+                    alert("✉️ Account creato! Controlla la tua email per confermare.");
+                }
+                chiudiAuthModal();
+                if (res.data && res.data.user) {
+                    await gestisciLoginOSincronizzazione(res.data.user);
+                }
+            }
+        } catch (error) {
+            btn.disabled = false;
+            btn.innerText = authMode === "login" ? "ACCEDI" : "REGISTRATI";
+            errBox.innerText = "Errore di connessione. Riprova.";
+            errBox.style.display = "block";
+        }
+    }
+
+    async function gestisciLoginOSincronizzazione(user) {
+        console.log('🔐 Utente autenticato:', user.email);
+        currentUser = user;
+        mostraStatoUtenteLoggato(user.email);
+
+        try {
+            if (lastSyncUserId === user.id) {
+                console.log('☁️ Stesso utente di prima, sync silenzioso');
+                await syncDatiSuSupabase();
+                return;
+            }
+
+            const result = await _supabase.from('userdata').select('payload').eq('id', user.id);
+            if (result.data && result.data.length > 0 && result.data[0].payload) {
+                const datiCloud = result.data[0].payload;
+                
+                if (datiCloud.darkTheme !== undefined) {
+                    localStorage.setItem('moneyTrack_darkTheme', datiCloud.darkTheme);
+                    applyTheme();
+                }
+                
+                if (firstLogin) {
+                    const datiLocaliEsistono = datiApp && datiApp.conti && Object.keys(datiApp.conti).length > 0;
+                    
+                    if (datiLocaliEsistono && datiCloud.datiApp && datiCloud.datiApp.conti && Object.keys(datiCloud.datiApp.conti).length > 0) {
+                        if (confirm('✅ Dati trovati nel cloud! Vuoi ripristinarli sul dispositivo?')) {
+                            ripristinaDatiCloud(datiCloud);
+                        } else {
+                            await syncDatiSuSupabase();
+                            alert('☁️ I tuoi dati locali sono stati sincronizzati con il cloud!');
+                        }
+                    } else if (datiCloud.datiApp && datiCloud.datiApp.conti && Object.keys(datiCloud.datiApp.conti).length > 0) {
+                        ripristinaDatiCloud(datiCloud);
+                        alert('✅ Dati ripristinati dal cloud!');
+                    } else {
+                        await syncDatiSuSupabase();
+                        if (firstLogin) {
+                            alert('☁️ Dati sincronizzati con il cloud!');
+                        }
+                    }
+                    firstLogin = false;
+                    lastSyncUserId = user.id;
+                    localStorage.setItem('moneyTrack_lastSyncUserId', user.id);
+                } else {
+                    console.log('☁️ Sync silenzioso con il cloud...');
+                    await syncDatiSuSupabase();
+                }
+            } else {
+                await syncDatiSuSupabase();
+                if (firstLogin) {
+                    alert('☁️ Dati sincronizzati con il cloud!');
+                    firstLogin = false;
+                    lastSyncUserId = user.id;
+                    localStorage.setItem('moneyTrack_lastSyncUserId', user.id);
+                }
+            }
+        } catch (error) {
+            console.error('Errore durante il sync:', error);
+            if (firstLogin) {
+                alert('⚠️ Errore durante la sincronizzazione. I dati sono al sicuro in locale.');
+                firstLogin = false;
+            }
+        }
+    }
+
+    function ripristinaDatiCloud(datiCloud) {
+        if (!datiCloud || !datiCloud.datiApp) return;
+        datiApp = datiCloud.datiApp;
+        if (datiCloud.contoAttivoId) {
+            contoAttivoId = datiCloud.contoAttivoId;
+            localStorage.setItem("moneyTrack_conto_attivo", contoAttivoId);
+        }
+        if (datiCloud.debiti) {
+            debiti = datiCloud.debiti;
+            salvaDebiti();
+        }
+        if (datiCloud.dashboardLayout) {
+            dashboardLayout = datiCloud.dashboardLayout;
+            localStorage.setItem("moneyTrack_dashboard_layout", JSON.stringify(dashboardLayout));
+        }
+        salvaDatiApp();
+        getContoAttivo();
+        aggiornaApp();
+        caricaSelectListe();
+        renderizzaIndicatori();
+        aggiornaPatrimonio();
+        renderizzaDebiti();
+        renderizzaDashboardPersonalizzata();
+    }
+
+    function mostraStatoUtenteLoggato(email) {
+        const link = document.getElementById("login-nav-link");
+        if (link) {
+            link.innerHTML = `🚪 Esci (${email.split('@')[0]})`;
+            link.setAttribute("onclick", "eseguiLogout()");
+        }
+    }
+
+    function mostraStatoUtenteDisconnesso() {
+        const link = document.getElementById("login-nav-link");
+        if (link) {
+            link.innerHTML = "🔐 Login";
+            link.setAttribute("onclick", "loginbtn()");
+        }
+    }
+
+    async function eseguiLogout() {
+        if (confirm("Vuoi disconnetterti dal Cloud?")) {
+            try {
+                await _supabase.auth.signOut();
+                currentUser = null;
+                firstLogin = true;
+                lastSyncUserId = null;
+                localStorage.removeItem('moneyTrack_lastSyncUserId');
+                alert("Disconnesso con successo.");
+                mostraStatoUtenteDisconnesso();
+            } catch (error) {
+                console.error('Errore logout:', error);
+                alert("Errore durante il logout.");
+            }
+        }
+    }
+
+    async function syncDatiSuSupabase() {
+        if (!currentUser) {
+            console.log('⏭️ Sync saltato: utente non loggato');
+            return;
+        }
+        if (syncInProgress) {
+            console.log('⏭️ Sync già in corso');
+            return;
+        }
+        const now = Date.now();
+        if (now - lastSyncTimestamp < 2000) {
+            console.log('⏭️ Sync troppo frequente');
+            return;
+        }
+        const currentHash = JSON.stringify({ datiApp, debiti, dashboardLayout });
+        if (currentHash === lastDataHash && lastDataHash !== '') {
+            console.log('⏭️ Dati invariati');
+            return;
+        }
+        syncInProgress = true;
+        lastSyncTimestamp = now;
+        try {
+            const payload = {
+                datiApp: datiApp,
+                contoAttivoId: contoAttivoId,
+                debiti: debiti,
+                dashboardLayout: dashboardLayout,
+                darkTheme: localStorage.getItem('moneyTrack_darkTheme') === 'true',
+                lastUpdated: new Date().toISOString()
+            };
+            const result = await _supabase.from('userdata').upsert({
+                id: currentUser.id,
+                payload: payload,
+                updated_at: new Date().toISOString()
+            }, { onConflict: 'id' });
+            if (result.error) throw result.error;
+            lastDataHash = currentHash;
+            console.log('☁️ Sync completato!');
+        } catch (e) {
+            console.error('❌ Errore Cloud Sync:', e);
+            localStorage.setItem('pending_sync', 'true');
+        } finally {
+            syncInProgress = false;
+        }
+    }
+
+    async function sincronizzaDalCloud() {
+        console.log('🔍 Sincronizzazione dal cloud avviata...');
+        const { data: session } = await _supabase.auth.getSession();
+        if (!session || !session.session) {
+            alert('❌ Devi fare login prima di sincronizzare!');
+            return;
+        }
+        const user = session.session.user;
+        try {
+            const btn = document.querySelector('.dropdown-content a[onclick*="sincronizzaDalCloud"]');
+            const testoOriginale = btn ? btn.textContent : '';
+            if (btn) { btn.textContent = '⏳ Caricamento...'; btn.style.opacity = '0.6'; btn.style.pointerEvents = 'none'; }
+            
+            const { data, error } = await _supabase.from('userdata').select('*').eq('id', user.id);
+            if (error) { throw error; }
+            
+            if (data && data.length > 0 && data[0].payload) {
+                const payload = data[0].payload;
+                const speseCloud = Object.values(payload.datiApp?.conti || {}).reduce((acc, c) => acc + (c.spese ? c.spese.length : 0), 0);
+                if (confirm(`✅ Trovati ${speseCloud} movimenti nel cloud!\n\nVuoi ripristinarli sul dispositivo?`)) {
+                    if (payload.datiApp) localStorage.setItem('moneyTrack_multi_dati', JSON.stringify(payload.datiApp));
+                    if (payload.contoAttivoId) localStorage.setItem('moneyTrack_conto_attivo', payload.contoAttivoId);
+                    if (payload.debiti) localStorage.setItem('moneyTrack_debiti', JSON.stringify(payload.debiti));
+                    if (payload.dashboardLayout) localStorage.setItem('moneyTrack_dashboard_layout', JSON.stringify(payload.dashboardLayout));
+                    if (payload.darkTheme !== undefined) localStorage.setItem('moneyTrack_darkTheme', payload.darkTheme);
+                    datiApp = JSON.parse(localStorage.getItem('moneyTrack_multi_dati'));
+                    contoAttivoId = localStorage.getItem('moneyTrack_conto_attivo');
+                    debiti = JSON.parse(localStorage.getItem('moneyTrack_debiti') || '[]');
+                    dashboardLayout = JSON.parse(localStorage.getItem('moneyTrack_dashboard_layout') || '[]');
+                    applyTheme();
+                    alert(`✅ Dati ripristinati dal cloud!`);
+                    window.location.reload();
+                }
+            } else {
+                alert('ℹ️ Nessun dato trovato nel cloud per questo utente.');
+            }
+            if (btn) { btn.textContent = testoOriginale; btn.style.opacity = '1'; btn.style.pointerEvents = 'auto'; }
+        } catch (error) {
+            console.error('❌ Errore sincronizzazione:', error);
+            alert('❌ Errore durante la sincronizzazione: ' + error.message);
+        }
+    }
 
     // ==========================================
     // 🔄 MIGRAZIONE
@@ -1984,9 +2340,23 @@
         const id = 'conto_' + Date.now();
         if (!datiApp) datiApp = { conti: {} };
         if (!datiApp.conti) datiApp.conti = {};
+        
+        // COPIA LE CATEGORIE DAL CONTO CORRENTE O USA QUELLE DI DEFAULT
         const contoCorrente = getContoAttivo();
-        const customCatsDaUsare = contoCorrente && contoCorrente.customCats ? JSON.parse(JSON.stringify(contoCorrente.customCats)) : { "Uscita": ["🏠 Casa", "🍕 Cibo", "🚗 Auto", "🛒 Spesa", "⏳ Programmata"], "Entrata": ["💰 Stipendio", "➕ Altro"] };
-        datiApp.conti[id] = { nome: nome, icona: icona, spese: [], future: [], customCats: customCatsDaUsare, budgets: {}, utenze: [], liste: {} };
+        const customCatsDaUsare = contoCorrente && contoCorrente.customCats ? 
+            JSON.parse(JSON.stringify(contoCorrente.customCats)) : 
+            { "Uscita": ["🏠 Casa", "🍕 Cibo", "🚗 Auto", "🛒 Spesa", "⏳ Programmata"], "Entrata": ["💰 Stipendio", "➕ Altro"] };
+        
+        datiApp.conti[id] = { 
+            nome: nome, 
+            icona: icona, 
+            spese: [], 
+            future: [], 
+            customCats: customCatsDaUsare, 
+            budgets: {}, 
+            utenze: [], 
+            liste: {} 
+        };
         salvaDatiApp();
         contoAttivoId = id;
         localStorage.setItem("moneyTrack_conto_attivo", contoAttivoId);
@@ -2243,7 +2613,7 @@
     }
 
     // ==========================================
-    // 📊 DASHBOARD PERSONALIZZABILE
+    // 📊 DASHBOARD PERSONALIZZABILE - DRAG & DROP VERTICALE
     // ==========================================
 
     function renderizzaDashboardPersonalizzata() {
@@ -2261,10 +2631,19 @@
         widgets.forEach(widget => {
             const content = renderWidgetContent(widget);
             html += `
-                <div class="dashboard-widget ${widget.tipo === 'salute' ? 'widget-full' : ''}">
+                <div class="dashboard-widget" 
+                     data-widget-id="${widget.id}"
+                     draggable="true"
+                     ondragstart="onWidgetDragStart(event, '${widget.id}')"
+                     ondragover="onWidgetDragOver(event)"
+                     ondrop="onWidgetDrop(event, '${widget.id}')"
+                     ondragend="onWidgetDragEnd(event)">
                     <div class="widget-header">
                         <span class="widget-title">${widget.titolo}</span>
-                        <button class="widget-close" onclick="rimuoviWidget('${widget.id}')">✕</button>
+                        <div>
+                            <span class="widget-drag-handle" title="Trascina per riordinare">⠿</span>
+                            <button class="widget-close" onclick="rimuoviWidget('${widget.id}')" title="Rimuovi widget">✕</button>
+                        </div>
                     </div>
                     <div class="widget-content">${content}</div>
                 </div>
@@ -2457,6 +2836,51 @@
         localStorage.setItem("moneyTrack_dashboard_layout", JSON.stringify(dashboardLayout));
         renderizzaDashboardPersonalizzata();
         mostraToast('🗑️ Widget rimosso', 'info');
+    }
+
+    // DRAG & DROP VERTICALE PER I WIDGET
+    function onWidgetDragStart(e, widgetId) {
+        draggedWidgetId = widgetId;
+        e.dataTransfer.effectAllowed = 'move';
+        setTimeout(() => e.target.classList.add('dragging'), 0);
+    }
+
+    function onWidgetDragOver(e) {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        const target = e.currentTarget;
+        if (target.dataset.widgetId !== draggedWidgetId) {
+            target.classList.add('drag-over');
+        }
+    }
+
+    function onWidgetDrop(e, targetWidgetId) {
+        e.preventDefault();
+        e.currentTarget.classList.remove('drag-over');
+        document.querySelectorAll('.dashboard-widget.dragging').forEach(el => el.classList.remove('dragging'));
+        
+        if (!draggedWidgetId || draggedWidgetId === targetWidgetId) return;
+
+        const fromIndex = dashboardLayout.findIndex(w => w.id === draggedWidgetId);
+        const toIndex = dashboardLayout.findIndex(w => w.id === targetWidgetId);
+
+        if (fromIndex === -1 || toIndex === -1) return;
+
+        // Sposta il widget verticalmente
+        const [removed] = dashboardLayout.splice(fromIndex, 1);
+        dashboardLayout.splice(toIndex, 0, removed);
+
+        // Aggiorna le posizioni
+        dashboardLayout.forEach((w, i) => w.posizione = i);
+        
+        localStorage.setItem("moneyTrack_dashboard_layout", JSON.stringify(dashboardLayout));
+        renderizzaDashboardPersonalizzata();
+        mostraToast('✅ Ordine widget aggiornato', 'success');
+    }
+
+    function onWidgetDragEnd(e) {
+        e.target.classList.remove('dragging');
+        document.querySelectorAll('.dashboard-widget.drag-over').forEach(el => el.classList.remove('drag-over'));
     }
 
     function aggiornaDashboardPersonalizzata() { renderizzaDashboardPersonalizzata(); }
@@ -2868,9 +3292,6 @@
     // ==========================================
     // ✏️ OPERAZIONI
     // ==========================================
-
-    let lastOperationTime = 0;
-    const MIN_OPERATION_INTERVAL = 1000;
 
     function aggiungiOperazione() {
         const now = Date.now();
@@ -3667,7 +4088,7 @@
                 icona: "🏦",
                 spese: [],
                 future: [],
-                customCats: { "Uscita": ["🏠 Casa", "🍕 Cibo", "🚗 Auto", "🛒 Spesa", "⏳ Programmata"], "Entrata": ["💰 Stipendio", "➕ Altro"] },
+                customCats: JSON.parse(JSON.stringify(customCats)),
                 budgets: {},
                 utenze: [],
                 liste: {}
@@ -3728,6 +4149,26 @@
         
         // Applica tema
         applyTheme();
+        
+        // Gestione login
+        _supabase.auth.onAuthStateChange(async (event, session) => {
+            if (event === 'SIGNED_IN' && session && session.user) {
+                await gestisciLoginOSincronizzazione(session.user);
+            } else if (event === 'SIGNED_OUT') {
+                currentUser = null;
+                firstLogin = true;
+                mostraStatoUtenteDisconnesso();
+            } else if (session && session.user && !currentUser) {
+                await gestisciLoginOSincronizzazione(session.user);
+            }
+        });
+
+        _supabase.auth.getSession().then(({ data }) => {
+            if (data && data.session && data.session.user) {
+                firstLogin = false;
+                gestisciLoginOSincronizzazione(data.session.user);
+            }
+        });
         
         console.log('✅ MoneyTrack avviato!');
         console.log(`📊 Spese: ${spese.length}, Conti: ${Object.keys(datiApp.conti).length}`);
@@ -3826,6 +4267,10 @@
     window.onContoDragOver = onContoDragOver;
     window.onContoDrop = onContoDrop;
     window.onContoDragEnd = onContoDragEnd;
+    window.onWidgetDragStart = onWidgetDragStart;
+    window.onWidgetDragOver = onWidgetDragOver;
+    window.onWidgetDrop = onWidgetDrop;
+    window.onWidgetDragEnd = onWidgetDragEnd;
     window.forzaMigrazioneManuale = forzaMigrazioneManuale;
     window.creaBackupManuale = creaBackupManuale;
     window.ripristinaBackup = ripristinaBackup;
@@ -3835,6 +4280,12 @@
     window.importaBackupFile = importaBackupFile;
     window.pulisciBackup = pulisciBackup;
     window.mostraToast = mostraToast;
+    window.loginbtn = loginbtn;
+    window.chiudiAuthModal = chiudiAuthModal;
+    window.eseguiAuth = eseguiAuth;
+    window.toggleAuthMode = toggleAuthMode;
+    window.eseguiLogout = eseguiLogout;
+    window.sincronizzaDalCloud = sincronizzaDalCloud;
 
     console.log('✅ MoneyTrack 2.1 - Tutte le funzionalità caricate!');
     </script>
