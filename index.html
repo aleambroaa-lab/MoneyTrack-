@@ -197,6 +197,7 @@
             scroll-snap-type: x mandatory;
             scrollbar-width: none;
             width: 100%;
+            gap: 0;
         }
         .conti-scroll-container::-webkit-scrollbar { display: none; }
 
@@ -209,101 +210,182 @@
             box-sizing: border-box;
         }
 
-        /* ===== CONTI INDICATORS ===== */
-        .conto-indicators {
+        /* ===== PAGINA AGGIUNGI CONTO ===== */
+        .conto-page-aggiungi {
+            flex: 0 0 100%;
+            min-width: 100%;
+            max-width: 100%;
+            scroll-snap-align: start;
+            padding: 0 15px 20px 15px;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 300px;
+        }
+        .conto-page-aggiungi .aggiungi-conto-card {
+            background: var(--bg-light);
+            border: 2px dashed var(--border);
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: var(--font-family);
+        }
+        .conto-page-aggiungi .aggiungi-conto-card:hover {
+            border-color: var(--primary);
+            background: var(--bg);
+            transform: scale(1.02);
+            box-shadow: var(--shadow-md);
+        }
+        .conto-page-aggiungi .aggiungi-conto-card:active {
+            transform: scale(0.96);
+        }
+        .conto-page-aggiungi .aggiungi-conto-card .plus-icon {
+            font-size: 4rem;
+            display: block;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+        .conto-page-aggiungi .aggiungi-conto-card .plus-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            font-family: var(--font-family);
+        }
+        .conto-page-aggiungi .aggiungi-conto-card .plus-sub {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-family: var(--font-family);
+        }
+
+        /* ===== SELEZIONE CONTI - PICCOLA BARRA ICONE ===== */
+        .conto-selector {
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 8px;
-            padding: 8px 15px 5px 15px;
-            flex-wrap: wrap;
-            background: var(--bg);
+            gap: 6px;
+            padding: 6px 10px;
+            background: var(--bg-light);
             border-bottom: 1px solid var(--border);
             position: sticky;
             top: 70px;
             z-index: 50;
-            min-height: 44px;
+            min-height: 36px;
             width: 100%;
             box-sizing: border-box;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            flex-wrap: nowrap;
         }
-        .conto-indicator {
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            cursor: pointer;
+        .conto-selector::-webkit-scrollbar { display: none; }
+
+        .conto-selector .conto-dot {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
             border: 2px solid var(--border);
-            background: var(--bg-light);
-            color: var(--text-secondary);
+            background: var(--bg);
+            cursor: pointer;
             transition: var(--transition);
-            white-space: nowrap;
             display: flex;
             align-items: center;
-            gap: 4px;
-            font-family: var(--font-family);
+            justify-content: center;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+            color: var(--text-secondary);
+            position: relative;
         }
-        .conto-indicator:hover { border-color: var(--primary); }
-        .conto-indicator.attivo { background: var(--primary); color: white; border-color: var(--primary); }
-        .conto-indicator .badge-saldo { font-size: 0.6rem; opacity: 0.7; font-family: var(--font-family); }
-        .conto-indicator .conto-nome-clickable {
-            cursor: pointer;
-            border-bottom: 1px dashed transparent;
-            transition: border-color 0.2s;
+        .conto-selector .conto-dot:hover {
+            border-color: var(--primary);
+            transform: scale(1.1);
         }
-        .conto-indicator .conto-nome-clickable:hover {
-            border-color: var(--text-secondary);
+        .conto-selector .conto-dot.attivo {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: white;
+            transform: scale(1.15);
+            box-shadow: 0 2px 8px rgba(181, 195, 182, 0.3);
         }
-        .conto-indicator .btn-elimina-conto {
-            margin-left: 4px;
-            font-size: 0.6rem;
-            opacity: 0.5;
-            cursor: pointer;
-            background: none;
+        .conto-selector .conto-dot .dot-elimina {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--danger);
+            color: white;
+            font-size: 0.5rem;
             border: none;
-            color: inherit;
-            padding: 0 2px;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
             font-family: var(--font-family);
+            line-height: 1;
+            padding: 0;
         }
-        .conto-indicator .btn-elimina-conto:hover { opacity: 1; }
-        .conto-indicator.btn-aggiungi-conto {
-            background: transparent;
+        .conto-selector .conto-dot:hover .dot-elimina {
+            display: flex;
+        }
+        .conto-selector .conto-dot .dot-elimina:hover {
+            transform: scale(1.2);
+        }
+        .conto-selector .conto-dot-aggiungi {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
             border: 2px dashed var(--border);
+            background: transparent;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
             color: var(--text-muted);
-            font-size: 0.85rem;
-            font-family: var(--font-family);
         }
-        .conto-indicator.btn-aggiungi-conto:hover { border-color: var(--primary); color: var(--primary); }
-
-        .conto-drag-handle {
-            cursor: grab;
-            opacity: 0.3;
-            font-size: 0.7rem;
-            margin-left: 4px;
-            user-select: none;
+        .conto-selector .conto-dot-aggiungi:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: scale(1.1);
         }
-        .conto-drag-handle:hover { opacity: 0.8; }
-        .conto-drag-handle:active { cursor: grabbing; }
-        .conto-indicator.dragging { opacity: 0.5; transform: scale(0.95); }
-        .conto-indicator.drag-over { border-color: var(--primary); background: var(--primary); color: white; transform: scale(1.05); }
 
         @media (max-width: 600px) {
-            .conto-indicators {
+            .conto-selector {
                 top: 60px;
-                gap: 5px;
-                padding: 6px 10px;
-                min-height: 40px;
-                overflow-x: auto;
-                flex-wrap: nowrap;
-                justify-content: flex-start;
+                gap: 4px;
+                padding: 4px 8px;
+                min-height: 30px;
             }
-            .conto-indicators::-webkit-scrollbar { display: none; }
-            .conto-indicator { padding: 4px 10px; font-size: 0.65rem; flex-shrink: 0; }
-            .conto-page { padding: 0 10px 15px 10px; }
+            .conto-selector .conto-dot {
+                width: 26px;
+                height: 26px;
+                font-size: 0.7rem;
+            }
+            .conto-selector .conto-dot-aggiungi {
+                width: 26px;
+                height: 26px;
+                font-size: 0.8rem;
+            }
+            .conto-selector .conto-dot .dot-elimina {
+                width: 14px;
+                height: 14px;
+                font-size: 0.4rem;
+                top: -5px;
+                right: -5px;
+            }
         }
 
-        /* ===== HEADER SALDO ===== */
+        /* ===== HEADER SALDO - CENTRATO ===== */
         .header-saldo {
-            padding: 20px;
+            padding: 24px 20px 20px 20px;
             color: white;
             display: flex;
             justify-content: space-between;
@@ -312,22 +394,102 @@
             margin-top: 10px;
             background: var(--success);
             font-family: var(--font-family);
+            position: relative;
+            min-height: 120px;
         }
-        .header-saldo h1 { margin: 5px 0 0 0; font-size: 2.2rem; font-weight: bold; font-family: var(--font-family); }
-        .header-saldo small { opacity: 0.9; font-size: 0.85rem; font-family: var(--font-family); }
-        .header-saldo button {
-            background: rgba(0,0,0,0.1);
+        .header-saldo .saldo-center {
+            flex: 1;
+            text-align: center;
+            padding: 0 10px;
+        }
+        .header-saldo .saldo-nome {
+            font-size: 0.75rem;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            font-family: var(--font-family);
+            margin-bottom: 4px;
+        }
+        .header-saldo .saldo-nome .rename-btn {
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.6);
+            cursor: pointer;
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            transition: var(--transition);
+            font-family: var(--font-family);
+            margin-left: 4px;
+        }
+        .header-saldo .saldo-nome .rename-btn:hover {
+            background: rgba(255,255,255,0.15);
+            color: white;
+        }
+        .header-saldo h1 { 
+            margin: 0; 
+            font-size: 2.8rem; 
+            font-weight: bold; 
+            font-family: var(--font-family);
+            line-height: 1.1;
+            letter-spacing: -0.5px;
+        }
+        .header-saldo .saldo-side {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        .header-saldo .saldo-side button {
+            background: rgba(0,0,0,0.12);
             border: none;
             color: white;
-            width: 44px;
-            height: 44px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             cursor: pointer;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             flex-shrink: 0;
             font-family: var(--font-family);
+            transition: var(--transition);
         }
-        .header-saldo button:active { transform: scale(0.9); }
+        .header-saldo .saldo-side button:hover {
+            background: rgba(0,0,0,0.25);
+        }
+        .header-saldo .saldo-side button:active { transform: scale(0.9); }
+        .header-saldo .saldo-side .btn-privacy {
+            background: rgba(0,0,0,0.08);
+        }
+        .header-saldo .saldo-side .btn-privacy:hover {
+            background: rgba(0,0,0,0.2);
+        }
+
+        @media (max-width: 600px) {
+            .header-saldo {
+                padding: 18px 14px 16px 14px;
+                min-height: 100px;
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .header-saldo .saldo-center {
+                padding: 0;
+                order: 2;
+            }
+            .header-saldo .saldo-side {
+                order: 1;
+                justify-content: flex-end;
+                margin-bottom: 6px;
+            }
+            .header-saldo .saldo-side button {
+                width: 34px;
+                height: 34px;
+                font-size: 0.9rem;
+            }
+            .header-saldo h1 { font-size: 2.2rem; }
+            .header-saldo .saldo-nome { font-size: 0.65rem; }
+            .header-saldo .saldo-nome .rename-btn { font-size: 0.6rem; }
+        }
 
         /* ===== BOTTONI ===== */
         .btn-modern {
@@ -1655,7 +1817,6 @@
     </style>
 </head>
 <body>
-
     <!-- ===== PULSANTE MIGRAZIONE ===== -->
     <button id="migrateBtn" onclick="forzaMigrazioneManuale()">🔄 Recupera i tuoi dati</button>
 
@@ -1702,8 +1863,8 @@
         <span class="value" id="patrimonioValore">0.00 €</span>
     </div>
 
-    <!-- ===== INDICATORI CONTI ===== -->
-    <div class="conto-indicators" id="contoIndicators"></div>
+    <!-- ===== SELEZIONE CONTI ===== -->
+    <div class="conto-selector" id="contoSelector"></div>
 
     <!-- ===== CONTI SCROLL ===== -->
     <div class="conti-scroll-container" id="contiScrollContainer"></div>
@@ -1714,21 +1875,17 @@
             <button onclick="mostraPagina('home')" class="btn-back-home">⬅ Torna alla Home</button>
             <h3 style="margin:0;">💾 Gestione Backup</h3>
         </div>
-
         <div class="backup-status" id="backupStatus">
             <span class="status-dot active" id="statusDot"></span>
             <span id="statusText">Caricamento...</span>
         </div>
-
         <div class="backup-actions-bar">
             <button class="btn-crea-backup" onclick="creaBackupManuale()">📦 Crea Backup</button>
             <button class="btn-importa-backup" onclick="document.getElementById('backupFileInput').click()">📂 Importa Backup</button>
             <button class="btn-esporta-tutti" onclick="esportaTuttiBackup()">💾 Esporta Tutti</button>
             <button class="btn-pulisci-backup" onclick="pulisciBackup()">🧹 Pulizia</button>
         </div>
-
         <input type="file" id="backupFileInput" style="display:none" accept=".json" onchange="importaBackupFile(event)">
-
         <div id="backupList"></div>
     </div>
 
@@ -1909,24 +2066,20 @@
                 <span style="font-size:2rem;">📖</span> Guida a MoneyTrack
             </h2>
             <div class="guide-content">
-                
                 <!-- PRIMI PASSI -->
                 <div class="guide-section">
                     <h3>🎯 Primi Passi</h3>
                     <p>Benvenuto su MoneyTrack! Questa guida ti accompagnerà passo passo nell'utilizzo di tutte le funzionalità dell'app.</p>
-                    
                     <div class="step">
                         <span class="step-num">1</span>
                         <div class="step-text">
-                            <strong>Creazione del primo conto</strong> - All'avvio, l'app crea automaticamente un "Conto Principale". Puoi rinominarlo o crearne di nuovi dal pulsante <strong>➕ Nuovo</strong> nella barra dei conti.
+                            <strong>Creazione del primo conto</strong> - All'avvio, l'app crea automaticamente un "Conto Principale". Puoi rinominarlo o crearne di nuovi scivolando all'ultima pagina e cliccando su <strong>➕ Nuovo Conto</strong>.
                         </div>
                     </div>
-                    
                     <div class="guide-screenshot">
                         <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='60'%3E%3Crect width='400' height='60' fill='%23f0f0f0'/%3E%3Ctext x='20' y='38' font-family='sans-serif' font-size='14' fill='%23666'%3E🏦 Conto Principale + ➕ Nuovo%3C/text%3E%3C/svg%3E" alt="Barra conti">
-                        <span class="placeholder-label">📸 Barra dei conti - Clicca su "+ Nuovo" per creare un conto</span>
+                        <span class="placeholder-label">📸 Scorri a destra per creare un nuovo conto</span>
                     </div>
-                    
                     <div class="step">
                         <span class="step-num">2</span>
                         <div class="step-text">
@@ -1934,162 +2087,126 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- GESTIONE CONTI -->
                 <div class="guide-section">
                     <h3>🏦 Gestione Conti</h3>
                     <p>MoneyTrack supporta <strong>conti multipli</strong> per organizzare al meglio le tue finanze.</p>
-                    
                     <div class="step">
                         <span class="step-num">1</span>
                         <div class="step-text">
-                            <strong>Creare un conto</strong> - Clicca sul pulsante <strong>➕ Nuovo</strong> nella barra dei conti, scegli un nome e un'icona, poi conferma.
+                            <strong>Creare un conto</strong> - Scorri a destra fino all'ultima pagina, clicca su <strong>➕ Nuovo Conto</strong>, scegli un nome e un'icona, poi conferma.
                         </div>
                     </div>
-                    
                     <div class="step">
                         <span class="step-num">2</span>
                         <div class="step-text">
-                            <strong>Rinominare un conto</strong> - Clicca sul nome del conto nella barra dei conti per rinominarlo.
+                            <strong>Rinominare un conto</strong> - Clicca sul pulsante <strong>✏️</strong> accanto al nome del conto nel header del saldo.
                         </div>
                     </div>
-                    
                     <div class="step">
                         <span class="step-num">3</span>
                         <div class="step-text">
-                            <strong>Cambiare conto attivo</strong> - Clicca sul nome del conto nella barra dei conti per passare da uno all'altro. Ogni conto ha le sue transazioni, budget e liste.
+                            <strong>Cambiare conto attivo</strong> - Clicca sull'icona del conto nella barra dei puntini in alto.
                         </div>
                     </div>
-                    
-                    <div class="step">
-                        <span class="step-num">4</span>
-                        <div class="step-text">
-                            <strong>Riordinare i conti</strong> - Usa il simbolo <strong>⠿</strong> (drag handle) per trascinare i conti nell'ordine che preferisci. L'ordine viene salvato automaticamente.
-                        </div>
-                    </div>
-                    
-                    <div class="guide-screenshot">
-                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='50'%3E%3Crect width='400' height='50' fill='%23f0f0f0'/%3E%3Ctext x='20' y='32' font-family='sans-serif' font-size='14' fill='%23666'%3E⠿ Conto 1  ⠿ Conto 2  ⠿ Conto 3%3C/text%3E%3C/svg%3E" alt="Drag handle conti">
-                        <span class="placeholder-label">📸 Trascina i conti con il simbolo ⠿ per riordinarli</span>
-                    </div>
-                    
                     <div class="guide-tip">
                         <span class="tip-icon">💡</span>
                         <span class="tip-text"><strong>Consiglio:</strong> Usa conti diversi per separare le spese personali da quelle di famiglia, o per tenere traccia di diversi progetti/risparmi.</span>
                     </div>
                 </div>
-
                 <!-- AGGIUNTA MOVIMENTI -->
                 <div class="guide-section">
                     <h3>✏️ Aggiunta Movimenti</h3>
                     <p>Registra ogni entrata e uscita per avere sempre sotto controllo le tue finanze.</p>
-                    
                     <div class="step">
                         <span class="step-num">1</span>
                         <div class="step-text">
                             <strong>Scegli il tipo</strong> - Seleziona <strong>📈 Entrata</strong> o <strong>📉 Uscita</strong> dal menu a tendina.
                         </div>
                     </div>
-                    
                     <div class="step">
                         <span class="step-num">2</span>
                         <div class="step-text">
                             <strong>Compila i campi</strong> - Inserisci data, categoria, importo e una nota descrittiva. Puoi usare la <strong>calcolatrice</strong> integrata cliccando su 🧮 CAL.
                         </div>
                     </div>
-                    
                     <div class="step">
                         <span class="step-num">3</span>
                         <div class="step-text">
                             <strong>Salva</strong> - Premi <strong>SALVA MOVIMENTO</strong> o usa la scorciatoia <strong>Ctrl+Enter</strong> per velocizzare l'inserimento.
                         </div>
                     </div>
-                    
                     <div class="guide-screenshot">
                         <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200'%3E%3Crect width='400' height='200' fill='%23f0f0f0'/%3E%3Ctext x='20' y='100' font-family='sans-serif' font-size='14' fill='%23666'%3E📈 Entrata  📉 Uscita%3C/text%3E%3Ctext x='20' y='130' font-family='sans-serif' font-size='14' fill='%23666'%3EData | Categoria | Importo | Nota%3C/text%3E%3Ctext x='20' y='160' font-family='sans-serif' font-size='14' fill='%23666'%3E[ SALVA MOVIMENTO ]%3C/text%3E%3C/svg%3E" alt="Form aggiunta movimento">
                         <span class="placeholder-label">📸 Form per aggiungere un nuovo movimento</span>
                     </div>
-                    
                     <div class="guide-tip">
                         <span class="tip-icon">⚡</span>
                         <span class="tip-text"><strong>Scorciatoia:</strong> Premi <strong>Ctrl+Enter</strong> mentre sei in un campo del form per salvare rapidamente il movimento senza usare il mouse.</span>
                     </div>
                 </div>
-
                 <!-- PERSONALIZZAZIONE WIDGET -->
                 <div class="guide-section">
                     <h3>📊 Personalizzazione Widget</h3>
                     <p>Organizza la tua dashboard come preferisci con i widget drag & drop verticale.</p>
-                    
                     <div class="step">
                         <span class="step-num">1</span>
                         <div class="step-text">
                             <strong>Aggiungere widget</strong> - Vai su <strong>📊 Widget</strong> nel menu, seleziona i widget che vuoi visualizzare e clicca su "Applica e chiudi".
                         </div>
                     </div>
-                    
                     <div class="step">
                         <span class="step-num">2</span>
                         <div class="step-text">
                             <strong>Riordinare i widget</strong> - Usa il simbolo <strong>⠿</strong> in alto a destra di ogni widget per trascinarlo verticalmente (su/giù). L'ordine viene salvato automaticamente.
                         </div>
                     </div>
-                    
                     <div class="step">
                         <span class="step-num">3</span>
                         <div class="step-text">
                             <strong>Rimuovere widget</strong> - Clicca sulla <strong>✕</strong> in alto a destra del widget per rimuoverlo dalla dashboard (o usa il menu Widget per gestirli tutti insieme).
                         </div>
                     </div>
-                    
                     <div class="guide-screenshot">
                         <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='120'%3E%3Crect width='400' height='120' fill='%23f0f0f0'/%3E%3Ctext x='20' y='30' font-family='sans-serif' font-size='14' fill='%23666'%3E⠿ 💪 Salute Finanziaria ✕%3C/text%3E%3Ctext x='20' y='60' font-family='sans-serif' font-size='14' fill='%23666'%3E⠿ 🏦 Debiti Attivi ✕%3C/text%3E%3Ctext x='20' y='90' font-family='sans-serif' font-size='14' fill='%23666'%3E⠿ 📈 Trend Spese ✕%3C/text%3E%3C/svg%3E" alt="Widget con drag handle">
                         <span class="placeholder-label">📸 Trascina i widget verticalmente con il simbolo ⠿</span>
                     </div>
                 </div>
-
                 <!-- BACKUP E SICUREZZA -->
                 <div class="guide-section">
                     <h3>💾 Backup e Sicurezza</h3>
                     <p>Proteggi i tuoi dati con il sistema di backup automatico e manuale.</p>
-                    
                     <div class="step">
                         <span class="step-num">1</span>
                         <div class="step-text">
                             <strong>Backup automatico</strong> - Ogni 5 minuti viene creato un backup automatico se ci sono modifiche ai dati. I backup sono conservati in locale.
                         </div>
                     </div>
-                    
                     <div class="step">
                         <span class="step-num">2</span>
                         <div class="step-text">
                             <strong>Backup manuale</strong> - Vai su <strong>💾 Gestione Backup</strong> nel menu e clicca su "Crea Backup". Puoi dare un nome personalizzato al backup.
                         </div>
                     </div>
-                    
                     <div class="step">
                         <span class="step-num">3</span>
                         <div class="step-text">
                             <strong>Ripristino</strong> - Dalla lista backup, clicca su <strong>🔄 Ripristina</strong> per tornare a una versione precedente dei tuoi dati.
                         </div>
                     </div>
-                    
                     <div class="guide-screenshot">
                         <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='80'%3E%3Crect width='400' height='80' fill='%23f0f0f0'/%3E%3Ctext x='20' y='30' font-family='sans-serif' font-size='13' fill='%23666'%3E📦 Crea Backup  📂 Importa Backup%3C/text%3E%3Ctext x='20' y='55' font-family='sans-serif' font-size='13' fill='%23666'%3E💾 Esporta Tutti  🧹 Pulizia%3C/text%3E%3C/svg%3E" alt="Pulsanti backup">
                         <span class="placeholder-label">📸 Sezione Backup - Gestisci i tuoi salvataggi</span>
                     </div>
-                    
                     <div class="guide-tip">
                         <span class="tip-icon">🔐</span>
                         <span class="tip-text"><strong>Sicurezza:</strong> Tutti i dati sono salvati in locale sul tuo dispositivo. Per maggiore sicurezza, attiva il <strong>Cloud Sync</strong> con il login per avere una copia dei tuoi dati online.</span>
                     </div>
                 </div>
-
                 <!-- ALTRE FUNZIONALITÀ -->
                 <div class="guide-section">
                     <h3>📅 Altre Funzionalità</h3>
                     <p>MoneyTrack offre molte altre funzionalità per una gestione completa delle tue finanze.</p>
-                    
                     <ul>
                         <li><strong>📅 Scadenze</strong> - Visualizza nel calendario le spese future programmate.</li>
                         <li><strong>📋 Liste Spese</strong> - Crea liste per progetti specifici (es. vacanze, ristrutturazione).</li>
@@ -2100,7 +2217,6 @@
                         <li><strong>🌙 Tema Scuro</strong> - Attiva la modalità notte per un'esperienza più confortevole.</li>
                     </ul>
                 </div>
-
                 <div class="guide-close-btn">
                     <button onclick="chiudiGuida()" style="font-family:var(--font-family);">✅ Ho capito, cominciamo!</button>
                 </div>
@@ -2168,15 +2284,21 @@
     let lastSyncTimestamp = 0;
 
     // ==========================================
-    // 📦 DATABASE E STATO
+    // 📦 DATABASE E STATO - CON CATEGORIE FIXED
     // ==========================================
+
+    // CATEGORIE DI DEFAULT
+    const DEFAULT_CATS = { 
+        "Uscita": ["🏠 Casa", "🍕 Cibo", "🚗 Auto", "🛒 Spesa", "⏳ Programmata"], 
+        "Entrata": ["💰 Stipendio", "➕ Altro"] 
+    };
 
     let datiApp = JSON.parse(localStorage.getItem("moneyTrack_multi_dati")) || null;
     let contoAttivoId = localStorage.getItem("moneyTrack_conto_attivo") || null;
 
     let spese = [];
     let future = [];
-    let customCats = { "Uscita": ["🏠 Casa", "🍕 Cibo", "🚗 Auto", "🛒 Spesa", "⏳ Programmata"], "Entrata": ["💰 Stipendio", "➕ Altro"] };
+    let customCats = JSON.parse(JSON.stringify(DEFAULT_CATS));
     let budgets = {};
     let utenze = [];
     let listeSpese = {};
@@ -2284,7 +2406,7 @@
                 salvaDatiApp();
                 getContoAttivo();
                 renderizzaConti();
-                renderizzaIndicatori();
+                renderizzaSelector();
                 aggiornaApp();
                 caricaSelectListe();
                 aggiornaPatrimonio();
@@ -2466,7 +2588,7 @@
     }
 
     // ==========================================
-    // 📦 FUNZIONI DATI - FIX CATEGORIE
+    // 📦 FUNZIONI DATI - CON CATEGORIE FIXED
     // ==========================================
 
     function getDatiConto(contoId) {
@@ -2474,13 +2596,12 @@
         if (!datiApp.conti) datiApp.conti = {};
         if (!contoId) return null;
         if (!datiApp.conti[contoId]) {
-            const defaultCats = { "Uscita": ["🏠 Casa", "🍕 Cibo", "🚗 Auto", "🛒 Spesa", "⏳ Programmata"], "Entrata": ["💰 Stipendio", "➕ Altro"] };
             datiApp.conti[contoId] = {
                 nome: "Conto",
                 icona: "🏦",
                 spese: [],
                 future: [],
-                customCats: JSON.parse(JSON.stringify(defaultCats)),
+                customCats: JSON.parse(JSON.stringify(DEFAULT_CATS)),
                 budgets: {},
                 utenze: [],
                 liste: {}
@@ -2496,13 +2617,12 @@
             if (conti.length === 0) {
                 const id = 'conto_' + Date.now();
                 datiApp = datiApp || { conti: {} };
-                const defaultCats = { "Uscita": ["🏠 Casa", "🍕 Cibo", "🚗 Auto", "🛒 Spesa", "⏳ Programmata"], "Entrata": ["💰 Stipendio", "➕ Altro"] };
                 datiApp.conti[id] = {
                     nome: "Conto Principale",
                     icona: "🏦",
                     spese: [],
                     future: [],
-                    customCats: JSON.parse(JSON.stringify(defaultCats)),
+                    customCats: JSON.parse(JSON.stringify(DEFAULT_CATS)),
                     budgets: {},
                     utenze: [],
                     liste: {}
@@ -2519,7 +2639,7 @@
         if (conto) {
             spese = conto.spese || [];
             future = conto.future || [];
-            customCats = conto.customCats || { "Uscita": ["🏠 Casa", "🍕 Cibo", "🚗 Auto", "🛒 Spesa", "⏳ Programmata"], "Entrata": ["💰 Stipendio", "➕ Altro"] };
+            customCats = conto.customCats || JSON.parse(JSON.stringify(DEFAULT_CATS));
             budgets = conto.budgets || {};
             utenze = conto.utenze || [];
             listeSpese = conto.liste || {};
@@ -2553,7 +2673,7 @@
     function salvaDebiti() { localStorage.setItem("moneyTrack_debiti", JSON.stringify(debiti)); }
 
     // ==========================================
-    // ✏️ CREA NUOVO CONTO - CON CATEGORIE EREDITATE
+    // ✏️ CREA NUOVO CONTO - CON PAGINA DEDICATA
     // ==========================================
 
     function creaNuovoConto() {
@@ -2565,19 +2685,13 @@
         if (!datiApp) datiApp = { conti: {} };
         if (!datiApp.conti) datiApp.conti = {};
         
-        // LEGGI LE CATEGORIE DAL CONTO CORRENTE (SE ESISTE)
         let customCatsDaUsare;
         const contoCorrente = contoAttivoId && datiApp.conti[contoAttivoId] ? datiApp.conti[contoAttivoId] : null;
         
         if (contoCorrente && contoCorrente.customCats && Object.keys(contoCorrente.customCats).length > 0) {
-            // COPIA LE CATEGORIE DAL CONTO CORRENTE
             customCatsDaUsare = JSON.parse(JSON.stringify(contoCorrente.customCats));
         } else {
-            // USA LE CATEGORIE DI DEFAULT
-            customCatsDaUsare = {
-                "Uscita": ["🏠 Casa", "🍕 Cibo", "🚗 Auto", "🛒 Spesa", "⏳ Programmata"],
-                "Entrata": ["💰 Stipendio", "➕ Altro"]
-            };
+            customCatsDaUsare = JSON.parse(JSON.stringify(DEFAULT_CATS));
         }
         
         datiApp.conti[id] = { 
@@ -2595,24 +2709,19 @@
         contoAttivoId = id;
         localStorage.setItem("moneyTrack_conto_attivo", contoAttivoId);
         
-        // CARICA IL NUOVO CONTO E AGGIORNA LE VARIABILI
         const conto = getDatiConto(contoAttivoId);
         if (conto) {
             spese = conto.spese || [];
             future = conto.future || [];
-            customCats = conto.customCats || { 
-                "Uscita": ["🏠 Casa", "🍕 Cibo", "🚗 Auto", "🛒 Spesa", "⏳ Programmata"], 
-                "Entrata": ["💰 Stipendio", "➕ Altro"] 
-            };
+            customCats = conto.customCats || JSON.parse(JSON.stringify(DEFAULT_CATS));
             budgets = conto.budgets || {};
             utenze = conto.utenze || [];
             listeSpese = conto.liste || {};
         }
         
-        // RENDERIZZA L'APP CON LE NUOVE CATEGORIE
         renderizzaConti();
-        renderizzaIndicatori();
-        aggiornaCategorie(); // RICARICA LE CATEGORIE NEL SELECT
+        renderizzaSelector();
+        aggiornaCategorie();
         aggiornaApp();
         caricaSelectListe();
         aggiornaPatrimonio();
@@ -2622,11 +2731,15 @@
         chiudiModalAggiungiConto();
         mostraToast('✅ Conto "' + nome + '" creato con le stesse categorie!', 'success');
         
+        setTimeout(() => {
+            scrollToConto(id);
+        }, 300);
+        
         if (currentUser) syncDatiSuSupabase();
     }
 
     // ==========================================
-    // 📊 GESTIONE WIDGET
+    // 📊 GESTIONE WIDGET - FIX
     // ==========================================
 
     function apriGestioneWidget() {
@@ -2660,7 +2773,7 @@
                         </div>
                     </div>
                     <label class="widget-toggle">
-                        <input type="checkbox" ${isActive ? 'checked' : ''} onchange="toggleWidget('${w.tipo}')">
+                        <input type="checkbox" ${isActive ? 'checked' : ''} data-widget-tipo="${w.tipo}" onchange="toggleWidget('${w.tipo}')">
                         <span class="toggle-track"></span>
                     </label>
                 </div>
@@ -2673,10 +2786,12 @@
         const existingIndex = dashboardLayout.findIndex(w => w.tipo === tipo);
         
         if (existingIndex === -1) {
+            // Aggiungi widget
             const widget = WIDGETS_AVAILABLE.find(w => w.tipo === tipo);
             if (widget) {
+                const newId = 'widget_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4);
                 dashboardLayout.push({
-                    id: 'widget_' + Date.now(),
+                    id: newId,
                     titolo: widget.titolo,
                     tipo: widget.tipo,
                     posizione: dashboardLayout.length
@@ -2684,11 +2799,15 @@
                 mostraToast('✅ Widget aggiunto: ' + widget.titolo, 'success');
             }
         } else {
+            // Rimuovi widget
             const removed = dashboardLayout[existingIndex];
             dashboardLayout.splice(existingIndex, 1);
+            // Riordina le posizioni
+            dashboardLayout.forEach((w, i) => w.posizione = i);
             mostraToast('🗑️ Widget rimosso: ' + removed.titolo, 'info');
         }
         
+        // Salva e aggiorna
         localStorage.setItem("moneyTrack_dashboard_layout", JSON.stringify(dashboardLayout));
         renderizzaListaWidget();
         renderizzaDashboardPersonalizzata();
@@ -2698,8 +2817,9 @@
         WIDGETS_AVAILABLE.forEach(w => {
             const exists = dashboardLayout.some(dw => dw.tipo === w.tipo);
             if (!exists) {
+                const newId = 'widget_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4);
                 dashboardLayout.push({
-                    id: 'widget_' + Date.now(),
+                    id: newId,
                     titolo: w.titolo,
                     tipo: w.tipo,
                     posizione: dashboardLayout.length
@@ -2719,6 +2839,326 @@
         renderizzaDashboardPersonalizzata();
         mostraToast('🗑️ Tutti i widget rimossi', 'info');
     }
+
+    // ==========================================
+    // 📊 DASHBOARD PERSONALIZZABILE - FIX
+    // ==========================================
+
+    function renderizzaDashboardPersonalizzata() {
+        const container = document.getElementById('dashboard-personalizzata');
+        if (!container) return;
+        
+        // Ordina i widget per posizione
+        const widgets = dashboardLayout.sort((a, b) => a.posizione - b.posizione);
+        
+        // Se non ci sono widget, mostra lo stato vuoto
+        if (widgets.length === 0) {
+            container.innerHTML = `
+                <div class="widget-empty-state">
+                    <span class="empty-icon">📊</span>
+                    <div class="empty-title">Nessun widget selezionato</div>
+                    <div class="empty-desc">Vai su <strong>📊 Widget</strong> nel menu per scegliere quali widget visualizzare.</div>
+                </div>
+            `;
+            return;
+        }
+        
+        let html = `<div class="dashboard-widgets">`;
+        widgets.forEach((widget, index) => {
+            const content = renderWidgetContent(widget);
+            // Usa l'id del widget o creane uno basato sull'indice
+            const widgetId = widget.id || 'widget_' + index;
+            html += `
+                <div class="dashboard-widget" 
+                     data-widget-id="${widgetId}"
+                     data-widget-index="${index}"
+                     draggable="true"
+                     ondragstart="onWidgetDragStart(event, '${widgetId}')"
+                     ondragover="onWidgetDragOver(event)"
+                     ondrop="onWidgetDrop(event, '${widgetId}')"
+                     ondragend="onWidgetDragEnd(event)">
+                    <div class="widget-header">
+                        <span class="widget-title">${widget.titolo}</span>
+                        <div>
+                            <span class="widget-drag-handle" title="Trascina per riordinare">⠿</span>
+                            <button class="widget-close" onclick="rimuoviWidget('${widgetId}')" title="Rimuovi widget">✕</button>
+                        </div>
+                    </div>
+                    <div class="widget-content">${content}</div>
+                </div>
+            `;
+        });
+        html += `</div>`;
+        container.innerHTML = html;
+    }
+
+    function rimuoviWidget(widgetId) {
+        if (!widgetId) {
+            console.error('❌ widgetId non valido:', widgetId);
+            return;
+        }
+        
+        // Trova il widget da rimuovere
+        const widgetToRemove = dashboardLayout.find(w => w.id === widgetId);
+        if (!widgetToRemove) {
+            // Prova a cercare per indice se l'id non corrisponde
+            const widgetIndex = parseInt(widgetId.split('_')[1]) || 0;
+            if (dashboardLayout[widgetIndex]) {
+                const removed = dashboardLayout[widgetIndex];
+                dashboardLayout.splice(widgetIndex, 1);
+                // Riordina le posizioni
+                dashboardLayout.forEach((w, i) => w.posizione = i);
+                localStorage.setItem("moneyTrack_dashboard_layout", JSON.stringify(dashboardLayout));
+                renderizzaDashboardPersonalizzata();
+                // Aggiorna anche la lista nella modale widget
+                const widgetList = document.getElementById('widget-list');
+                if (widgetList) {
+                    const checkbox = widgetList.querySelector(`input[data-widget-tipo="${removed.tipo}"]`);
+                    if (checkbox) checkbox.checked = false;
+                }
+                mostraToast(`🗑️ "${removed.titolo}" rimosso`, 'info');
+                if (currentUser) syncDatiSuSupabase();
+                return;
+            }
+            mostraToast('⚠️ Widget non trovato', 'warning');
+            return;
+        }
+        
+        if (!confirm(`Rimuovere "${widgetToRemove.titolo}" dalla dashboard?`)) return;
+        
+        // Rimuovi il widget
+        dashboardLayout = dashboardLayout.filter(w => w.id !== widgetId);
+        
+        // Riordina le posizioni
+        dashboardLayout.forEach((w, i) => w.posizione = i);
+        
+        // Salva
+        localStorage.setItem("moneyTrack_dashboard_layout", JSON.stringify(dashboardLayout));
+        
+        // Aggiorna la dashboard
+        renderizzaDashboardPersonalizzata();
+        
+        // Aggiorna anche la lista nella modale widget
+        const widgetList = document.getElementById('widget-list');
+        if (widgetList) {
+            const checkbox = widgetList.querySelector(`input[data-widget-tipo="${widgetToRemove.tipo}"]`);
+            if (checkbox) checkbox.checked = false;
+        }
+        
+        mostraToast(`🗑️ "${widgetToRemove.titolo}" rimosso`, 'info');
+        
+        if (currentUser) syncDatiSuSupabase();
+    }
+
+    function renderWidgetContent(widget) {
+        switch (widget.tipo) {
+            case 'salute': return renderWidgetSalute();
+            case 'debiti': return renderWidgetDebiti();
+            case 'trend': return renderWidgetTrend();
+            case 'risparmio': return renderWidgetRisparmio();
+            case 'spese': return renderWidgetSpese();
+            case 'prossime': return renderWidgetProssime();
+            default: return '<p style="color:var(--text-muted);">Widget non disponibile</p>';
+        }
+    }
+
+    function renderWidgetSalute() {
+        const oggi = new Date();
+        const meseCorrente = oggi.getMonth(), annoCorrente = oggi.getFullYear();
+        let totEntrate = 0, totUscite = 0;
+        spese.forEach(s => {
+            const d = new Date(s.data);
+            if (d.getMonth() === meseCorrente && d.getFullYear() === annoCorrente) {
+                if (s.tipo === 'Entrata') totEntrate += s.imp;
+                else totUscite += s.imp;
+            }
+        });
+        const risparmio = totEntrate - totUscite;
+        const percentualeRisparmio = totEntrate > 0 ? (risparmio / totEntrate * 100) : 0;
+        const score = Math.min(100, Math.max(0, 50 + (percentualeRisparmio * 2)));
+        return `
+            <div class="widget-salute">
+                <span class="salute-score" style="color:${score >= 70 ? 'var(--success)' : (score >= 40 ? 'var(--warning)' : 'var(--danger)')}">${score.toFixed(0)}%</span>
+                <span class="salute-label">Salute Finanziaria</span>
+                <div style="margin-top:10px;font-size:0.85rem;color:var(--text-secondary);">
+                    <div>📈 Risparmio: <strong>${risparmio.toFixed(2)}€</strong> (${percentualeRisparmio.toFixed(1)}%)</div>
+                    <div style="margin-top:4px;font-size:0.75rem;color:var(--text-muted);">
+                        ${score >= 70 ? '✅ Ottima gestione!' : score >= 40 ? '⚠️ Attenzione alle spese!' : '🔴 Rivedere il budget!'}
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    function renderWidgetDebiti() {
+        if (debiti.length === 0) return '<p style="color:var(--text-muted);text-align:center;padding:10px;">Nessun debito attivo 🎉</p>';
+        const debitiAttivi = debiti.filter(d => d.stato !== 'estinto');
+        let totaleResiduo = debitiAttivi.reduce((sum, d) => sum + d.capitaleResiduo, 0);
+        return `
+            <div class="widget-debito-summary">
+                ${debitiAttivi.slice(0, 3).map(d => `
+                    <div class="debito-mini-card"><span class="debito-nome">${d.nome}</span><span class="debito-importo">${d.capitaleResiduo.toFixed(0)}€</span></div>
+                `).join('')}
+                ${debitiAttivi.length > 3 ? `<div style="text-align:center;font-size:0.75rem;color:var(--text-muted);padding:4px;">+${debitiAttivi.length - 3} altri debiti</div>` : ''}
+                <div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border);display:flex;justify-content:space-between;font-weight:bold;">
+                    <span>Totale residuo</span><span style="color:var(--danger);">${totaleResiduo.toFixed(2)}€</span>
+                </div>
+            </div>
+        `;
+    }
+
+    function renderWidgetTrend() {
+        const ultimi6Mesi = [];
+        for (let i = 5; i >= 0; i--) {
+            const mese = new Date();
+            mese.setMonth(mese.getMonth() - i);
+            let tot = 0;
+            spese.forEach(s => {
+                const d = new Date(s.data);
+                if (d.getMonth() === mese.getMonth() && d.getFullYear() === mese.getFullYear()) {
+                    if (s.tipo === 'Uscita') tot += s.imp;
+                }
+            });
+            ultimi6Mesi.push({ mese: mesiEstesi[mese.getMonth()].substring(0, 3), spese: tot });
+        }
+        const trend = ultimi6Mesi.map(m => m.spese);
+        const media = trend.reduce((a, b) => a + b, 0) / trend.length;
+        const ultimo = trend[trend.length - 1] || 0;
+        const variazione = media > 0 ? ((ultimo - media) / media * 100) : 0;
+        return `
+            <div style="padding:5px 0;">
+                <div style="display:flex;justify-content:space-between;font-size:0.85rem;">
+                    <span>📊 Media 6 mesi: <strong>${media.toFixed(0)}€</strong></span>
+                    <span style="color:${variazione > 0 ? 'var(--danger)' : 'var(--success)'};">${variazione > 0 ? '↑' : '↓'} ${Math.abs(variazione).toFixed(1)}%</span>
+                </div>
+                <div style="display:flex;gap:4px;margin-top:8px;height:30px;align-items:flex-end;">
+                    ${trend.map((v, i) => `<div style="flex:1;background:${i === trend.length - 1 ? 'var(--danger)' : 'var(--primary)'};height:${v > 0 ? Math.max(10, (v / (Math.max(...trend) || 1)) * 100) : 5}%;border-radius:3px;min-height:5px;"></div>`).join('')}
+                </div>
+                <div style="display:flex;justify-content:space-between;font-size:0.6rem;color:var(--text-muted);margin-top:4px;">${ultimi6Mesi.map(m => `<span>${m.mese}</span>`).join('')}</div>
+            </div>
+        `;
+    }
+
+    function renderWidgetRisparmio() {
+        const oggi = new Date();
+        const meseCorrente = oggi.getMonth(), annoCorrente = oggi.getFullYear();
+        let totEntrate = 0, totUscite = 0;
+        spese.forEach(s => {
+            const d = new Date(s.data);
+            if (d.getMonth() === meseCorrente && d.getFullYear() === annoCorrente) {
+                if (s.tipo === 'Entrata') totEntrate += s.imp;
+                else totUscite += s.imp;
+            }
+        });
+        const risparmio = totEntrate - totUscite;
+        const percentuale = totEntrate > 0 ? (risparmio / totEntrate * 100) : 0;
+        return `
+            <div style="text-align:center;padding:5px;">
+                <div style="font-size:2rem;font-weight:bold;color:${risparmio >= 0 ? 'var(--success)' : 'var(--danger)'};">${risparmio.toFixed(0)}€</div>
+                <div style="font-size:0.8rem;color:var(--text-secondary);">Risparmiato questo mese</div>
+                <div style="margin-top:10px;">
+                    <div style="display:flex;justify-content:space-between;font-size:0.75rem;">
+                        <span>Progresso obiettivo (20%)</span>
+                        <span>${Math.min(100, (percentuale / 20 * 100)).toFixed(0)}%</span>
+                    </div>
+                    <div class="progress-bar-bg" style="height:6px;">
+                        <div class="progress-bar-fill" style="width:${Math.min(100, (percentuale / 20 * 100))}%;background:${percentuale >= 20 ? 'var(--success)' : 'var(--warning)'};"></div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    function renderWidgetSpese() {
+        const oggi = new Date();
+        const meseCorrente = oggi.getMonth(), annoCorrente = oggi.getFullYear();
+        const categorie = {};
+        spese.forEach(s => {
+            const d = new Date(s.data);
+            if (d.getMonth() === meseCorrente && d.getFullYear() === annoCorrente) {
+                if (s.tipo === 'Uscita') categorie[s.cat] = (categorie[s.cat] || 0) + s.imp;
+            }
+        });
+        const sorted = Object.entries(categorie).sort((a, b) => b[1] - a[1]).slice(0, 4);
+        if (sorted.length === 0) return '<p style="color:var(--text-muted);text-align:center;padding:10px;">Nessuna spesa questo mese</p>';
+        const totali = Object.values(categorie).reduce((a, b) => a + b, 0);
+        return `<div>${sorted.map(([cat, imp]) => `
+            <div style="display:flex;justify-content:space-between;padding:3px 0;font-size:0.8rem;border-bottom:1px solid var(--border);">
+                <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:60%;">${cat}</span>
+                <span>${(imp / totali * 100).toFixed(0)}% (${imp.toFixed(0)}€)</span>
+            </div>
+        `).join('')}</div>`;
+    }
+
+    function renderWidgetProssime() {
+        const oggi = new Date();
+        oggi.setHours(0, 0, 0, 0);
+        const prossime = future.filter(f => new Date(f.data) >= oggi).sort((a, b) => new Date(a.data) - new Date(b.data)).slice(0, 4);
+        if (prossime.length === 0) return '<p style="color:var(--text-muted);text-align:center;padding:10px;">Nessuna spesa futura</p>';
+        return `<div>${prossime.map(p => `
+            <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:0.8rem;border-bottom:1px solid var(--border);">
+                <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:55%;">${p.desc}</span>
+                <span style="font-weight:bold;color:var(--danger);">${p.imp.toFixed(0)}€</span>
+                <span style="font-size:0.65rem;color:var(--text-muted);">${p.data}</span>
+            </div>
+        `).join('')}</div>`;
+    }
+
+    // ==========================================
+    // 📊 FUNZIONI DRAG & DROP WIDGET - FIX
+    // ==========================================
+
+    function onWidgetDragStart(e, widgetId) {
+        draggedWidgetId = widgetId;
+        e.dataTransfer.effectAllowed = 'move';
+        setTimeout(() => {
+            const target = e.target.closest('.dashboard-widget');
+            if (target) target.classList.add('dragging');
+        }, 0);
+    }
+
+    function onWidgetDragOver(e) {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        const target = e.currentTarget.closest('.dashboard-widget');
+        if (target && target.dataset.widgetId !== draggedWidgetId) {
+            target.classList.add('drag-over');
+        }
+    }
+
+    function onWidgetDrop(e, targetWidgetId) {
+        e.preventDefault();
+        
+        document.querySelectorAll('.dashboard-widget.dragging').forEach(el => el.classList.remove('dragging'));
+        document.querySelectorAll('.dashboard-widget.drag-over').forEach(el => el.classList.remove('drag-over'));
+        
+        if (!draggedWidgetId || draggedWidgetId === targetWidgetId) return;
+
+        const fromIndex = dashboardLayout.findIndex(w => w.id === draggedWidgetId);
+        const toIndex = dashboardLayout.findIndex(w => w.id === targetWidgetId);
+
+        if (fromIndex === -1 || toIndex === -1) return;
+
+        const [removed] = dashboardLayout.splice(fromIndex, 1);
+        dashboardLayout.splice(toIndex, 0, removed);
+
+        dashboardLayout.forEach((w, i) => w.posizione = i);
+        
+        localStorage.setItem("moneyTrack_dashboard_layout", JSON.stringify(dashboardLayout));
+        renderizzaDashboardPersonalizzata();
+        mostraToast('✅ Ordine widget aggiornato', 'success');
+        
+        if (currentUser) syncDatiSuSupabase();
+    }
+
+    function onWidgetDragEnd(e) {
+        const target = e.target.closest('.dashboard-widget');
+        if (target) target.classList.remove('dragging');
+        document.querySelectorAll('.dashboard-widget.drag-over').forEach(el => el.classList.remove('drag-over'));
+        draggedWidgetId = null;
+    }
+
+    function aggiornaDashboardPersonalizzata() { renderizzaDashboardPersonalizzata(); }
 
     // ==========================================
     // 🔐 AUTH
@@ -2879,7 +3319,7 @@
         getContoAttivo();
         aggiornaApp();
         caricaSelectListe();
-        renderizzaIndicatori();
+        renderizzaSelector();
         aggiornaPatrimonio();
         renderizzaDebiti();
         renderizzaDashboardPersonalizzata();
@@ -3039,7 +3479,7 @@
         datiApp.conti[contoDaRinominare].nome = nuovoNome;
         salvaDatiApp();
         chiudiModalRinominaConto();
-        renderizzaIndicatori();
+        renderizzaSelector();
         renderizzaConti();
         mostraToast('✅ Conto rinominato con successo!', 'success');
         if (currentUser) syncDatiSuSupabase();
@@ -3071,13 +3511,12 @@
         try {
             const contoId = 'conto_' + Date.now();
             if (!datiApp) datiApp = { conti: {} };
-            const defaultCats = { "Uscita": ["🏠 Casa", "🍕 Cibo", "🚗 Auto", "🛒 Spesa", "⏳ Programmata"], "Entrata": ["💰 Stipendio", "➕ Altro"] };
             datiApp.conti[contoId] = {
                 nome: "Conto Principale",
                 icona: "🏦",
                 spese: JSON.parse(oldDb) || [],
                 future: JSON.parse(localStorage.getItem("moneyTrack_future")) || [],
-                customCats: JSON.parse(localStorage.getItem("moneyTrack_cats")) || JSON.parse(JSON.stringify(defaultCats)),
+                customCats: JSON.parse(localStorage.getItem("moneyTrack_cats")) || JSON.parse(JSON.stringify(DEFAULT_CATS)),
                 budgets: JSON.parse(localStorage.getItem("moneyTrack_budgets")) || {},
                 utenze: JSON.parse(localStorage.getItem("moneyTrack_utenze")) || [],
                 liste: JSON.parse(localStorage.getItem("moneyTrack_liste")) || {}
@@ -3097,13 +3536,12 @@
             if (speseVecchie.length === 0) { alert('❌ Nessuna spesa trovata!'); return; }
             const contoId = 'conto_' + Date.now();
             if (!datiApp) datiApp = { conti: {} };
-            const defaultCats = { "Uscita": ["🏠 Casa", "🍕 Cibo", "🚗 Auto", "🛒 Spesa", "⏳ Programmata"], "Entrata": ["💰 Stipendio", "➕ Altro"] };
             datiApp.conti[contoId] = {
                 nome: "Conto Principale",
                 icona: "🏦",
                 spese: speseVecchie,
                 future: JSON.parse(localStorage.getItem("moneyTrack_future")) || [],
-                customCats: JSON.parse(localStorage.getItem("moneyTrack_cats")) || JSON.parse(JSON.stringify(defaultCats)),
+                customCats: JSON.parse(localStorage.getItem("moneyTrack_cats")) || JSON.parse(JSON.stringify(DEFAULT_CATS)),
                 budgets: JSON.parse(localStorage.getItem("moneyTrack_budgets")) || {},
                 utenze: JSON.parse(localStorage.getItem("moneyTrack_utenze")) || [],
                 liste: JSON.parse(localStorage.getItem("moneyTrack_liste")) || {}
@@ -3127,21 +3565,21 @@
     function mostraPagina(p) {
         document.querySelectorAll('#pagina-backup, #pagina-analisi, #pagina-news, #pagina-liste, #sezione-scadenze').forEach(el => el.style.display = 'none');
         const contiScroll = document.getElementById('contiScrollContainer');
-        const indicators = document.getElementById('contoIndicators');
+        const selector = document.getElementById('contoSelector');
         const patrimonio = document.getElementById('patrimonioTotale');
         
         if (p === 'home') {
             contiScroll.style.display = 'flex';
-            indicators.style.display = 'flex';
+            selector.style.display = 'flex';
             patrimonio.style.display = 'flex';
             aggiornaApp();
-            renderizzaIndicatori();
+            renderizzaSelector();
             aggiornaPatrimonio();
             renderizzaDebiti();
             renderizzaDashboardPersonalizzata();
         } else {
             contiScroll.style.display = 'none';
-            indicators.style.display = 'none';
+            selector.style.display = 'none';
             patrimonio.style.display = 'none';
             const pagina = document.getElementById('pagina-' + p);
             if (pagina) pagina.style.display = 'block';
@@ -3152,6 +3590,38 @@
             else if (p === 'scadenze') disegnaCalendario();
         }
         window.scrollTo(0, 0);
+    }
+
+    // ==========================================
+    // 🏷️ SELEZIONE CONTI (solo icone)
+    // ==========================================
+
+    function renderizzaSelector() {
+        const container = document.getElementById('contoSelector');
+        if (!container) return;
+        const conti = getConti();
+        
+        let html = '';
+        conti.forEach(conto => {
+            const isAttivo = conto.id === contoAttivoId;
+            html += `
+                <div class="conto-dot ${isAttivo ? 'attivo' : ''}" 
+                     data-conto-id="${conto.id}"
+                     onclick="cambiaConto('${conto.id}')"
+                     title="${sanitizeHTML(conto.nome)}">
+                    ${conto.icona || '🏦'}
+                    <button class="dot-elimina" onclick="event.stopPropagation(); eliminaConto('${conto.id}')" title="Elimina conto">✕</button>
+                </div>
+            `;
+        });
+        
+        html += `
+            <div class="conto-dot-aggiungi" onclick="apriModalAggiungiConto()" title="Aggiungi conto">
+                ➕
+            </div>
+        `;
+        
+        container.innerHTML = html;
     }
 
     // ==========================================
@@ -3193,7 +3663,7 @@
         }
         getContoAttivo();
         renderizzaConti();
-        renderizzaIndicatori();
+        renderizzaSelector();
         aggiornaApp();
         caricaSelectListe();
         aggiornaPatrimonio();
@@ -3210,7 +3680,7 @@
         getContoAttivo();
         aggiornaApp();
         caricaSelectListe();
-        renderizzaIndicatori();
+        renderizzaSelector();
         aggiornaPatrimonio();
         renderizzaDebiti();
         renderizzaDashboardPersonalizzata();
@@ -3221,89 +3691,11 @@
         const container = document.getElementById('contiScrollContainer');
         const pages = container.querySelectorAll('.conto-page');
         for (let i = 0; i < pages.length; i++) {
-            if (pages[i].dataset.contoId === id) { container.scrollLeft = pages[i].offsetLeft; break; }
+            if (pages[i].dataset.contoId === id) { 
+                container.scrollLeft = pages[i].offsetLeft; 
+                break; 
+            }
         }
-    }
-
-    function renderizzaIndicatori() {
-        const container = document.getElementById('contoIndicators');
-        if (!container) return;
-        const conti = getConti();
-        let html = '';
-        conti.forEach(conto => {
-            const isAttivo = conto.id === contoAttivoId;
-            let saldo = 0;
-            if (conto.spese) { conto.spese.forEach(s => { if (s.tipo === "Entrata") saldo += s.imp; else saldo -= s.imp; }); }
-            html += `
-                <div class="conto-indicator ${isAttivo ? 'attivo' : ''}" 
-                     data-conto-id="${conto.id}"
-                     draggable="true"
-                     ondragstart="onContoDragStart(event, '${conto.id}')"
-                     ondragover="onContoDragOver(event)"
-                     ondrop="onContoDrop(event, '${conto.id}')"
-                     ondragend="onContoDragEnd(event)">
-                    <span>${conto.icona || '🏦'}</span>
-                    <span class="conto-nome-clickable" onclick="event.stopPropagation(); apriModalRinominaConto('${conto.id}')" title="Clicca per rinominare">${sanitizeHTML(conto.nome)}</span>
-                    <span class="badge-saldo">${privacy ? '***' : saldo.toFixed(0)}€</span>
-                    <span class="conto-drag-handle" onclick="event.stopPropagation();">⠿</span>
-                    ${conti.length > 1 ? `<button class="btn-elimina-conto" onclick="event.stopPropagation(); eliminaConto('${conto.id}')" title="Elimina conto">✕</button>` : ''}
-                </div>
-            `;
-        });
-        html += `<div class="conto-indicator btn-aggiungi-conto" onclick="apriModalAggiungiConto()">➕ Nuovo</div>`;
-        container.innerHTML = html;
-    }
-
-    // Aggiorna gli event listener per il click sul nome del conto
-    function aggiornaClickNomeConto() {
-        document.querySelectorAll('.conto-nome-clickable').forEach(el => {
-            el.onclick = function(e) {
-                e.stopPropagation();
-                const contoId = this.closest('.conto-indicator').dataset.contoId;
-                apriModalRinominaConto(contoId);
-            };
-        });
-    }
-
-    function onContoDragStart(e, contoId) {
-        draggedContoId = contoId;
-        e.dataTransfer.effectAllowed = 'move';
-        e.target.classList.add('dragging');
-    }
-
-    function onContoDragOver(e) {
-        e.preventDefault();
-        e.dataTransfer.dropEffect = 'move';
-        if (e.currentTarget.dataset.contoId !== draggedContoId) {
-            e.currentTarget.classList.add('drag-over');
-        }
-    }
-
-    function onContoDrop(e, targetContoId) {
-        e.preventDefault();
-        e.currentTarget.classList.remove('drag-over');
-        if (!draggedContoId || draggedContoId === targetContoId) return;
-        const conti = getConti();
-        const fromIndex = conti.findIndex(c => c.id === draggedContoId);
-        const toIndex = conti.findIndex(c => c.id === targetContoId);
-        if (fromIndex === -1 || toIndex === -1) return;
-        const keys = Object.keys(datiApp.conti);
-        const newKeys = [...keys];
-        newKeys.splice(fromIndex, 1);
-        newKeys.splice(toIndex, 0, draggedContoId);
-        const nuovoOrdine = {};
-        newKeys.forEach(key => { nuovoOrdine[key] = datiApp.conti[key]; });
-        datiApp.conti = nuovoOrdine;
-        salvaDatiApp();
-        renderizzaIndicatori();
-        renderizzaConti();
-        if (contoAttivoId) cambiaConto(contoAttivoId);
-        mostraToast('✅ Ordine conti aggiornato', 'success');
-    }
-
-    function onContoDragEnd(e) {
-        e.target.classList.remove('dragging');
-        document.querySelectorAll('.conto-indicator.drag-over').forEach(el => el.classList.remove('drag-over'));
     }
 
     // ==========================================
@@ -3430,296 +3822,25 @@
     }
 
     // ==========================================
-    // 📊 DASHBOARD PERSONALIZZABILE - DRAG & DROP VERTICALE
-    // ==========================================
-
-    function renderizzaDashboardPersonalizzata() {
-        const container = document.getElementById('dashboard-personalizzata');
-        if (!container) return;
-        
-        const widgets = dashboardLayout.sort((a, b) => a.posizione - b.posizione);
-        
-        // Se non ci sono widget, mostra lo stato vuoto SENZA pulsante
-        if (widgets.length === 0) {
-            container.innerHTML = `
-                <div class="widget-empty-state">
-                    <span class="empty-icon">📊</span>
-                    <div class="empty-title">Nessun widget selezionato</div>
-                    <div class="empty-desc">Vai su <strong>📊 Widget</strong> nel menu per scegliere quali widget visualizzare.</div>
-                </div>
-            `;
-            return;
-        }
-        
-        let html = `<div class="dashboard-widgets">`;
-        widgets.forEach(widget => {
-            const content = renderWidgetContent(widget);
-            html += `
-                <div class="dashboard-widget" 
-                     data-widget-id="${widget.id}"
-                     draggable="true"
-                     ondragstart="onWidgetDragStart(event, '${widget.id}')"
-                     ondragover="onWidgetDragOver(event)"
-                     ondrop="onWidgetDrop(event, '${widget.id}')"
-                     ondragend="onWidgetDragEnd(event)">
-                    <div class="widget-header">
-                        <span class="widget-title">${widget.titolo}</span>
-                        <div>
-                            <span class="widget-drag-handle" title="Trascina per riordinare">⠿</span>
-                            <button class="widget-close" onclick="rimuoviWidget('${widget.id}')" title="Rimuovi widget">✕</button>
-                        </div>
-                    </div>
-                    <div class="widget-content">${content}</div>
-                </div>
-            `;
-        });
-        html += `</div>`;
-        container.innerHTML = html;
-    }
-
-    function renderWidgetContent(widget) {
-        switch (widget.tipo) {
-            case 'salute': return renderWidgetSalute();
-            case 'debiti': return renderWidgetDebiti();
-            case 'trend': return renderWidgetTrend();
-            case 'risparmio': return renderWidgetRisparmio();
-            case 'spese': return renderWidgetSpese();
-            case 'prossime': return renderWidgetProssime();
-            default: return '<p style="color:var(--text-muted);">Widget non disponibile</p>';
-        }
-    }
-
-    function renderWidgetSalute() {
-        const oggi = new Date();
-        const meseCorrente = oggi.getMonth(), annoCorrente = oggi.getFullYear();
-        let totEntrate = 0, totUscite = 0;
-        spese.forEach(s => {
-            const d = new Date(s.data);
-            if (d.getMonth() === meseCorrente && d.getFullYear() === annoCorrente) {
-                if (s.tipo === 'Entrata') totEntrate += s.imp;
-                else totUscite += s.imp;
-            }
-        });
-        const risparmio = totEntrate - totUscite;
-        const percentualeRisparmio = totEntrate > 0 ? (risparmio / totEntrate * 100) : 0;
-        const score = Math.min(100, Math.max(0, 50 + (percentualeRisparmio * 2)));
-        return `
-            <div class="widget-salute">
-                <span class="salute-score" style="color:${score >= 70 ? 'var(--success)' : (score >= 40 ? 'var(--warning)' : 'var(--danger)')}">${score.toFixed(0)}%</span>
-                <span class="salute-label">Salute Finanziaria</span>
-                <div style="margin-top:10px;font-size:0.85rem;color:var(--text-secondary);">
-                    <div>📈 Risparmio: <strong>${risparmio.toFixed(2)}€</strong> (${percentualeRisparmio.toFixed(1)}%)</div>
-                    <div style="margin-top:4px;font-size:0.75rem;color:var(--text-muted);">
-                        ${score >= 70 ? '✅ Ottima gestione!' : score >= 40 ? '⚠️ Attenzione alle spese!' : '🔴 Rivedere il budget!'}
-                    </div>
-                </div>
-            </div>
-        `;
-    }
-
-    function renderWidgetDebiti() {
-        if (debiti.length === 0) return '<p style="color:var(--text-muted);text-align:center;padding:10px;">Nessun debito attivo 🎉</p>';
-        const debitiAttivi = debiti.filter(d => d.stato !== 'estinto');
-        let totaleResiduo = debitiAttivi.reduce((sum, d) => sum + d.capitaleResiduo, 0);
-        return `
-            <div class="widget-debito-summary">
-                ${debitiAttivi.slice(0, 3).map(d => `
-                    <div class="debito-mini-card"><span class="debito-nome">${d.nome}</span><span class="debito-importo">${d.capitaleResiduo.toFixed(0)}€</span></div>
-                `).join('')}
-                ${debitiAttivi.length > 3 ? `<div style="text-align:center;font-size:0.75rem;color:var(--text-muted);padding:4px;">+${debitiAttivi.length - 3} altri debiti</div>` : ''}
-                <div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border);display:flex;justify-content:space-between;font-weight:bold;">
-                    <span>Totale residuo</span><span style="color:var(--danger);">${totaleResiduo.toFixed(2)}€</span>
-                </div>
-            </div>
-        `;
-    }
-
-    function renderWidgetTrend() {
-        const ultimi6Mesi = [];
-        for (let i = 5; i >= 0; i--) {
-            const mese = new Date();
-            mese.setMonth(mese.getMonth() - i);
-            let tot = 0;
-            spese.forEach(s => {
-                const d = new Date(s.data);
-                if (d.getMonth() === mese.getMonth() && d.getFullYear() === mese.getFullYear()) {
-                    if (s.tipo === 'Uscita') tot += s.imp;
-                }
-            });
-            ultimi6Mesi.push({ mese: mesiEstesi[mese.getMonth()].substring(0, 3), spese: tot });
-        }
-        const trend = ultimi6Mesi.map(m => m.spese);
-        const media = trend.reduce((a, b) => a + b, 0) / trend.length;
-        const ultimo = trend[trend.length - 1] || 0;
-        const variazione = media > 0 ? ((ultimo - media) / media * 100) : 0;
-        return `
-            <div style="padding:5px 0;">
-                <div style="display:flex;justify-content:space-between;font-size:0.85rem;">
-                    <span>📊 Media 6 mesi: <strong>${media.toFixed(0)}€</strong></span>
-                    <span style="color:${variazione > 0 ? 'var(--danger)' : 'var(--success)'};">${variazione > 0 ? '↑' : '↓'} ${Math.abs(variazione).toFixed(1)}%</span>
-                </div>
-                <div style="display:flex;gap:4px;margin-top:8px;height:30px;align-items:flex-end;">
-                    ${trend.map((v, i) => `<div style="flex:1;background:${i === trend.length - 1 ? 'var(--danger)' : 'var(--primary)'};height:${v > 0 ? Math.max(10, (v / (Math.max(...trend) || 1)) * 100) : 5}%;border-radius:3px;min-height:5px;"></div>`).join('')}
-                </div>
-                <div style="display:flex;justify-content:space-between;font-size:0.6rem;color:var(--text-muted);margin-top:4px;">${ultimi6Mesi.map(m => `<span>${m.mese}</span>`).join('')}</div>
-            </div>
-        `;
-    }
-
-    function renderWidgetRisparmio() {
-        const oggi = new Date();
-        const meseCorrente = oggi.getMonth(), annoCorrente = oggi.getFullYear();
-        let totEntrate = 0, totUscite = 0;
-        spese.forEach(s => {
-            const d = new Date(s.data);
-            if (d.getMonth() === meseCorrente && d.getFullYear() === annoCorrente) {
-                if (s.tipo === 'Entrata') totEntrate += s.imp;
-                else totUscite += s.imp;
-            }
-        });
-        const risparmio = totEntrate - totUscite;
-        const percentuale = totEntrate > 0 ? (risparmio / totEntrate * 100) : 0;
-        return `
-            <div style="text-align:center;padding:5px;">
-                <div style="font-size:2rem;font-weight:bold;color:${risparmio >= 0 ? 'var(--success)' : 'var(--danger)'};">${risparmio.toFixed(0)}€</div>
-                <div style="font-size:0.8rem;color:var(--text-secondary);">Risparmiato questo mese</div>
-                <div style="margin-top:10px;">
-                    <div style="display:flex;justify-content:space-between;font-size:0.75rem;">
-                        <span>Progresso obiettivo (20%)</span>
-                        <span>${Math.min(100, (percentuale / 20 * 100)).toFixed(0)}%</span>
-                    </div>
-                    <div class="progress-bar-bg" style="height:6px;">
-                        <div class="progress-bar-fill" style="width:${Math.min(100, (percentuale / 20 * 100))}%;background:${percentuale >= 20 ? 'var(--success)' : 'var(--warning)'};"></div>
-                    </div>
-                </div>
-            </div>
-        `;
-    }
-
-    function renderWidgetSpese() {
-        const oggi = new Date();
-        const meseCorrente = oggi.getMonth(), annoCorrente = oggi.getFullYear();
-        const categorie = {};
-        spese.forEach(s => {
-            const d = new Date(s.data);
-            if (d.getMonth() === meseCorrente && d.getFullYear() === annoCorrente) {
-                if (s.tipo === 'Uscita') categorie[s.cat] = (categorie[s.cat] || 0) + s.imp;
-            }
-        });
-        const sorted = Object.entries(categorie).sort((a, b) => b[1] - a[1]).slice(0, 4);
-        if (sorted.length === 0) return '<p style="color:var(--text-muted);text-align:center;padding:10px;">Nessuna spesa questo mese</p>';
-        const totali = Object.values(categorie).reduce((a, b) => a + b, 0);
-        return `<div>${sorted.map(([cat, imp]) => `
-            <div style="display:flex;justify-content:space-between;padding:3px 0;font-size:0.8rem;border-bottom:1px solid var(--border);">
-                <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:60%;">${cat}</span>
-                <span>${(imp / totali * 100).toFixed(0)}% (${imp.toFixed(0)}€)</span>
-            </div>
-        `).join('')}</div>`;
-    }
-
-    function renderWidgetProssime() {
-        const oggi = new Date();
-        oggi.setHours(0, 0, 0, 0);
-        const prossime = future.filter(f => new Date(f.data) >= oggi).sort((a, b) => new Date(a.data) - new Date(b.data)).slice(0, 4);
-        if (prossime.length === 0) return '<p style="color:var(--text-muted);text-align:center;padding:10px;">Nessuna spesa futura</p>';
-        return `<div>${prossime.map(p => `
-            <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:0.8rem;border-bottom:1px solid var(--border);">
-                <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:55%;">${p.desc}</span>
-                <span style="font-weight:bold;color:var(--danger);">${p.imp.toFixed(0)}€</span>
-                <span style="font-size:0.65rem;color:var(--text-muted);">${p.data}</span>
-            </div>
-        `).join('')}</div>`;
-    }
-
-    function aggiungiWidget(tipo) {
-        const widgetMap = {
-            'salute': { titolo: '💪 Salute Finanziaria', tipo: 'salute' },
-            'debiti': { titolo: '🏦 Debiti Attivi', tipo: 'debiti' },
-            'trend': { titolo: '📈 Trend Spese', tipo: 'trend' },
-            'risparmio': { titolo: '🎯 Risparmio Mese', tipo: 'risparmio' },
-            'spese': { titolo: '💸 Spese per Categoria', tipo: 'spese' },
-            'prossime': { titolo: '📅 Prossime Scadenze', tipo: 'prossime' }
-        };
-        const widget = widgetMap[tipo];
-        if (!widget) return;
-        if (dashboardLayout.some(w => w.tipo === tipo)) { alert('Questo widget è già presente!'); return; }
-        const id = 'widget_' + Date.now();
-        dashboardLayout.push({ id: id, ...widget, posizione: dashboardLayout.length });
-        localStorage.setItem("moneyTrack_dashboard_layout", JSON.stringify(dashboardLayout));
-        renderizzaDashboardPersonalizzata();
-        mostraToast('✅ Widget aggiunto!', 'success');
-    }
-
-    function rimuoviWidget(widgetId) {
-        if (!confirm('Rimuovere questo widget?')) return;
-        dashboardLayout = dashboardLayout.filter(w => w.id !== widgetId);
-        localStorage.setItem("moneyTrack_dashboard_layout", JSON.stringify(dashboardLayout));
-        renderizzaDashboardPersonalizzata();
-        mostraToast('🗑️ Widget rimosso', 'info');
-    }
-
-    // DRAG & DROP VERTICALE PER I WIDGET
-    function onWidgetDragStart(e, widgetId) {
-        draggedWidgetId = widgetId;
-        e.dataTransfer.effectAllowed = 'move';
-        setTimeout(() => e.target.classList.add('dragging'), 0);
-    }
-
-    function onWidgetDragOver(e) {
-        e.preventDefault();
-        e.dataTransfer.dropEffect = 'move';
-        const target = e.currentTarget;
-        if (target.dataset.widgetId !== draggedWidgetId) {
-            target.classList.add('drag-over');
-        }
-    }
-
-    function onWidgetDrop(e, targetWidgetId) {
-        e.preventDefault();
-        e.currentTarget.classList.remove('drag-over');
-        document.querySelectorAll('.dashboard-widget.dragging').forEach(el => el.classList.remove('dragging'));
-        
-        if (!draggedWidgetId || draggedWidgetId === targetWidgetId) return;
-
-        const fromIndex = dashboardLayout.findIndex(w => w.id === draggedWidgetId);
-        const toIndex = dashboardLayout.findIndex(w => w.id === targetWidgetId);
-
-        if (fromIndex === -1 || toIndex === -1) return;
-
-        const [removed] = dashboardLayout.splice(fromIndex, 1);
-        dashboardLayout.splice(toIndex, 0, removed);
-
-        dashboardLayout.forEach((w, i) => w.posizione = i);
-        
-        localStorage.setItem("moneyTrack_dashboard_layout", JSON.stringify(dashboardLayout));
-        renderizzaDashboardPersonalizzata();
-        mostraToast('✅ Ordine widget aggiornato', 'success');
-    }
-
-    function onWidgetDragEnd(e) {
-        e.target.classList.remove('dragging');
-        document.querySelectorAll('.dashboard-widget.drag-over').forEach(el => el.classList.remove('drag-over'));
-    }
-
-    function aggiornaDashboardPersonalizzata() { renderizzaDashboardPersonalizzata(); }
-
-    // ==========================================
-    // 🏷️ CATEGORIE - FIX PER I NUOVI CONTI
+    // 🏷️ CATEGORIE
     // ==========================================
 
     function aggiornaCategorie() {
         const t = document.getElementById("tipo-" + contoAttivoId).value;
         const s = document.getElementById("categoria-" + contoAttivoId);
         
-        // Assicurati che customCats sia sempre un oggetto valido
-        if (!customCats || typeof customCats !== 'object') {
-            customCats = { "Uscita": ["🏠 Casa", "🍕 Cibo", "🚗 Auto", "🛒 Spesa", "⏳ Programmata"], "Entrata": ["💰 Stipendio", "➕ Altro"] };
+        if (!customCats || typeof customCats !== 'object' || Object.keys(customCats).length === 0) {
+            customCats = JSON.parse(JSON.stringify(DEFAULT_CATS));
         }
-        if (!customCats[t]) {
+        
+        if (!customCats[t] || customCats[t].length === 0) {
             customCats[t] = t === "Uscita" ? ["🏠 Casa", "🍕 Cibo", "🚗 Auto", "🛒 Spesa", "⏳ Programmata"] : ["💰 Stipendio", "➕ Altro"];
         }
         
-        s.innerHTML = (customCats[t] || ["Generica"]).map(c => `<option value="${c}">${c}</option>`).join("");
+        if (s) {
+            s.innerHTML = (customCats[t] || ["Generica"]).map(c => `<option value="${c}">${c}</option>`).join("");
+        }
+        
         inizializzaSelectBudget();
         inizializzaSelectBudgetMobile();
     }
@@ -3777,7 +3898,9 @@
     function inizializzaSelectBudget() {
         const select = document.getElementById("budget-categoria-" + contoAttivoId);
         if (select) { 
-            const cats = customCats && customCats["Uscita"] ? customCats["Uscita"] : ["🏠 Casa", "🍕 Cibo", "🚗 Auto", "🛒 Spesa", "⏳ Programmata"];
+            const cats = customCats && customCats["Uscita"] && customCats["Uscita"].length > 0 ? 
+                customCats["Uscita"] : 
+                ["🏠 Casa", "🍕 Cibo", "🚗 Auto", "🛒 Spesa", "⏳ Programmata"];
             select.innerHTML = cats.map(c => `<option value="${c}">${c}</option>`).join(""); 
         }
     }
@@ -3785,7 +3908,9 @@
     function inizializzaSelectBudgetMobile() {
         const select = document.getElementById("budget-categoria-mobile-" + contoAttivoId);
         if (select) { 
-            const cats = customCats && customCats["Uscita"] ? customCats["Uscita"] : ["🏠 Casa", "🍕 Cibo", "🚗 Auto", "🛒 Spesa", "⏳ Programmata"];
+            const cats = customCats && customCats["Uscita"] && customCats["Uscita"].length > 0 ? 
+                customCats["Uscita"] : 
+                ["🏠 Casa", "🍕 Cibo", "🚗 Auto", "🛒 Spesa", "⏳ Programmata"];
             select.innerHTML = cats.map(c => `<option value="${c}">${c}</option>`).join(""); 
         }
     }
@@ -3903,6 +4028,9 @@
     function aggiornaApp() {
         const conto = getContoAttivo();
         if (!conto) return;
+        
+        customCats = conto.customCats || JSON.parse(JSON.stringify(DEFAULT_CATS));
+        
         const l = document.getElementById("lista-transazioni-" + contoAttivoId);
         const box = document.getElementById("boxSaldo-" + contoAttivoId);
         const query = document.getElementById("filtroRicerca-" + contoAttivoId).value.toLowerCase();
@@ -3963,7 +4091,7 @@
         disegnaTorta(catsUscita, totUsciteMese);
         aggiornaListaFuture();
         aggiornaBudgetProgress(catsUscita);
-        renderizzaIndicatori();
+        renderizzaSelector();
         aggiornaPatrimonio();
         renderizzaDashboardPersonalizzata();
     }
@@ -3997,13 +4125,23 @@
             html += `
                 <div class="conto-page" data-conto-id="${conto.id}" id="conto-page-${conto.id}">
                     <div class="container" style="padding:0 5px 20px 5px;">
+                        <!-- HEADER SALDO CENTRATO -->
                         <div class="header-saldo" id="boxSaldo-${conto.id}">
-                            <div>
-                                <small>${conto.icona || '🏦'} ${sanitizeHTML(conto.nome)}</small>
+                            <div class="saldo-side">
+                                <button class="btn-privacy" onclick="togglePrivacy()" title="Attiva/disattiva privacy">👁️</button>
+                            </div>
+                            <div class="saldo-center">
+                                <div class="saldo-nome">
+                                    ${conto.icona || '🏦'} ${sanitizeHTML(conto.nome)}
+                                    <button class="rename-btn" onclick="apriModalRinominaConto('${conto.id}')" title="Rinomina conto">✏️</button>
+                                </div>
                                 <h1 id="saldo-cifra-${conto.id}">0.00 €</h1>
                             </div>
-                            <button onclick="togglePrivacy()" title="Privacy">👁️</button>
+                            <div class="saldo-side">
+                                <!-- Spazio per bilanciare -->
+                            </div>
                         </div>
+
                         <div class="nav-buttons-container">
                             <button class="btn-modern" onclick="mostraPagina('news')">📰 NEWS</button>
                             <button class="btn-modern" onclick="mostraPagina('analisi')">🧠 ANALISI</button>
@@ -4012,6 +4150,7 @@
                             <button class="btn-modern" onclick="mostraPagina('backup')" style="background:#28a745;color:white;">💾 BACKUP</button>
                             <button class="btn-modern btn-warning" onclick="apriPopupSuggerimenti()" style="font-size:1.2rem;">💡</button>
                         </div>
+
                         <div id="dashboard-personalizzata"></div>
                         <div id="previsione-fine-mese-${conto.id}" class="info-previsione"></div>
                         <div class="desktop-grid">
@@ -4112,6 +4251,9 @@
             `;
         });
         container.innerHTML = html;
+        
+        aggiungiPaginaAggiungiConto();
+        
         if (contoAttivoId) {
             getContoAttivo();
             aggiornaApp();
@@ -4120,6 +4262,26 @@
             renderizzaDebiti();
             renderizzaDashboardPersonalizzata();
         }
+    }
+
+    function aggiungiPaginaAggiungiConto() {
+        const container = document.getElementById('contiScrollContainer');
+        if (!container) return;
+        
+        const esistente = container.querySelector('.conto-page-aggiungi');
+        if (esistente) esistente.remove();
+        
+        const div = document.createElement('div');
+        div.className = 'conto-page-aggiungi';
+        div.dataset.contoId = 'aggiungi-conto';
+        div.innerHTML = `
+            <div class="aggiungi-conto-card" onclick="apriModalAggiungiConto()">
+                <span class="plus-icon">➕</span>
+                <div class="plus-title">Nuovo Conto</div>
+                <div class="plus-sub">Clicca per aggiungere un nuovo conto</div>
+            </div>
+        `;
+        container.appendChild(div);
     }
 
     // ==========================================
@@ -4779,7 +4941,7 @@
                     if (dati.darkTheme !== undefined) { localStorage.setItem('moneyTrack_darkTheme', dati.darkTheme); applyTheme(); }
                     getContoAttivo();
                     renderizzaConti();
-                    renderizzaIndicatori();
+                    renderizzaSelector();
                     aggiornaApp();
                     caricaSelectListe();
                     aggiornaPatrimonio();
@@ -4895,12 +5057,10 @@
     document.addEventListener('DOMContentLoaded', function() {
         console.log('🚀 Avvio MoneyTrack...');
         
-        // Carica dati
         datiApp = JSON.parse(localStorage.getItem("moneyTrack_multi_dati")) || null;
         contoAttivoId = localStorage.getItem("moneyTrack_conto_attivo") || null;
         dashboardLayout = JSON.parse(localStorage.getItem("moneyTrack_dashboard_layout")) || [];
         
-        // Migrazione
         const oldDb = localStorage.getItem("moneyTrack_db");
         if (oldDb && JSON.parse(oldDb).length > 0) {
             if (!datiApp || !datiApp.conti || Object.keys(datiApp.conti).length === 0) {
@@ -4913,17 +5073,15 @@
             }
         }
         
-        // Crea conto di default
         if (!datiApp || !datiApp.conti || Object.keys(datiApp.conti).length === 0) {
             datiApp = { conti: {} };
             const id = 'conto_' + Date.now();
-            const defaultCats = { "Uscita": ["🏠 Casa", "🍕 Cibo", "🚗 Auto", "🛒 Spesa", "⏳ Programmata"], "Entrata": ["💰 Stipendio", "➕ Altro"] };
             datiApp.conti[id] = {
                 nome: "Conto Principale",
                 icona: "🏦",
                 spese: [],
                 future: [],
-                customCats: JSON.parse(JSON.stringify(defaultCats)),
+                customCats: JSON.parse(JSON.stringify(DEFAULT_CATS)),
                 budgets: {},
                 utenze: [],
                 liste: {}
@@ -4933,30 +5091,25 @@
             salvaDatiApp();
         }
         
-        // Carica conto attivo
         getContoAttivo();
+        customCats = datiApp.conti[contoAttivoId].customCats || JSON.parse(JSON.stringify(DEFAULT_CATS));
         
-        // Renderizza
         renderizzaConti();
-        renderizzaIndicatori();
+        renderizzaSelector();
         aggiornaPatrimonio();
         renderizzaDebiti();
         renderizzaDashboardPersonalizzata();
         
-        // Date di default
         document.getElementById('data-' + contoAttivoId).value = new Date().toISOString().split('T')[0];
         document.getElementById('debito-data').value = new Date().toISOString().split('T')[0];
         
-        // Aggiorna
         aggiornaCategorie();
         aggiornaApp();
         caricaSelectListe();
         aggiornaListaBackup();
         
-        // Filtro
         document.getElementById('filtroRicerca-' + contoAttivoId).addEventListener('keyup', debouncedAggiorna);
         
-        // Notifiche
         if ("Notification" in window && Notification.permission !== "granted" && Notification.permission !== "denied") {
             Notification.requestPermission();
         }
@@ -4976,16 +5129,10 @@
             }
         }, 2000);
         
-        // News
         setTimeout(caricaNews, 1000);
-        
-        // Avvia auto-backup
         avviaAutoBackup();
-        
-        // Applica tema
         applyTheme();
         
-        // Gestione login
         _supabase.auth.onAuthStateChange(async (event, session) => {
             if (event === 'SIGNED_IN' && session && session.user) {
                 await gestisciLoginOSincronizzazione(session.user);
@@ -5006,6 +5153,7 @@
         });
         
         console.log('✅ MoneyTrack avviato!');
+        console.log('📊 Categorie caricate:', customCats);
         console.log(`📊 Spese: ${spese.length}, Conti: ${Object.keys(datiApp.conti).length}`);
         console.log(`📊 Widget attivi: ${dashboardLayout.length}`);
     });
@@ -5099,10 +5247,6 @@
     window.renderizzaDashboardPersonalizzata = renderizzaDashboardPersonalizzata;
     window.aggiungiWidget = aggiungiWidget;
     window.rimuoviWidget = rimuoviWidget;
-    window.onContoDragStart = onContoDragStart;
-    window.onContoDragOver = onContoDragOver;
-    window.onContoDrop = onContoDrop;
-    window.onContoDragEnd = onContoDragEnd;
     window.onWidgetDragStart = onWidgetDragStart;
     window.onWidgetDragOver = onWidgetDragOver;
     window.onWidgetDrop = onWidgetDrop;
@@ -5132,6 +5276,8 @@
     window.apriModalRinominaConto = apriModalRinominaConto;
     window.chiudiModalRinominaConto = chiudiModalRinominaConto;
     window.confermaRinominaConto = confermaRinominaConto;
+    window.renderizzaSelector = renderizzaSelector;
+    window.DEFAULT_CATS = DEFAULT_CATS;
 
     console.log('✅ MoneyTrack 2.1 - Tutte le funzionalità caricate!');
     </script>
