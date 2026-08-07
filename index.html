@@ -43,7 +43,7 @@
             --transition: all 0.25s ease;
             --safe-top: env(safe-area-inset-top, 0px);
             --safe-bottom: env(safe-area-inset-bottom, 0px);
-            --font-family: -apple-system, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
         }
 
         .dark-theme {
@@ -68,6 +68,16 @@
             overflow-x: hidden;
             padding-top: var(--safe-top);
             padding-bottom: var(--safe-bottom);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ===== FONT UNIFORME ===== */
+        input, select, button, textarea, .btn-modern, .conto-indicator, .mese-header, .header-saldo small, .header-saldo h1,
+        .patrimonio-totale .label, .patrimonio-totale .value, .dashboard-widget, .widget-title, .debito-card,
+        .lista-spesa-card, .popup-content, .modal-content, .toast, .backup-card, .cal-giorno, .budget-info,
+        .filtro-mobile, .utenza-totale, .nav-buttons-container .btn-modern, .dropdown-content a {
+            font-family: var(--font-family);
         }
 
         /* ===== NAV ===== */
@@ -95,8 +105,8 @@
         }
         .logo-box img { height: 45px; border-radius: 12px; cursor: pointer; }
         .center-title { flex: 1; text-align: center; }
-        .center-title .title-main { font-weight: bold; font-size: 1.2rem; color: var(--text-primary); }
-        .center-title .title-sub { font-size: 0.6rem; color: var(--text-secondary); opacity: 0.8; }
+        .center-title .title-main { font-weight: bold; font-size: 1.2rem; color: var(--text-primary); font-family: var(--font-family); }
+        .center-title .title-sub { font-size: 0.6rem; color: var(--text-secondary); opacity: 0.8; font-family: var(--font-family); }
 
         .menu-container { position: relative; }
         .menu-dots {
@@ -106,6 +116,7 @@
             padding: 5px 8px;
             border-radius: 50%;
             transition: var(--transition);
+            font-family: var(--font-family);
         }
         .menu-dots:hover { background: var(--border); }
 
@@ -133,8 +144,17 @@
             cursor: pointer;
             transition: var(--transition);
             white-space: nowrap;
+            font-family: var(--font-family);
         }
         .dropdown-content a:hover { background-color: var(--border); color: var(--success); }
+        .dropdown-content .guide-link {
+            border-top: 1px solid var(--border);
+            margin-top: 4px;
+            padding-top: 10px;
+            color: var(--primary);
+            font-weight: 600;
+        }
+        .dropdown-content .guide-link:hover { color: var(--secondary); }
         .show { display: block !important; }
 
         @media (max-width: 600px) {
@@ -162,9 +182,10 @@
             justify-content: space-between;
             align-items: center;
             transition: background-color 0.3s, border-color 0.3s;
+            font-family: var(--font-family);
         }
-        .patrimonio-totale .label { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
-        .patrimonio-totale .value { font-size: 1.3rem; font-weight: bold; }
+        .patrimonio-totale .label { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; font-family: var(--font-family); }
+        .patrimonio-totale .value { font-size: 1.3rem; font-weight: bold; font-family: var(--font-family); }
         .patrimonio-totale .value.positivo { color: var(--success); }
         .patrimonio-totale .value.negativo { color: var(--danger); }
 
@@ -219,10 +240,19 @@
             display: flex;
             align-items: center;
             gap: 4px;
+            font-family: var(--font-family);
         }
         .conto-indicator:hover { border-color: var(--primary); }
         .conto-indicator.attivo { background: var(--primary); color: white; border-color: var(--primary); }
-        .conto-indicator .badge-saldo { font-size: 0.6rem; opacity: 0.7; }
+        .conto-indicator .badge-saldo { font-size: 0.6rem; opacity: 0.7; font-family: var(--font-family); }
+        .conto-indicator .conto-nome-clickable {
+            cursor: pointer;
+            border-bottom: 1px dashed transparent;
+            transition: border-color 0.2s;
+        }
+        .conto-indicator .conto-nome-clickable:hover {
+            border-color: var(--text-secondary);
+        }
         .conto-indicator .btn-elimina-conto {
             margin-left: 4px;
             font-size: 0.6rem;
@@ -232,6 +262,7 @@
             border: none;
             color: inherit;
             padding: 0 2px;
+            font-family: var(--font-family);
         }
         .conto-indicator .btn-elimina-conto:hover { opacity: 1; }
         .conto-indicator.btn-aggiungi-conto {
@@ -239,6 +270,7 @@
             border: 2px dashed var(--border);
             color: var(--text-muted);
             font-size: 0.85rem;
+            font-family: var(--font-family);
         }
         .conto-indicator.btn-aggiungi-conto:hover { border-color: var(--primary); color: var(--primary); }
 
@@ -279,9 +311,10 @@
             border-radius: var(--radius-md);
             margin-top: 10px;
             background: var(--success);
+            font-family: var(--font-family);
         }
-        .header-saldo h1 { margin: 5px 0 0 0; font-size: 2.2rem; font-weight: bold; }
-        .header-saldo small { opacity: 0.9; font-size: 0.85rem; }
+        .header-saldo h1 { margin: 5px 0 0 0; font-size: 2.2rem; font-weight: bold; font-family: var(--font-family); }
+        .header-saldo small { opacity: 0.9; font-size: 0.85rem; font-family: var(--font-family); }
         .header-saldo button {
             background: rgba(0,0,0,0.1);
             border: none;
@@ -292,6 +325,7 @@
             cursor: pointer;
             font-size: 1.2rem;
             flex-shrink: 0;
+            font-family: var(--font-family);
         }
         .header-saldo button:active { transform: scale(0.9); }
 
@@ -317,6 +351,7 @@
             gap: 4px;
             flex: 1;
             max-width: 140px;
+            font-family: var(--font-family);
         }
         .btn-modern:hover { transform: translateY(-2px); background: #eaeaea; box-shadow: var(--shadow-md); }
         .btn-modern:active { transform: scale(0.96); }
@@ -360,6 +395,7 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
+            font-family: var(--font-family);
         }
         .btn-back-home:hover { background: #e0e0e0; transform: translateY(-2px); }
 
@@ -378,6 +414,7 @@
             color: var(--text-primary);
             -webkit-appearance: none;
             appearance: none;
+            font-family: var(--font-family);
         }
         select {
             background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' stroke='%23666' stroke-width='1.5' fill='none'/></svg>");
@@ -414,12 +451,277 @@
             position: relative;
             max-height: 90vh;
             overflow-y: auto;
+            font-family: var(--font-family);
         }
         .modal-content.auth {
             max-width: 340px;
             padding: 25px;
             border: 1px solid var(--border);
         }
+        .modal-content.guida {
+            max-width: 700px;
+            padding: 30px;
+        }
+        .modal-content.guida .guide-content {
+            padding-right: 5px;
+        }
+        .modal-content.guida .guide-section {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+        .modal-content.guida .guide-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        .modal-content.guida .guide-section h3 {
+            color: var(--primary);
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--font-family);
+        }
+        .modal-content.guida .guide-section p {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+            font-family: var(--font-family);
+        }
+        .modal-content.guida .guide-section ul {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            font-size: 0.95rem;
+            padding-left: 20px;
+            margin-bottom: 8px;
+            font-family: var(--font-family);
+        }
+        .modal-content.guida .guide-section ul li {
+            margin-bottom: 4px;
+        }
+        .modal-content.guida .guide-section .step {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            background: var(--bg-light);
+            padding: 12px 15px;
+            border-radius: var(--radius-sm);
+            border-left: 3px solid var(--primary);
+        }
+        .modal-content.guida .guide-section .step .step-num {
+            font-weight: bold;
+            color: var(--primary);
+            font-size: 1.1rem;
+            min-width: 28px;
+            text-align: center;
+            font-family: var(--font-family);
+        }
+        .modal-content.guida .guide-section .step .step-text {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            font-family: var(--font-family);
+        }
+        .modal-content.guida .guide-section .step .step-text strong {
+            color: var(--text-primary);
+        }
+        .modal-content.guida .guide-screenshot {
+            width: 100%;
+            max-width: 400px;
+            margin: 10px auto;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            overflow: hidden;
+            background: var(--bg-light);
+            text-align: center;
+            padding: 20px;
+        }
+        .modal-content.guida .guide-screenshot img {
+            max-width: 100%;
+            height: auto;
+            border-radius: var(--radius-sm);
+        }
+        .modal-content.guida .guide-screenshot .placeholder-label {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            margin-top: 8px;
+            display: block;
+            font-family: var(--font-family);
+        }
+        .modal-content.guida .guide-tip {
+            background: rgba(181, 195, 182, 0.15);
+            border-radius: var(--radius-sm);
+            padding: 12px 16px;
+            margin: 10px 0;
+            border-left: 3px solid var(--info);
+        }
+        .modal-content.guida .guide-tip .tip-icon {
+            font-size: 1.2rem;
+            margin-right: 8px;
+        }
+        .modal-content.guida .guide-tip .tip-text {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            font-family: var(--font-family);
+        }
+        .modal-content.guida .guide-close-btn {
+            position: sticky;
+            bottom: 0;
+            background: var(--bg);
+            padding: 15px 0 0 0;
+            border-top: 1px solid var(--border);
+            margin-top: 15px;
+            display: flex;
+            justify-content: center;
+        }
+        .modal-content.guida .guide-close-btn button {
+            padding: 12px 30px;
+            border-radius: var(--radius-md);
+            border: none;
+            background: var(--primary);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 1rem;
+            font-family: var(--font-family);
+        }
+        .modal-content.guida .guide-close-btn button:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+        }
+
+        /* ===== MODALE GESTIONE WIDGET ===== */
+        .modal-content.widget-management {
+            max-width: 500px;
+            padding: 25px;
+        }
+        .modal-content.widget-management .widget-option {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            transition: var(--transition);
+            cursor: pointer;
+            font-family: var(--font-family);
+        }
+        .modal-content.widget-management .widget-option:hover {
+            background: var(--bg-light);
+        }
+        .modal-content.widget-management .widget-option:last-child {
+            border-bottom: none;
+        }
+        .modal-content.widget-management .widget-option .widget-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .modal-content.widget-management .widget-option .widget-info .widget-icon {
+            font-size: 1.5rem;
+        }
+        .modal-content.widget-management .widget-option .widget-info .widget-name {
+            font-weight: 500;
+            color: var(--text-primary);
+            font-family: var(--font-family);
+        }
+        .modal-content.widget-management .widget-option .widget-info .widget-desc {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-family: var(--font-family);
+        }
+        .modal-content.widget-management .widget-option .widget-toggle {
+            position: relative;
+            width: 48px;
+            height: 26px;
+            flex-shrink: 0;
+        }
+        .modal-content.widget-management .widget-option .widget-toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .modal-content.widget-management .widget-option .widget-toggle .toggle-track {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.3s;
+            border-radius: 26px;
+        }
+        .modal-content.widget-management .widget-option .widget-toggle .toggle-track:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.3s;
+            border-radius: 50%;
+        }
+        .modal-content.widget-management .widget-option .widget-toggle input:checked + .toggle-track {
+            background-color: var(--success);
+        }
+        .modal-content.widget-management .widget-option .widget-toggle input:checked + .toggle-track:before {
+            transform: translateX(22px);
+        }
+        .modal-content.widget-management .widget-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border);
+        }
+        .modal-content.widget-management .widget-actions button {
+            flex: 1;
+            padding: 12px;
+            border-radius: var(--radius-sm);
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.9rem;
+            font-family: var(--font-family);
+        }
+        .modal-content.widget-management .widget-actions .btn-close-widget {
+            background: var(--primary);
+            color: white;
+        }
+        .modal-content.widget-management .widget-actions .btn-close-widget:hover {
+            background: var(--secondary);
+        }
+        .modal-content.widget-management .widget-actions .btn-select-all {
+            background: var(--info);
+            color: white;
+        }
+        .modal-content.widget-management .widget-actions .btn-select-all:hover {
+            background: #138496;
+        }
+        .modal-content.widget-management .widget-actions .btn-deselect-all {
+            background: var(--bg-light);
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+        .modal-content.widget-management .widget-actions .btn-deselect-all:hover {
+            background: var(--border);
+        }
+
+        .dark-theme .modal-content.widget-management .widget-option:hover {
+            background: #333;
+        }
+        .dark-theme .modal-content.widget-management .widget-option .widget-toggle .toggle-track {
+            background-color: #555;
+        }
+
         .close-btn {
             position: absolute;
             top: 10px;
@@ -430,6 +732,7 @@
             background: none;
             border: none;
             transition: var(--transition);
+            font-family: var(--font-family);
         }
         .close-btn:hover { color: var(--danger); transform: rotate(90deg); }
 
@@ -439,7 +742,7 @@
             align-items: center !important;
             padding: 12px 16px !important;
         }
-        .theme-toggle-item span { color: var(--text-secondary); font-size: 0.9rem; }
+        .theme-toggle-item span { color: var(--text-secondary); font-size: 0.9rem; font-family: var(--font-family); }
 
         .toggle-switch {
             position: relative;
@@ -507,13 +810,14 @@
             display: flex;
             align-items: center;
             gap: 12px;
+            font-family: var(--font-family);
         }
         .toast.success { border-left: 4px solid var(--success); }
         .toast.error { border-left: 4px solid var(--danger); }
         .toast.warning { border-left: 4px solid var(--warning); }
         .toast.info { border-left: 4px solid var(--info); }
         .toast .toast-icon { font-size: 1.5rem; flex-shrink: 0; }
-        .toast .toast-text { flex: 1; }
+        .toast .toast-text { flex: 1; font-family: var(--font-family); }
         .toast .toast-close {
             cursor: pointer;
             opacity: 0.5;
@@ -522,6 +826,7 @@
             border: none;
             color: var(--text-muted);
             padding: 0 4px;
+            font-family: var(--font-family);
         }
         .toast .toast-close:hover { opacity: 1; }
         @keyframes toastIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
@@ -534,6 +839,7 @@
             padding: 20px;
             margin-bottom: 15px;
             transition: var(--transition);
+            font-family: var(--font-family);
         }
         #pagina-backup .backup-card:hover { box-shadow: var(--shadow-sm); }
         #pagina-backup .backup-card .backup-header {
@@ -544,8 +850,8 @@
             flex-wrap: wrap;
             gap: 8px;
         }
-        #pagina-backup .backup-card .backup-nome { font-weight: bold; font-size: 1.1rem; color: var(--text-primary); }
-        #pagina-backup .backup-card .backup-dettagli { font-size: 0.85rem; color: var(--text-secondary); }
+        #pagina-backup .backup-card .backup-nome { font-weight: bold; font-size: 1.1rem; color: var(--text-primary); font-family: var(--font-family); }
+        #pagina-backup .backup-card .backup-dettagli { font-size: 0.85rem; color: var(--text-secondary); font-family: var(--font-family); }
         #pagina-backup .backup-card .backup-dettagli span { display: inline-block; margin-right: 15px; }
         #pagina-backup .backup-card .backup-azioni {
             display: flex;
@@ -561,6 +867,7 @@
             font-weight: 600;
             cursor: pointer;
             transition: var(--transition);
+            font-family: var(--font-family);
         }
         #pagina-backup .backup-card .backup-azioni .btn-ripristina { background: var(--success); color: white; }
         #pagina-backup .backup-card .backup-azioni .btn-ripristina:hover { background: #1e7e34; }
@@ -569,7 +876,7 @@
         #pagina-backup .backup-card .backup-azioni .btn-esporta-backup { background: var(--primary); color: white; }
         #pagina-backup .backup-card .backup-azioni .btn-esporta-backup:hover { background: var(--secondary); }
 
-        .backup-empty { text-align: center; padding: 40px 20px; color: var(--text-muted); }
+        .backup-empty { text-align: center; padding: 40px 20px; color: var(--text-muted); font-family: var(--font-family); }
         .backup-empty .icon { font-size: 3.5rem; display: block; margin-bottom: 15px; }
 
         .backup-actions-bar {
@@ -586,6 +893,7 @@
             cursor: pointer;
             transition: var(--transition);
             font-size: 0.9rem;
+            font-family: var(--font-family);
         }
         .backup-actions-bar .btn-crea-backup { background: var(--success); color: white; }
         .backup-actions-bar .btn-crea-backup:hover { background: #1e7e34; }
@@ -608,6 +916,7 @@
             font-size: 0.85rem;
             color: var(--text-secondary);
             flex-wrap: wrap;
+            font-family: var(--font-family);
         }
         .backup-status .status-dot {
             width: 10px;
@@ -626,9 +935,13 @@
 
         @media (max-width: 600px) {
             .modal-content { padding: 20px; max-width: 95%; }
+            .modal-content.guida { padding: 20px; }
+            .modal-content.widget-management { padding: 20px; }
             .backup-actions-bar button { flex: 1; min-width: 100px; font-size: 0.8rem; padding: 8px 12px; }
             .toast { padding: 12px 16px; font-size: 0.8rem; }
             #toast-container { width: 95%; bottom: 10px; }
+            .modal-content.guida .guide-section .step { flex-direction: column; gap: 4px; }
+            .modal-content.guida .guide-section .step .step-num { text-align: left; }
         }
 
         /* ===== ALTRI STILI ===== */
@@ -640,13 +953,14 @@
             max-width: 900px;
             box-sizing: border-box;
             transition: background-color 0.3s;
+            font-family: var(--font-family);
         }
 
         .section { padding: 20px 0; border-bottom: 1px solid var(--border); }
         .section:last-child { border-bottom: none; }
 
-        h3 { margin-top: 0; font-size: 1.1rem; color: var(--text-secondary); margin-bottom: 15px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-        h4 { margin-top: 0; margin-bottom: 12px; color: var(--text-secondary); display: flex; align-items: center; gap: 6px; }
+        h3 { margin-top: 0; font-size: 1.1rem; color: var(--text-secondary); margin-bottom: 15px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-family: var(--font-family); }
+        h4 { margin-top: 0; margin-bottom: 12px; color: var(--text-secondary); display: flex; align-items: center; gap: 6px; font-family: var(--font-family); }
 
         .cat-row { display: flex; align-items: center; gap: 8px; width: 100%; margin-bottom: 10px; }
         .cat-row .small-btn {
@@ -666,6 +980,7 @@
             height: 46px;
             width: 46px;
             box-sizing: border-box;
+            font-family: var(--font-family);
         }
         .cat-row .small-btn:hover { transform: translateY(-2px); background: #eaeaea; box-shadow: var(--shadow-md); }
         .cat-row .small-btn:active { transform: scale(0.94); }
@@ -674,7 +989,7 @@
 
         .table-container { overflow-x: auto; margin-top: 10px; -webkit-overflow-scrolling: touch; }
         table { width: 100%; border-collapse: collapse; }
-        td { padding: 12px 0; border-bottom: 1px solid #f4f4f4; }
+        td { padding: 12px 0; border-bottom: 1px solid #f4f4f4; font-family: var(--font-family); }
         .positivo { color: var(--success); font-weight: bold; }
         .negativo { color: var(--danger); font-weight: bold; }
 
@@ -687,6 +1002,7 @@
             padding: 4px;
             border-radius: 4px;
             display: inline-block;
+            font-family: var(--font-family);
         }
         .action-icon:hover { opacity: 1; transform: scale(1.2); background: var(--border); }
         .action-icon:active { transform: scale(0.9); }
@@ -704,6 +1020,7 @@
             border-bottom: 1px solid #f0f0f0;
             transition: var(--transition);
             user-select: none;
+            font-family: var(--font-family);
         }
         .mese-header:hover { background: #f8f9fa; }
         .mese-header:active { transform: scale(0.99); }
@@ -718,6 +1035,7 @@
             border-radius: var(--radius-md);
             padding: 15px;
             transition: background-color 0.3s, border-color 0.3s;
+            font-family: var(--font-family);
         }
         .budget-item { margin-bottom: 15px; }
         .budget-info {
@@ -728,6 +1046,7 @@
             font-weight: 500;
             flex-wrap: wrap;
             gap: 4px;
+            font-family: var(--font-family);
         }
         .progress-bar-bg {
             background: #e9ecef;
@@ -771,6 +1090,7 @@
             cursor: pointer;
             transition: var(--transition);
             font-weight: 600;
+            font-family: var(--font-family);
         }
         .budget-row button:hover { opacity: 0.85; }
 
@@ -780,6 +1100,7 @@
             border: 1px solid var(--border);
             padding: 12px;
             margin-bottom: 12px;
+            font-family: var(--font-family);
         }
         .filtro-mobile .filtro-riga {
             display: flex;
@@ -805,6 +1126,7 @@
             text-transform: uppercase;
             white-space: nowrap;
             padding-right: 4px;
+            font-family: var(--font-family);
         }
         .filtro-mobile .filtro-riga .filtro-gruppo input,
         .filtro-mobile .filtro-riga .filtro-gruppo select {
@@ -816,6 +1138,7 @@
             min-width: 60px;
             margin-bottom: 0;
             outline: none;
+            font-family: var(--font-family);
         }
         .filtro-mobile .filtro-azioni {
             display: flex;
@@ -835,6 +1158,7 @@
             min-height: 34px;
             flex: 1;
             min-width: 60px;
+            font-family: var(--font-family);
         }
         .filtro-mobile .filtro-azioni .btn-filtra { background: var(--primary); color: white; }
         .filtro-mobile .filtro-azioni .btn-reset-filtro { background: var(--danger); color: white; }
@@ -849,6 +1173,7 @@
             color: var(--text-primary);
             outline: none;
             transition: var(--transition);
+            font-family: var(--font-family);
         }
         .filtro-mobile .filtro-ricerca .lente {
             position: absolute;
@@ -872,11 +1197,12 @@
             margin-bottom: 15px;
             flex-wrap: wrap;
             gap: 8px;
+            font-family: var(--font-family);
         }
-        .utenza-totale .label { font-size: 0.8rem; opacity: 0.9; }
-        .utenza-totale .value { font-weight: bold; font-size: 1.2rem; }
+        .utenza-totale .label { font-size: 0.8rem; opacity: 0.9; font-family: var(--font-family); }
+        .utenza-totale .value { font-weight: bold; font-size: 1.2rem; font-family: var(--font-family); }
 
-        .utenza-empty { text-align: center; padding: 30px; color: var(--text-muted); }
+        .utenza-empty { text-align: center; padding: 30px; color: var(--text-muted); font-family: var(--font-family); }
         .utenza-empty .icon { font-size: 3rem; display: block; margin-bottom: 10px; }
 
         .debito-form {
@@ -888,10 +1214,11 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 12px;
+            font-family: var(--font-family);
         }
         .debito-form .full-width { grid-column: 1 / -1; }
         .debito-form input, .debito-form select { margin-bottom: 0; padding: 10px; font-size: 0.9rem; }
-        .debito-form label { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
+        .debito-form label { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; font-family: var(--font-family); }
         .debito-form .form-group { display: flex; flex-direction: column; gap: 4px; }
         .debito-form .btn-salva-debito {
             grid-column: 1 / -1;
@@ -904,6 +1231,7 @@
             cursor: pointer;
             transition: var(--transition);
             font-size: 0.9rem;
+            font-family: var(--font-family);
         }
         .debito-form .btn-salva-debito:hover { opacity: 0.85; }
         .debito-form .btn-annulla-debito {
@@ -916,6 +1244,7 @@
             cursor: pointer;
             transition: var(--transition);
             font-size: 0.85rem;
+            font-family: var(--font-family);
         }
         .debito-form .btn-annulla-debito:hover { background: var(--border); }
 
@@ -926,6 +1255,7 @@
             padding: 16px;
             margin-bottom: 15px;
             transition: var(--transition);
+            font-family: var(--font-family);
         }
         .debito-card:hover { box-shadow: var(--shadow-sm); }
         .debito-card .debito-header {
@@ -938,7 +1268,7 @@
             flex-wrap: wrap;
             gap: 8px;
         }
-        .debito-card .debito-nome { font-weight: bold; font-size: 1.1rem; display: flex; align-items: center; gap: 8px; }
+        .debito-card .debito-nome { font-weight: bold; font-size: 1.1rem; display: flex; align-items: center; gap: 8px; font-family: var(--font-family); }
         .debito-card .debito-dettagli {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
@@ -951,8 +1281,8 @@
             background: var(--bg);
             border-radius: var(--radius-sm);
         }
-        .debito-card .debito-dettaglio .label { font-size: 0.6rem; color: var(--text-muted); text-transform: uppercase; }
-        .debito-card .debito-dettaglio .value { font-weight: bold; font-size: 1rem; margin-top: 2px; }
+        .debito-card .debito-dettaglio .label { font-size: 0.6rem; color: var(--text-muted); text-transform: uppercase; font-family: var(--font-family); }
+        .debito-card .debito-dettaglio .value { font-weight: bold; font-size: 1rem; margin-top: 2px; font-family: var(--font-family); }
         .debito-card .debito-progresso-container { margin: 10px 0; }
         .debito-card .debito-progresso-label {
             display: flex;
@@ -960,6 +1290,7 @@
             font-size: 0.8rem;
             color: var(--text-secondary);
             margin-bottom: 4px;
+            font-family: var(--font-family);
         }
         .debito-card .debito-progresso {
             background: var(--bg);
@@ -989,6 +1320,7 @@
             cursor: pointer;
             transition: var(--transition);
             font-weight: 600;
+            font-family: var(--font-family);
         }
         .debito-card .debito-azioni .btn-modifica { background: var(--primary); color: white; }
         .debito-card .debito-azioni .btn-modifica:hover { background: var(--secondary); }
@@ -1025,6 +1357,7 @@
             position: relative;
             cursor: grab;
             user-select: none;
+            font-family: var(--font-family);
         }
         .dashboard-widget:active { cursor: grabbing; }
         .dashboard-widget.dragging {
@@ -1058,7 +1391,7 @@
             padding-bottom: 8px;
             border-bottom: 1px solid var(--border);
         }
-        .dashboard-widget .widget-title { font-weight: 600; font-size: 0.85rem; color: var(--text-secondary); }
+        .dashboard-widget .widget-title { font-weight: 600; font-size: 0.85rem; color: var(--text-secondary); font-family: var(--font-family); }
         .dashboard-widget .widget-close {
             cursor: pointer;
             opacity: 0.4;
@@ -1068,13 +1401,14 @@
             font-size: 1rem;
             color: var(--text-muted);
             padding: 0 4px;
+            font-family: var(--font-family);
         }
         .dashboard-widget .widget-close:hover { opacity: 1; color: var(--danger); }
-        .dashboard-widget .widget-content { font-size: 0.9rem; }
+        .dashboard-widget .widget-content { font-size: 0.9rem; font-family: var(--font-family); }
 
-        .widget-salute { text-align: center; padding: 10px; }
-        .widget-salute .salute-score { font-size: 2.5rem; font-weight: bold; display: block; }
-        .widget-salute .salute-label { font-size: 0.8rem; color: var(--text-muted); }
+        .widget-salute { text-align: center; padding: 10px; font-family: var(--font-family); }
+        .widget-salute .salute-score { font-size: 2.5rem; font-weight: bold; display: block; font-family: var(--font-family); }
+        .widget-salute .salute-label { font-size: 0.8rem; color: var(--text-muted); font-family: var(--font-family); }
 
         .widget-debito-summary .debito-mini-card {
             padding: 8px 0;
@@ -1082,10 +1416,11 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            font-family: var(--font-family);
         }
         .widget-debito-summary .debito-mini-card:last-child { border-bottom: none; }
-        .widget-debito-summary .debito-nome { font-weight: 500; }
-        .widget-debito-summary .debito-importo { font-weight: bold; color: var(--danger); }
+        .widget-debito-summary .debito-nome { font-weight: 500; font-family: var(--font-family); }
+        .widget-debito-summary .debito-importo { font-weight: bold; color: var(--danger); font-family: var(--font-family); }
 
         .dashboard-grid-edit {
             display: flex;
@@ -1105,11 +1440,41 @@
             cursor: pointer;
             font-size: 0.75rem;
             transition: var(--transition);
+            font-family: var(--font-family);
         }
         .dashboard-grid-edit .btn-add-widget:hover { background: var(--primary); color: white; border-color: var(--primary); }
 
         @media (max-width: 600px) {
             .dashboard-widgets { gap: 10px; }
+        }
+
+        /* ===== WIDGET EMPTY STATE ===== */
+        .widget-empty-state {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-muted);
+            background: var(--bg-light);
+            border-radius: var(--radius-md);
+            border: 2px dashed var(--border);
+            margin: 15px 0;
+            font-family: var(--font-family);
+        }
+        .widget-empty-state .empty-icon {
+            font-size: 2.5rem;
+            display: block;
+            margin-bottom: 10px;
+        }
+        .widget-empty-state .empty-title {
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+            font-family: var(--font-family);
+        }
+        .widget-empty-state .empty-desc {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-family: var(--font-family);
         }
 
         /* ===== LISTE SPESE ===== */
@@ -1125,11 +1490,12 @@
             align-items: center;
             flex-wrap: wrap;
             gap: 10px;
+            font-family: var(--font-family);
         }
         .lista-spesa-card:hover { box-shadow: var(--shadow-sm); transform: translateX(4px); }
         .lista-spesa-card .info { flex: 1; min-width: 150px; }
-        .lista-spesa-card .info .data { font-size: 0.7rem; color: var(--text-muted); }
-        .lista-spesa-card .info .desc { font-weight: 600; font-size: 0.95rem; color: var(--text-primary); }
+        .lista-spesa-card .info .data { font-size: 0.7rem; color: var(--text-muted); font-family: var(--font-family); }
+        .lista-spesa-card .info .desc { font-weight: 600; font-size: 0.95rem; color: var(--text-primary); font-family: var(--font-family); }
         .lista-spesa-card .info .categoria {
             font-size: 0.75rem;
             background: var(--border);
@@ -1138,8 +1504,9 @@
             display: inline-block;
             margin-top: 3px;
             color: var(--text-secondary);
+            font-family: var(--font-family);
         }
-        .lista-spesa-card .importo { font-weight: bold; font-size: 1.1rem; color: var(--danger); white-space: nowrap; margin-right: 10px; }
+        .lista-spesa-card .importo { font-weight: bold; font-size: 1.1rem; color: var(--danger); white-space: nowrap; margin-right: 10px; font-family: var(--font-family); }
         .lista-spesa-card .azioni { display: flex; gap: 6px; flex-shrink: 0; }
         .lista-spesa-card .azioni span {
             cursor: pointer;
@@ -1148,6 +1515,7 @@
             transition: var(--transition);
             font-size: 1rem;
             opacity: 0.5;
+            font-family: var(--font-family);
         }
         .lista-spesa-card .azioni span:hover { opacity: 1; background: var(--border); }
 
@@ -1161,9 +1529,10 @@
             justify-content: space-between;
             align-items: center;
             font-size: 0.85rem;
+            font-family: var(--font-family);
         }
-        .lista-totale-categoria .label { color: var(--text-secondary); }
-        .lista-totale-categoria .value { font-weight: bold; color: var(--danger); }
+        .lista-totale-categoria .label { color: var(--text-secondary); font-family: var(--font-family); }
+        .lista-totale-categoria .value { font-weight: bold; color: var(--danger); font-family: var(--font-family); }
 
         #lista-filtri-categorie .btn-filtro-cat {
             background: var(--bg-light);
@@ -1175,11 +1544,12 @@
             transition: var(--transition);
             color: var(--text-secondary);
             white-space: nowrap;
+            font-family: var(--font-family);
         }
         #lista-filtri-categorie .btn-filtro-cat:hover { background: var(--border); }
         #lista-filtri-categorie .btn-filtro-cat.attivo { background: var(--primary); color: white; border-color: var(--primary); }
 
-        .lista-empty { text-align: center; padding: 40px 20px; color: var(--text-muted); }
+        .lista-empty { text-align: center; padding: 40px 20px; color: var(--text-muted); font-family: var(--font-family); }
         .lista-empty .icon { font-size: 3.5rem; display: block; margin-bottom: 15px; }
 
         /* ===== CALENDARIO ===== */
@@ -1201,10 +1571,11 @@
             justify-content: flex-start;
             font-size: 0.85rem;
             position: relative;
+            font-family: var(--font-family);
         }
         .cal-giorno.vuoto { background: #f7f7f7; }
         .cal-giorno.oggi { border: 2px solid var(--primary); font-weight: bold; }
-        .cal-numero-giorno { margin-bottom: 4px; display: inline-block; }
+        .cal-numero-giorno { margin-bottom: 4px; display: inline-block; font-family: var(--font-family); }
         .cal-badge-scadenza {
             font-size: 0.6rem;
             padding: 2px 4px;
@@ -1214,6 +1585,7 @@
             overflow: hidden;
             text-overflow: ellipsis;
             color: white;
+            font-family: var(--font-family);
         }
         .badge-impatta { background-color: #dc3545; }
 
@@ -1222,7 +1594,7 @@
         .dark-theme .grid-calendario { background: #333; }
         .dark-theme .mese-content { background: #1a1a1a; }
         .dark-theme details { background: #2a2a2a !important; border-color: #444 !important; }
-        .dark-theme details summary { color: var(--text-secondary) !important; }
+        .dark-theme details summary { color: var(--text-secondary) !important; font-family: var(--font-family); }
         .dark-theme .lista-spesa-card { background: #2a2a2a; border-color: #444; }
         .dark-theme .lista-totale-categoria { background: #333; border-color: #444; }
         .dark-theme #lista-filtri-categorie .btn-filtro-cat { background: #333; border-color: #444; color: var(--text-secondary); }
@@ -1233,6 +1605,7 @@
         .dark-theme .debito-progresso { background: #444; }
         .dark-theme .dashboard-widget { background: #2a2a2a; border-color: #444; }
         .dark-theme .widget-header { border-color: #444; }
+        .dark-theme .widget-empty-state { background: #2a2a2a; border-color: #444; }
         .dark-theme .sticky-col { background: var(--bg); }
         .dark-theme .filtro-mobile { background: #2a2a2a !important; border-color: #444 !important; }
         .dark-theme .filtro-mobile input, .dark-theme .filtro-mobile select { background: #333 !important; color: var(--text-primary) !important; border-color: #555 !important; }
@@ -1269,6 +1642,7 @@
             cursor: pointer;
             display: none;
             animation: pulse 2s infinite;
+            font-family: var(--font-family);
         }
         @keyframes pulse {
             0% { transform: translateX(-50%) scale(1); box-shadow: 0 4px 20px rgba(40,167,69,0.4); }
@@ -1311,6 +1685,8 @@
                     <a onclick="esportaDati()">📋 Backup rapido</a>
                     <a onclick="esportaCSV()">📊 Esporta CSV</a>
                     <a onclick="document.getElementById('fileInput').click()">📂 Ripristina (Importa)</a>
+                    <a onclick="apriGestioneWidget()" style="color:var(--primary);">📊 Widget</a>
+                    <a onclick="apriGuida()" class="guide-link">📖 Guida e Istruzioni</a>
                     <a onclick="eliminaMieiDati()" style="color:var(--danger);">🗑️ Elimina i miei dati</a>
                 </div>
             </div>
@@ -1363,11 +1739,11 @@
             <h3 style="margin:0;">📅 Calendario Scadenze</h3>
         </div>
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; background:var(--bg-light); padding:10px; border-radius:var(--radius-sm); flex-wrap:wrap; gap:8px;">
-            <button onclick="navigaMeseCalendario(-1)" style="padding:8px 12px; border-radius:8px; border:1px solid var(--border); background:var(--bg); cursor:pointer; font-weight:bold; color:var(--text-primary);">◀ Mese Prec.</button>
-            <h3 id="cal-titolo-mese" style="margin:0; font-size:1.2rem; font-weight:bold; text-transform:capitalize; color:var(--text-primary);"></h3>
-            <button onclick="navigaMeseCalendario(1)" style="padding:8px 12px; border-radius:8px; border:1px solid var(--border); background:var(--bg); cursor:pointer; font-weight:bold; color:var(--text-primary);">Mese Succ. ▶</button>
+            <button onclick="navigaMeseCalendario(-1)" style="padding:8px 12px; border-radius:8px; border:1px solid var(--border); background:var(--bg); cursor:pointer; font-weight:bold; color:var(--text-primary); font-family:var(--font-family);">◀ Mese Prec.</button>
+            <h3 id="cal-titolo-mese" style="margin:0; font-size:1.2rem; font-weight:bold; text-transform:capitalize; color:var(--text-primary); font-family:var(--font-family);"></h3>
+            <button onclick="navigaMeseCalendario(1)" style="padding:8px 12px; border-radius:8px; border:1px solid var(--border); background:var(--bg); cursor:pointer; font-weight:bold; color:var(--text-primary); font-family:var(--font-family);">Mese Succ. ▶</button>
         </div>
-        <div style="display:grid; grid-template-columns:repeat(7,1fr); text-align:center; font-weight:bold; font-size:0.8rem; margin-bottom:5px; opacity:0.7;">
+        <div style="display:grid; grid-template-columns:repeat(7,1fr); text-align:center; font-weight:bold; font-size:0.8rem; margin-bottom:5px; opacity:0.7; font-family:var(--font-family);">
             <div>Lun</div><div>Mar</div><div>Mer</div><div>Gio</div><div>Ven</div><div>Sab</div><div>Dom</div>
         </div>
         <div id="calendario-grid" class="grid-calendario"></div>
@@ -1377,7 +1753,7 @@
     <div id="pagina-analisi" class="container" style="display:none; padding:20px;">
         <div style="display:flex; gap:10px; align-items:center; margin-bottom:20px; flex-wrap:wrap;">
             <button onclick="mostraPagina('home')" class="btn-back-home">⬅ Torna alla Home</button>
-            <select id="anno-selezionato" onchange="generaReport()" style="padding:10px; border-radius:var(--radius-sm); border:1px solid var(--border); font-size:0.9rem; cursor:pointer; flex:1; min-width:100px;"></select>
+            <select id="anno-selezionato" onchange="generaReport()" style="padding:10px; border-radius:var(--radius-sm); border:1px solid var(--border); font-size:0.9rem; cursor:pointer; flex:1; min-width:100px; font-family:var(--font-family);"></select>
         </div>
         <div class="section">
             <h3>📊 Analisi Spese Mese</h3>
@@ -1400,11 +1776,11 @@
     <div id="pagina-news" class="container" style="display:none; padding:20px;">
         <h3>📰 News Finanziarie</h3>
         <div style="display:flex; gap:8px; margin-bottom:20px; overflow-x:auto; padding-bottom:10px;">
-            <button onclick="filtraNews('tutte', event)" style="background:var(--primary); color:white; border:none; padding:8px 15px; border-radius:20px; font-size:0.8rem; cursor:pointer; flex-shrink:0;">🌎 Tutte</button>
-            <button onclick="filtraNews('italia', event)" style="background:var(--bg-light); border:1px solid var(--border); padding:8px 15px; border-radius:20px; font-size:0.8rem; cursor:pointer; flex-shrink:0; color:var(--text-secondary);">🇮🇹 Italia</button>
-            <button onclick="filtraNews('mondo', event)" style="background:var(--bg-light); border:1px solid var(--border); padding:8px 15px; border-radius:20px; font-size:0.8rem; cursor:pointer; flex-shrink:0; color:var(--text-secondary);">🌐 Global</button>
+            <button onclick="filtraNews('tutte', event)" style="background:var(--primary); color:white; border:none; padding:8px 15px; border-radius:20px; font-size:0.8rem; cursor:pointer; flex-shrink:0; font-family:var(--font-family);">🌎 Tutte</button>
+            <button onclick="filtraNews('italia', event)" style="background:var(--bg-light); border:1px solid var(--border); padding:8px 15px; border-radius:20px; font-size:0.8rem; cursor:pointer; flex-shrink:0; color:var(--text-secondary); font-family:var(--font-family);">🇮🇹 Italia</button>
+            <button onclick="filtraNews('mondo', event)" style="background:var(--bg-light); border:1px solid var(--border); padding:8px 15px; border-radius:20px; font-size:0.8rem; cursor:pointer; flex-shrink:0; color:var(--text-secondary); font-family:var(--font-family);">🌐 Global</button>
         </div>
-        <div id="loading-news" style="text-align:center; padding:20px; color:var(--text-muted);">Caricamento notizie...</div>
+        <div id="loading-news" style="text-align:center; padding:20px; color:var(--text-muted); font-family:var(--font-family);">Caricamento notizie...</div>
         <div id="news-container" class="desktop-grid"></div>
     </div>
 
@@ -1416,30 +1792,30 @@
         </div>
         <div style="background:var(--bg-light); border-radius:var(--radius-md); padding:15px; margin-bottom:20px; border:1px solid var(--border);">
             <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
-                <select id="lista-selezionata" style="flex:2; min-width:150px;" onchange="caricaLista()">
+                <select id="lista-selezionata" style="flex:2; min-width:150px; font-family:var(--font-family);" onchange="caricaLista()">
                     <option value="">➕ Crea nuova lista...</option>
                 </select>
                 <button class="btn-modern btn-success" onclick="creaNuovaLista()" style="flex:0.5; min-width:80px;">➕ Nuova</button>
                 <button class="btn-modern btn-danger" onclick="eliminaLista()" style="flex:0.5; min-width:80px;">🗑️ Elimina</button>
             </div>
-            <div id="lista-info" style="margin-top:10px; font-size:0.85rem; color:var(--text-muted); display:none;">
+            <div id="lista-info" style="margin-top:10px; font-size:0.85rem; color:var(--text-muted); display:none; font-family:var(--font-family);">
                 <span id="lista-info-nome"></span> · <span id="lista-info-conteggio">0</span> spese · <span id="lista-info-totale">0.00 €</span>
             </div>
         </div>
         <div id="lista-form" style="background:var(--bg-light); border-radius:var(--radius-md); padding:15px; margin-bottom:20px; border:1px solid var(--border); display:none;">
-            <h4 style="margin-top:0; margin-bottom:12px;">✏️ Aggiungi Spesa a <span id="lista-nome-corrente" style="color:var(--primary);"></span></h4>
+            <h4 style="margin-top:0; margin-bottom:12px; font-family:var(--font-family);">✏️ Aggiungi Spesa a <span id="lista-nome-corrente" style="color:var(--primary);"></span></h4>
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                <input type="date" id="lista-data" style="grid-column:1/-1;">
-                <select id="lista-categoria" style="grid-column:1/-1;">
+                <input type="date" id="lista-data" style="grid-column:1/-1; font-family:var(--font-family);">
+                <select id="lista-categoria" style="grid-column:1/-1; font-family:var(--font-family);">
                     <option value="🏨 Alloggio">🏨 Alloggio</option>
                     <option value="🍽️ Ristoranti">🍽️ Ristoranti</option>
                     <option value="🚗 Trasporti">🚗 Trasporti</option>
                     <option value="🛍️ Shopping">🛍️ Shopping</option>
                     <option value="💰 Spese varie">💰 Spese varie</option>
                 </select>
-                <input type="text" id="lista-descrizione" placeholder="Descrizione spesa" style="grid-column:1/-1;">
-                <input type="number" id="lista-importo" placeholder="Importo (€)" step="0.01" inputmode="decimal" style="grid-column:1/-1;">
-                <button class="btn-modern btn-success" onclick="aggiungiSpesaLista()" style="grid-column:1/-1;">➕ Aggiungi Spesa</button>
+                <input type="text" id="lista-descrizione" placeholder="Descrizione spesa" style="grid-column:1/-1; font-family:var(--font-family);">
+                <input type="number" id="lista-importo" placeholder="Importo (€)" step="0.01" inputmode="decimal" style="grid-column:1/-1; font-family:var(--font-family);">
+                <button class="btn-modern btn-success" onclick="aggiungiSpesaLista()" style="grid-column:1/-1; font-family:var(--font-family);">➕ Aggiungi Spesa</button>
             </div>
         </div>
         <div id="lista-contenuto" style="display:none;">
@@ -1448,12 +1824,12 @@
                 <span class="value" id="lista-totale-costo">0.00 €</span>
             </div>
             <div style="display:flex; gap:8px; margin-bottom:15px; overflow-x:auto; padding-bottom:10px; flex-wrap:wrap;">
-                <button onclick="filtraLista('tutte', event)" style="background:var(--primary); color:white; border:none; padding:8px 15px; border-radius:20px; font-size:0.8rem; cursor:pointer;">🌎 Tutte</button>
+                <button onclick="filtraLista('tutte', event)" style="background:var(--primary); color:white; border:none; padding:8px 15px; border-radius:20px; font-size:0.8rem; cursor:pointer; font-family:var(--font-family);">🌎 Tutte</button>
                 <div id="lista-filtri-categorie" style="display:flex; gap:8px; flex-wrap:wrap;"></div>
             </div>
             <div id="lista-spese-container"></div>
         </div>
-        <div id="lista-vuota" style="display:none; text-align:center; padding:40px 20px; color:var(--text-muted);">
+        <div id="lista-vuota" style="display:none; text-align:center; padding:40px 20px; color:var(--text-muted); font-family:var(--font-family);">
             <span style="font-size:3.5rem; display:block; margin-bottom:15px;">📋</span>
             <p><strong>Nessuna lista creata</strong></p>
         </div>
@@ -1462,18 +1838,31 @@
     <!-- ===== MODALE AGGIUNTA CONTO ===== -->
     <div id="modalAggiungiConto" class="modal">
         <div class="modal-content">
-            <h3>➕ Nuovo Conto</h3>
-            <input type="text" id="inputNuovoConto" placeholder="Nome conto..." style="margin-bottom:10px;">
+            <h3 style="font-family:var(--font-family);">➕ Nuovo Conto</h3>
+            <input type="text" id="inputNuovoConto" placeholder="Nome conto..." style="margin-bottom:10px; font-family:var(--font-family);">
             <div style="margin-bottom:15px; display:flex; gap:8px; flex-wrap:wrap;">
-                <button onclick="setIconaConto('🏦')" class="btn-modern" style="flex:0; padding:8px 12px; font-size:1.2rem; max-width:50px;">🏦</button>
-                <button onclick="setIconaConto('💰')" class="btn-modern" style="flex:0; padding:8px 12px; font-size:1.2rem; max-width:50px;">💰</button>
-                <button onclick="setIconaConto('💳')" class="btn-modern" style="flex:0; padding:8px 12px; font-size:1.2rem; max-width:50px;">💳</button>
-                <button onclick="setIconaConto('📱')" class="btn-modern" style="flex:0; padding:8px 12px; font-size:1.2rem; max-width:50px;">📱</button>
+                <button onclick="setIconaConto('🏦')" class="btn-modern" style="flex:0; padding:8px 12px; font-size:1.2rem; max-width:50px; font-family:var(--font-family);">🏦</button>
+                <button onclick="setIconaConto('💰')" class="btn-modern" style="flex:0; padding:8px 12px; font-size:1.2rem; max-width:50px; font-family:var(--font-family);">💰</button>
+                <button onclick="setIconaConto('💳')" class="btn-modern" style="flex:0; padding:8px 12px; font-size:1.2rem; max-width:50px; font-family:var(--font-family);">💳</button>
+                <button onclick="setIconaConto('📱')" class="btn-modern" style="flex:0; padding:8px 12px; font-size:1.2rem; max-width:50px; font-family:var(--font-family);">📱</button>
             </div>
             <input type="hidden" id="iconaNuovoConto" value="🏦">
             <div style="display:flex; gap:10px; margin-top:10px;">
-                <button class="btn-modern" onclick="chiudiModalAggiungiConto()" style="flex:1; max-width:none; background:var(--bg-light); color:var(--text-secondary);">Annulla</button>
-                <button class="btn-modern btn-success" onclick="creaNuovoConto()" style="flex:1; max-width:none;">➕ Crea</button>
+                <button class="btn-modern" onclick="chiudiModalAggiungiConto()" style="flex:1; max-width:none; background:var(--bg-light); color:var(--text-secondary); font-family:var(--font-family);">Annulla</button>
+                <button class="btn-modern btn-success" onclick="creaNuovoConto()" style="flex:1; max-width:none; font-family:var(--font-family);">➕ Crea</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== MODALE RINOMINA CONTO ===== -->
+    <div id="modalRinominaConto" class="modal">
+        <div class="modal-content" style="max-width:350px;">
+            <button class="close-btn" onclick="chiudiModalRinominaConto()">&times;</button>
+            <h3 style="font-family:var(--font-family); margin-bottom:15px;">✏️ Rinomina Conto</h3>
+            <input type="text" id="inputRinominaConto" placeholder="Nuovo nome conto..." style="font-family:var(--font-family);">
+            <div style="display:flex; gap:10px; margin-top:10px;">
+                <button class="btn-modern" onclick="chiudiModalRinominaConto()" style="flex:1; max-width:none; background:var(--bg-light); color:var(--text-secondary); font-family:var(--font-family);">Annulla</button>
+                <button class="btn-modern btn-success" onclick="confermaRinominaConto()" style="flex:1; max-width:none; font-family:var(--font-family);">✅ Rinomina</button>
             </div>
         </div>
     </div>
@@ -1482,13 +1871,239 @@
     <div id="auth-modal" class="modal" style="display:none;">
         <div class="modal-content auth">
             <button class="close-btn" onclick="chiudiAuthModal()">&times;</button>
-            <h3 style="margin-bottom:20px; text-align:center; font-size:1.25rem;" id="auth-title">🔐 Cloud Sync Login</h3>
-            <div id="auth-error" style="color:var(--danger); font-size:0.85rem; margin-bottom:12px; display:none; text-align:center; font-weight:bold;"></div>
-            <input type="email" id="auth-email" placeholder="La tua Email" style="margin-bottom:12px; background:#f9f9f9; border:1px solid #ddd;">
-            <input type="password" id="auth-password" placeholder="Password (min. 6 caratteri)" style="margin-bottom:15px; background:#f9f9f9; border:1px solid #ddd;">
-            <button class="btn-modern btn-success" id="btn-auth-primary" onclick="eseguiAuth()" style="max-width:none; width:100%; margin-top:5px;">ACCEDI</button>
-            <div style="text-align:center; margin-top:18px; font-size:0.85rem;">
-                <a id="auth-toggle-link" onclick="toggleAuthMode()" style="color:var(--secondary); font-weight:bold; cursor:pointer; text-decoration:underline;">Non hai un account? Registrati</a>
+            <h3 style="margin-bottom:20px; text-align:center; font-size:1.25rem; font-family:var(--font-family);" id="auth-title">🔐 Cloud Sync Login</h3>
+            <div id="auth-error" style="color:var(--danger); font-size:0.85rem; margin-bottom:12px; display:none; text-align:center; font-weight:bold; font-family:var(--font-family);"></div>
+            <input type="email" id="auth-email" placeholder="La tua Email" style="margin-bottom:12px; background:#f9f9f9; border:1px solid #ddd; font-family:var(--font-family);">
+            <input type="password" id="auth-password" placeholder="Password (min. 6 caratteri)" style="margin-bottom:15px; background:#f9f9f9; border:1px solid #ddd; font-family:var(--font-family);">
+            <button class="btn-modern btn-success" id="btn-auth-primary" onclick="eseguiAuth()" style="max-width:none; width:100%; margin-top:5px; font-family:var(--font-family);">ACCEDI</button>
+            <div style="text-align:center; margin-top:18px; font-size:0.85rem; font-family:var(--font-family);">
+                <a id="auth-toggle-link" onclick="toggleAuthMode()" style="color:var(--secondary); font-weight:bold; cursor:pointer; text-decoration:underline; font-family:var(--font-family);">Non hai un account? Registrati</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== MODALE GESTIONE WIDGET ===== -->
+    <div id="widget-modal" class="modal">
+        <div class="modal-content widget-management">
+            <button class="close-btn" onclick="chiudiGestioneWidget()">&times;</button>
+            <h3 style="margin-bottom:20px; color:var(--text-primary); font-family:var(--font-family);">📊 Gestione Widget</h3>
+            <p style="color:var(--text-secondary); font-size:0.9rem; margin-bottom:15px; font-family:var(--font-family);">
+                Seleziona i widget che vuoi visualizzare nella dashboard. Puoi sempre riordinarli trascinandoli.
+            </p>
+            <div id="widget-list">
+                <!-- Generato dinamicamente -->
+            </div>
+            <div class="widget-actions">
+                <button class="btn-select-all" onclick="selezionaTuttiWidget()" style="font-family:var(--font-family);">✅ Seleziona tutti</button>
+                <button class="btn-deselect-all" onclick="deselezionaTuttiWidget()" style="font-family:var(--font-family);">⬜ Deseleziona tutti</button>
+                <button class="btn-close-widget" onclick="chiudiGestioneWidget()" style="font-family:var(--font-family);">✔️ Applica e chiudi</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== MODALE GUIDA ===== -->
+    <div id="guide-modal" class="modal">
+        <div class="modal-content guida">
+            <button class="close-btn" onclick="chiudiGuida()">&times;</button>
+            <h2 style="color:var(--text-primary); margin-bottom:20px; display:flex; align-items:center; gap:10px; font-family:var(--font-family);">
+                <span style="font-size:2rem;">📖</span> Guida a MoneyTrack
+            </h2>
+            <div class="guide-content">
+                
+                <!-- PRIMI PASSI -->
+                <div class="guide-section">
+                    <h3>🎯 Primi Passi</h3>
+                    <p>Benvenuto su MoneyTrack! Questa guida ti accompagnerà passo passo nell'utilizzo di tutte le funzionalità dell'app.</p>
+                    
+                    <div class="step">
+                        <span class="step-num">1</span>
+                        <div class="step-text">
+                            <strong>Creazione del primo conto</strong> - All'avvio, l'app crea automaticamente un "Conto Principale". Puoi rinominarlo o crearne di nuovi dal pulsante <strong>➕ Nuovo</strong> nella barra dei conti.
+                        </div>
+                    </div>
+                    
+                    <div class="guide-screenshot">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='60'%3E%3Crect width='400' height='60' fill='%23f0f0f0'/%3E%3Ctext x='20' y='38' font-family='sans-serif' font-size='14' fill='%23666'%3E🏦 Conto Principale + ➕ Nuovo%3C/text%3E%3C/svg%3E" alt="Barra conti">
+                        <span class="placeholder-label">📸 Barra dei conti - Clicca su "+ Nuovo" per creare un conto</span>
+                    </div>
+                    
+                    <div class="step">
+                        <span class="step-num">2</span>
+                        <div class="step-text">
+                            <strong>Inserisci il primo movimento</strong> - Compila il form "Nuova Operazione" con data, categoria, importo e nota, poi premi <strong>SALVA MOVIMENTO</strong> o usa <strong>Ctrl+Enter</strong>.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GESTIONE CONTI -->
+                <div class="guide-section">
+                    <h3>🏦 Gestione Conti</h3>
+                    <p>MoneyTrack supporta <strong>conti multipli</strong> per organizzare al meglio le tue finanze.</p>
+                    
+                    <div class="step">
+                        <span class="step-num">1</span>
+                        <div class="step-text">
+                            <strong>Creare un conto</strong> - Clicca sul pulsante <strong>➕ Nuovo</strong> nella barra dei conti, scegli un nome e un'icona, poi conferma.
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <span class="step-num">2</span>
+                        <div class="step-text">
+                            <strong>Rinominare un conto</strong> - Clicca sul nome del conto nella barra dei conti per rinominarlo.
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <span class="step-num">3</span>
+                        <div class="step-text">
+                            <strong>Cambiare conto attivo</strong> - Clicca sul nome del conto nella barra dei conti per passare da uno all'altro. Ogni conto ha le sue transazioni, budget e liste.
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <span class="step-num">4</span>
+                        <div class="step-text">
+                            <strong>Riordinare i conti</strong> - Usa il simbolo <strong>⠿</strong> (drag handle) per trascinare i conti nell'ordine che preferisci. L'ordine viene salvato automaticamente.
+                        </div>
+                    </div>
+                    
+                    <div class="guide-screenshot">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='50'%3E%3Crect width='400' height='50' fill='%23f0f0f0'/%3E%3Ctext x='20' y='32' font-family='sans-serif' font-size='14' fill='%23666'%3E⠿ Conto 1  ⠿ Conto 2  ⠿ Conto 3%3C/text%3E%3C/svg%3E" alt="Drag handle conti">
+                        <span class="placeholder-label">📸 Trascina i conti con il simbolo ⠿ per riordinarli</span>
+                    </div>
+                    
+                    <div class="guide-tip">
+                        <span class="tip-icon">💡</span>
+                        <span class="tip-text"><strong>Consiglio:</strong> Usa conti diversi per separare le spese personali da quelle di famiglia, o per tenere traccia di diversi progetti/risparmi.</span>
+                    </div>
+                </div>
+
+                <!-- AGGIUNTA MOVIMENTI -->
+                <div class="guide-section">
+                    <h3>✏️ Aggiunta Movimenti</h3>
+                    <p>Registra ogni entrata e uscita per avere sempre sotto controllo le tue finanze.</p>
+                    
+                    <div class="step">
+                        <span class="step-num">1</span>
+                        <div class="step-text">
+                            <strong>Scegli il tipo</strong> - Seleziona <strong>📈 Entrata</strong> o <strong>📉 Uscita</strong> dal menu a tendina.
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <span class="step-num">2</span>
+                        <div class="step-text">
+                            <strong>Compila i campi</strong> - Inserisci data, categoria, importo e una nota descrittiva. Puoi usare la <strong>calcolatrice</strong> integrata cliccando su 🧮 CAL.
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <span class="step-num">3</span>
+                        <div class="step-text">
+                            <strong>Salva</strong> - Premi <strong>SALVA MOVIMENTO</strong> o usa la scorciatoia <strong>Ctrl+Enter</strong> per velocizzare l'inserimento.
+                        </div>
+                    </div>
+                    
+                    <div class="guide-screenshot">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200'%3E%3Crect width='400' height='200' fill='%23f0f0f0'/%3E%3Ctext x='20' y='100' font-family='sans-serif' font-size='14' fill='%23666'%3E📈 Entrata  📉 Uscita%3C/text%3E%3Ctext x='20' y='130' font-family='sans-serif' font-size='14' fill='%23666'%3EData | Categoria | Importo | Nota%3C/text%3E%3Ctext x='20' y='160' font-family='sans-serif' font-size='14' fill='%23666'%3E[ SALVA MOVIMENTO ]%3C/text%3E%3C/svg%3E" alt="Form aggiunta movimento">
+                        <span class="placeholder-label">📸 Form per aggiungere un nuovo movimento</span>
+                    </div>
+                    
+                    <div class="guide-tip">
+                        <span class="tip-icon">⚡</span>
+                        <span class="tip-text"><strong>Scorciatoia:</strong> Premi <strong>Ctrl+Enter</strong> mentre sei in un campo del form per salvare rapidamente il movimento senza usare il mouse.</span>
+                    </div>
+                </div>
+
+                <!-- PERSONALIZZAZIONE WIDGET -->
+                <div class="guide-section">
+                    <h3>📊 Personalizzazione Widget</h3>
+                    <p>Organizza la tua dashboard come preferisci con i widget drag & drop verticale.</p>
+                    
+                    <div class="step">
+                        <span class="step-num">1</span>
+                        <div class="step-text">
+                            <strong>Aggiungere widget</strong> - Vai su <strong>📊 Widget</strong> nel menu, seleziona i widget che vuoi visualizzare e clicca su "Applica e chiudi".
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <span class="step-num">2</span>
+                        <div class="step-text">
+                            <strong>Riordinare i widget</strong> - Usa il simbolo <strong>⠿</strong> in alto a destra di ogni widget per trascinarlo verticalmente (su/giù). L'ordine viene salvato automaticamente.
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <span class="step-num">3</span>
+                        <div class="step-text">
+                            <strong>Rimuovere widget</strong> - Clicca sulla <strong>✕</strong> in alto a destra del widget per rimuoverlo dalla dashboard (o usa il menu Widget per gestirli tutti insieme).
+                        </div>
+                    </div>
+                    
+                    <div class="guide-screenshot">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='120'%3E%3Crect width='400' height='120' fill='%23f0f0f0'/%3E%3Ctext x='20' y='30' font-family='sans-serif' font-size='14' fill='%23666'%3E⠿ 💪 Salute Finanziaria ✕%3C/text%3E%3Ctext x='20' y='60' font-family='sans-serif' font-size='14' fill='%23666'%3E⠿ 🏦 Debiti Attivi ✕%3C/text%3E%3Ctext x='20' y='90' font-family='sans-serif' font-size='14' fill='%23666'%3E⠿ 📈 Trend Spese ✕%3C/text%3E%3C/svg%3E" alt="Widget con drag handle">
+                        <span class="placeholder-label">📸 Trascina i widget verticalmente con il simbolo ⠿</span>
+                    </div>
+                </div>
+
+                <!-- BACKUP E SICUREZZA -->
+                <div class="guide-section">
+                    <h3>💾 Backup e Sicurezza</h3>
+                    <p>Proteggi i tuoi dati con il sistema di backup automatico e manuale.</p>
+                    
+                    <div class="step">
+                        <span class="step-num">1</span>
+                        <div class="step-text">
+                            <strong>Backup automatico</strong> - Ogni 5 minuti viene creato un backup automatico se ci sono modifiche ai dati. I backup sono conservati in locale.
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <span class="step-num">2</span>
+                        <div class="step-text">
+                            <strong>Backup manuale</strong> - Vai su <strong>💾 Gestione Backup</strong> nel menu e clicca su "Crea Backup". Puoi dare un nome personalizzato al backup.
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <span class="step-num">3</span>
+                        <div class="step-text">
+                            <strong>Ripristino</strong> - Dalla lista backup, clicca su <strong>🔄 Ripristina</strong> per tornare a una versione precedente dei tuoi dati.
+                        </div>
+                    </div>
+                    
+                    <div class="guide-screenshot">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='80'%3E%3Crect width='400' height='80' fill='%23f0f0f0'/%3E%3Ctext x='20' y='30' font-family='sans-serif' font-size='13' fill='%23666'%3E📦 Crea Backup  📂 Importa Backup%3C/text%3E%3Ctext x='20' y='55' font-family='sans-serif' font-size='13' fill='%23666'%3E💾 Esporta Tutti  🧹 Pulizia%3C/text%3E%3C/svg%3E" alt="Pulsanti backup">
+                        <span class="placeholder-label">📸 Sezione Backup - Gestisci i tuoi salvataggi</span>
+                    </div>
+                    
+                    <div class="guide-tip">
+                        <span class="tip-icon">🔐</span>
+                        <span class="tip-text"><strong>Sicurezza:</strong> Tutti i dati sono salvati in locale sul tuo dispositivo. Per maggiore sicurezza, attiva il <strong>Cloud Sync</strong> con il login per avere una copia dei tuoi dati online.</span>
+                    </div>
+                </div>
+
+                <!-- ALTRE FUNZIONALITÀ -->
+                <div class="guide-section">
+                    <h3>📅 Altre Funzionalità</h3>
+                    <p>MoneyTrack offre molte altre funzionalità per una gestione completa delle tue finanze.</p>
+                    
+                    <ul>
+                        <li><strong>📅 Scadenze</strong> - Visualizza nel calendario le spese future programmate.</li>
+                        <li><strong>📋 Liste Spese</strong> - Crea liste per progetti specifici (es. vacanze, ristrutturazione).</li>
+                        <li><strong>🧠 Analisi</strong> - Grafici a torta e barre per analizzare le tue spese per categoria.</li>
+                        <li><strong>📰 News</strong> - Resta aggiornato sulle notizie finanziarie.</li>
+                        <li><strong>🏦 Debiti</strong> - Tieni traccia di mutui, prestiti e piani di rimborso.</li>
+                        <li><strong>🎯 Budget</strong> - Imposta limiti di spesa mensili per categoria.</li>
+                        <li><strong>🌙 Tema Scuro</strong> - Attiva la modalità notte per un'esperienza più confortevole.</li>
+                    </ul>
+                </div>
+
+                <div class="guide-close-btn">
+                    <button onclick="chiudiGuida()" style="font-family:var(--font-family);">✅ Ho capito, cominciamo!</button>
+                </div>
             </div>
         </div>
     </div>
@@ -1497,25 +2112,25 @@
     <div id="calc-modal" class="modal">
         <div class="modal-content" style="max-width:350px;">
             <button class="close-btn" onclick="chiudiCalcolatrice()">&times;</button>
-            <input type="text" id="calc-screen" readonly style="width:100%; height:50px; background:#fff; border:none; margin-bottom:15px; text-align:right; padding:10px; font-size:20px; border-radius:5px;">
+            <input type="text" id="calc-screen" readonly style="width:100%; height:50px; background:#fff; border:none; margin-bottom:15px; text-align:right; padding:10px; font-size:20px; border-radius:5px; font-family:var(--font-family);">
             <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:10px;">
-                <button onclick="clearScreen()" style="background:#ff4d4d; color:white;">C</button>
-                <button onclick="pressKey('/')">/</button>
-                <button onclick="pressKey('*')">*</button>
-                <button onclick="pressKey('-')">-</button>
-                <button onclick="pressKey('7')">7</button>
-                <button onclick="pressKey('8')">8</button>
-                <button onclick="pressKey('9')">9</button>
-                <button onclick="pressKey('+')">+</button>
-                <button onclick="pressKey('4')">4</button>
-                <button onclick="pressKey('5')">5</button>
-                <button onclick="pressKey('6')">6</button>
-                <button onclick="calculate()" style="grid-row:span 2; background:#4caf50; color:white;">=</button>
-                <button onclick="pressKey('1')">1</button>
-                <button onclick="pressKey('2')">2</button>
-                <button onclick="pressKey('3')">3</button>
-                <button onclick="pressKey('0')">0</button>
-                <button onclick="pressKey(',')">,</button>
+                <button onclick="clearScreen()" style="background:#ff4d4d; color:white; font-family:var(--font-family);">C</button>
+                <button onclick="pressKey('/')" style="font-family:var(--font-family);">/</button>
+                <button onclick="pressKey('*')" style="font-family:var(--font-family);">*</button>
+                <button onclick="pressKey('-')" style="font-family:var(--font-family);">-</button>
+                <button onclick="pressKey('7')" style="font-family:var(--font-family);">7</button>
+                <button onclick="pressKey('8')" style="font-family:var(--font-family);">8</button>
+                <button onclick="pressKey('9')" style="font-family:var(--font-family);">9</button>
+                <button onclick="pressKey('+')" style="font-family:var(--font-family);">+</button>
+                <button onclick="pressKey('4')" style="font-family:var(--font-family);">4</button>
+                <button onclick="pressKey('5')" style="font-family:var(--font-family);">5</button>
+                <button onclick="pressKey('6')" style="font-family:var(--font-family);">6</button>
+                <button onclick="calculate()" style="grid-row:span 2; background:#4caf50; color:white; font-family:var(--font-family);">=</button>
+                <button onclick="pressKey('1')" style="font-family:var(--font-family);">1</button>
+                <button onclick="pressKey('2')" style="font-family:var(--font-family);">2</button>
+                <button onclick="pressKey('3')" style="font-family:var(--font-family);">3</button>
+                <button onclick="pressKey('0')" style="font-family:var(--font-family);">0</button>
+                <button onclick="pressKey(',')" style="font-family:var(--font-family);">,</button>
             </div>
         </div>
     </div>
@@ -1566,13 +2181,19 @@
     let utenze = [];
     let listeSpese = {};
     let debiti = JSON.parse(localStorage.getItem("moneyTrack_debiti")) || [];
-    let dashboardLayout = JSON.parse(localStorage.getItem("moneyTrack_dashboard_layout")) || [
-        { id: 'salute', titolo: '💪 Salute Finanziaria', tipo: 'salute', posizione: 0 },
-        { id: 'debiti', titolo: '🏦 Debiti Attivi', tipo: 'debiti', posizione: 1 },
-        { id: 'trend', titolo: '📈 Trend Spese', tipo: 'trend', posizione: 2 },
-        { id: 'risparmio', titolo: '🎯 Risparmio Mese', tipo: 'risparmio', posizione: 3 }
+    let dashboardLayout = JSON.parse(localStorage.getItem("moneyTrack_dashboard_layout")) || [];
+
+    // ===== WIDGET DISPONIBILI =====
+    const WIDGETS_AVAILABLE = [
+        { id: 'salute', titolo: '💪 Salute Finanziaria', tipo: 'salute', desc: 'Valutazione della tua salute finanziaria' },
+        { id: 'debiti', titolo: '🏦 Debiti Attivi', tipo: 'debiti', desc: 'Riepilogo dei tuoi debiti' },
+        { id: 'trend', titolo: '📈 Trend Spese', tipo: 'trend', desc: 'Andamento delle spese mensili' },
+        { id: 'risparmio', titolo: '🎯 Risparmio Mese', tipo: 'risparmio', desc: 'Monitoraggio del risparmio mensile' },
+        { id: 'spese', titolo: '💸 Spese per Categoria', tipo: 'spese', desc: 'Distribuzione delle spese per categoria' },
+        { id: 'prossime', titolo: '📅 Prossime Scadenze', tipo: 'prossime', desc: 'Spese future in arrivo' }
     ];
 
+    let contoDaRinominare = null;
     let privacy = false;
     let debitoEditIndex = -1;
     let graficoTorta = null;
@@ -1845,7 +2466,7 @@
     }
 
     // ==========================================
-    // 📦 FUNZIONI DATI
+    // 📦 FUNZIONI DATI - FIX CATEGORIE
     // ==========================================
 
     function getDatiConto(contoId) {
@@ -1853,12 +2474,13 @@
         if (!datiApp.conti) datiApp.conti = {};
         if (!contoId) return null;
         if (!datiApp.conti[contoId]) {
+            const defaultCats = { "Uscita": ["🏠 Casa", "🍕 Cibo", "🚗 Auto", "🛒 Spesa", "⏳ Programmata"], "Entrata": ["💰 Stipendio", "➕ Altro"] };
             datiApp.conti[contoId] = {
                 nome: "Conto",
                 icona: "🏦",
                 spese: [],
                 future: [],
-                customCats: JSON.parse(JSON.stringify(customCats)),
+                customCats: JSON.parse(JSON.stringify(defaultCats)),
                 budgets: {},
                 utenze: [],
                 liste: {}
@@ -1874,12 +2496,13 @@
             if (conti.length === 0) {
                 const id = 'conto_' + Date.now();
                 datiApp = datiApp || { conti: {} };
+                const defaultCats = { "Uscita": ["🏠 Casa", "🍕 Cibo", "🚗 Auto", "🛒 Spesa", "⏳ Programmata"], "Entrata": ["💰 Stipendio", "➕ Altro"] };
                 datiApp.conti[id] = {
                     nome: "Conto Principale",
                     icona: "🏦",
                     spese: [],
                     future: [],
-                    customCats: JSON.parse(JSON.stringify(customCats)),
+                    customCats: JSON.parse(JSON.stringify(defaultCats)),
                     budgets: {},
                     utenze: [],
                     liste: {}
@@ -1928,6 +2551,174 @@
     }
 
     function salvaDebiti() { localStorage.setItem("moneyTrack_debiti", JSON.stringify(debiti)); }
+
+    // ==========================================
+    // ✏️ CREA NUOVO CONTO - CON CATEGORIE EREDITATE
+    // ==========================================
+
+    function creaNuovoConto() {
+        const nome = document.getElementById('inputNuovoConto').value.trim();
+        if (!nome) { alert('Inserisci un nome!'); return; }
+        const icona = document.getElementById('iconaNuovoConto').value || '🏦';
+        const id = 'conto_' + Date.now();
+        
+        if (!datiApp) datiApp = { conti: {} };
+        if (!datiApp.conti) datiApp.conti = {};
+        
+        // LEGGI LE CATEGORIE DAL CONTO CORRENTE (SE ESISTE)
+        let customCatsDaUsare;
+        const contoCorrente = contoAttivoId && datiApp.conti[contoAttivoId] ? datiApp.conti[contoAttivoId] : null;
+        
+        if (contoCorrente && contoCorrente.customCats && Object.keys(contoCorrente.customCats).length > 0) {
+            // COPIA LE CATEGORIE DAL CONTO CORRENTE
+            customCatsDaUsare = JSON.parse(JSON.stringify(contoCorrente.customCats));
+        } else {
+            // USA LE CATEGORIE DI DEFAULT
+            customCatsDaUsare = {
+                "Uscita": ["🏠 Casa", "🍕 Cibo", "🚗 Auto", "🛒 Spesa", "⏳ Programmata"],
+                "Entrata": ["💰 Stipendio", "➕ Altro"]
+            };
+        }
+        
+        datiApp.conti[id] = { 
+            nome: nome, 
+            icona: icona, 
+            spese: [], 
+            future: [], 
+            customCats: customCatsDaUsare, 
+            budgets: {}, 
+            utenze: [], 
+            liste: {} 
+        };
+        
+        salvaDatiApp();
+        contoAttivoId = id;
+        localStorage.setItem("moneyTrack_conto_attivo", contoAttivoId);
+        
+        // CARICA IL NUOVO CONTO E AGGIORNA LE VARIABILI
+        const conto = getDatiConto(contoAttivoId);
+        if (conto) {
+            spese = conto.spese || [];
+            future = conto.future || [];
+            customCats = conto.customCats || { 
+                "Uscita": ["🏠 Casa", "🍕 Cibo", "🚗 Auto", "🛒 Spesa", "⏳ Programmata"], 
+                "Entrata": ["💰 Stipendio", "➕ Altro"] 
+            };
+            budgets = conto.budgets || {};
+            utenze = conto.utenze || [];
+            listeSpese = conto.liste || {};
+        }
+        
+        // RENDERIZZA L'APP CON LE NUOVE CATEGORIE
+        renderizzaConti();
+        renderizzaIndicatori();
+        aggiornaCategorie(); // RICARICA LE CATEGORIE NEL SELECT
+        aggiornaApp();
+        caricaSelectListe();
+        aggiornaPatrimonio();
+        renderizzaDebiti();
+        renderizzaDashboardPersonalizzata();
+        
+        chiudiModalAggiungiConto();
+        mostraToast('✅ Conto "' + nome + '" creato con le stesse categorie!', 'success');
+        
+        if (currentUser) syncDatiSuSupabase();
+    }
+
+    // ==========================================
+    // 📊 GESTIONE WIDGET
+    // ==========================================
+
+    function apriGestioneWidget() {
+        const modal = document.getElementById('widget-modal');
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+        document.getElementById('myDropdown').classList.remove('show');
+        renderizzaListaWidget();
+    }
+
+    function chiudiGestioneWidget() {
+        document.getElementById('widget-modal').style.display = 'none';
+        document.body.style.overflow = 'auto';
+        renderizzaDashboardPersonalizzata();
+    }
+
+    function renderizzaListaWidget() {
+        const container = document.getElementById('widget-list');
+        if (!container) return;
+        
+        let html = '';
+        WIDGETS_AVAILABLE.forEach(w => {
+            const isActive = dashboardLayout.some(dw => dw.tipo === w.tipo);
+            html += `
+                <div class="widget-option" onclick="toggleWidget('${w.tipo}')">
+                    <div class="widget-info">
+                        <span class="widget-icon">${w.titolo.split(' ')[0]}</span>
+                        <div>
+                            <div class="widget-name">${w.titolo}</div>
+                            <div class="widget-desc">${w.desc}</div>
+                        </div>
+                    </div>
+                    <label class="widget-toggle">
+                        <input type="checkbox" ${isActive ? 'checked' : ''} onchange="toggleWidget('${w.tipo}')">
+                        <span class="toggle-track"></span>
+                    </label>
+                </div>
+            `;
+        });
+        container.innerHTML = html;
+    }
+
+    function toggleWidget(tipo) {
+        const existingIndex = dashboardLayout.findIndex(w => w.tipo === tipo);
+        
+        if (existingIndex === -1) {
+            const widget = WIDGETS_AVAILABLE.find(w => w.tipo === tipo);
+            if (widget) {
+                dashboardLayout.push({
+                    id: 'widget_' + Date.now(),
+                    titolo: widget.titolo,
+                    tipo: widget.tipo,
+                    posizione: dashboardLayout.length
+                });
+                mostraToast('✅ Widget aggiunto: ' + widget.titolo, 'success');
+            }
+        } else {
+            const removed = dashboardLayout[existingIndex];
+            dashboardLayout.splice(existingIndex, 1);
+            mostraToast('🗑️ Widget rimosso: ' + removed.titolo, 'info');
+        }
+        
+        localStorage.setItem("moneyTrack_dashboard_layout", JSON.stringify(dashboardLayout));
+        renderizzaListaWidget();
+        renderizzaDashboardPersonalizzata();
+    }
+
+    function selezionaTuttiWidget() {
+        WIDGETS_AVAILABLE.forEach(w => {
+            const exists = dashboardLayout.some(dw => dw.tipo === w.tipo);
+            if (!exists) {
+                dashboardLayout.push({
+                    id: 'widget_' + Date.now(),
+                    titolo: w.titolo,
+                    tipo: w.tipo,
+                    posizione: dashboardLayout.length
+                });
+            }
+        });
+        localStorage.setItem("moneyTrack_dashboard_layout", JSON.stringify(dashboardLayout));
+        renderizzaListaWidget();
+        renderizzaDashboardPersonalizzata();
+        mostraToast('✅ Tutti i widget selezionati', 'success');
+    }
+
+    function deselezionaTuttiWidget() {
+        dashboardLayout = [];
+        localStorage.setItem("moneyTrack_dashboard_layout", JSON.stringify(dashboardLayout));
+        renderizzaListaWidget();
+        renderizzaDashboardPersonalizzata();
+        mostraToast('🗑️ Tutti i widget rimossi', 'info');
+    }
 
     // ==========================================
     // 🔐 AUTH
@@ -2217,6 +3008,59 @@
     }
 
     // ==========================================
+    // ✏️ RINOMINA CONTO
+    // ==========================================
+
+    function apriModalRinominaConto(contoId) {
+        contoDaRinominare = contoId;
+        const conto = getDatiConto(contoId);
+        if (!conto) return;
+        document.getElementById('inputRinominaConto').value = conto.nome;
+        document.getElementById('modalRinominaConto').style.display = 'flex';
+        document.getElementById('inputRinominaConto').focus();
+        document.getElementById('inputRinominaConto').select();
+    }
+
+    function chiudiModalRinominaConto() {
+        document.getElementById('modalRinominaConto').style.display = 'none';
+        contoDaRinominare = null;
+    }
+
+    function confermaRinominaConto() {
+        const nuovoNome = document.getElementById('inputRinominaConto').value.trim();
+        if (!nuovoNome) {
+            alert('Inserisci un nome valido!');
+            return;
+        }
+        if (!contoDaRinominare || !datiApp || !datiApp.conti || !datiApp.conti[contoDaRinominare]) {
+            alert('Errore: conto non trovato!');
+            return;
+        }
+        datiApp.conti[contoDaRinominare].nome = nuovoNome;
+        salvaDatiApp();
+        chiudiModalRinominaConto();
+        renderizzaIndicatori();
+        renderizzaConti();
+        mostraToast('✅ Conto rinominato con successo!', 'success');
+        if (currentUser) syncDatiSuSupabase();
+    }
+
+    // ==========================================
+    // 📖 GUIDA UTENTE
+    // ==========================================
+
+    function apriGuida() {
+        document.getElementById('guide-modal').style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+        document.getElementById('myDropdown').classList.remove('show');
+    }
+
+    function chiudiGuida() {
+        document.getElementById('guide-modal').style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+
+    // ==========================================
     // 🔄 MIGRAZIONE
     // ==========================================
 
@@ -2227,12 +3071,13 @@
         try {
             const contoId = 'conto_' + Date.now();
             if (!datiApp) datiApp = { conti: {} };
+            const defaultCats = { "Uscita": ["🏠 Casa", "🍕 Cibo", "🚗 Auto", "🛒 Spesa", "⏳ Programmata"], "Entrata": ["💰 Stipendio", "➕ Altro"] };
             datiApp.conti[contoId] = {
                 nome: "Conto Principale",
                 icona: "🏦",
                 spese: JSON.parse(oldDb) || [],
                 future: JSON.parse(localStorage.getItem("moneyTrack_future")) || [],
-                customCats: JSON.parse(localStorage.getItem("moneyTrack_cats")) || { "Uscita": ["🏠 Casa", "🍕 Cibo", "🚗 Auto", "🛒 Spesa", "⏳ Programmata"], "Entrata": ["💰 Stipendio", "➕ Altro"] },
+                customCats: JSON.parse(localStorage.getItem("moneyTrack_cats")) || JSON.parse(JSON.stringify(defaultCats)),
                 budgets: JSON.parse(localStorage.getItem("moneyTrack_budgets")) || {},
                 utenze: JSON.parse(localStorage.getItem("moneyTrack_utenze")) || [],
                 liste: JSON.parse(localStorage.getItem("moneyTrack_liste")) || {}
@@ -2252,12 +3097,13 @@
             if (speseVecchie.length === 0) { alert('❌ Nessuna spesa trovata!'); return; }
             const contoId = 'conto_' + Date.now();
             if (!datiApp) datiApp = { conti: {} };
+            const defaultCats = { "Uscita": ["🏠 Casa", "🍕 Cibo", "🚗 Auto", "🛒 Spesa", "⏳ Programmata"], "Entrata": ["💰 Stipendio", "➕ Altro"] };
             datiApp.conti[contoId] = {
                 nome: "Conto Principale",
                 icona: "🏦",
                 spese: speseVecchie,
                 future: JSON.parse(localStorage.getItem("moneyTrack_future")) || [],
-                customCats: JSON.parse(localStorage.getItem("moneyTrack_cats")) || { "Uscita": ["🏠 Casa", "🍕 Cibo", "🚗 Auto", "🛒 Spesa", "⏳ Programmata"], "Entrata": ["💰 Stipendio", "➕ Altro"] },
+                customCats: JSON.parse(localStorage.getItem("moneyTrack_cats")) || JSON.parse(JSON.stringify(defaultCats)),
                 budgets: JSON.parse(localStorage.getItem("moneyTrack_budgets")) || {},
                 utenze: JSON.parse(localStorage.getItem("moneyTrack_utenze")) || [],
                 liste: JSON.parse(localStorage.getItem("moneyTrack_liste")) || {}
@@ -2333,45 +3179,6 @@
 
     function chiudiModalAggiungiConto() { document.getElementById('modalAggiungiConto').style.display = 'none'; }
 
-    function creaNuovoConto() {
-        const nome = document.getElementById('inputNuovoConto').value.trim();
-        if (!nome) { alert('Inserisci un nome!'); return; }
-        const icona = document.getElementById('iconaNuovoConto').value || '🏦';
-        const id = 'conto_' + Date.now();
-        if (!datiApp) datiApp = { conti: {} };
-        if (!datiApp.conti) datiApp.conti = {};
-        
-        // COPIA LE CATEGORIE DAL CONTO CORRENTE O USA QUELLE DI DEFAULT
-        const contoCorrente = getContoAttivo();
-        const customCatsDaUsare = contoCorrente && contoCorrente.customCats ? 
-            JSON.parse(JSON.stringify(contoCorrente.customCats)) : 
-            { "Uscita": ["🏠 Casa", "🍕 Cibo", "🚗 Auto", "🛒 Spesa", "⏳ Programmata"], "Entrata": ["💰 Stipendio", "➕ Altro"] };
-        
-        datiApp.conti[id] = { 
-            nome: nome, 
-            icona: icona, 
-            spese: [], 
-            future: [], 
-            customCats: customCatsDaUsare, 
-            budgets: {}, 
-            utenze: [], 
-            liste: {} 
-        };
-        salvaDatiApp();
-        contoAttivoId = id;
-        localStorage.setItem("moneyTrack_conto_attivo", contoAttivoId);
-        getContoAttivo();
-        renderizzaConti();
-        renderizzaIndicatori();
-        aggiornaApp();
-        caricaSelectListe();
-        aggiornaPatrimonio();
-        renderizzaDebiti();
-        renderizzaDashboardPersonalizzata();
-        chiudiModalAggiungiConto();
-        mostraToast('✅ Conto creato!', 'success');
-    }
-
     function eliminaConto(id) {
         if (!datiApp || !datiApp.conti || !datiApp.conti[id]) return;
         const nome = datiApp.conti[id].nome;
@@ -2429,7 +3236,6 @@
             if (conto.spese) { conto.spese.forEach(s => { if (s.tipo === "Entrata") saldo += s.imp; else saldo -= s.imp; }); }
             html += `
                 <div class="conto-indicator ${isAttivo ? 'attivo' : ''}" 
-                     onclick="cambiaConto('${conto.id}')"
                      data-conto-id="${conto.id}"
                      draggable="true"
                      ondragstart="onContoDragStart(event, '${conto.id}')"
@@ -2437,15 +3243,26 @@
                      ondrop="onContoDrop(event, '${conto.id}')"
                      ondragend="onContoDragEnd(event)">
                     <span>${conto.icona || '🏦'}</span>
-                    ${sanitizeHTML(conto.nome)}
+                    <span class="conto-nome-clickable" onclick="event.stopPropagation(); apriModalRinominaConto('${conto.id}')" title="Clicca per rinominare">${sanitizeHTML(conto.nome)}</span>
                     <span class="badge-saldo">${privacy ? '***' : saldo.toFixed(0)}€</span>
-                    <span class="conto-drag-handle">⠿</span>
-                    ${conti.length > 1 ? `<button class="btn-elimina-conto" onclick="event.stopPropagation(); eliminaConto('${conto.id}')">✕</button>` : ''}
+                    <span class="conto-drag-handle" onclick="event.stopPropagation();">⠿</span>
+                    ${conti.length > 1 ? `<button class="btn-elimina-conto" onclick="event.stopPropagation(); eliminaConto('${conto.id}')" title="Elimina conto">✕</button>` : ''}
                 </div>
             `;
         });
         html += `<div class="conto-indicator btn-aggiungi-conto" onclick="apriModalAggiungiConto()">➕ Nuovo</div>`;
         container.innerHTML = html;
+    }
+
+    // Aggiorna gli event listener per il click sul nome del conto
+    function aggiornaClickNomeConto() {
+        document.querySelectorAll('.conto-nome-clickable').forEach(el => {
+            el.onclick = function(e) {
+                e.stopPropagation();
+                const contoId = this.closest('.conto-indicator').dataset.contoId;
+                apriModalRinominaConto(contoId);
+            };
+        });
     }
 
     function onContoDragStart(e, contoId) {
@@ -2619,14 +3436,21 @@
     function renderizzaDashboardPersonalizzata() {
         const container = document.getElementById('dashboard-personalizzata');
         if (!container) return;
+        
         const widgets = dashboardLayout.sort((a, b) => a.posizione - b.posizione);
+        
+        // Se non ci sono widget, mostra lo stato vuoto SENZA pulsante
         if (widgets.length === 0) {
-            container.innerHTML = `<div style="text-align:center;padding:20px;color:var(--text-muted);">
-                <p>📊 Nessun widget in dashboard</p>
-                <button class="btn-modern btn-primary" onclick="aggiungiWidget('salute')" style="max-width:200px;margin:10px auto;">➕ Aggiungi Widget</button>
-            </div>`;
+            container.innerHTML = `
+                <div class="widget-empty-state">
+                    <span class="empty-icon">📊</span>
+                    <div class="empty-title">Nessun widget selezionato</div>
+                    <div class="empty-desc">Vai su <strong>📊 Widget</strong> nel menu per scegliere quali widget visualizzare.</div>
+                </div>
+            `;
             return;
         }
+        
         let html = `<div class="dashboard-widgets">`;
         widgets.forEach(widget => {
             const content = renderWidgetContent(widget);
@@ -2649,11 +3473,7 @@
                 </div>
             `;
         });
-        html += `</div>
-            <div style="text-align:center;margin-top:10px;">
-                <button class="btn-modern btn-primary" onclick="aggiungiWidget('salute')" style="max-width:200px;font-size:0.8rem;padding:8px 12px;min-height:32px;">➕ Aggiungi Widget</button>
-            </div>
-        `;
+        html += `</div>`;
         container.innerHTML = html;
     }
 
@@ -2866,11 +3686,9 @@
 
         if (fromIndex === -1 || toIndex === -1) return;
 
-        // Sposta il widget verticalmente
         const [removed] = dashboardLayout.splice(fromIndex, 1);
         dashboardLayout.splice(toIndex, 0, removed);
 
-        // Aggiorna le posizioni
         dashboardLayout.forEach((w, i) => w.posizione = i);
         
         localStorage.setItem("moneyTrack_dashboard_layout", JSON.stringify(dashboardLayout));
@@ -2886,12 +3704,21 @@
     function aggiornaDashboardPersonalizzata() { renderizzaDashboardPersonalizzata(); }
 
     // ==========================================
-    // 🏷️ CATEGORIE
+    // 🏷️ CATEGORIE - FIX PER I NUOVI CONTI
     // ==========================================
 
     function aggiornaCategorie() {
         const t = document.getElementById("tipo-" + contoAttivoId).value;
         const s = document.getElementById("categoria-" + contoAttivoId);
+        
+        // Assicurati che customCats sia sempre un oggetto valido
+        if (!customCats || typeof customCats !== 'object') {
+            customCats = { "Uscita": ["🏠 Casa", "🍕 Cibo", "🚗 Auto", "🛒 Spesa", "⏳ Programmata"], "Entrata": ["💰 Stipendio", "➕ Altro"] };
+        }
+        if (!customCats[t]) {
+            customCats[t] = t === "Uscita" ? ["🏠 Casa", "🍕 Cibo", "🚗 Auto", "🛒 Spesa", "⏳ Programmata"] : ["💰 Stipendio", "➕ Altro"];
+        }
+        
         s.innerHTML = (customCats[t] || ["Generica"]).map(c => `<option value="${c}">${c}</option>`).join("");
         inizializzaSelectBudget();
         inizializzaSelectBudgetMobile();
@@ -2949,12 +3776,18 @@
 
     function inizializzaSelectBudget() {
         const select = document.getElementById("budget-categoria-" + contoAttivoId);
-        if (select) { select.innerHTML = (customCats["Uscita"] || ["Generica"]).map(c => `<option value="${c}">${c}</option>`).join(""); }
+        if (select) { 
+            const cats = customCats && customCats["Uscita"] ? customCats["Uscita"] : ["🏠 Casa", "🍕 Cibo", "🚗 Auto", "🛒 Spesa", "⏳ Programmata"];
+            select.innerHTML = cats.map(c => `<option value="${c}">${c}</option>`).join(""); 
+        }
     }
 
     function inizializzaSelectBudgetMobile() {
         const select = document.getElementById("budget-categoria-mobile-" + contoAttivoId);
-        if (select) { select.innerHTML = (customCats["Uscita"] || ["Generica"]).map(c => `<option value="${c}">${c}</option>`).join(""); }
+        if (select) { 
+            const cats = customCats && customCats["Uscita"] ? customCats["Uscita"] : ["🏠 Casa", "🍕 Cibo", "🚗 Auto", "🛒 Spesa", "⏳ Programmata"];
+            select.innerHTML = cats.map(c => `<option value="${c}">${c}</option>`).join(""); 
+        }
     }
 
     function impostaBudget() {
@@ -4065,6 +4898,7 @@
         // Carica dati
         datiApp = JSON.parse(localStorage.getItem("moneyTrack_multi_dati")) || null;
         contoAttivoId = localStorage.getItem("moneyTrack_conto_attivo") || null;
+        dashboardLayout = JSON.parse(localStorage.getItem("moneyTrack_dashboard_layout")) || [];
         
         // Migrazione
         const oldDb = localStorage.getItem("moneyTrack_db");
@@ -4083,12 +4917,13 @@
         if (!datiApp || !datiApp.conti || Object.keys(datiApp.conti).length === 0) {
             datiApp = { conti: {} };
             const id = 'conto_' + Date.now();
+            const defaultCats = { "Uscita": ["🏠 Casa", "🍕 Cibo", "🚗 Auto", "🛒 Spesa", "⏳ Programmata"], "Entrata": ["💰 Stipendio", "➕ Altro"] };
             datiApp.conti[id] = {
                 nome: "Conto Principale",
                 icona: "🏦",
                 spese: [],
                 future: [],
-                customCats: JSON.parse(JSON.stringify(customCats)),
+                customCats: JSON.parse(JSON.stringify(defaultCats)),
                 budgets: {},
                 utenze: [],
                 liste: {}
@@ -4172,6 +5007,7 @@
         
         console.log('✅ MoneyTrack avviato!');
         console.log(`📊 Spese: ${spese.length}, Conti: ${Object.keys(datiApp.conti).length}`);
+        console.log(`📊 Widget attivi: ${dashboardLayout.length}`);
     });
 
     // ==========================================
@@ -4286,6 +5122,16 @@
     window.toggleAuthMode = toggleAuthMode;
     window.eseguiLogout = eseguiLogout;
     window.sincronizzaDalCloud = sincronizzaDalCloud;
+    window.apriGuida = apriGuida;
+    window.chiudiGuida = chiudiGuida;
+    window.apriGestioneWidget = apriGestioneWidget;
+    window.chiudiGestioneWidget = chiudiGestioneWidget;
+    window.toggleWidget = toggleWidget;
+    window.selezionaTuttiWidget = selezionaTuttiWidget;
+    window.deselezionaTuttiWidget = deselezionaTuttiWidget;
+    window.apriModalRinominaConto = apriModalRinominaConto;
+    window.chiudiModalRinominaConto = chiudiModalRinominaConto;
+    window.confermaRinominaConto = confermaRinominaConto;
 
     console.log('✅ MoneyTrack 2.1 - Tutte le funzionalità caricate!');
     </script>
