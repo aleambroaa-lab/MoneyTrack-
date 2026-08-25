@@ -3813,6 +3813,46 @@
         return data.toISOString().split('T')[0];
     }
 
+    // ===== NUOVA FUNZIONE: AGGIUNGI PAGAMENTO =====
+    function aggiungiPagamentoDebito(idx) {
+        const debito = debiti[idx];
+        if (!debito) return;
+
+        // Chiedi l'importo pagato
+        const importoPagato = parseFloat(prompt(`Quanto hai pagato per "${debito.nome}"? (capitale residuo: ${debito.capitaleResiduo.toFixed(2)}€)`, "0"));
+        if (isNaN(importoPagato) || importoPagato <= 0) {
+            alert("Inserisci un importo valido maggiore di zero.");
+            return;
+        }
+
+        // Non puoi pagare più del residuo
+        if (importoPagato > debito.capitaleResiduo) {
+            alert("Non puoi pagare più del capitale residuo!");
+            return;
+        }
+
+        // Riduci il capitale residuo
+        debito.capitaleResiduo -= importoPagato;
+        debito.pagamentiEffettuati = (debito.pagamentiEffettuati || 0) + 1;
+
+        // Se il residuo è (quasi) zero, segna come estinto
+        if (debito.capitaleResiduo < 0.01) {
+            debito.capitaleResiduo = 0;
+            debito.stato = 'estinto';
+            debito.dataEstinzione = new Date().toISOString().split('T')[0];
+            alert(`🎉 Debito "${debito.nome}" completamente estinto!`);
+        } else {
+            // Ricalcola la data di estinzione con il nuovo residuo
+            debito.dataEstinzione = calcolaDataEstinzione(debito.capitaleResiduo, debito.tasso, debito.rata, new Date().toISOString().split('T')[0]);
+        }
+
+        // Salva e aggiorna
+        salvaDebiti();
+        renderizzaDebiti();
+        aggiornaDashboardPersonalizzata();
+        mostraToast(`✅ Pagamento di ${importoPagato.toFixed(2)}€ registrato per "${debito.nome}"`, 'success');
+    }
+
     function modificaDebito(idx) {
         const d = debiti[idx];
         if (!d) return;
@@ -3875,6 +3915,9 @@
                     <div class="debito-azioni">
                         <button class="btn-modifica" onclick="modificaDebito(${idx})">✏️ Modifica</button>
                         <button class="btn-elimina" onclick="eliminaDebito(${idx})">🗑️ Elimina</button>
+                        <button class="btn-paga-rata" onclick="aggiungiPagamentoDebito(${idx})" style="background:var(--success); color:white; border:none; padding:6px 14px; border-radius:6px; font-weight:600; font-size:0.8rem; cursor:pointer;">
+                            💰 Paga rata
+                        </button>
                     </div>
                 </div>
             `;
@@ -5298,6 +5341,7 @@
     window.aggiungiDebito = aggiungiDebito;
     window.modificaDebito = modificaDebito;
     window.eliminaDebito = eliminaDebito;
+    window.aggiungiPagamentoDebito = aggiungiPagamentoDebito;
     window.renderizzaDebiti = renderizzaDebiti;
     window.resetFormDebito = resetFormDebito;
     window.aggiornaDashboardPersonalizzata = aggiornaDashboardPersonalizzata;
