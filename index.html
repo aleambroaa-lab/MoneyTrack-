@@ -1708,7 +1708,7 @@
         ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 3px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--secondary); }
 
-        /* ===== MEDIA QUERY MOBILE - CARATTERI PIÙ GRANDI ===== */
+        /* ===== MEDIA QUERY MOBILE - CARATTERI PIÙ GRANDI E PULSANTI ADATTATI ===== */
         @media (max-width: 600px) {
             /* Base più grande su mobile */
             html { font-size: 18px; }
@@ -1748,11 +1748,19 @@
                 padding: 12px 8px;
                 max-width: 120px;
             }
+            /* Pulsanti della barra di navigazione - risoluzione sovrapposizione */
+            .nav-buttons-container {
+                gap: 8px; /* più spazio tra i pulsanti */
+            }
             .nav-buttons-container .btn-modern {
-                font-size: 0.75rem;
-                min-height: 40px;
-                padding: 8px 4px;
-                max-width: 100px;
+                flex: 0 1 auto; /* non si allargano oltre il contenuto */
+                max-width: none; /* rimuove il limite di 100px */
+                min-width: auto; /* non forza una larghezza minima */
+                font-size: 0.7rem; /* leggermente più piccolo per adattarsi */
+                padding: 6px 12px;
+                min-height: 36px;
+                text-transform: uppercase;
+                letter-spacing: 0.3px;
             }
             .btn-modern.full-width {
                 font-size: 1rem;
