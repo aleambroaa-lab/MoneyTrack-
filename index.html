@@ -157,16 +157,6 @@
         .dropdown-content .guide-link:hover { color: var(--secondary); }
         .show { display: block !important; }
 
-        @media (max-width: 600px) {
-            nav { padding: 8px 10px; min-height: 60px; }
-            .logo-box img { height: 35px; }
-            .center-title .title-main { font-size: 0.95rem; }
-            .center-title .title-sub { font-size: 0.5rem; }
-            .menu-dots { font-size: 1.3rem; }
-            .dropdown-content { min-width: 180px; right: -10px; top: 36px; }
-            .dropdown-content a { padding: 10px 14px; font-size: 0.8rem; }
-        }
-
         /* ===== CONTAINER ===== */
         .container { max-width: 900px; margin: 0 auto; padding: 0 15px 40px; }
 
@@ -357,32 +347,6 @@
             transform: scale(1.1);
         }
 
-        @media (max-width: 600px) {
-            .conto-selector {
-                top: 60px;
-                gap: 4px;
-                padding: 4px 8px;
-                min-height: 30px;
-            }
-            .conto-selector .conto-dot {
-                width: 26px;
-                height: 26px;
-                font-size: 0.7rem;
-            }
-            .conto-selector .conto-dot-aggiungi {
-                width: 26px;
-                height: 26px;
-                font-size: 0.8rem;
-            }
-            .conto-selector .conto-dot .dot-elimina {
-                width: 14px;
-                height: 14px;
-                font-size: 0.4rem;
-                top: -5px;
-                right: -5px;
-            }
-        }
-
         /* ===== HEADER SALDO - CENTRATO ===== */
         .header-saldo {
             padding: 24px 20px 20px 20px;
@@ -402,30 +366,48 @@
             text-align: center;
             padding: 0 10px;
         }
-        .header-saldo .saldo-nome {
-            font-size: 0.75rem;
-            opacity: 0.8;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+        /* Nome conto più grande */
+        .saldo-nome {
+            font-size: 1.1rem !important;
             font-weight: 600;
-            font-family: var(--font-family);
-            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 6px;
         }
-        .header-saldo .saldo-nome .rename-btn {
+        .saldo-nome .rename-btn {
             background: none;
             border: none;
             color: rgba(255,255,255,0.6);
             cursor: pointer;
-            font-size: 0.7rem;
+            font-size: 0.9rem;
             padding: 2px 6px;
             border-radius: 4px;
             transition: var(--transition);
             font-family: var(--font-family);
-            margin-left: 4px;
         }
-        .header-saldo .saldo-nome .rename-btn:hover {
+        .saldo-nome .rename-btn:hover {
             background: rgba(255,255,255,0.15);
             color: white;
+        }
+        .btn-privacy {
+            background: rgba(0,0,0,0.12);
+            border: none;
+            color: white;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.1rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            flex-shrink: 0;
+        }
+        .btn-privacy:hover {
+            background: rgba(0,0,0,0.25);
         }
         .header-saldo h1 { 
             margin: 0; 
@@ -458,38 +440,6 @@
             background: rgba(0,0,0,0.25);
         }
         .header-saldo .saldo-side button:active { transform: scale(0.9); }
-        .header-saldo .saldo-side .btn-privacy {
-            background: rgba(0,0,0,0.08);
-        }
-        .header-saldo .saldo-side .btn-privacy:hover {
-            background: rgba(0,0,0,0.2);
-        }
-
-        @media (max-width: 600px) {
-            .header-saldo {
-                padding: 18px 14px 16px 14px;
-                min-height: 100px;
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .header-saldo .saldo-center {
-                padding: 0;
-                order: 2;
-            }
-            .header-saldo .saldo-side {
-                order: 1;
-                justify-content: flex-end;
-                margin-bottom: 6px;
-            }
-            .header-saldo .saldo-side button {
-                width: 34px;
-                height: 34px;
-                font-size: 0.9rem;
-            }
-            .header-saldo h1 { font-size: 2.2rem; }
-            .header-saldo .saldo-nome { font-size: 0.65rem; }
-            .header-saldo .saldo-nome .rename-btn { font-size: 0.6rem; }
-        }
 
         /* ===== BOTTONI ===== */
         .btn-modern {
@@ -1095,17 +1045,6 @@
         .dark-theme .toast { background: #2a2a2a; border-color: #444; }
         .dark-theme .modal-content { background: #2a2a2a; border-color: #444; }
 
-        @media (max-width: 600px) {
-            .modal-content { padding: 20px; max-width: 95%; }
-            .modal-content.guida { padding: 20px; }
-            .modal-content.widget-management { padding: 20px; }
-            .backup-actions-bar button { flex: 1; min-width: 100px; font-size: 0.8rem; padding: 8px 12px; }
-            .toast { padding: 12px 16px; font-size: 0.8rem; }
-            #toast-container { width: 95%; bottom: 10px; }
-            .modal-content.guida .guide-section .step { flex-direction: column; gap: 4px; }
-            .modal-content.guida .guide-section .step .step-num { text-align: left; }
-        }
-
         /* ===== ALTRI STILI ===== */
         .info-previsione {
             background: var(--bg-dark);
@@ -1494,15 +1433,6 @@
         .budget-container-desktop { display: block; }
         .budget-container-mobile { display: none; }
 
-        @media (max-width: 767px) {
-            .desktop-grid { display: flex; flex-direction: column; }
-            .section-divider { border-right: none; border-bottom: 1px solid var(--border); padding-right: 0; }
-            .budget-container-desktop { display: none; }
-            .budget-container-mobile { display: block; margin-top: 20px; }
-            .debito-form { grid-template-columns: 1fr; }
-            .debito-card .debito-dettagli { grid-template-columns: 1fr 1fr; }
-        }
-
         /* ===== WIDGET DASHBOARD - DRAG & DROP VERTICALE ===== */
         .dashboard-widgets {
             display: flex;
@@ -1605,10 +1535,6 @@
             font-family: var(--font-family);
         }
         .dashboard-grid-edit .btn-add-widget:hover { background: var(--primary); color: white; border-color: var(--primary); }
-
-        @media (max-width: 600px) {
-            .dashboard-widgets { gap: 10px; }
-        }
 
         /* ===== WIDGET EMPTY STATE ===== */
         .widget-empty-state {
@@ -1777,14 +1703,142 @@
         .dark-theme .mese-container.attivo .mese-header { background: #333; }
         .dark-theme .info-previsione { background: #2a2a2a; }
 
-        @media (min-width: 768px) {
-            .table-container table { min-width: 600px; }
-        }
-
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: var(--border); border-radius: 3px; }
         ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 3px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--secondary); }
+
+        /* ===== MEDIA QUERY MOBILE - CARATTERI PIÙ GRANDI ===== */
+        @media (max-width: 600px) {
+            /* Base più grande su mobile */
+            html { font-size: 18px; }
+            body { font-size: 1rem; }
+
+            nav { padding: 8px 10px; min-height: 60px; }
+            .logo-box img { height: 35px; }
+            .center-title .title-main { font-size: 1.1rem; }
+            .center-title .title-sub { font-size: 0.65rem; }
+            .menu-dots { font-size: 1.5rem; }
+            .dropdown-content { min-width: 200px; right: -10px; top: 36px; }
+            .dropdown-content a { padding: 12px 16px; font-size: 1rem; }
+
+            .conto-selector { top: 60px; gap: 6px; padding: 6px 10px; min-height: 36px; }
+            .conto-selector .conto-dot { width: 32px; height: 32px; font-size: 0.9rem; }
+            .conto-selector .conto-dot-aggiungi { width: 32px; height: 32px; font-size: 1rem; }
+            .conto-selector .conto-dot .dot-elimina { width: 16px; height: 16px; font-size: 0.5rem; top: -5px; right: -5px; }
+
+            .header-saldo {
+                padding: 18px 14px 16px 14px;
+                min-height: 110px;
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .header-saldo .saldo-center { padding: 0; order: 2; }
+            .header-saldo .saldo-side { order: 1; justify-content: flex-end; margin-bottom: 6px; }
+            .header-saldo .saldo-side button { width: 38px; height: 38px; font-size: 1.1rem; }
+            .header-saldo h1 { font-size: 2.6rem; }
+            .saldo-nome { font-size: 1.3rem !important; }
+            .saldo-nome .rename-btn { font-size: 0.9rem; }
+            .btn-privacy { width: 34px; height: 34px; font-size: 1rem; }
+
+            /* Pulsanti e bottoni */
+            .btn-modern {
+                font-size: 0.85rem;
+                min-height: 44px;
+                padding: 12px 8px;
+                max-width: 120px;
+            }
+            .nav-buttons-container .btn-modern {
+                font-size: 0.75rem;
+                min-height: 40px;
+                padding: 8px 4px;
+                max-width: 100px;
+            }
+            .btn-modern.full-width {
+                font-size: 1rem;
+                height: 50px;
+                padding: 14px;
+            }
+
+            /* Modali */
+            .modal-content { padding: 20px; max-width: 95%; }
+            .modal-content.guida { padding: 20px; }
+            .modal-content.widget-management { padding: 20px; }
+            .modal-content.guida .guide-section .step { flex-direction: column; gap: 4px; }
+            .modal-content.guida .guide-section .step .step-num { text-align: left; }
+
+            /* Backup */
+            .backup-actions-bar button {
+                flex: 1;
+                min-width: 100px;
+                font-size: 0.85rem;
+                padding: 10px 14px;
+            }
+            .toast { padding: 14px 18px; font-size: 0.9rem; }
+            #toast-container { width: 95%; bottom: 10px; }
+
+            /* Tabelle e storico */
+            .mese-header { font-size: 1rem; padding: 14px 16px; }
+            .mese-content { padding: 0 12px; }
+            td { padding: 14px 0; font-size: 0.95rem; }
+            .action-icon { font-size: 1.2rem; }
+
+            /* Budget e filtri */
+            .budget-container { padding: 12px; }
+            .budget-row select, .budget-row input { font-size: 0.95rem; padding: 10px; }
+            .budget-row button { font-size: 0.9rem; height: 44px; }
+            .budget-info { font-size: 0.95rem; }
+
+            .filtro-mobile { padding: 12px; }
+            .filtro-mobile .filtro-riga .filtro-gruppo input,
+            .filtro-mobile .filtro-riga .filtro-gruppo select { font-size: 0.9rem; padding: 8px 4px; }
+            .filtro-mobile .filtro-azioni button { font-size: 0.85rem; min-height: 38px; }
+            .filtro-mobile .filtro-ricerca input { font-size: 0.9rem; padding: 10px 12px 10px 32px; }
+
+            /* Debiti */
+            .debito-form { grid-template-columns: 1fr; padding: 16px; }
+            .debito-form input, .debito-form select { font-size: 0.95rem; padding: 10px; }
+            .debito-card .debito-dettagli { grid-template-columns: 1fr 1fr; }
+            .debito-card .debito-dettaglio .value { font-size: 1.1rem; }
+            .debito-card .debito-azioni button { font-size: 0.85rem; padding: 8px 14px; }
+
+            /* Widget */
+            .dashboard-widgets { gap: 12px; }
+            .dashboard-widget { padding: 14px; }
+            .dashboard-widget .widget-title { font-size: 0.95rem; }
+            .dashboard-widget .widget-content { font-size: 0.95rem; }
+
+            /* Lista spese */
+            .lista-spesa-card { padding: 14px; }
+            .lista-spesa-card .info .desc { font-size: 1rem; }
+            .lista-spesa-card .importo { font-size: 1.2rem; }
+            .lista-spesa-card .info .data { font-size: 0.8rem; }
+            .lista-totale-categoria { font-size: 0.95rem; padding: 10px 14px; }
+
+            /* Calendario */
+            .cal-giorno { min-height: 70px; font-size: 0.95rem; }
+            .cal-badge-scadenza { font-size: 0.7rem; }
+
+            /* Altro */
+            .patrimonio-totale .value { font-size: 1.5rem; }
+            .info-previsione { font-size: 0.95rem; padding: 16px; }
+            h3 { font-size: 1.2rem; }
+            h4 { font-size: 1rem; }
+            .utenza-totale .value { font-size: 1.3rem; }
+            .conto-page-aggiungi .aggiungi-conto-card .plus-icon { font-size: 4.5rem; }
+            .conto-page-aggiungi .aggiungi-conto-card .plus-title { font-size: 1.5rem; }
+        }
+
+        @media (max-width: 767px) {
+            .desktop-grid { display: flex; flex-direction: column; }
+            .section-divider { border-right: none; border-bottom: 1px solid var(--border); padding-right: 0; }
+            .budget-container-desktop { display: none; }
+            .budget-container-mobile { display: block; margin-top: 20px; }
+            .debito-form { grid-template-columns: 1fr; }
+            .debito-card .debito-dettagli { grid-template-columns: 1fr 1fr; }
+            .debito-card .debito-nome { font-size: 1.2rem; }
+            .debito-card .debito-dettaglio .value { font-size: 1rem; }
+        }
 
         /* ===== MIGRAZIONE ===== */
         #migrateBtn {
@@ -4125,20 +4179,15 @@
             html += `
                 <div class="conto-page" data-conto-id="${conto.id}" id="conto-page-${conto.id}">
                     <div class="container" style="padding:0 5px 20px 5px;">
-                        <!-- HEADER SALDO CENTRATO -->
+                        <!-- HEADER SALDO CENTRATO CON PRIVACY AL CENTRO -->
                         <div class="header-saldo" id="boxSaldo-${conto.id}">
-                            <div class="saldo-side">
-                                <button class="btn-privacy" onclick="togglePrivacy()" title="Attiva/disattiva privacy">👁️</button>
-                            </div>
                             <div class="saldo-center">
                                 <div class="saldo-nome">
                                     ${conto.icona || '🏦'} ${sanitizeHTML(conto.nome)}
                                     <button class="rename-btn" onclick="apriModalRinominaConto('${conto.id}')" title="Rinomina conto">✏️</button>
+                                    <button class="btn-privacy" onclick="togglePrivacy()" title="Attiva/disattiva privacy">👁️</button>
                                 </div>
                                 <h1 id="saldo-cifra-${conto.id}">0.00 €</h1>
-                            </div>
-                            <div class="saldo-side">
-                                <!-- Spazio per bilanciare -->
                             </div>
                         </div>
 
