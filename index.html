@@ -1433,14 +1433,24 @@
         .budget-container-desktop { display: block; }
         .budget-container-mobile { display: none; }
 
-        /* ===== WIDGET DASHBOARD - DRAG & DROP VERTICALE ===== */
+        /* ===== WIDGET DASHBOARD - SCROLL ORIZZONTALE ===== */
         .dashboard-widgets {
             display: flex;
-            flex-direction: column;
+            flex-direction: row;          /* orizzontale */
             gap: 15px;
-            margin: 15px 0;
+            overflow-x: auto;             /* scroll orizzontale */
+            -webkit-overflow-scrolling: touch;
+            scroll-snap-type: x mandatory;
+            padding: 8px 4px 15px 4px;
+            margin: 0 -4px;
+            scrollbar-width: thin;
         }
+
         .dashboard-widget {
+            flex: 0 0 auto;              /* non si restringe */
+            min-width: 280px;
+            max-width: 90vw;
+            scroll-snap-align: start;
             background: var(--bg-light);
             border: 1px solid var(--border);
             border-radius: var(--radius-md);
@@ -1449,8 +1459,8 @@
             position: relative;
             cursor: grab;
             user-select: none;
-            font-family: var(--font-family);
         }
+
         .dashboard-widget:active { cursor: grabbing; }
         .dashboard-widget.dragging {
             opacity: 0.5;
@@ -1497,6 +1507,14 @@
         }
         .dashboard-widget .widget-close:hover { opacity: 1; color: var(--danger); }
         .dashboard-widget .widget-content { font-size: 0.9rem; font-family: var(--font-family); }
+
+        /* Desktop: larghezza leggermente maggiore */
+        @media (min-width: 768px) {
+            .dashboard-widget {
+                min-width: 320px;
+                max-width: 400px;
+            }
+        }
 
         .widget-salute { text-align: center; padding: 10px; font-family: var(--font-family); }
         .widget-salute .salute-score { font-size: 2.5rem; font-weight: bold; display: block; font-family: var(--font-family); }
@@ -1810,9 +1828,9 @@
             .debito-card .debito-dettaglio .value { font-size: 1.1rem; }
             .debito-card .debito-azioni button { font-size: 0.85rem; padding: 8px 14px; }
 
-            /* Widget */
-            .dashboard-widgets { gap: 12px; }
-            .dashboard-widget { padding: 14px; }
+            /* Widget - su mobile si adattano allo scroll */
+            .dashboard-widgets { gap: 12px; padding: 8px 2px 15px 2px; }
+            .dashboard-widget { min-width: 240px; padding: 14px; }
             .dashboard-widget .widget-title { font-size: 0.95rem; }
             .dashboard-widget .widget-content { font-size: 0.95rem; }
 
