@@ -251,6 +251,18 @@
         .patrimonio-totale .value.positivo { color: var(--emerald); }
         .patrimonio-totale .value.negativo { color: var(--red); }
 
+        /* ===== PREVISIONE GLOBALE (spostata sotto il Patrimonio) ===== */
+        #previsione-globale {
+            max-width: 1200px;
+            margin: 8px auto;
+            padding: 16px 24px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            transition: background 0.3s, border 0.3s;
+        }
+
         /* ===== SELEZIONE CONTI (dots) ===== */
         .conto-selector {
             display: flex;
@@ -1401,6 +1413,9 @@
         <span class="label">💰 Patrimonio Totale</span>
         <span class="value" id="patrimonioValore">0.00 €</span>
     </div>
+
+    <!-- ===== PREVISIONE GLOBALE (spostata sotto il Patrimonio) ===== -->
+    <div id="previsione-globale" class="info-previsione" style="max-width:1200px; margin:8px auto; padding:16px 24px;"></div>
 
     <!-- ===== SELEZIONE CONTI ===== -->
     <div class="conto-selector" id="contoSelector"></div>
@@ -2958,11 +2973,13 @@
             const contiScroll = document.getElementById('contiScrollContainer');
             const selector = document.getElementById('contoSelector');
             const patrimonio = document.getElementById('patrimonioTotale');
+            const previsioneGlobale = document.getElementById('previsione-globale');
 
             if (p === 'home') {
                 contiScroll.style.display = 'flex';
                 selector.style.display = 'flex';
                 patrimonio.style.display = 'flex';
+                previsioneGlobale.style.display = 'block';
                 aggiornaApp();
                 renderizzaSelector();
                 aggiornaPatrimonio();
@@ -2972,6 +2989,7 @@
                 contiScroll.style.display = 'none';
                 selector.style.display = 'none';
                 patrimonio.style.display = 'none';
+                previsioneGlobale.style.display = 'none';
                 const pagina = document.getElementById('pagina-' + p);
                 if (pagina) pagina.style.display = 'block';
                 if (p === 'news') caricaNews();
@@ -3448,7 +3466,9 @@
             let tuttiImpegniFuturi = speseFutureValide.reduce((acc, curr) => acc + (parseFloat(curr.imp) || 0), 0);
             const previstoFineMese = saldoAttuale - impegniMese;
             const saldoFuturo = saldoAttuale - tuttiImpegniFuturi;
-            const div = document.getElementById("previsione-fine-mese-" + contoAttivoId);
+
+            // Usa il contenitore globale
+            const div = document.getElementById("previsione-globale");
             if (!div) return;
             div.style.textAlign = "left";
             if (privacy) {
@@ -3528,8 +3548,6 @@
             mappaGruppi.forEach((righeHtml, meseStr) => {
                 const div = document.createElement('div');
                 div.className = 'mese-container';
-                // Rimossa la condizione che aggiungeva 'attivo' per il mese corrente
-                // → tutti i mesi partono chiusi
                 div.innerHTML = `
                 <div class="mese-header" onclick="this.parentElement.classList.toggle('attivo')">
                     <span>📅 ${meseStr}</span>
@@ -3600,7 +3618,7 @@
                         </div>
 
                         <div id="dashboard-personalizzata"></div>
-                        <div id="previsione-fine-mese-${conto.id}" class="info-previsione"></div>
+                        <!-- PREVISIONE RIMOSSA DA QUI - ORA GLOBALE -->
                         <div class="desktop-grid">
                             <div class="section section-divider">
                                 <!-- Nuova Operazione con CAL a destra -->
