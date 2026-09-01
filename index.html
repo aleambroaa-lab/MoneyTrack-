@@ -151,7 +151,7 @@
             right: 0;
             top: 48px;
             background: var(--bg-card);
-            min-width: 220px;
+            min-width: 240px;
             border: 1px solid var(--border-light);
             border-radius: var(--radius-md);
             box-shadow: var(--shadow-lg);
@@ -220,7 +220,92 @@
         .dark-theme .toggle-slider:before { content: "☀️"; background: #2d3a4f; }
         .dark-theme .toggle-switch input:checked + .toggle-slider:before { content: "🌙"; }
 
-        .show { display: block !important; }
+        /* ===== SUBMENU DROPDOWN ===== */
+        .dropdown-submenu {
+            border-bottom: 1px solid var(--border-light);
+        }
+        .dropdown-submenu:last-child { border-bottom: none; }
+        .submenu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 18px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            transition: var(--transition);
+            user-select: none;
+        }
+        .submenu-header:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+        .submenu-header .submenu-arrow {
+            font-size: 0.8rem;
+            transition: transform 0.25s ease;
+            color: var(--text-muted);
+        }
+        .submenu-header .submenu-arrow.open {
+            transform: rotate(90deg);
+        }
+        .submenu-content {
+            display: none;
+            background: var(--bg-hover);
+            border-top: 1px solid var(--border-light);
+            padding: 4px 0;
+        }
+        .submenu-content.open {
+            display: block;
+        }
+        .submenu-content a {
+            padding: 8px 18px 8px 36px !important;
+            font-size: 0.85rem !important;
+        }
+        .submenu-content .theme-toggle-item {
+            padding: 8px 18px 8px 36px !important;
+        }
+        .submenu-content .theme-toggle-item span {
+            font-size: 0.85rem !important;
+        }
+        .submenu-content .setting-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 18px 6px 36px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        .submenu-content .setting-row select {
+            flex: 1;
+            padding: 4px 8px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-light);
+            background: var(--bg-card);
+            color: var(--text-primary);
+            font-size: 0.8rem;
+            margin: 0;
+            min-width: 80px;
+            cursor: pointer;
+        }
+        .submenu-content .setting-row select:focus {
+            border-color: var(--blue);
+            box-shadow: 0 0 0 2px rgba(79,106,245,0.15);
+        }
+        .submenu-content .submenu-header {
+            padding: 8px 18px 8px 36px !important;
+            font-size: 0.85rem !important;
+        }
+        .submenu-content .submenu-content .submenu-header {
+            padding-left: 48px !important;
+        }
+        .submenu-content .submenu-content .submenu-content a {
+            padding-left: 56px !important;
+        }
+        .dropdown-divider {
+            height: 1px;
+            background: var(--border-light);
+            margin: 4px 12px;
+        }
 
         /* ===== PATRIMONIO TOTALE (KPI) ===== */
         .patrimonio-totale {
@@ -251,7 +336,7 @@
         .patrimonio-totale .value.positivo { color: var(--emerald); }
         .patrimonio-totale .value.negativo { color: var(--red); }
 
-        /* ===== PREVISIONE GLOBALE (spostata sotto il Patrimonio) ===== */
+        /* ===== PREVISIONE GLOBALE ===== */
         #previsione-globale {
             max-width: 1200px;
             margin: 8px auto;
@@ -263,84 +348,9 @@
             transition: background 0.3s, border 0.3s;
         }
 
-        /* ===== SELEZIONE CONTI (dots) ===== */
+        /* ===== SELEZIONE CONTI (RIMOSSA - NASCOSTA) ===== */
         .conto-selector {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            padding: 8px 16px;
-            max-width: 1200px;
-            margin: 0 auto 4px;
-            overflow-x: auto;
-            flex-wrap: nowrap;
-            scrollbar-width: none;
-        }
-        .conto-selector::-webkit-scrollbar { display: none; }
-        .conto-selector .conto-dot {
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            border: 2px solid var(--border-light);
-            background: var(--bg-card);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            cursor: pointer;
-            transition: var(--transition);
-            flex-shrink: 0;
-            position: relative;
-            box-shadow: var(--shadow-sm);
-        }
-        .conto-selector .conto-dot:hover {
-            border-color: var(--blue);
-            transform: scale(1.05);
-        }
-        .conto-selector .conto-dot.attivo {
-            border-color: var(--blue);
-            background: var(--blue);
-            color: white;
-            box-shadow: 0 4px 12px rgba(79,106,245,0.3);
-            transform: scale(1.08);
-        }
-        .conto-selector .conto-dot .dot-elimina {
-            position: absolute;
-            top: -6px;
-            right: -6px;
-            width: 18px;
-            height: 18px;
-            background: var(--red);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            font-size: 0.5rem;
-            cursor: pointer;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            transition: var(--transition);
-            line-height: 1;
-        }
-        .conto-selector .conto-dot:hover .dot-elimina { display: flex; }
-        .conto-selector .conto-dot-aggiungi {
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            border: 2px dashed var(--border-light);
-            background: transparent;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.3rem;
-            cursor: pointer;
-            transition: var(--transition);
-            color: var(--text-muted);
-            flex-shrink: 0;
-        }
-        .conto-selector .conto-dot-aggiungi:hover {
-            border-color: var(--blue);
-            color: var(--blue);
-            background: var(--blue-light);
+            display: none !important;
         }
 
         /* ===== PAGINE ===== */
@@ -551,6 +561,8 @@
         }
         .modal-content.auth { max-width: 380px; }
         .modal-content.guida { max-width: 700px; }
+        .modal-content.giroconto { max-width: 460px; }
+        .modal-content.storico-giroconti { max-width: 700px; }
         .close-btn {
             position: absolute;
             top: 12px;
@@ -772,6 +784,16 @@
             font-weight: 600;
             background: var(--bg-input);
             color: var(--text-secondary);
+        }
+        .badge-giroconto {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.6rem;
+            font-weight: 700;
+            background: var(--blue-light);
+            color: var(--blue);
+            margin-left: 4px;
         }
 
         /* ===== FILTRI ===== */
@@ -1134,6 +1156,202 @@
             text-overflow: ellipsis;
         }
 
+        /* ===== PAGINA CONTI ===== */
+        #pagina-conti {
+            padding: 20px 0;
+        }
+        #pagina-conti .page-title {
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+        #pagina-conti .totale-conti {
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            padding: 12px;
+            background: var(--bg-card);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow-sm);
+        }
+        #pagina-conti .totale-conti .value {
+            color: var(--blue);
+            font-weight: 700;
+        }
+        .conti-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .conti-actions .btn-modern {
+            padding: 12px 24px;
+            font-size: 0.85rem;
+            flex: 0 1 auto;
+            min-width: 180px;
+        }
+        .conto-riga {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 18px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            margin-bottom: 8px;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+        .conto-riga:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateX(4px);
+        }
+        .conto-riga .conto-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .conto-riga .conto-icona {
+            font-size: 1.6rem;
+        }
+        .conto-riga .conto-nome {
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--text-primary);
+        }
+        .conto-riga .conto-giacenza {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        .conto-riga .conto-giacenza.positivo { color: var(--emerald); }
+        .conto-riga .conto-giacenza.negativo { color: var(--red); }
+        .btn-aggiungi-conto-footer {
+            display: flex;
+            justify-content: center;
+            margin-top: 24px;
+        }
+        .btn-aggiungi-conto-footer .btn-circle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--blue);
+            color: white;
+            border: none;
+            font-size: 2.2rem;
+            font-weight: 300;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(79,106,245,0.3);
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn-aggiungi-conto-footer .btn-circle:hover {
+            transform: scale(1.08);
+            box-shadow: 0 8px 32px rgba(79,106,245,0.4);
+        }
+
+        /* ===== STORICO GIROCONTI ===== */
+        .storico-tabella {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+        .storico-tabella th {
+            text-align: left;
+            padding: 10px 8px;
+            border-bottom: 2px solid var(--border-light);
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .storico-tabella td {
+            padding: 10px 8px;
+            border-bottom: 1px solid var(--border-light);
+            vertical-align: middle;
+        }
+        .storico-tabella .amount {
+            font-weight: 700;
+            color: var(--red);
+        }
+        .storico-tabella .btn-elimina-giroconto {
+            background: none;
+            border: none;
+            color: var(--red);
+            cursor: pointer;
+            font-size: 1.1rem;
+            padding: 4px 6px;
+            border-radius: 4px;
+            transition: var(--transition);
+            opacity: 0.6;
+        }
+        .storico-tabella .btn-elimina-giroconto:hover {
+            opacity: 1;
+            background: var(--red-light);
+        }
+
+        /* ===== PAGINA BACKUP UNIFICATA ===== */
+        #pagina-backup .backup-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: var(--shadow-sm);
+        }
+        #pagina-backup .backup-actions-bar {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+            justify-content: center;
+        }
+        #pagina-backup .backup-actions-bar button {
+            padding: 10px 20px;
+            border-radius: var(--radius-sm);
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.8rem;
+            flex: 1 1 auto;
+            min-width: 120px;
+        }
+        #pagina-backup .backup-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            padding: 10px 16px;
+            margin-bottom: 16px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        #pagina-backup .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        #pagina-backup .status-dot.active { background: var(--emerald); }
+        #pagina-backup .page-title {
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+
         /* ===== RESPONSIVE ===== */
         @media (max-width: 768px) {
             .form-grid { grid-template-columns: 1fr; }
@@ -1146,10 +1364,17 @@
             .header-saldo .saldo-side { order: 1; justify-content: center; margin-bottom: 6px; }
             .dashboard-widget { min-width: 200px; }
             .nav-buttons-container .btn-modern { max-width: 80px; font-size: 0.55rem; padding: 6px 4px; }
-            .conto-selector .conto-dot, .conto-selector .conto-dot-aggiungi { width: 36px; height: 36px; font-size: 1rem; }
             .logo-box img { height: 40px; }
             .center-title .title-main { font-size: 1.1rem; }
             .center-title .title-sub { font-size: 0.65rem; }
+            .conti-actions .btn-modern { min-width: 140px; font-size: 0.75rem; padding: 10px 16px; }
+            #pagina-conti .page-title { font-size: 1.4rem; }
+            .conto-riga { padding: 12px 14px; }
+            .conto-riga .conto-icona { font-size: 1.2rem; }
+            .storico-tabella { font-size: 0.75rem; }
+            .storico-tabella th, .storico-tabella td { padding: 6px 4px; }
+            #pagina-backup .backup-actions-bar button { min-width: 100px; font-size: 0.7rem; padding: 8px 12px; }
+            .dropdown-content { min-width: 200px; }
         }
         @media (max-width: 480px) {
             .container { padding: 0 8px 20px; }
@@ -1160,6 +1385,8 @@
             .logo-box img { height: 36px; }
             .center-title .title-main { font-size: 1rem; }
             .center-title .title-sub { font-size: 0.6rem; }
+            #pagina-backup .backup-actions-bar button { min-width: 80px; font-size: 0.6rem; padding: 6px 10px; }
+            .dropdown-content { min-width: 180px; }
         }
 
         /* ===== FIX SCROLL ORIZZONTALE MOBILE ===== */
@@ -1192,12 +1419,6 @@
             .header-saldo h1 {
                 font-size: 1.6rem !important;
             }
-            .conto-selector .conto-dot,
-            .conto-selector .conto-dot-aggiungi {
-                width: 32px !important;
-                height: 32px !important;
-                font-size: 0.9rem !important;
-            }
             .nav-buttons-container .btn-modern {
                 max-width: 60px !important;
                 font-size: 0.5rem !important;
@@ -1222,61 +1443,6 @@
             }
         }
 
-        /* ===== PAGINE SECONDARIE ===== */
-        #pagina-backup .backup-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-light);
-            border-radius: var(--radius-md);
-            padding: 16px;
-            margin-bottom: 12px;
-            box-shadow: var(--shadow-sm);
-        }
-        .backup-actions-bar {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-bottom: 16px;
-        }
-        .backup-actions-bar button {
-            padding: 8px 18px;
-            border-radius: var(--radius-sm);
-            border: none;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            font-size: 0.8rem;
-            flex: 1;
-            min-width: 100px;
-        }
-        .btn-crea-backup { background: var(--emerald); color: white; }
-        .btn-crea-backup:hover { background: #059669; }
-        .btn-importa-backup { background: var(--blue); color: white; }
-        .btn-importa-backup:hover { background: #3b56e0; }
-        .btn-esporta-tutti { background: var(--purple); color: white; }
-        .btn-esporta-tutti:hover { background: #7c3aed; }
-        .btn-pulisci-backup { background: var(--red); color: white; }
-        .btn-pulisci-backup:hover { background: #dc2626; }
-
-        .backup-status {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: var(--bg-card);
-            border: 1px solid var(--border-light);
-            border-radius: var(--radius-sm);
-            padding: 10px 16px;
-            margin-bottom: 16px;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-        }
-        .status-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            display: inline-block;
-        }
-        .status-dot.active { background: var(--emerald); }
-
         /* ===== DARK THEME ADJUSTMENTS ===== */
         .dark-theme .card,
         .dark-theme .header-saldo,
@@ -1288,7 +1454,12 @@
         .dark-theme .modal-content,
         .dark-theme .toast,
         .dark-theme .aggiungi-conto-card,
-        .dark-theme .dashboard-widget {
+        .dark-theme .dashboard-widget,
+        .dark-theme #pagina-conti .totale-conti,
+        .dark-theme .conto-riga,
+        .dark-theme #pagina-backup .backup-status,
+        .dark-theme .dropdown-content,
+        .dark-theme .submenu-content {
             background: var(--bg-card);
             border-color: var(--border-light);
         }
@@ -1297,6 +1468,7 @@
         .dark-theme .mese-container.attivo .mese-header { background: var(--bg-hover); }
         .dark-theme input, .dark-theme select { background: var(--bg-input); border-color: var(--border-light); color: var(--text-primary); }
         .dark-theme input:focus, .dark-theme select:focus { background: var(--bg-card); }
+        .dark-theme .submenu-content .setting-row select { background: var(--bg-input); }
 
         /* ===== UTILITY ===== */
         .section { padding: 16px 0; border-bottom: 1px solid var(--border-light); }
@@ -1382,24 +1554,70 @@
                 <div class="title-sub">Controlla le tue finanze</div>
             </div>
             <div class="menu-container">
-                <button class="menu-dots" onclick="toggleMenu()">⋮</button>
+                <button class="menu-dots" id="menuToggleBtn">⋮</button>
                 <div id="myDropdown" class="dropdown-content">
-                    <div class="theme-toggle-item">
-                        <span>🌙 Tema Scuro</span>
-                        <label class="toggle-switch">
-                            <input type="checkbox" id="themeToggle" onchange="toggleTheme()">
-                            <span class="toggle-slider"></span>
-                        </label>
-                    </div>
+                    <!-- LOGIN -->
                     <a onclick="loginbtn()" id="login-nav-link">🔐 Login</a>
-                    <a onclick="sincronizzaDalCloud()" style="border-top:1px solid var(--border-light);margin-top:4px;padding-top:10px;">🔄 Sincronizza dal Cloud</a>
-                    <a onclick="mostraPagina('backup')">💾 Gestione Backup</a>
-                    <a onclick="esportaDati()">📋 Backup rapido</a>
-                    <a onclick="esportaCSV()">📊 Esporta CSV</a>
-                    <a onclick="document.getElementById('fileInput').click()">📂 Ripristina (Importa)</a>
+
+                    <!-- CONTI -->
+                    <a onclick="mostraPagina('conti')" style="color:var(--blue);font-weight:600;">🏦 Conti</a>
+
+                    <!-- IMPOSTAZIONI (espandibile) -->
+                    <div class="dropdown-submenu">
+                        <div class="submenu-header" onclick="toggleSubmenu('settings')">
+                            <span>⚙️ Impostazioni</span>
+                            <span class="submenu-arrow" id="submenu-arrow-settings">▶</span>
+                        </div>
+                        <div class="submenu-content" id="submenu-settings">
+                            <!-- Backup e Sincronizzazione -->
+                            <a onclick="mostraPagina('backup')" style="padding-left:28px;">💾 Backup e Sincronizzazione</a>
+
+                            <!-- Aspetto (espandibile) -->
+                            <div class="dropdown-submenu" style="border-bottom:none; padding-left:8px;">
+                                <div class="submenu-header" onclick="toggleSubmenu('appearance')" style="padding-left:20px;">
+                                    <span>🎨 Aspetto</span>
+                                    <span class="submenu-arrow" id="submenu-arrow-appearance">▶</span>
+                                </div>
+                                <div class="submenu-content" id="submenu-appearance" style="padding-left:12px;">
+                                    <!-- Tema Scuro -->
+                                    <div class="theme-toggle-item" style="padding:8px 18px 8px 36px;">
+                                        <span>🌙 Tema Scuro</span>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="themeToggle" onchange="toggleTheme()">
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
+                                    <!-- Lingua -->
+                                    <div class="setting-row">
+                                        <span>🌐 Lingua</span>
+                                        <select id="languageSelect" onchange="cambiaLingua(this.value)">
+                                            <option value="it">Italiano</option>
+                                            <option value="en">English</option>
+                                            <option value="es">Español</option>
+                                        </select>
+                                    </div>
+                                    <!-- Valuta -->
+                                    <div class="setting-row">
+                                        <span>💶 Valuta</span>
+                                        <select id="currencySelect" onchange="cambiaValuta(this.value)">
+                                            <option value="EUR">EUR (€)</option>
+                                            <option value="USD">USD ($)</option>
+                                            <option value="GBP">GBP (£)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Elimina i miei dati -->
+                            <a onclick="eliminaMieiDati()" style="color:var(--red);padding-left:28px;">🗑️ Elimina i miei dati</a>
+                        </div>
+                    </div>
+
+                    <!-- WIDGET -->
                     <a onclick="apriGestioneWidget()" style="color:var(--blue);">📊 Widget</a>
+
+                    <!-- GUIDA -->
                     <a onclick="apriGuida()" class="guide-link" style="font-weight:600;color:var(--blue);">📖 Guida e Istruzioni</a>
-                    <a onclick="eliminaMieiDati()" style="color:var(--red);">🗑️ Elimina i miei dati</a>
                 </div>
             </div>
         </div>
@@ -1414,32 +1632,58 @@
         <span class="value" id="patrimonioValore">0.00 €</span>
     </div>
 
-    <!-- ===== PREVISIONE GLOBALE (spostata sotto il Patrimonio) ===== -->
+    <!-- ===== PREVISIONE GLOBALE ===== -->
     <div id="previsione-globale" class="info-previsione" style="max-width:1200px; margin:8px auto; padding:16px 24px;"></div>
 
-    <!-- ===== SELEZIONE CONTI ===== -->
-    <div class="conto-selector" id="contoSelector"></div>
+    <!-- ===== SELEZIONE CONTI (RIMOSSA - NASCOSTA) ===== -->
+    <div class="conto-selector" id="contoSelector" style="display:none !important;"></div>
 
     <!-- ===== CONTI SCROLL ===== -->
     <div class="conti-scroll-container" id="contiScrollContainer"></div>
 
-    <!-- ===== PAGINA BACKUP ===== -->
-    <div id="pagina-backup" class="container" style="display:none; padding:20px 0;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:10px;">
+    <!-- ===== PAGINA CONTI ===== -->
+    <div id="pagina-conti" class="container" style="display:none; padding:20px 0;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:10px;">
             <button onclick="mostraPagina('home')" class="btn-back-home">⬅ Torna alla Home</button>
-            <h3 style="margin:0;">💾 Gestione Backup</h3>
         </div>
+        <div class="page-title">🏦 Conti</div>
+        <div class="totale-conti" id="totaleContiPagina">
+            Totale conti: <span class="value" id="totaleContiValore">0.00 €</span>
+        </div>
+        <div class="conti-actions">
+            <button class="btn-modern btn-primary" onclick="apriModalGiroconto()">↔ Nuovo giroconto</button>
+            <button class="btn-modern btn-info" onclick="apriStoricoGiroconti()">📜 Storico giroconti</button>
+        </div>
+        <div id="listaContiPagina"></div>
+        <div class="btn-aggiungi-conto-footer">
+            <button class="btn-circle" onclick="apriModalAggiungiConto()" title="Aggiungi nuovo conto">+</button>
+        </div>
+    </div>
+
+    <!-- ===== PAGINA BACKUP UNIFICATA ===== -->
+    <div id="pagina-backup" class="container" style="display:none; padding:20px 0;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:10px;">
+            <button onclick="mostraPagina('home')" class="btn-back-home">⬅ Torna alla Home</button>
+        </div>
+        <div class="page-title">💾 Backup e Sincronizzazione</div>
+
+        <!-- STATO BACKUP -->
         <div class="backup-status" id="backupStatus">
             <span class="status-dot active" id="statusDot"></span>
             <span id="statusText">Caricamento...</span>
         </div>
+
+        <!-- PULSANTI AZIONI -->
         <div class="backup-actions-bar">
+            <button class="btn-sync-cloud" onclick="sincronizzaDalCloud()">🔄 Sincronizza dal Cloud</button>
+            <button class="btn-backup-rapido" onclick="esportaDati()">📋 Backup rapido</button>
+            <button class="btn-ripristina" onclick="document.getElementById('fileInput').click()">📂 Ripristina</button>
             <button class="btn-crea-backup" onclick="creaBackupManuale()">📦 Crea Backup</button>
-            <button class="btn-importa-backup" onclick="document.getElementById('backupFileInput').click()">📂 Importa Backup</button>
             <button class="btn-esporta-tutti" onclick="esportaTuttiBackup()">💾 Esporta Tutti</button>
             <button class="btn-pulisci-backup" onclick="pulisciBackup()">🧹 Pulizia</button>
         </div>
-        <input type="file" id="backupFileInput" style="display:none" accept=".json" onchange="importaBackupFile(event)">
+
+        <!-- LISTA BACKUP -->
         <div id="backupList"></div>
     </div>
 
@@ -1577,6 +1821,39 @@
             <div style="display:flex; gap:10px; margin-top:8px;">
                 <button class="btn-modern" onclick="chiudiModalRinominaConto()" style="flex:1; max-width:none; background:var(--bg-input); color:var(--text-secondary);">Annulla</button>
                 <button class="btn-modern btn-success" onclick="confermaRinominaConto()" style="flex:1; max-width:none;">✅ Rinomina</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== MODALE GIROCONTO ===== -->
+    <div id="modalGiroconto" class="modal">
+        <div class="modal-content giroconto">
+            <button class="close-btn" onclick="chiudiModalGiroconto()">&times;</button>
+            <h3 style="margin-bottom:16px;">↔ Nuovo Giroconto</h3>
+            <div id="giroconto-error" style="color:var(--red); font-size:0.85rem; margin-bottom:12px; display:none;"></div>
+            <select id="giroconto-da" style="margin-bottom:12px;">
+                <option value="">Seleziona conto di origine...</option>
+            </select>
+            <select id="giroconto-a" style="margin-bottom:12px;">
+                <option value="">Seleziona conto di destinazione...</option>
+            </select>
+            <input type="number" id="giroconto-importo" placeholder="Importo (€)" step="0.01" inputmode="decimal" style="margin-bottom:12px;">
+            <input type="date" id="giroconto-data" style="margin-bottom:12px;">
+            <input type="text" id="giroconto-descrizione" placeholder="Descrizione (opzionale)" style="margin-bottom:16px;">
+            <div style="display:flex; gap:10px;">
+                <button class="btn-modern" onclick="chiudiModalGiroconto()" style="flex:1; max-width:none; background:var(--bg-input); color:var(--text-secondary);">Annulla</button>
+                <button class="btn-modern btn-success" onclick="eseguiGiroconto()" style="flex:1; max-width:none;">↔ Esegui giroconto</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== MODALE STORICO GIROCONTI ===== -->
+    <div id="modalStoricoGiroconti" class="modal">
+        <div class="modal-content storico-giroconti">
+            <button class="close-btn" onclick="chiudiStoricoGiroconti()">&times;</button>
+            <h3 style="margin-bottom:16px;">📜 Storico Giroconti</h3>
+            <div id="storico-giroconti-container">
+                <div class="utenza-empty"><span class="icon">📭</span><p>Nessun giroconto effettuato</p></div>
             </div>
         </div>
     </div>
@@ -2169,6 +2446,7 @@
             aggiornaPatrimonio();
             renderizzaDebiti();
             renderizzaDashboardPersonalizzata();
+            aggiornaPaginaConti();
 
             chiudiModalAggiungiConto();
             mostraToast('✅ Conto "' + nome + '" creato con le stesse categorie!', 'success');
@@ -2725,6 +3003,7 @@
             aggiornaPatrimonio();
             renderizzaDebiti();
             renderizzaDashboardPersonalizzata();
+            aggiornaPaginaConti();
         }
 
         function mostraStatoUtenteLoggato(email) {
@@ -2815,7 +3094,7 @@
             }
             const user = session.session.user;
             try {
-                const btn = document.querySelector('.dropdown-content a[onclick*="sincronizzaDalCloud"]');
+                const btn = document.querySelector('#pagina-backup .btn-sync-cloud');
                 const testoOriginale = btn ? btn.textContent : '';
                 if (btn) { btn.textContent = '⏳ Caricamento...';
                     btn.style.opacity = '0.6';
@@ -2887,6 +3166,7 @@
             chiudiModalRinominaConto();
             renderizzaSelector();
             renderizzaConti();
+            aggiornaPaginaConti();
             mostraToast('✅ Conto rinominato con successo!', 'success');
             if (currentUser) syncDatiSuSupabase();
         }
@@ -2962,14 +3242,112 @@
         }
 
         // ==========================================
-        // 🧭 NAVIGAZIONE
+        // 🧭 NAVIGAZIONE E MENU
         // ==========================================
 
-        function toggleMenu() { document.getElementById("myDropdown").classList.toggle("show"); }
-        window.onclick = (e) => { if (!e.target.matches('.menu-dots')) document.getElementById("myDropdown").classList.remove('show'); }
+        function toggleMenu() {
+            const dropdown = document.getElementById("myDropdown");
+            if (dropdown) {
+                const isOpen = dropdown.classList.contains("show");
+                if (isOpen) {
+                    dropdown.classList.remove("show");
+                    dropdown.style.display = "";
+                    console.log("Menu chiuso");
+                } else {
+                    dropdown.classList.add("show");
+                    dropdown.style.display = "block";
+                    console.log("Menu aperto");
+                }
+            } else {
+                console.warn("Dropdown non trovato!");
+            }
+        }
+
+        // Gestione click esterno per chiudere il menu
+        document.addEventListener('click', function(e) {
+            const dropdown = document.getElementById("myDropdown");
+            const menuDots = document.getElementById('menuToggleBtn');
+            if (dropdown && menuDots && !dropdown.contains(e.target) && !menuDots.contains(e.target)) {
+                dropdown.classList.remove('show');
+                dropdown.style.display = "";
+            }
+        });
+
+        // Aggiungi event listener al pulsante del menu
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuBtn = document.getElementById('menuToggleBtn');
+            if (menuBtn) {
+                menuBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    toggleMenu();
+                });
+            } else {
+                console.warn("Pulsante menu non trovato!");
+            }
+        });
+
+        // Funzione per aprire/chiudere sottomenu
+        function toggleSubmenu(id) {
+            event.stopPropagation();
+            const content = document.getElementById('submenu-' + id);
+            const arrow = document.getElementById('submenu-arrow-' + id);
+            if (!content || !arrow) return;
+            const isOpen = content.classList.contains('open');
+            if (isOpen) {
+                content.classList.remove('open');
+                arrow.classList.remove('open');
+            } else {
+                content.classList.add('open');
+                arrow.classList.add('open');
+            }
+            localStorage.setItem('moneyTrack_submenu_' + id, !isOpen);
+        }
+
+        // Ripristina stato sottomenu all'avvio
+        function ripristinaStatoSubmenu() {
+            ['settings', 'appearance'].forEach(id => {
+                const isOpen = localStorage.getItem('moneyTrack_submenu_' + id) === 'true';
+                const content = document.getElementById('submenu-' + id);
+                const arrow = document.getElementById('submenu-arrow-' + id);
+                if (content && arrow) {
+                    if (isOpen) {
+                        content.classList.add('open');
+                        arrow.classList.add('open');
+                    } else {
+                        content.classList.remove('open');
+                        arrow.classList.remove('open');
+                    }
+                }
+            });
+        }
+
+        // Funzioni per Lingua e Valuta
+        function cambiaLingua(val) {
+            const nomi = { it: 'Italiano', en: 'English', es: 'Español' };
+            mostraToast(`🌐 Lingua impostata su ${nomi[val] || val}`, 'success');
+            localStorage.setItem('moneyTrack_language', val);
+        }
+
+        function cambiaValuta(val) {
+            const simboli = { EUR: '€', USD: '$', GBP: '£' };
+            mostraToast(`💶 Valuta impostata su ${val} (${simboli[val] || ''})`, 'success');
+            localStorage.setItem('moneyTrack_currency', val);
+        }
+
+        // ==========================================
+        // 🏷️ SELEZIONE CONTI (RIMOSSA - NASCOSTA)
+        // ==========================================
+
+        function renderizzaSelector() {
+            // La barra dei conti è stata rimossa - questa funzione non fa più nulla
+            // Mantenuta per compatibilità con altre funzioni
+            const container = document.getElementById('contoSelector');
+            if (container) container.innerHTML = '';
+        }
 
         function mostraPagina(p) {
-            document.querySelectorAll('#pagina-backup, #pagina-analisi, #pagina-news, #pagina-liste, #sezione-scadenze').forEach(el => el.style.display = 'none');
+            document.querySelectorAll('#pagina-backup, #pagina-analisi, #pagina-news, #pagina-liste, #sezione-scadenze, #pagina-conti').forEach(el => el.style.display = 'none');
             const contiScroll = document.getElementById('contiScrollContainer');
             const selector = document.getElementById('contoSelector');
             const patrimonio = document.getElementById('patrimonioTotale');
@@ -2977,11 +3355,10 @@
 
             if (p === 'home') {
                 contiScroll.style.display = 'flex';
-                selector.style.display = 'flex';
+                selector.style.display = 'none'; // NASCOSTO
                 patrimonio.style.display = 'flex';
                 previsioneGlobale.style.display = 'block';
                 aggiornaApp();
-                renderizzaSelector();
                 aggiornaPatrimonio();
                 renderizzaDebiti();
                 renderizzaDashboardPersonalizzata();
@@ -2997,40 +3374,9 @@
                 else if (p === 'liste') caricaSelectListe();
                 else if (p === 'backup') aggiornaListaBackup();
                 else if (p === 'scadenze') disegnaCalendario();
+                else if (p === 'conti') aggiornaPaginaConti();
             }
             window.scrollTo(0, 0);
-        }
-
-        // ==========================================
-        // 🏷️ SELEZIONE CONTI (solo icone)
-        // ==========================================
-
-        function renderizzaSelector() {
-            const container = document.getElementById('contoSelector');
-            if (!container) return;
-            const conti = getConti();
-
-            let html = '';
-            conti.forEach(conto => {
-                const isAttivo = conto.id === contoAttivoId;
-                html += `
-                <div class="conto-dot ${isAttivo ? 'attivo' : ''}" 
-                     data-conto-id="${conto.id}"
-                     onclick="cambiaConto('${conto.id}')"
-                     title="${sanitizeHTML(conto.nome)}">
-                    ${conto.icona || '🏦'}
-                    <button class="dot-elimina" onclick="event.stopPropagation(); eliminaConto('${conto.id}')" title="Elimina conto">✕</button>
-                </div>
-                `;
-            });
-
-            html += `
-            <div class="conto-dot-aggiungi" onclick="apriModalAggiungiConto()" title="Aggiungi conto">
-                ➕
-            </div>
-            `;
-
-            container.innerHTML = html;
         }
 
         // ==========================================
@@ -3080,6 +3426,7 @@
             aggiornaPatrimonio();
             renderizzaDebiti();
             renderizzaDashboardPersonalizzata();
+            aggiornaPaginaConti();
             mostraToast('🗑️ Conto eliminato', 'info');
         }
 
@@ -3095,6 +3442,7 @@
             aggiornaPatrimonio();
             renderizzaDebiti();
             renderizzaDashboardPersonalizzata();
+            aggiornaPaginaConti();
             scrollToConto(id);
         }
 
@@ -3467,7 +3815,6 @@
             const previstoFineMese = saldoAttuale - impegniMese;
             const saldoFuturo = saldoAttuale - tuttiImpegniFuturi;
 
-            // Usa il contenitore globale
             const div = document.getElementById("previsione-globale");
             if (!div) return;
             div.style.textAlign = "left";
@@ -3532,6 +3879,7 @@
                     <td>
                         <small style="color:var(--text-muted);">${sanitizeHTML(s.data)}</small><br>
                         <strong>${sanitizeHTML(s.cat)}</strong>
+                        ${s.girocontoId ? `<span class="badge-giroconto">↔ Giroconto</span>` : ''}
                         <br><small style="color:var(--text-secondary);">${sanitizeHTML(s.nota || '')}</small>
                     </td>
                     <td style="text-align:right; white-space:nowrap;">
@@ -3561,9 +3909,9 @@
             disegnaTorta(catsUscita, totUsciteMese);
             aggiornaListaFuture();
             aggiornaBudgetProgress(catsUscita);
-            renderizzaSelector();
             aggiornaPatrimonio();
             renderizzaDashboardPersonalizzata();
+            aggiornaPaginaConti();
         }
 
         debouncedAggiorna = debounce(aggiornaApp, 300);
@@ -3583,6 +3931,11 @@
             if (el) {
                 el.textContent = (privacy ? '***' : totale.toFixed(2)) + ' €';
                 el.className = 'value ' + (totale >= 0 ? 'positivo' : 'negativo');
+            }
+            // Aggiorna anche il totale nella pagina conti
+            const totaleEl = document.getElementById('totaleContiValore');
+            if (totaleEl) {
+                totaleEl.textContent = (privacy ? '***' : totale.toFixed(2)) + ' €';
             }
         }
 
@@ -3618,7 +3971,6 @@
                         </div>
 
                         <div id="dashboard-personalizzata"></div>
-                        <!-- PREVISIONE RIMOSSA DA QUI - ORA GLOBALE -->
                         <div class="desktop-grid">
                             <div class="section section-divider">
                                 <!-- Nuova Operazione con CAL a destra -->
@@ -3733,6 +4085,7 @@
                 aggiornaPatrimonio();
                 renderizzaDebiti();
                 renderizzaDashboardPersonalizzata();
+                aggiornaPaginaConti();
             }
         }
 
@@ -3755,7 +4108,321 @@
         }
 
         // ==========================================
-        // ✏️ OPERAZIONI
+        // 📋 PAGINA CONTI - GIROCONTI E LISTA CONTI
+        // ==========================================
+
+        function aggiornaPaginaConti() {
+            const container = document.getElementById('listaContiPagina');
+            if (!container) return;
+            const conti = getConti();
+            const totale = conti.reduce((sum, conto) => {
+                let saldo = 0;
+                if (conto.spese) {
+                    conto.spese.forEach(s => {
+                        if (s.tipo === "Entrata") saldo += s.imp;
+                        else saldo -= s.imp;
+                    });
+                }
+                return sum + saldo;
+            }, 0);
+            document.getElementById('totaleContiValore').textContent = (privacy ? '***' : totale.toFixed(2)) + ' €';
+
+            if (conti.length === 0) {
+                container.innerHTML = `
+                <div class="utenza-empty">
+                    <span class="icon">🏦</span>
+                    <p><strong>Nessun conto creato</strong></p>
+                    <p style="font-size:0.8rem;">Clicca sul pulsante + in basso per crearne uno</p>
+                </div>
+                `;
+                return;
+            }
+
+            let html = '';
+            conti.forEach(conto => {
+                let saldo = 0;
+                if (conto.spese) {
+                    conto.spese.forEach(s => {
+                        if (s.tipo === "Entrata") saldo += s.imp;
+                        else saldo -= s.imp;
+                    });
+                }
+                const isPositivo = saldo >= 0;
+                html += `
+                <div class="conto-riga" onclick="cambiaConto('${conto.id}'); mostraPagina('home')" style="cursor:pointer;">
+                    <div class="conto-info">
+                        <span class="conto-icona">${conto.icona || '🏦'}</span>
+                        <span class="conto-nome">${sanitizeHTML(conto.nome)}</span>
+                    </div>
+                    <span class="conto-giacenza ${isPositivo ? 'positivo' : 'negativo'}">
+                        ${privacy ? '***' : saldo.toFixed(2) + ' €'}
+                    </span>
+                </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        // ==========================================
+        // ↔ GIROCONTI - CON ID UNIVOCO
+        // ==========================================
+
+        function apriModalGiroconto() {
+            const conti = getConti();
+            if (conti.length < 2) {
+                mostraToast('⚠️ Servono almeno 2 conti per fare un giroconto!', 'warning');
+                return;
+            }
+            const daSelect = document.getElementById('giroconto-da');
+            const aSelect = document.getElementById('giroconto-a');
+            daSelect.innerHTML = '';
+            aSelect.innerHTML = '';
+            conti.forEach(c => {
+                daSelect.innerHTML += `<option value="${c.id}">${c.icona} ${sanitizeHTML(c.nome)}</option>`;
+                aSelect.innerHTML += `<option value="${c.id}">${c.icona} ${sanitizeHTML(c.nome)}</option>`;
+            });
+            document.getElementById('giroconto-data').value = new Date().toISOString().split('T')[0];
+            document.getElementById('giroconto-importo').value = '';
+            document.getElementById('giroconto-descrizione').value = '';
+            document.getElementById('giroconto-error').style.display = 'none';
+            document.getElementById('modalGiroconto').style.display = 'flex';
+        }
+
+        function chiudiModalGiroconto() {
+            document.getElementById('modalGiroconto').style.display = 'none';
+        }
+
+        function eseguiGiroconto() {
+            const fromId = document.getElementById('giroconto-da').value;
+            const toId = document.getElementById('giroconto-a').value;
+            const importo = parseFloat(document.getElementById('giroconto-importo').value);
+            const data = document.getElementById('giroconto-data').value;
+            const descrizione = document.getElementById('giroconto-descrizione').value.trim() || 'Giroconto';
+
+            if (!fromId || !toId) {
+                mostraToast('⚠️ Seleziona conto di origine e destinazione!', 'warning');
+                return;
+            }
+            if (fromId === toId) {
+                mostraToast('⚠️ Origine e destinazione devono essere diversi!', 'warning');
+                return;
+            }
+            if (isNaN(importo) || importo <= 0) {
+                mostraToast('⚠️ Inserisci un importo valido!', 'warning');
+                return;
+            }
+            if (!data) {
+                mostraToast('⚠️ Inserisci una data!', 'warning');
+                return;
+            }
+
+            // Verifica saldo disponibile sul conto origine
+            const contoFrom = getDatiConto(fromId);
+            if (!contoFrom) { mostraToast('❌ Conto origine non trovato!', 'error'); return; }
+            let saldoFrom = 0;
+            if (contoFrom.spese) {
+                contoFrom.spese.forEach(s => {
+                    if (s.tipo === "Entrata") saldoFrom += s.imp;
+                    else saldoFrom -= s.imp;
+                });
+            }
+            if (saldoFrom < importo) {
+                mostraToast(`⚠️ Saldo insufficiente sul conto origine (${saldoFrom.toFixed(2)}€)`, 'warning');
+                return;
+            }
+
+            const contoTo = getDatiConto(toId);
+            if (!contoTo) { mostraToast('❌ Conto destinazione non trovato!', 'error'); return; }
+
+            // Genera un ID univoco per il giroconto
+            const girocontoId = 'gc_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
+
+            // 1. Aggiungi transazione in uscita sul conto origine
+            contoFrom.spese.push({
+                tipo: "Uscita",
+                data: data,
+                cat: "🔄 Giroconto",
+                imp: importo,
+                nota: `Giroconto → ${contoTo.nome}${descrizione ? ' (' + descrizione + ')' : ''}`,
+                girocontoId: girocontoId
+            });
+
+            // 2. Aggiungi transazione in entrata sul conto destinazione
+            contoTo.spese.push({
+                tipo: "Entrata",
+                data: data,
+                cat: "🔄 Giroconto",
+                imp: importo,
+                nota: `Giroconto ← ${contoFrom.nome}${descrizione ? ' (' + descrizione + ')' : ''}`,
+                girocontoId: girocontoId
+            });
+
+            // 3. Salva storico giroconto
+            if (!datiApp.giroconti) datiApp.giroconti = [];
+            datiApp.giroconti.push({
+                id: girocontoId,
+                fromAccountId: fromId,
+                toAccountId: toId,
+                fromAccountName: contoFrom.nome,
+                toAccountName: contoTo.nome,
+                amount: importo,
+                date: data,
+                description: descrizione || '',
+                timestamp: new Date().toISOString()
+            });
+
+            salvaDatiApp();
+            chiudiModalGiroconto();
+
+            // Ricarica i dati del conto attivo
+            if (contoAttivoId) {
+                const attivo = getDatiConto(contoAttivoId);
+                if (attivo) {
+                    spese = attivo.spese || [];
+                    future = attivo.future || [];
+                    customCats = attivo.customCats || JSON.parse(JSON.stringify(DEFAULT_CATS));
+                    budgets = attivo.budgets || {};
+                    utenze = attivo.utenze || [];
+                    listeSpese = attivo.liste || {};
+                }
+            }
+
+            aggiornaApp();
+            renderizzaConti();
+            aggiornaPatrimonio();
+            renderizzaDebiti();
+            renderizzaDashboardPersonalizzata();
+            aggiornaPaginaConti();
+
+            mostraToast(`✅ Giroconto di ${importo.toFixed(2)}€ da "${contoFrom.nome}" a "${contoTo.nome}" completato!`, 'success');
+            if (currentUser) syncDatiSuSupabase();
+        }
+
+        // ==========================================
+        // 🗑️ ELIMINAZIONE GIROCONTO (centralizzata)
+        // ==========================================
+
+        function eliminaGiroconto(girocontoId) {
+            if (!girocontoId) return;
+            if (!confirm('Eliminare questo giroconto e tutte le transazioni associate?')) return;
+
+            // 1. Trova il record storico
+            const giroconti = datiApp.giroconti || [];
+            const idx = giroconti.findIndex(g => g.id === girocontoId);
+            if (idx === -1) {
+                mostraToast('❌ Giroconto non trovato nello storico', 'error');
+                return;
+            }
+            const giro = giroconti[idx];
+
+            // 2. Elimina le due transazioni dai rispettivi conti
+            const conti = getConti();
+            let trovataUscita = false,
+                trovataEntrata = false;
+
+            conti.forEach(conto => {
+                if (!conto.spese) return;
+                const originalLength = conto.spese.length;
+                conto.spese = conto.spese.filter(s => s.girocontoId !== girocontoId);
+                if (conto.spese.length < originalLength) {
+                    if (conto.id === giro.fromAccountId) trovataUscita = true;
+                    if (conto.id === giro.toAccountId) trovataEntrata = true;
+                    datiApp.conti[conto.id].spese = conto.spese;
+                }
+            });
+
+            // 3. Rimuovi dallo storico
+            giroconti.splice(idx, 1);
+            datiApp.giroconti = giroconti;
+
+            // 4. Salva
+            salvaDatiApp();
+
+            // 5. Ricarica i dati del conto attivo
+            if (contoAttivoId) {
+                const attivo = getDatiConto(contoAttivoId);
+                if (attivo) {
+                    spese = attivo.spese || [];
+                    future = attivo.future || [];
+                    customCats = attivo.customCats || JSON.parse(JSON.stringify(DEFAULT_CATS));
+                    budgets = attivo.budgets || {};
+                    utenze = attivo.utenze || [];
+                    listeSpese = attivo.liste || {};
+                }
+            }
+
+            // 6. Aggiorna UI
+            aggiornaApp();
+            renderizzaConti();
+            aggiornaPatrimonio();
+            renderizzaDebiti();
+            renderizzaDashboardPersonalizzata();
+            aggiornaPaginaConti();
+            chiudiStoricoGiroconti();
+
+            mostraToast(`🗑️ Giroconto "${giro.fromAccountName} → ${giro.toAccountName}" eliminato`, 'success');
+            if (currentUser) syncDatiSuSupabase();
+        }
+
+        // ==========================================
+        // 📜 STORICO GIROCONTI - con pulsante elimina
+        // ==========================================
+
+        function apriStoricoGiroconti() {
+            const container = document.getElementById('storico-giroconti-container');
+            if (!container) return;
+
+            const giroconti = datiApp.giroconti || [];
+
+            if (giroconti.length === 0) {
+                container.innerHTML = `
+                <div class="utenza-empty">
+                    <span class="icon">📭</span>
+                    <p><strong>Nessun giroconto effettuato</strong></p>
+                </div>
+                `;
+            } else {
+                let html = `
+                <table class="storico-tabella">
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Da</th>
+                            <th>→ A</th>
+                            <th>Importo</th>
+                            <th>Descrizione</th>
+                            <th style="text-align:center;">Azioni</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                `;
+                giroconti.sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(g => {
+                    html += `
+                    <tr>
+                        <td>${g.date}</td>
+                        <td>${sanitizeHTML(g.fromAccountName)}</td>
+                        <td>${sanitizeHTML(g.toAccountName)}</td>
+                        <td class="amount">${g.amount.toFixed(2)}€</td>
+                        <td>${sanitizeHTML(g.description) || '-'}</td>
+                        <td style="text-align:center;">
+                            <button class="btn-elimina-giroconto" onclick="eliminaGiroconto('${g.id}')" title="Elimina giroconto">🗑️</button>
+                        </td>
+                    </tr>
+                    `;
+                });
+                html += `</tbody></table>`;
+                container.innerHTML = html;
+            }
+
+            document.getElementById('modalStoricoGiroconti').style.display = 'flex';
+        }
+
+        function chiudiStoricoGiroconti() {
+            document.getElementById('modalStoricoGiroconti').style.display = 'none';
+        }
+
+        // ==========================================
+        // ✏️ OPERAZIONI - con supporto girocontoId
         // ==========================================
 
         function aggiungiOperazione() {
@@ -3804,6 +4471,16 @@
         }
 
         function eliminaRiga(idx) {
+            const s = spese[idx];
+            if (!s) return;
+
+            if (s.girocontoId) {
+                if (confirm('Questa transazione fa parte di un giroconto. Eliminare anche l\'altra transazione e lo storico?')) {
+                    eliminaGiroconto(s.girocontoId);
+                }
+                return;
+            }
+
             if (confirm("Eliminare questa transazione?")) {
                 spese.splice(idx, 1);
                 salvaContoAttivo();
@@ -4454,6 +5131,7 @@
                         aggiornaPatrimonio();
                         renderizzaDebiti();
                         renderizzaDashboardPersonalizzata();
+                        aggiornaPaginaConti();
                         mostraToast('✅ Ripristino completato!', 'success');
                     } else { alert("❌ Backup non valido."); }
                 } catch (error) { console.error(error);
@@ -4573,6 +5251,15 @@
             contoAttivoId = localStorage.getItem("moneyTrack_conto_attivo") || null;
             dashboardLayout = JSON.parse(localStorage.getItem("moneyTrack_dashboard_layout")) || [];
 
+            // Ripristina stato dei sottomenu
+            ripristinaStatoSubmenu();
+
+            // Ripristina lingua e valuta
+            const savedLang = localStorage.getItem('moneyTrack_language');
+            const savedCurrency = localStorage.getItem('moneyTrack_currency');
+            if (savedLang) document.getElementById('languageSelect').value = savedLang;
+            if (savedCurrency) document.getElementById('currencySelect').value = savedCurrency;
+
             const oldDb = localStorage.getItem("moneyTrack_db");
             if (oldDb && JSON.parse(oldDb).length > 0) {
                 if (!datiApp || !datiApp.conti || Object.keys(datiApp.conti).length === 0) {
@@ -4619,6 +5306,7 @@
             aggiornaApp();
             caricaSelectListe();
             aggiornaListaBackup();
+            aggiornaPaginaConti();
 
             document.getElementById('filtroRicerca-' + contoAttivoId).addEventListener('keyup', debouncedAggiorna);
 
@@ -4668,6 +5356,7 @@
             console.log('📊 Categorie caricate:', customCats);
             console.log(`📊 Spese: ${spese.length}, Conti: ${Object.keys(datiApp.conti).length}`);
             console.log(`📊 Widget attivi: ${dashboardLayout.length}`);
+            console.log(`📊 Giroconti: ${(datiApp.giroconti || []).length}`);
         });
 
         // ==========================================
@@ -4790,6 +5479,17 @@
         window.confermaRinominaConto = confermaRinominaConto;
         window.renderizzaSelector = renderizzaSelector;
         window.DEFAULT_CATS = DEFAULT_CATS;
+        window.aggiornaPaginaConti = aggiornaPaginaConti;
+        window.apriModalGiroconto = apriModalGiroconto;
+        window.chiudiModalGiroconto = chiudiModalGiroconto;
+        window.eseguiGiroconto = eseguiGiroconto;
+        window.apriStoricoGiroconti = apriStoricoGiroconti;
+        window.chiudiStoricoGiroconti = chiudiStoricoGiroconti;
+        window.eliminaGiroconto = eliminaGiroconto;
+        window.toggleSubmenu = toggleSubmenu;
+        window.cambiaLingua = cambiaLingua;
+        window.cambiaValuta = cambiaValuta;
+        window.ripristinaStatoSubmenu = ripristinaStatoSubmenu;
 
         console.log('✅ MoneyTrack 2.1 - Tutte le funzionalità caricate!');
     </script>
