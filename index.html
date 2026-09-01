@@ -551,6 +551,8 @@
         }
         .modal-content.auth { max-width: 380px; }
         .modal-content.guida { max-width: 700px; }
+        .modal-content.giroconto { max-width: 460px; }
+        .modal-content.storico-giroconti { max-width: 700px; }
         .close-btn {
             position: absolute;
             top: 12px;
@@ -772,6 +774,16 @@
             font-weight: 600;
             background: var(--bg-input);
             color: var(--text-secondary);
+        }
+        .badge-giroconto {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.6rem;
+            font-weight: 700;
+            background: var(--blue-light);
+            color: var(--blue);
+            margin-left: 4px;
         }
 
         /* ===== FILTRI ===== */
@@ -1235,9 +1247,7 @@
             box-shadow: 0 8px 32px rgba(79,106,245,0.4);
         }
 
-        /* ===== MODALE GIROCONTO ===== */
-        .modal-content.giroconto { max-width: 460px; }
-        .modal-content.storico-giroconti { max-width: 700px; }
+        /* ===== STORICO GIROCONTI ===== */
         .storico-tabella {
             width: 100%;
             border-collapse: collapse;
@@ -1256,10 +1266,26 @@
         .storico-tabella td {
             padding: 10px 8px;
             border-bottom: 1px solid var(--border-light);
+            vertical-align: middle;
         }
         .storico-tabella .amount {
             font-weight: 700;
             color: var(--red);
+        }
+        .storico-tabella .btn-elimina-giroconto {
+            background: none;
+            border: none;
+            color: var(--red);
+            cursor: pointer;
+            font-size: 1.1rem;
+            padding: 4px 6px;
+            border-radius: 4px;
+            transition: var(--transition);
+            opacity: 0.6;
+        }
+        .storico-tabella .btn-elimina-giroconto:hover {
+            opacity: 1;
+            background: var(--red-light);
         }
 
         /* ===== RESPONSIVE ===== */
@@ -3728,6 +3754,7 @@
                     <td>
                         <small style="color:var(--text-muted);">${sanitizeHTML(s.data)}</small><br>
                         <strong>${sanitizeHTML(s.cat)}</strong>
+                        ${s.girocontoId ? `<span class="badge-giroconto">↔ Giroconto</span>` : ''}
                         <br><small style="color:var(--text-secondary);">${sanitizeHTML(s.nota || '')}</small>
                     </td>
                     <td style="text-align:right; white-space:nowrap;">
@@ -4013,7 +4040,7 @@
         }
 
         // ==========================================
-        // ↔ GIROCONTI
+        // ↔ GIROCONTI - CON ID UNIVOCO
         // ==========================================
 
         function apriModalGiroconto() {
@@ -4083,13 +4110,17 @@
             const contoTo = getDatiConto(toId);
             if (!contoTo) { mostraToast('❌ Conto destinazione non trovato!', 'error'); return; }
 
+            // Genera un ID univoco per il giroconto
+            const girocontoId = 'gc_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
+
             // 1. Aggiungi transazione in uscita sul conto origine
             contoFrom.spese.push({
                 tipo: "Uscita",
                 data: data,
                 cat: "🔄 Giroconto",
                 imp: importo,
-                nota: `Giroconto → ${contoTo.nome}${descrizione ? ' (' + descrizione + ')' : ''}`
+                nota: `Giroconto → ${contoTo.nome}${descrizione ? ' (' + descrizione + ')' : ''}`,
+                girocontoId: girocontoId  // <-- ID univoco
             });
 
             // 2. Aggiungi transazione in entrata sul conto destinazione
@@ -4098,13 +4129,14 @@
                 data: data,
                 cat: "🔄 Giroconto",
                 imp: importo,
-                nota: `Giroconto ← ${contoFrom.nome}${descrizione ? ' (' + descrizione + ')' : ''}`
+                nota: `Giroconto ← ${contoFrom.nome}${descrizione ? ' (' + descrizione + ')' : ''}`,
+                girocontoId: girocontoId  // <-- ID univoco
             });
 
             // 3. Salva storico giroconto
             if (!datiApp.giroconti) datiApp.giroconti = [];
             datiApp.giroconti.push({
-                id: Date.now(),
+                id: girocontoId,  // <-- stesso ID usato nelle transazioni
                 fromAccountId: fromId,
                 toAccountId: toId,
                 fromAccountName: contoFrom.nome,
@@ -4143,7 +4175,75 @@
         }
 
         // ==========================================
-        // 📜 STORICO GIROCONTI
+        // 🗑️ ELIMINAZIONE GIROCONTO (centralizzata)
+        // ==========================================
+
+        function eliminaGiroconto(girocontoId) {
+            if (!girocontoId) return;
+            if (!confirm('Eliminare questo giroconto e tutte le transazioni associate?')) return;
+
+            // 1. Trova il record storico
+            const giroconti = datiApp.giroconti || [];
+            const idx = giroconti.findIndex(g => g.id === girocontoId);
+            if (idx === -1) {
+                mostraToast('❌ Giroconto non trovato nello storico', 'error');
+                return;
+            }
+            const giro = giroconti[idx];
+
+            // 2. Elimina le due transazioni dai rispettivi conti
+            const conti = getConti();
+            let trovataUscita = false,
+                trovataEntrata = false;
+
+            conti.forEach(conto => {
+                if (!conto.spese) return;
+                const originalLength = conto.spese.length;
+                conto.spese = conto.spese.filter(s => s.girocontoId !== girocontoId);
+                if (conto.spese.length < originalLength) {
+                    if (conto.id === giro.fromAccountId) trovataUscita = true;
+                    if (conto.id === giro.toAccountId) trovataEntrata = true;
+                    // Aggiorna il conto in datiApp
+                    datiApp.conti[conto.id].spese = conto.spese;
+                }
+            });
+
+            // 3. Rimuovi dallo storico
+            giroconti.splice(idx, 1);
+            datiApp.giroconti = giroconti;
+
+            // 4. Salva
+            salvaDatiApp();
+
+            // 5. Ricarica i dati del conto attivo
+            if (contoAttivoId) {
+                const attivo = getDatiConto(contoAttivoId);
+                if (attivo) {
+                    spese = attivo.spese || [];
+                    future = attivo.future || [];
+                    customCats = attivo.customCats || JSON.parse(JSON.stringify(DEFAULT_CATS));
+                    budgets = attivo.budgets || {};
+                    utenze = attivo.utenze || [];
+                    listeSpese = attivo.liste || {};
+                }
+            }
+
+            // 6. Aggiorna UI
+            aggiornaApp();
+            renderizzaConti();
+            aggiornaPatrimonio();
+            renderizzaDebiti();
+            renderizzaDashboardPersonalizzata();
+            aggiornaPaginaConti();
+            // Se lo storico era aperto, lo richiudiamo per forzare il refresh
+            chiudiStoricoGiroconti();
+
+            mostraToast(`🗑️ Giroconto "${giro.fromAccountName} → ${giro.toAccountName}" eliminato`, 'success');
+            if (currentUser) syncDatiSuSupabase();
+        }
+
+        // ==========================================
+        // 📜 STORICO GIROCONTI - con pulsante elimina
         // ==========================================
 
         function apriStoricoGiroconti() {
@@ -4169,6 +4269,7 @@
                             <th>→ A</th>
                             <th>Importo</th>
                             <th>Descrizione</th>
+                            <th style="text-align:center;">Azioni</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -4181,6 +4282,9 @@
                         <td>${sanitizeHTML(g.toAccountName)}</td>
                         <td class="amount">${g.amount.toFixed(2)}€</td>
                         <td>${sanitizeHTML(g.description) || '-'}</td>
+                        <td style="text-align:center;">
+                            <button class="btn-elimina-giroconto" onclick="eliminaGiroconto('${g.id}')" title="Elimina giroconto">🗑️</button>
+                        </td>
                     </tr>
                     `;
                 });
@@ -4196,7 +4300,7 @@
         }
 
         // ==========================================
-        // ✏️ OPERAZIONI
+        // ✏️ OPERAZIONI - con supporto girocontoId
         // ==========================================
 
         function aggiungiOperazione() {
@@ -4214,6 +4318,7 @@
                 cat: document.getElementById("categoria-" + contoAttivoId).value,
                 imp: i,
                 nota: sanitizeHTML(document.getElementById("nota-" + contoAttivoId).value)
+                // Non ha girocontoId (è una transazione normale)
             };
             if (editIdx === -1) spese.push(obj);
             else {
@@ -4244,7 +4349,20 @@
             window.scrollTo(0, 0);
         }
 
+        // Modifica di eliminaRiga: se la transazione ha girocontoId, cancella tutto il giroconto
         function eliminaRiga(idx) {
+            const s = spese[idx];
+            if (!s) return;
+
+            // Se è una transazione di giroconto, elimina l'intero giroconto
+            if (s.girocontoId) {
+                if (confirm('Questa transazione fa parte di un giroconto. Eliminare anche l\'altra transazione e lo storico?')) {
+                    eliminaGiroconto(s.girocontoId);
+                }
+                return;
+            }
+
+            // Altrimenti è una transazione normale
             if (confirm("Eliminare questa transazione?")) {
                 spese.splice(idx, 1);
                 salvaContoAttivo();
@@ -5240,6 +5358,7 @@
         window.eseguiGiroconto = eseguiGiroconto;
         window.apriStoricoGiroconti = apriStoricoGiroconti;
         window.chiudiStoricoGiroconti = chiudiStoricoGiroconti;
+        window.eliminaGiroconto = eliminaGiroconto;
 
         console.log('✅ MoneyTrack 2.1 - Tutte le funzionalità caricate!');
     </script>
