@@ -251,7 +251,7 @@
         .patrimonio-totale .value.positivo { color: var(--emerald); }
         .patrimonio-totale .value.negativo { color: var(--red); }
 
-        /* ===== PREVISIONE GLOBALE ===== */
+        /* ===== PREVISIONE GLOBALE (spostata sotto il Patrimonio) ===== */
         #previsione-globale {
             max-width: 1200px;
             margin: 8px auto;
@@ -551,8 +551,6 @@
         }
         .modal-content.auth { max-width: 380px; }
         .modal-content.guida { max-width: 700px; }
-        .modal-content.giroconto { max-width: 460px; }
-        .modal-content.storico-giroconti { max-width: 700px; }
         .close-btn {
             position: absolute;
             top: 12px;
@@ -774,16 +772,6 @@
             font-weight: 600;
             background: var(--bg-input);
             color: var(--text-secondary);
-        }
-        .badge-giroconto {
-            display: inline-block;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 0.6rem;
-            font-weight: 700;
-            background: var(--blue-light);
-            color: var(--blue);
-            margin-left: 4px;
         }
 
         /* ===== FILTRI ===== */
@@ -1146,148 +1134,6 @@
             text-overflow: ellipsis;
         }
 
-        /* ===== PAGINA CONTI ===== */
-        #pagina-conti {
-            padding: 20px 0;
-        }
-        #pagina-conti .page-title {
-            text-align: center;
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 6px;
-        }
-        #pagina-conti .totale-conti {
-            text-align: center;
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: var(--text-secondary);
-            margin-bottom: 16px;
-            padding: 12px;
-            background: var(--bg-card);
-            border-radius: var(--radius-md);
-            border: 1px solid var(--border-light);
-            box-shadow: var(--shadow-sm);
-        }
-        #pagina-conti .totale-conti .value {
-            color: var(--blue);
-            font-weight: 700;
-        }
-        .conti-actions {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-        .conti-actions .btn-modern {
-            padding: 12px 24px;
-            font-size: 0.85rem;
-            flex: 0 1 auto;
-            min-width: 180px;
-        }
-        .conto-riga {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 14px 18px;
-            background: var(--bg-card);
-            border: 1px solid var(--border-light);
-            border-radius: var(--radius-md);
-            margin-bottom: 8px;
-            box-shadow: var(--shadow-sm);
-            transition: var(--transition);
-        }
-        .conto-riga:hover {
-            box-shadow: var(--shadow-md);
-            transform: translateX(4px);
-        }
-        .conto-riga .conto-info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .conto-riga .conto-icona {
-            font-size: 1.6rem;
-        }
-        .conto-riga .conto-nome {
-            font-weight: 600;
-            font-size: 1rem;
-            color: var(--text-primary);
-        }
-        .conto-riga .conto-giacenza {
-            font-weight: 700;
-            font-size: 1.1rem;
-        }
-        .conto-riga .conto-giacenza.positivo { color: var(--emerald); }
-        .conto-riga .conto-giacenza.negativo { color: var(--red); }
-        .btn-aggiungi-conto-footer {
-            display: flex;
-            justify-content: center;
-            margin-top: 24px;
-        }
-        .btn-aggiungi-conto-footer .btn-circle {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: var(--blue);
-            color: white;
-            border: none;
-            font-size: 2.2rem;
-            font-weight: 300;
-            cursor: pointer;
-            box-shadow: 0 4px 16px rgba(79,106,245,0.3);
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .btn-aggiungi-conto-footer .btn-circle:hover {
-            transform: scale(1.08);
-            box-shadow: 0 8px 32px rgba(79,106,245,0.4);
-        }
-
-        /* ===== STORICO GIROCONTI ===== */
-        .storico-tabella {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.85rem;
-        }
-        .storico-tabella th {
-            text-align: left;
-            padding: 10px 8px;
-            border-bottom: 2px solid var(--border-light);
-            color: var(--text-muted);
-            font-weight: 600;
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .storico-tabella td {
-            padding: 10px 8px;
-            border-bottom: 1px solid var(--border-light);
-            vertical-align: middle;
-        }
-        .storico-tabella .amount {
-            font-weight: 700;
-            color: var(--red);
-        }
-        .storico-tabella .btn-elimina-giroconto {
-            background: none;
-            border: none;
-            color: var(--red);
-            cursor: pointer;
-            font-size: 1.1rem;
-            padding: 4px 6px;
-            border-radius: 4px;
-            transition: var(--transition);
-            opacity: 0.6;
-        }
-        .storico-tabella .btn-elimina-giroconto:hover {
-            opacity: 1;
-            background: var(--red-light);
-        }
-
         /* ===== RESPONSIVE ===== */
         @media (max-width: 768px) {
             .form-grid { grid-template-columns: 1fr; }
@@ -1304,12 +1150,6 @@
             .logo-box img { height: 40px; }
             .center-title .title-main { font-size: 1.1rem; }
             .center-title .title-sub { font-size: 0.65rem; }
-            .conti-actions .btn-modern { min-width: 140px; font-size: 0.75rem; padding: 10px 16px; }
-            #pagina-conti .page-title { font-size: 1.4rem; }
-            .conto-riga { padding: 12px 14px; }
-            .conto-riga .conto-icona { font-size: 1.2rem; }
-            .storico-tabella { font-size: 0.75rem; }
-            .storico-tabella th, .storico-tabella td { padding: 6px 4px; }
         }
         @media (max-width: 480px) {
             .container { padding: 0 8px 20px; }
@@ -1448,9 +1288,7 @@
         .dark-theme .modal-content,
         .dark-theme .toast,
         .dark-theme .aggiungi-conto-card,
-        .dark-theme .dashboard-widget,
-        .dark-theme #pagina-conti .totale-conti,
-        .dark-theme .conto-riga {
+        .dark-theme .dashboard-widget {
             background: var(--bg-card);
             border-color: var(--border-light);
         }
@@ -1555,7 +1393,6 @@
                     </div>
                     <a onclick="loginbtn()" id="login-nav-link">🔐 Login</a>
                     <a onclick="sincronizzaDalCloud()" style="border-top:1px solid var(--border-light);margin-top:4px;padding-top:10px;">🔄 Sincronizza dal Cloud</a>
-                    <a onclick="mostraPagina('conti')" style="color:var(--blue);font-weight:600;">🏦 Conti</a>
                     <a onclick="mostraPagina('backup')">💾 Gestione Backup</a>
                     <a onclick="esportaDati()">📋 Backup rapido</a>
                     <a onclick="esportaCSV()">📊 Esporta CSV</a>
@@ -1577,7 +1414,7 @@
         <span class="value" id="patrimonioValore">0.00 €</span>
     </div>
 
-    <!-- ===== PREVISIONE GLOBALE ===== -->
+    <!-- ===== PREVISIONE GLOBALE (spostata sotto il Patrimonio) ===== -->
     <div id="previsione-globale" class="info-previsione" style="max-width:1200px; margin:8px auto; padding:16px 24px;"></div>
 
     <!-- ===== SELEZIONE CONTI ===== -->
@@ -1585,27 +1422,6 @@
 
     <!-- ===== CONTI SCROLL ===== -->
     <div class="conti-scroll-container" id="contiScrollContainer"></div>
-
-    <!-- ===== PAGINA CONTI ===== -->
-    <div id="pagina-conti" class="container" style="display:none; padding:20px 0;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:10px;">
-            <button onclick="mostraPagina('home')" class="btn-back-home">⬅ Torna alla Home</button>
-        </div>
-        <div class="page-title">🏦 Conti</div>
-        <div class="totale-conti" id="totaleContiPagina">
-            Totale conti: <span class="value" id="totaleContiValore">0.00 €</span>
-        </div>
-        <div class="conti-actions">
-            <button class="btn-modern btn-primary" onclick="apriModalGiroconto()">↔ Nuovo giroconto</button>
-            <button class="btn-modern btn-info" onclick="apriStoricoGiroconti()">📜 Storico giroconti</button>
-        </div>
-        <div id="listaContiPagina">
-            <!-- Qui verranno elencati i conti -->
-        </div>
-        <div class="btn-aggiungi-conto-footer">
-            <button class="btn-circle" onclick="apriModalAggiungiConto()" title="Aggiungi nuovo conto">+</button>
-        </div>
-    </div>
 
     <!-- ===== PAGINA BACKUP ===== -->
     <div id="pagina-backup" class="container" style="display:none; padding:20px 0;">
@@ -1761,39 +1577,6 @@
             <div style="display:flex; gap:10px; margin-top:8px;">
                 <button class="btn-modern" onclick="chiudiModalRinominaConto()" style="flex:1; max-width:none; background:var(--bg-input); color:var(--text-secondary);">Annulla</button>
                 <button class="btn-modern btn-success" onclick="confermaRinominaConto()" style="flex:1; max-width:none;">✅ Rinomina</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- ===== MODALE GIROCONTO ===== -->
-    <div id="modalGiroconto" class="modal">
-        <div class="modal-content giroconto">
-            <button class="close-btn" onclick="chiudiModalGiroconto()">&times;</button>
-            <h3 style="margin-bottom:16px;">↔ Nuovo Giroconto</h3>
-            <div id="giroconto-error" style="color:var(--red); font-size:0.85rem; margin-bottom:12px; display:none;"></div>
-            <select id="giroconto-da" style="margin-bottom:12px;">
-                <option value="">Seleziona conto di origine...</option>
-            </select>
-            <select id="giroconto-a" style="margin-bottom:12px;">
-                <option value="">Seleziona conto di destinazione...</option>
-            </select>
-            <input type="number" id="giroconto-importo" placeholder="Importo (€)" step="0.01" inputmode="decimal" style="margin-bottom:12px;">
-            <input type="date" id="giroconto-data" style="margin-bottom:12px;">
-            <input type="text" id="giroconto-descrizione" placeholder="Descrizione (opzionale)" style="margin-bottom:16px;">
-            <div style="display:flex; gap:10px;">
-                <button class="btn-modern" onclick="chiudiModalGiroconto()" style="flex:1; max-width:none; background:var(--bg-input); color:var(--text-secondary);">Annulla</button>
-                <button class="btn-modern btn-success" onclick="eseguiGiroconto()" style="flex:1; max-width:none;">↔ Esegui giroconto</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- ===== MODALE STORICO GIROCONTI ===== -->
-    <div id="modalStoricoGiroconti" class="modal">
-        <div class="modal-content storico-giroconti">
-            <button class="close-btn" onclick="chiudiStoricoGiroconti()">&times;</button>
-            <h3 style="margin-bottom:16px;">📜 Storico Giroconti</h3>
-            <div id="storico-giroconti-container">
-                <div class="utenza-empty"><span class="icon">📭</span><p>Nessun giroconto effettuato</p></div>
             </div>
         </div>
     </div>
@@ -2386,7 +2169,6 @@
             aggiornaPatrimonio();
             renderizzaDebiti();
             renderizzaDashboardPersonalizzata();
-            aggiornaPaginaConti();
 
             chiudiModalAggiungiConto();
             mostraToast('✅ Conto "' + nome + '" creato con le stesse categorie!', 'success');
@@ -2943,7 +2725,6 @@
             aggiornaPatrimonio();
             renderizzaDebiti();
             renderizzaDashboardPersonalizzata();
-            aggiornaPaginaConti();
         }
 
         function mostraStatoUtenteLoggato(email) {
@@ -3106,7 +2887,6 @@
             chiudiModalRinominaConto();
             renderizzaSelector();
             renderizzaConti();
-            aggiornaPaginaConti();
             mostraToast('✅ Conto rinominato con successo!', 'success');
             if (currentUser) syncDatiSuSupabase();
         }
@@ -3189,7 +2969,7 @@
         window.onclick = (e) => { if (!e.target.matches('.menu-dots')) document.getElementById("myDropdown").classList.remove('show'); }
 
         function mostraPagina(p) {
-            document.querySelectorAll('#pagina-backup, #pagina-analisi, #pagina-news, #pagina-liste, #sezione-scadenze, #pagina-conti').forEach(el => el.style.display = 'none');
+            document.querySelectorAll('#pagina-backup, #pagina-analisi, #pagina-news, #pagina-liste, #sezione-scadenze').forEach(el => el.style.display = 'none');
             const contiScroll = document.getElementById('contiScrollContainer');
             const selector = document.getElementById('contoSelector');
             const patrimonio = document.getElementById('patrimonioTotale');
@@ -3217,7 +2997,6 @@
                 else if (p === 'liste') caricaSelectListe();
                 else if (p === 'backup') aggiornaListaBackup();
                 else if (p === 'scadenze') disegnaCalendario();
-                else if (p === 'conti') aggiornaPaginaConti();
             }
             window.scrollTo(0, 0);
         }
@@ -3301,7 +3080,6 @@
             aggiornaPatrimonio();
             renderizzaDebiti();
             renderizzaDashboardPersonalizzata();
-            aggiornaPaginaConti();
             mostraToast('🗑️ Conto eliminato', 'info');
         }
 
@@ -3317,7 +3095,6 @@
             aggiornaPatrimonio();
             renderizzaDebiti();
             renderizzaDashboardPersonalizzata();
-            aggiornaPaginaConti();
             scrollToConto(id);
         }
 
@@ -3690,6 +3467,7 @@
             const previstoFineMese = saldoAttuale - impegniMese;
             const saldoFuturo = saldoAttuale - tuttiImpegniFuturi;
 
+            // Usa il contenitore globale
             const div = document.getElementById("previsione-globale");
             if (!div) return;
             div.style.textAlign = "left";
@@ -3754,7 +3532,6 @@
                     <td>
                         <small style="color:var(--text-muted);">${sanitizeHTML(s.data)}</small><br>
                         <strong>${sanitizeHTML(s.cat)}</strong>
-                        ${s.girocontoId ? `<span class="badge-giroconto">↔ Giroconto</span>` : ''}
                         <br><small style="color:var(--text-secondary);">${sanitizeHTML(s.nota || '')}</small>
                     </td>
                     <td style="text-align:right; white-space:nowrap;">
@@ -3787,7 +3564,6 @@
             renderizzaSelector();
             aggiornaPatrimonio();
             renderizzaDashboardPersonalizzata();
-            aggiornaPaginaConti();
         }
 
         debouncedAggiorna = debounce(aggiornaApp, 300);
@@ -3807,11 +3583,6 @@
             if (el) {
                 el.textContent = (privacy ? '***' : totale.toFixed(2)) + ' €';
                 el.className = 'value ' + (totale >= 0 ? 'positivo' : 'negativo');
-            }
-            // Aggiorna anche il totale nella pagina conti
-            const totaleEl = document.getElementById('totaleContiValore');
-            if (totaleEl) {
-                totaleEl.textContent = (privacy ? '***' : totale.toFixed(2)) + ' €';
             }
         }
 
@@ -3847,6 +3618,7 @@
                         </div>
 
                         <div id="dashboard-personalizzata"></div>
+                        <!-- PREVISIONE RIMOSSA DA QUI - ORA GLOBALE -->
                         <div class="desktop-grid">
                             <div class="section section-divider">
                                 <!-- Nuova Operazione con CAL a destra -->
@@ -3961,7 +3733,6 @@
                 aggiornaPatrimonio();
                 renderizzaDebiti();
                 renderizzaDashboardPersonalizzata();
-                aggiornaPaginaConti();
             }
         }
 
@@ -3984,323 +3755,7 @@
         }
 
         // ==========================================
-        // 📋 PAGINA CONTI - GIROCONTI E LISTA CONTI
-        // ==========================================
-
-        function aggiornaPaginaConti() {
-            const container = document.getElementById('listaContiPagina');
-            if (!container) return;
-            const conti = getConti();
-            const totale = conti.reduce((sum, conto) => {
-                let saldo = 0;
-                if (conto.spese) {
-                    conto.spese.forEach(s => {
-                        if (s.tipo === "Entrata") saldo += s.imp;
-                        else saldo -= s.imp;
-                    });
-                }
-                return sum + saldo;
-            }, 0);
-            document.getElementById('totaleContiValore').textContent = (privacy ? '***' : totale.toFixed(2)) + ' €';
-
-            if (conti.length === 0) {
-                container.innerHTML = `
-                <div class="utenza-empty">
-                    <span class="icon">🏦</span>
-                    <p><strong>Nessun conto creato</strong></p>
-                    <p style="font-size:0.8rem;">Clicca sul pulsante + in basso per crearne uno</p>
-                </div>
-                `;
-                return;
-            }
-
-            let html = '';
-            conti.forEach(conto => {
-                let saldo = 0;
-                if (conto.spese) {
-                    conto.spese.forEach(s => {
-                        if (s.tipo === "Entrata") saldo += s.imp;
-                        else saldo -= s.imp;
-                    });
-                }
-                const isPositivo = saldo >= 0;
-                html += `
-                <div class="conto-riga" onclick="cambiaConto('${conto.id}'); mostraPagina('home')" style="cursor:pointer;">
-                    <div class="conto-info">
-                        <span class="conto-icona">${conto.icona || '🏦'}</span>
-                        <span class="conto-nome">${sanitizeHTML(conto.nome)}</span>
-                    </div>
-                    <span class="conto-giacenza ${isPositivo ? 'positivo' : 'negativo'}">
-                        ${privacy ? '***' : saldo.toFixed(2) + ' €'}
-                    </span>
-                </div>
-                `;
-            });
-            container.innerHTML = html;
-        }
-
-        // ==========================================
-        // ↔ GIROCONTI - CON ID UNIVOCO
-        // ==========================================
-
-        function apriModalGiroconto() {
-            const conti = getConti();
-            if (conti.length < 2) {
-                mostraToast('⚠️ Servono almeno 2 conti per fare un giroconto!', 'warning');
-                return;
-            }
-            const daSelect = document.getElementById('giroconto-da');
-            const aSelect = document.getElementById('giroconto-a');
-            daSelect.innerHTML = '';
-            aSelect.innerHTML = '';
-            conti.forEach(c => {
-                daSelect.innerHTML += `<option value="${c.id}">${c.icona} ${sanitizeHTML(c.nome)}</option>`;
-                aSelect.innerHTML += `<option value="${c.id}">${c.icona} ${sanitizeHTML(c.nome)}</option>`;
-            });
-            document.getElementById('giroconto-data').value = new Date().toISOString().split('T')[0];
-            document.getElementById('giroconto-importo').value = '';
-            document.getElementById('giroconto-descrizione').value = '';
-            document.getElementById('giroconto-error').style.display = 'none';
-            document.getElementById('modalGiroconto').style.display = 'flex';
-        }
-
-        function chiudiModalGiroconto() {
-            document.getElementById('modalGiroconto').style.display = 'none';
-        }
-
-        function eseguiGiroconto() {
-            const fromId = document.getElementById('giroconto-da').value;
-            const toId = document.getElementById('giroconto-a').value;
-            const importo = parseFloat(document.getElementById('giroconto-importo').value);
-            const data = document.getElementById('giroconto-data').value;
-            const descrizione = document.getElementById('giroconto-descrizione').value.trim() || 'Giroconto';
-
-            if (!fromId || !toId) {
-                mostraToast('⚠️ Seleziona conto di origine e destinazione!', 'warning');
-                return;
-            }
-            if (fromId === toId) {
-                mostraToast('⚠️ Origine e destinazione devono essere diversi!', 'warning');
-                return;
-            }
-            if (isNaN(importo) || importo <= 0) {
-                mostraToast('⚠️ Inserisci un importo valido!', 'warning');
-                return;
-            }
-            if (!data) {
-                mostraToast('⚠️ Inserisci una data!', 'warning');
-                return;
-            }
-
-            // Verifica saldo disponibile sul conto origine
-            const contoFrom = getDatiConto(fromId);
-            if (!contoFrom) { mostraToast('❌ Conto origine non trovato!', 'error'); return; }
-            let saldoFrom = 0;
-            if (contoFrom.spese) {
-                contoFrom.spese.forEach(s => {
-                    if (s.tipo === "Entrata") saldoFrom += s.imp;
-                    else saldoFrom -= s.imp;
-                });
-            }
-            if (saldoFrom < importo) {
-                mostraToast(`⚠️ Saldo insufficiente sul conto origine (${saldoFrom.toFixed(2)}€)`, 'warning');
-                return;
-            }
-
-            const contoTo = getDatiConto(toId);
-            if (!contoTo) { mostraToast('❌ Conto destinazione non trovato!', 'error'); return; }
-
-            // Genera un ID univoco per il giroconto
-            const girocontoId = 'gc_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
-
-            // 1. Aggiungi transazione in uscita sul conto origine
-            contoFrom.spese.push({
-                tipo: "Uscita",
-                data: data,
-                cat: "🔄 Giroconto",
-                imp: importo,
-                nota: `Giroconto → ${contoTo.nome}${descrizione ? ' (' + descrizione + ')' : ''}`,
-                girocontoId: girocontoId  // <-- ID univoco
-            });
-
-            // 2. Aggiungi transazione in entrata sul conto destinazione
-            contoTo.spese.push({
-                tipo: "Entrata",
-                data: data,
-                cat: "🔄 Giroconto",
-                imp: importo,
-                nota: `Giroconto ← ${contoFrom.nome}${descrizione ? ' (' + descrizione + ')' : ''}`,
-                girocontoId: girocontoId  // <-- ID univoco
-            });
-
-            // 3. Salva storico giroconto
-            if (!datiApp.giroconti) datiApp.giroconti = [];
-            datiApp.giroconti.push({
-                id: girocontoId,  // <-- stesso ID usato nelle transazioni
-                fromAccountId: fromId,
-                toAccountId: toId,
-                fromAccountName: contoFrom.nome,
-                toAccountName: contoTo.nome,
-                amount: importo,
-                date: data,
-                description: descrizione || '',
-                timestamp: new Date().toISOString()
-            });
-
-            salvaDatiApp();
-            chiudiModalGiroconto();
-
-            // Ricarica i dati del conto attivo
-            if (contoAttivoId) {
-                const attivo = getDatiConto(contoAttivoId);
-                if (attivo) {
-                    spese = attivo.spese || [];
-                    future = attivo.future || [];
-                    customCats = attivo.customCats || JSON.parse(JSON.stringify(DEFAULT_CATS));
-                    budgets = attivo.budgets || {};
-                    utenze = attivo.utenze || [];
-                    listeSpese = attivo.liste || {};
-                }
-            }
-
-            aggiornaApp();
-            renderizzaConti();
-            aggiornaPatrimonio();
-            renderizzaDebiti();
-            renderizzaDashboardPersonalizzata();
-            aggiornaPaginaConti();
-
-            mostraToast(`✅ Giroconto di ${importo.toFixed(2)}€ da "${contoFrom.nome}" a "${contoTo.nome}" completato!`, 'success');
-            if (currentUser) syncDatiSuSupabase();
-        }
-
-        // ==========================================
-        // 🗑️ ELIMINAZIONE GIROCONTO (centralizzata)
-        // ==========================================
-
-        function eliminaGiroconto(girocontoId) {
-            if (!girocontoId) return;
-            if (!confirm('Eliminare questo giroconto e tutte le transazioni associate?')) return;
-
-            // 1. Trova il record storico
-            const giroconti = datiApp.giroconti || [];
-            const idx = giroconti.findIndex(g => g.id === girocontoId);
-            if (idx === -1) {
-                mostraToast('❌ Giroconto non trovato nello storico', 'error');
-                return;
-            }
-            const giro = giroconti[idx];
-
-            // 2. Elimina le due transazioni dai rispettivi conti
-            const conti = getConti();
-            let trovataUscita = false,
-                trovataEntrata = false;
-
-            conti.forEach(conto => {
-                if (!conto.spese) return;
-                const originalLength = conto.spese.length;
-                conto.spese = conto.spese.filter(s => s.girocontoId !== girocontoId);
-                if (conto.spese.length < originalLength) {
-                    if (conto.id === giro.fromAccountId) trovataUscita = true;
-                    if (conto.id === giro.toAccountId) trovataEntrata = true;
-                    // Aggiorna il conto in datiApp
-                    datiApp.conti[conto.id].spese = conto.spese;
-                }
-            });
-
-            // 3. Rimuovi dallo storico
-            giroconti.splice(idx, 1);
-            datiApp.giroconti = giroconti;
-
-            // 4. Salva
-            salvaDatiApp();
-
-            // 5. Ricarica i dati del conto attivo
-            if (contoAttivoId) {
-                const attivo = getDatiConto(contoAttivoId);
-                if (attivo) {
-                    spese = attivo.spese || [];
-                    future = attivo.future || [];
-                    customCats = attivo.customCats || JSON.parse(JSON.stringify(DEFAULT_CATS));
-                    budgets = attivo.budgets || {};
-                    utenze = attivo.utenze || [];
-                    listeSpese = attivo.liste || {};
-                }
-            }
-
-            // 6. Aggiorna UI
-            aggiornaApp();
-            renderizzaConti();
-            aggiornaPatrimonio();
-            renderizzaDebiti();
-            renderizzaDashboardPersonalizzata();
-            aggiornaPaginaConti();
-            // Se lo storico era aperto, lo richiudiamo per forzare il refresh
-            chiudiStoricoGiroconti();
-
-            mostraToast(`🗑️ Giroconto "${giro.fromAccountName} → ${giro.toAccountName}" eliminato`, 'success');
-            if (currentUser) syncDatiSuSupabase();
-        }
-
-        // ==========================================
-        // 📜 STORICO GIROCONTI - con pulsante elimina
-        // ==========================================
-
-        function apriStoricoGiroconti() {
-            const container = document.getElementById('storico-giroconti-container');
-            if (!container) return;
-
-            const giroconti = datiApp.giroconti || [];
-
-            if (giroconti.length === 0) {
-                container.innerHTML = `
-                <div class="utenza-empty">
-                    <span class="icon">📭</span>
-                    <p><strong>Nessun giroconto effettuato</strong></p>
-                </div>
-                `;
-            } else {
-                let html = `
-                <table class="storico-tabella">
-                    <thead>
-                        <tr>
-                            <th>Data</th>
-                            <th>Da</th>
-                            <th>→ A</th>
-                            <th>Importo</th>
-                            <th>Descrizione</th>
-                            <th style="text-align:center;">Azioni</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                `;
-                giroconti.sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(g => {
-                    html += `
-                    <tr>
-                        <td>${g.date}</td>
-                        <td>${sanitizeHTML(g.fromAccountName)}</td>
-                        <td>${sanitizeHTML(g.toAccountName)}</td>
-                        <td class="amount">${g.amount.toFixed(2)}€</td>
-                        <td>${sanitizeHTML(g.description) || '-'}</td>
-                        <td style="text-align:center;">
-                            <button class="btn-elimina-giroconto" onclick="eliminaGiroconto('${g.id}')" title="Elimina giroconto">🗑️</button>
-                        </td>
-                    </tr>
-                    `;
-                });
-                html += `</tbody></table>`;
-                container.innerHTML = html;
-            }
-
-            document.getElementById('modalStoricoGiroconti').style.display = 'flex';
-        }
-
-        function chiudiStoricoGiroconti() {
-            document.getElementById('modalStoricoGiroconti').style.display = 'none';
-        }
-
-        // ==========================================
-        // ✏️ OPERAZIONI - con supporto girocontoId
+        // ✏️ OPERAZIONI
         // ==========================================
 
         function aggiungiOperazione() {
@@ -4318,7 +3773,6 @@
                 cat: document.getElementById("categoria-" + contoAttivoId).value,
                 imp: i,
                 nota: sanitizeHTML(document.getElementById("nota-" + contoAttivoId).value)
-                // Non ha girocontoId (è una transazione normale)
             };
             if (editIdx === -1) spese.push(obj);
             else {
@@ -4349,20 +3803,7 @@
             window.scrollTo(0, 0);
         }
 
-        // Modifica di eliminaRiga: se la transazione ha girocontoId, cancella tutto il giroconto
         function eliminaRiga(idx) {
-            const s = spese[idx];
-            if (!s) return;
-
-            // Se è una transazione di giroconto, elimina l'intero giroconto
-            if (s.girocontoId) {
-                if (confirm('Questa transazione fa parte di un giroconto. Eliminare anche l\'altra transazione e lo storico?')) {
-                    eliminaGiroconto(s.girocontoId);
-                }
-                return;
-            }
-
-            // Altrimenti è una transazione normale
             if (confirm("Eliminare questa transazione?")) {
                 spese.splice(idx, 1);
                 salvaContoAttivo();
@@ -5013,7 +4454,6 @@
                         aggiornaPatrimonio();
                         renderizzaDebiti();
                         renderizzaDashboardPersonalizzata();
-                        aggiornaPaginaConti();
                         mostraToast('✅ Ripristino completato!', 'success');
                     } else { alert("❌ Backup non valido."); }
                 } catch (error) { console.error(error);
@@ -5179,7 +4619,6 @@
             aggiornaApp();
             caricaSelectListe();
             aggiornaListaBackup();
-            aggiornaPaginaConti();
 
             document.getElementById('filtroRicerca-' + contoAttivoId).addEventListener('keyup', debouncedAggiorna);
 
@@ -5229,7 +4668,6 @@
             console.log('📊 Categorie caricate:', customCats);
             console.log(`📊 Spese: ${spese.length}, Conti: ${Object.keys(datiApp.conti).length}`);
             console.log(`📊 Widget attivi: ${dashboardLayout.length}`);
-            console.log(`📊 Giroconti: ${(datiApp.giroconti || []).length}`);
         });
 
         // ==========================================
@@ -5352,13 +4790,6 @@
         window.confermaRinominaConto = confermaRinominaConto;
         window.renderizzaSelector = renderizzaSelector;
         window.DEFAULT_CATS = DEFAULT_CATS;
-        window.aggiornaPaginaConti = aggiornaPaginaConti;
-        window.apriModalGiroconto = apriModalGiroconto;
-        window.chiudiModalGiroconto = chiudiModalGiroconto;
-        window.eseguiGiroconto = eseguiGiroconto;
-        window.apriStoricoGiroconti = apriStoricoGiroconti;
-        window.chiudiStoricoGiroconti = chiudiStoricoGiroconti;
-        window.eliminaGiroconto = eliminaGiroconto;
 
         console.log('✅ MoneyTrack 2.1 - Tutte le funzionalità caricate!');
     </script>
