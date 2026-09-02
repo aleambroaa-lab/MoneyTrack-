@@ -133,7 +133,33 @@
             letter-spacing: 0.3px;
             margin-top: 2px;
         }
-        .menu-container { position: relative; }
+        .menu-container { 
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-suggerimenti {
+            background: transparent;
+            border: none;
+            font-size: 1.4rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+            padding: 4px 4px;
+            transition: var(--transition);
+            line-height: 1;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn-suggerimenti:hover {
+            background: var(--bg-hover);
+            color: var(--orange);
+            transform: scale(1.1);
+        }
         .menu-dots {
             font-size: 1.6rem;
             cursor: pointer;
@@ -502,22 +528,6 @@
         .btn-modern.btn-primary:hover { background: #3b56e0; }
         .btn-modern.btn-info { background: var(--purple); color: white; }
         .btn-modern.full-width { width: 100%; max-width: 100%; padding: 14px; font-size: 0.85rem; height: 48px; margin-top: 12px; }
-
-        .nav-buttons-container {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin: 16px 0 12px;
-        }
-        .nav-buttons-container .btn-modern {
-            flex: 1;
-            min-width: 50px;
-            max-width: 110px;
-            font-size: 0.65rem;
-            padding: 8px 6px;
-            min-height: 36px;
-        }
 
         .btn-back-home {
             background: var(--bg-card);
@@ -1363,7 +1373,6 @@
             .header-saldo .saldo-center { order: 2; }
             .header-saldo .saldo-side { order: 1; justify-content: center; margin-bottom: 6px; }
             .dashboard-widget { min-width: 200px; }
-            .nav-buttons-container .btn-modern { max-width: 80px; font-size: 0.55rem; padding: 6px 4px; }
             .logo-box img { height: 40px; }
             .center-title .title-main { font-size: 1.1rem; }
             .center-title .title-sub { font-size: 0.65rem; }
@@ -1375,18 +1384,19 @@
             .storico-tabella th, .storico-tabella td { padding: 6px 4px; }
             #pagina-backup .backup-actions-bar button { min-width: 100px; font-size: 0.7rem; padding: 8px 12px; }
             .dropdown-content { min-width: 200px; }
+            .btn-suggerimenti { font-size: 1.2rem; width: 32px; height: 32px; }
         }
         @media (max-width: 480px) {
             .container { padding: 0 8px 20px; }
             .modal-content { padding: 20px; max-width: 100%; }
             .header-saldo h1 { font-size: 1.6rem; }
             .dashboard-widget { min-width: 160px; padding: 12px; }
-            .nav-buttons-container .btn-modern { max-width: 70px; font-size: 0.5rem; }
             .logo-box img { height: 36px; }
             .center-title .title-main { font-size: 1rem; }
             .center-title .title-sub { font-size: 0.6rem; }
             #pagina-backup .backup-actions-bar button { min-width: 80px; font-size: 0.6rem; padding: 6px 10px; }
             .dropdown-content { min-width: 180px; }
+            .btn-suggerimenti { font-size: 1rem; width: 28px; height: 28px; }
         }
 
         /* ===== FIX SCROLL ORIZZONTALE MOBILE ===== */
@@ -1418,16 +1428,6 @@
             }
             .header-saldo h1 {
                 font-size: 1.6rem !important;
-            }
-            .nav-buttons-container .btn-modern {
-                max-width: 60px !important;
-                font-size: 0.5rem !important;
-                padding: 4px 4px !important;
-                min-height: 30px !important;
-            }
-            .dashboard-widget {
-                min-width: 160px !important;
-                padding: 12px !important;
             }
             input, select {
                 font-size: 0.85rem !important;
@@ -1554,6 +1554,8 @@
                 <div class="title-sub">Controlla le tue finanze</div>
             </div>
             <div class="menu-container">
+                <!-- PULSANTE LAMPADINA (suggerimenti) a sinistra dei tre puntini -->
+                <button class="btn-suggerimenti" onclick="apriPopupSuggerimenti()" title="💡 Suggerimenti finanziari">💡</button>
                 <button class="menu-dots" id="menuToggleBtn">⋮</button>
                 <div id="myDropdown" class="dropdown-content">
                     <!-- LOGIN -->
@@ -1561,6 +1563,18 @@
 
                     <!-- CONTI -->
                     <a onclick="mostraPagina('conti')" style="color:var(--blue);font-weight:600;">🏦 Conti</a>
+
+                    <!-- ANALISI -->
+                    <a onclick="mostraPagina('analisi')" style="color:var(--purple);font-weight:500;">📊 Analisi</a>
+
+                    <!-- LISTE -->
+                    <a onclick="mostraPagina('liste')" style="color:var(--purple);font-weight:500;">📋 Liste</a>
+
+                    <!-- NEWS -->
+                    <a onclick="mostraPagina('news')" style="color:var(--purple);font-weight:500;">📰 News</a>
+
+                    <!-- SCADENZE (spostata dal menu) -->
+                    <a onclick="mostraPagina('scadenze')" style="color:var(--purple);font-weight:500;">📅 Scadenze</a>
 
                     <!-- IMPOSTAZIONI (espandibile) -->
                     <div class="dropdown-submenu">
@@ -2566,17 +2580,15 @@
 
             const widgets = dashboardLayout.sort((a, b) => a.posizione - b.posizione);
 
+            // Se non ci sono widget, nascondi il container e termina
             if (widgets.length === 0) {
-                container.innerHTML = `
-                <div class="widget-empty-state">
-                    <span class="empty-icon">📊</span>
-                    <div class="empty-title">Nessun widget selezionato</div>
-                    <div class="empty-desc">Vai su <strong>📊 Widget</strong> nel menu per scegliere quali widget visualizzare.</div>
-                </div>
-                `;
+                container.style.display = 'none';
+                container.innerHTML = '';
                 return;
             }
 
+            // Mostra il container e genera i widget
+            container.style.display = 'block';
             let html = `<div class="dashboard-widgets">`;
             widgets.forEach((widget, index) => {
                 const content = renderWidgetContent(widget);
@@ -3961,14 +3973,9 @@
                             </div>
                         </div>
 
-                        <div class="nav-buttons-container">
-                            <button class="btn-modern" onclick="mostraPagina('news')">📰 NEWS</button>
-                            <button class="btn-modern" onclick="mostraPagina('analisi')">🧠 ANALISI</button>
-                            <button class="btn-modern" onclick="mostraPagina('scadenze')">📅 SCADENZE</button>
-                            <button class="btn-modern" onclick="mostraPagina('liste')" style="background:var(--purple);color:white;">📋 LISTE</button>
-                            <button class="btn-modern" onclick="mostraPagina('backup')" style="background:var(--emerald);color:white;">💾 BACKUP</button>
-                            <button class="btn-modern btn-warning" onclick="apriPopupSuggerimenti()" style="font-size:1.2rem;">💡</button>
-                        </div>
+                        <!-- PULSANTI NAVIGAZIONE RIMOSSI (BACKUP e SCADENZE spostati nel menu) -->
+                        <!-- Ora la barra è vuota e viene nascosta -->
+                        <div class="nav-buttons-container" style="display:none;"></div>
 
                         <div id="dashboard-personalizzata"></div>
                         <div class="desktop-grid">
