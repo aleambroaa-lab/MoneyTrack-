@@ -15,9 +15,6 @@
     
     <title>MoneyTrack · Multi Conto</title>
     
-    <!-- Font Awesome (icone) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -106,8 +103,6 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 12px;
-            flex-wrap: wrap;
         }
         .logo-box {
             display: flex;
@@ -121,68 +116,49 @@
             transition: transform 0.2s;
         }
         .logo-box img:hover { transform: scale(1.05); }
-
-        /* Barra di ricerca centrata */
-        .search-container {
-            flex: 1 1 300px;
-            min-width: 150px;
-            max-width: 500px;
-            position: relative;
-            margin: 0 8px;
+        .center-title {
+            text-align: center;
+            flex: 1;
+            padding: 0 12px;
         }
-        .search-container input {
-            width: 100%;
-            padding: 10px 14px 10px 40px;
-            border: 1px solid var(--border-light);
-            border-radius: var(--radius-xl);
-            background: var(--bg-input);
+        .center-title .title-main {
+            font-weight: 700;
+            font-size: 1.4rem;
             color: var(--text-primary);
-            font-size: 0.9rem;
-            outline: none;
-            transition: var(--transition);
+            letter-spacing: -0.3px;
         }
-        .search-container input:focus {
-            border-color: var(--blue);
-            box-shadow: 0 0 0 3px rgba(79,106,245,0.15);
-            background: var(--bg-card);
-        }
-        .search-container .search-icon {
-            position: absolute;
-            left: 14px;
-            top: 50%;
-            transform: translateY(-50%);
+        .center-title .title-sub {
+            font-size: 0.8rem;
             color: var(--text-muted);
-            pointer-events: none;
-            font-size: 0.9rem;
+            letter-spacing: 0.3px;
+            margin-top: 2px;
         }
-
-        /* Contenitore menu a destra */
         .menu-container { 
+            position: relative;
             display: flex;
             align-items: center;
-            gap: 4px;
-            flex-shrink: 0;
+            gap: 6px;
         }
         .btn-suggerimenti {
             background: transparent;
             border: none;
-            font-size: 1.3rem;
+            font-size: 1.4rem;
             cursor: pointer;
             color: var(--text-secondary);
-            padding: 6px;
+            padding: 4px 4px;
             transition: var(--transition);
             line-height: 1;
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
+            width: 36px;
+            height: 36px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
         .btn-suggerimenti:hover {
-            background: rgba(245, 158, 11, 0.15);
+            background: var(--bg-hover);
             color: var(--orange);
-            transform: rotate(15deg) scale(1.1);
+            transform: scale(1.1);
         }
         .menu-dots {
             font-size: 1.6rem;
@@ -193,13 +169,8 @@
             background: transparent;
             border: none;
             line-height: 1;
-            display: flex;
-            align-items: center;
-            height: 40px;
         }
-        .menu-dots:hover { color: var(--blue); transform: scale(1.1); }
-
-        /* ===== DROPDOWN CON ANIMAZIONE ===== */
+        .menu-dots:hover { color: var(--blue); }
         .dropdown-content {
             display: none;
             position: absolute;
@@ -213,17 +184,7 @@
             padding: 8px 0;
             z-index: 101;
             overflow: hidden;
-            opacity: 0;
-            transform: translateY(-10px) scale(0.98);
-            transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s;
-            visibility: hidden;
-            transform-origin: top right;
-        }
-        .dropdown-content.show {
-            display: block;
-            opacity: 1;
-            transform: translateY(0) scale(1);
-            visibility: visible;
+            transition: opacity 0.2s;
         }
         .dropdown-content a {
             display: flex;
@@ -318,14 +279,9 @@
             background: var(--bg-hover);
             border-top: 1px solid var(--border-light);
             padding: 4px 0;
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease, padding 0.3s ease;
         }
         .submenu-content.open {
             display: block;
-            max-height: 500px;
-            padding: 4px 0;
         }
         .submenu-content a {
             padding: 8px 18px 8px 36px !important;
@@ -375,63 +331,6 @@
             height: 1px;
             background: var(--border-light);
             margin: 4px 12px;
-        }
-
-        /* ===== RISULTATI RICERCA GLOBALE ===== */
-        #globalSearchResults {
-            position: absolute;
-            top: calc(100% + 6px);
-            left: 0;
-            right: 0;
-            background: var(--bg-card);
-            border: 1px solid var(--border-light);
-            border-radius: var(--radius-md);
-            box-shadow: var(--shadow-lg);
-            max-height: 350px;
-            overflow-y: auto;
-            z-index: 102;
-            padding: 8px 0;
-            display: none;
-            animation: scaleIn 0.2s ease;
-        }
-        #globalSearchResults .result-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px 14px;
-            border-bottom: 1px solid var(--border-light);
-            cursor: default;
-            transition: var(--transition);
-        }
-        #globalSearchResults .result-item:hover {
-            background: var(--bg-hover);
-        }
-        #globalSearchResults .result-item .info {
-            flex: 1;
-            min-width: 0;
-        }
-        #globalSearchResults .result-item .info .title {
-            font-weight: 600;
-            font-size: 0.85rem;
-            color: var(--text-primary);
-        }
-        #globalSearchResults .result-item .info .meta {
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            margin-top: 2px;
-        }
-        #globalSearchResults .result-item .amount {
-            font-weight: 700;
-            font-size: 0.9rem;
-            flex-shrink: 0;
-            margin-left: 12px;
-        }
-        #globalSearchResults .result-item .amount.positive { color: var(--emerald); }
-        #globalSearchResults .result-item .amount.negative { color: var(--red); }
-        #globalSearchResults .empty-state {
-            padding: 16px;
-            text-align: center;
-            color: var(--text-muted);
-            font-size: 0.9rem;
         }
 
         /* ===== PATRIMONIO TOTALE (KPI) ===== */
@@ -498,7 +397,6 @@
             scroll-snap-align: start;
             padding: 0 16px 24px;
             box-sizing: border-box;
-            animation: fadeSlideIn 0.3s ease;
         }
         .conto-page-aggiungi {
             flex: 0 0 100%;
@@ -611,13 +509,13 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
+            gap: 4px;
             min-height: 40px;
             flex: 0 1 auto;
         }
         .btn-modern:hover {
             background: var(--bg-hover);
-            transform: translateY(-2px);
+            transform: translateY(-1px);
             box-shadow: var(--shadow-md);
         }
         .btn-modern:active { transform: scale(0.96); }
@@ -645,7 +543,7 @@
             transition: var(--transition);
             box-shadow: var(--shadow-sm);
         }
-        .btn-back-home:hover { background: var(--bg-hover); transform: translateX(-2px); }
+        .btn-back-home:hover { background: var(--bg-hover); }
 
         /* ===== MODALI ===== */
         .modal {
@@ -658,7 +556,6 @@
             justify-content: center;
             align-items: center;
             padding: 20px;
-            animation: fadeIn 0.2s ease;
         }
         .modal-content {
             background: var(--bg-card);
@@ -671,7 +568,6 @@
             box-shadow: var(--shadow-xl);
             border: 1px solid var(--border-light);
             position: relative;
-            animation: scaleIn 0.25s ease;
         }
         .modal-content.auth { max-width: 380px; }
         .modal-content.guida { max-width: 700px; }
@@ -716,10 +612,9 @@
             align-items: center;
             gap: 12px;
             pointer-events: auto;
-            animation: toastIn 0.4s ease;
+            animation: toastIn 0.3s ease;
             width: 100%;
             border-left: 4px solid var(--blue);
-            transform-origin: center bottom;
         }
         .toast.success { border-left-color: var(--emerald); }
         .toast.error { border-left-color: var(--red); }
@@ -734,10 +629,7 @@
             font-size: 1.2rem;
             padding: 0 4px;
         }
-        @keyframes toastIn {
-            from { opacity:0; transform: translateY(30px) scale(0.95); }
-            to { opacity:1; transform: translateY(0) scale(1); }
-        }
+        @keyframes toastIn { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
 
         /* ===== CARDS, FORM, LISTE ===== */
         .card {
@@ -746,10 +638,9 @@
             border-radius: var(--radius-md);
             padding: 20px;
             box-shadow: var(--shadow-sm);
-            transition: background 0.3s, border 0.3s, box-shadow 0.3s;
+            transition: background 0.3s, border 0.3s;
         }
         .card + .card { margin-top: 20px; }
-        .card:hover { box-shadow: var(--shadow-md); }
 
         input, select {
             width: 100%;
@@ -816,10 +707,7 @@
             cursor: grab;
         }
         .dashboard-widget:active { cursor: grabbing; }
-        .dashboard-widget:hover {
-            box-shadow: var(--shadow-md);
-            transform: translateY(-4px);
-        }
+        .dashboard-widget:hover { box-shadow: var(--shadow-md); }
         .dashboard-widget .widget-header {
             display: flex;
             justify-content: space-between;
@@ -1025,7 +913,7 @@
             height: 100%;
             background: var(--emerald);
             border-radius: 20px;
-            transition: width 0.3s ease;
+            transition: width 0.3s;
         }
         .progress-bar-fill.danger { background: var(--red); }
         .budget-row {
@@ -1094,13 +982,6 @@
         }
         .debiti-content {
             padding-top: 16px;
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease, padding 0.3s ease;
-        }
-        .debiti-content.open {
-            max-height: 2000px;
-            padding-top: 16px;
         }
 
         .debito-form {
@@ -1148,9 +1029,7 @@
             padding: 16px;
             margin-bottom: 12px;
             box-shadow: var(--shadow-sm);
-            transition: var(--transition);
         }
-        .debito-card:hover { box-shadow: var(--shadow-md); }
         .debito-card .debito-header {
             display: flex;
             justify-content: space-between;
@@ -1190,7 +1069,7 @@
         .debito-progresso-fill {
             height: 100%;
             border-radius: 20px;
-            transition: width 0.3s ease;
+            transition: width 0.3s;
         }
         .debito-progresso-fill.verde { background: var(--emerald); }
         .debito-progresso-fill.giallo { background: var(--orange); }
@@ -1495,7 +1374,8 @@
             .header-saldo .saldo-side { order: 1; justify-content: center; margin-bottom: 6px; }
             .dashboard-widget { min-width: 200px; }
             .logo-box img { height: 40px; }
-            .search-container { flex-basis: 100%; max-width: 100%; margin: 4px 0; }
+            .center-title .title-main { font-size: 1.1rem; }
+            .center-title .title-sub { font-size: 0.65rem; }
             .conti-actions .btn-modern { min-width: 140px; font-size: 0.75rem; padding: 10px 16px; }
             #pagina-conti .page-title { font-size: 1.4rem; }
             .conto-riga { padding: 12px 14px; }
@@ -1512,6 +1392,8 @@
             .header-saldo h1 { font-size: 1.6rem; }
             .dashboard-widget { min-width: 160px; padding: 12px; }
             .logo-box img { height: 36px; }
+            .center-title .title-main { font-size: 1rem; }
+            .center-title .title-sub { font-size: 0.6rem; }
             #pagina-backup .backup-actions-bar button { min-width: 80px; font-size: 0.6rem; padding: 6px 10px; }
             .dropdown-content { min-width: 180px; }
             .btn-suggerimenti { font-size: 1rem; width: 28px; height: 28px; }
@@ -1577,8 +1459,7 @@
         .dark-theme .conto-riga,
         .dark-theme #pagina-backup .backup-status,
         .dark-theme .dropdown-content,
-        .dark-theme .submenu-content,
-        .dark-theme #globalSearchResults {
+        .dark-theme .submenu-content {
             background: var(--bg-card);
             border-color: var(--border-light);
         }
@@ -1655,33 +1536,6 @@
             50% { transform: translateX(-50%) scale(1.03); }
             100% { transform: translateX(-50%) scale(1); }
         }
-
-        /* ===== ANIMAZIONI ===== */
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        @keyframes scaleIn {
-            from { opacity: 0; transform: scale(0.95) translateY(-10px); }
-            to { opacity: 1; transform: scale(1) translateY(0); }
-        }
-        @keyframes fadeSlideIn {
-            from { opacity: 0; transform: translateX(20px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-        @keyframes shimmer {
-            0% { background-position: -200px 0; }
-            100% { background-position: 200px 0; }
-        }
-        .skeleton {
-            background: linear-gradient(90deg, var(--bg-input) 25%, var(--bg-hover) 50%, var(--bg-input) 75%);
-            background-size: 200px 100%;
-            animation: shimmer 1.5s infinite;
-            border-radius: var(--radius-sm);
-        }
-        .transition-all {
-            transition: all 0.3s ease;
-        }
     </style>
 </head>
 <body>
@@ -1695,53 +1549,53 @@
                 <img src="logo.png" alt="MoneyTrack" 
                      onerror="this.src='https://via.placeholder.com/100x50/4f6af5/FFFFFF?text=MT'">
             </div>
-            <div class="search-container">
-                <span class="search-icon"><i class="fas fa-search"></i></span>
-                <input type="text" id="globalSearchInput" placeholder="Cerca transazioni, debiti..." oninput="ricercaGlobale(this.value)" autocomplete="off">
-                <div id="globalSearchResults"></div>
+            <div class="center-title">
+                <div class="title-main">MoneyTrack</div>
+                <div class="title-sub">Controlla le tue finanze</div>
             </div>
             <div class="menu-container">
-                <button class="btn-suggerimenti" onclick="apriPopupSuggerimenti()" title="💡 Suggerimenti finanziari"><i class="fas fa-lightbulb"></i></button>
-                <button class="menu-dots" id="menuToggleBtn"><i class="fas fa-ellipsis-v"></i></button>
+                <!-- PULSANTE LAMPADINA (suggerimenti) a sinistra dei tre puntini -->
+                <button class="btn-suggerimenti" onclick="apriPopupSuggerimenti()" title="💡 Suggerimenti finanziari">💡</button>
+                <button class="menu-dots" id="menuToggleBtn">⋮</button>
                 <div id="myDropdown" class="dropdown-content">
                     <!-- LOGIN -->
-                    <a onclick="loginbtn()" id="login-nav-link"><i class="fas fa-sign-in-alt"></i> Login</a>
+                    <a onclick="loginbtn()" id="login-nav-link">🔐 Login</a>
 
                     <!-- CONTI -->
-                    <a onclick="mostraPagina('conti')" style="color:var(--blue);font-weight:600;"><i class="fas fa-university"></i> Conti</a>
+                    <a onclick="mostraPagina('conti')" style="color:var(--blue);font-weight:600;">🏦 Conti</a>
 
                     <!-- ANALISI -->
-                    <a onclick="mostraPagina('analisi')" style="color:var(--purple);font-weight:500;"><i class="fas fa-chart-pie"></i> Analisi</a>
+                    <a onclick="mostraPagina('analisi')" style="color:var(--purple);font-weight:500;">📊 Analisi</a>
 
                     <!-- LISTE -->
-                    <a onclick="mostraPagina('liste')" style="color:var(--purple);font-weight:500;"><i class="fas fa-list-ul"></i> Liste</a>
+                    <a onclick="mostraPagina('liste')" style="color:var(--purple);font-weight:500;">📋 Liste</a>
 
                     <!-- NEWS -->
-                    <a onclick="mostraPagina('news')" style="color:var(--purple);font-weight:500;"><i class="fas fa-newspaper"></i> News</a>
+                    <a onclick="mostraPagina('news')" style="color:var(--purple);font-weight:500;">📰 News</a>
 
                     <!-- SCADENZE (spostata dal menu) -->
-                    <a onclick="mostraPagina('scadenze')" style="color:var(--purple);font-weight:500;"><i class="fas fa-calendar-alt"></i> Scadenze</a>
+                    <a onclick="mostraPagina('scadenze')" style="color:var(--purple);font-weight:500;">📅 Scadenze</a>
 
                     <!-- IMPOSTAZIONI (espandibile) -->
                     <div class="dropdown-submenu">
                         <div class="submenu-header" onclick="toggleSubmenu('settings')">
-                            <span><i class="fas fa-cog"></i> Impostazioni</span>
-                            <span class="submenu-arrow" id="submenu-arrow-settings"><i class="fas fa-chevron-right"></i></span>
+                            <span>⚙️ Impostazioni</span>
+                            <span class="submenu-arrow" id="submenu-arrow-settings">▶</span>
                         </div>
                         <div class="submenu-content" id="submenu-settings">
                             <!-- Backup e Sincronizzazione -->
-                            <a onclick="mostraPagina('backup')" style="padding-left:28px;"><i class="fas fa-cloud-upload-alt"></i> Backup e Sincronizzazione</a>
+                            <a onclick="mostraPagina('backup')" style="padding-left:28px;">💾 Backup e Sincronizzazione</a>
 
                             <!-- Aspetto (espandibile) -->
                             <div class="dropdown-submenu" style="border-bottom:none; padding-left:8px;">
                                 <div class="submenu-header" onclick="toggleSubmenu('appearance')" style="padding-left:20px;">
-                                    <span><i class="fas fa-palette"></i> Aspetto</span>
-                                    <span class="submenu-arrow" id="submenu-arrow-appearance"><i class="fas fa-chevron-right"></i></span>
+                                    <span>🎨 Aspetto</span>
+                                    <span class="submenu-arrow" id="submenu-arrow-appearance">▶</span>
                                 </div>
                                 <div class="submenu-content" id="submenu-appearance" style="padding-left:12px;">
                                     <!-- Tema Scuro -->
                                     <div class="theme-toggle-item" style="padding:8px 18px 8px 36px;">
-                                        <span><i class="fas fa-moon"></i> Tema Scuro</span>
+                                        <span>🌙 Tema Scuro</span>
                                         <label class="toggle-switch">
                                             <input type="checkbox" id="themeToggle" onchange="toggleTheme()">
                                             <span class="toggle-slider"></span>
@@ -1749,7 +1603,7 @@
                                     </div>
                                     <!-- Lingua -->
                                     <div class="setting-row">
-                                        <span><i class="fas fa-globe"></i> Lingua</span>
+                                        <span>🌐 Lingua</span>
                                         <select id="languageSelect" onchange="cambiaLingua(this.value)">
                                             <option value="it">Italiano</option>
                                             <option value="en">English</option>
@@ -1758,7 +1612,7 @@
                                     </div>
                                     <!-- Valuta -->
                                     <div class="setting-row">
-                                        <span><i class="fas fa-euro-sign"></i> Valuta</span>
+                                        <span>💶 Valuta</span>
                                         <select id="currencySelect" onchange="cambiaValuta(this.value)">
                                             <option value="EUR">EUR (€)</option>
                                             <option value="USD">USD ($)</option>
@@ -1769,15 +1623,15 @@
                             </div>
 
                             <!-- Elimina i miei dati -->
-                            <a onclick="eliminaMieiDati()" style="color:var(--red);padding-left:28px;"><i class="fas fa-trash-alt"></i> Elimina i miei dati</a>
+                            <a onclick="eliminaMieiDati()" style="color:var(--red);padding-left:28px;">🗑️ Elimina i miei dati</a>
                         </div>
                     </div>
 
                     <!-- WIDGET -->
-                    <a onclick="apriGestioneWidget()" style="color:var(--blue);"><i class="fas fa-th-large"></i> Widget</a>
+                    <a onclick="apriGestioneWidget()" style="color:var(--blue);">📊 Widget</a>
 
                     <!-- GUIDA -->
-                    <a onclick="apriGuida()" class="guide-link" style="font-weight:600;color:var(--blue);"><i class="fas fa-book"></i> Guida e Istruzioni</a>
+                    <a onclick="apriGuida()" class="guide-link" style="font-weight:600;color:var(--blue);">📖 Guida e Istruzioni</a>
                 </div>
             </div>
         </div>
@@ -1788,7 +1642,7 @@
 
     <!-- ===== PATRIMONIO ===== -->
     <div class="patrimonio-totale" id="patrimonioTotale">
-        <span class="label"><i class="fas fa-coins"></i> Patrimonio Totale</span>
+        <span class="label">💰 Patrimonio Totale</span>
         <span class="value" id="patrimonioValore">0.00 €</span>
     </div>
 
@@ -1804,28 +1658,28 @@
     <!-- ===== PAGINA CONTI ===== -->
     <div id="pagina-conti" class="container" style="display:none; padding:20px 0;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:10px;">
-            <button onclick="mostraPagina('home')" class="btn-back-home"><i class="fas fa-arrow-left"></i> Torna alla Home</button>
+            <button onclick="mostraPagina('home')" class="btn-back-home">⬅ Torna alla Home</button>
         </div>
-        <div class="page-title"><i class="fas fa-university"></i> Conti</div>
+        <div class="page-title">🏦 Conti</div>
         <div class="totale-conti" id="totaleContiPagina">
             Totale conti: <span class="value" id="totaleContiValore">0.00 €</span>
         </div>
         <div class="conti-actions">
-            <button class="btn-modern btn-primary" onclick="apriModalGiroconto()"><i class="fas fa-exchange-alt"></i> Nuovo giroconto</button>
-            <button class="btn-modern btn-info" onclick="apriStoricoGiroconti()"><i class="fas fa-history"></i> Storico giroconti</button>
+            <button class="btn-modern btn-primary" onclick="apriModalGiroconto()">↔ Nuovo giroconto</button>
+            <button class="btn-modern btn-info" onclick="apriStoricoGiroconti()">📜 Storico giroconti</button>
         </div>
         <div id="listaContiPagina"></div>
         <div class="btn-aggiungi-conto-footer">
-            <button class="btn-circle" onclick="apriModalAggiungiConto()" title="Aggiungi nuovo conto"><i class="fas fa-plus"></i></button>
+            <button class="btn-circle" onclick="apriModalAggiungiConto()" title="Aggiungi nuovo conto">+</button>
         </div>
     </div>
 
     <!-- ===== PAGINA BACKUP UNIFICATA ===== -->
     <div id="pagina-backup" class="container" style="display:none; padding:20px 0;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:10px;">
-            <button onclick="mostraPagina('home')" class="btn-back-home"><i class="fas fa-arrow-left"></i> Torna alla Home</button>
+            <button onclick="mostraPagina('home')" class="btn-back-home">⬅ Torna alla Home</button>
         </div>
-        <div class="page-title"><i class="fas fa-cloud-upload-alt"></i> Backup e Sincronizzazione</div>
+        <div class="page-title">💾 Backup e Sincronizzazione</div>
 
         <!-- STATO BACKUP -->
         <div class="backup-status" id="backupStatus">
@@ -1835,12 +1689,12 @@
 
         <!-- PULSANTI AZIONI -->
         <div class="backup-actions-bar">
-            <button class="btn-sync-cloud" onclick="sincronizzaDalCloud()"><i class="fas fa-sync"></i> Sincronizza dal Cloud</button>
-            <button class="btn-backup-rapido" onclick="esportaDati()"><i class="fas fa-copy"></i> Backup rapido</button>
-            <button class="btn-ripristina" onclick="document.getElementById('fileInput').click()"><i class="fas fa-upload"></i> Ripristina</button>
-            <button class="btn-crea-backup" onclick="creaBackupManuale()"><i class="fas fa-archive"></i> Crea Backup</button>
-            <button class="btn-esporta-tutti" onclick="esportaTuttiBackup()"><i class="fas fa-file-export"></i> Esporta Tutti</button>
-            <button class="btn-pulisci-backup" onclick="pulisciBackup()"><i class="fas fa-broom"></i> Pulizia</button>
+            <button class="btn-sync-cloud" onclick="sincronizzaDalCloud()">🔄 Sincronizza dal Cloud</button>
+            <button class="btn-backup-rapido" onclick="esportaDati()">📋 Backup rapido</button>
+            <button class="btn-ripristina" onclick="document.getElementById('fileInput').click()">📂 Ripristina</button>
+            <button class="btn-crea-backup" onclick="creaBackupManuale()">📦 Crea Backup</button>
+            <button class="btn-esporta-tutti" onclick="esportaTuttiBackup()">💾 Esporta Tutti</button>
+            <button class="btn-pulisci-backup" onclick="pulisciBackup()">🧹 Pulizia</button>
         </div>
 
         <!-- LISTA BACKUP -->
@@ -1850,13 +1704,13 @@
     <!-- ===== PAGINA SCADENZE ===== -->
     <div id="sezione-scadenze" class="container" style="display:none; padding:20px 0;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:10px;">
-            <button onclick="mostraPagina('home')" class="btn-back-home"><i class="fas fa-arrow-left"></i> Torna alla Home</button>
-            <h3 style="margin:0;"><i class="fas fa-calendar-alt"></i> Calendario Scadenze</h3>
+            <button onclick="mostraPagina('home')" class="btn-back-home">⬅ Torna alla Home</button>
+            <h3 style="margin:0;">📅 Calendario Scadenze</h3>
         </div>
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; background:var(--bg-card); padding:10px; border-radius:var(--radius-md); border:1px solid var(--border-light); flex-wrap:wrap; gap:8px;">
-            <button onclick="navigaMeseCalendario(-1)" class="btn-modern" style="flex:0; padding:8px 16px;"><i class="fas fa-chevron-left"></i> Mese Prec.</button>
+            <button onclick="navigaMeseCalendario(-1)" class="btn-modern" style="flex:0; padding:8px 16px;">◀ Mese Prec.</button>
             <h3 id="cal-titolo-mese" style="margin:0; font-size:1.2rem; font-weight:700; text-transform:capitalize;"></h3>
-            <button onclick="navigaMeseCalendario(1)" class="btn-modern" style="flex:0; padding:8px 16px;">Mese Succ. <i class="fas fa-chevron-right"></i></button>
+            <button onclick="navigaMeseCalendario(1)" class="btn-modern" style="flex:0; padding:8px 16px;">Mese Succ. ▶</button>
         </div>
         <div style="display:grid; grid-template-columns:repeat(7,1fr); text-align:center; font-weight:600; font-size:0.7rem; text-transform:uppercase; color:var(--text-muted); margin-bottom:6px;">
             <div>Lun</div><div>Mar</div><div>Mer</div><div>Gio</div><div>Ven</div><div>Sab</div><div>Dom</div>
@@ -1867,33 +1721,33 @@
     <!-- ===== PAGINA ANALISI ===== -->
     <div id="pagina-analisi" class="container" style="display:none; padding:20px 0;">
         <div style="display:flex; gap:10px; align-items:center; margin-bottom:20px; flex-wrap:wrap;">
-            <button onclick="mostraPagina('home')" class="btn-back-home"><i class="fas fa-arrow-left"></i> Torna alla Home</button>
+            <button onclick="mostraPagina('home')" class="btn-back-home">⬅ Torna alla Home</button>
             <select id="anno-selezionato" onchange="generaReport()" style="padding:10px; border-radius:var(--radius-sm); border:1px solid var(--border-light); font-size:0.9rem; cursor:pointer; flex:1; min-width:100px; background:var(--bg-card); color:var(--text-primary);"></select>
         </div>
         <div class="card">
-            <h3><i class="fas fa-chart-pie"></i> Analisi Spese Mese</h3>
+            <h3>📊 Analisi Spese Mese</h3>
             <div style="height:250px; position:relative;"><canvas id="graficoTorta"></canvas></div>
         </div>
         <div class="card" style="margin-top:20px; overflow-x:auto;">
-            <h3><i class="fas fa-table"></i> Dettaglio Mensile</h3>
+            <h3>📅 Dettaglio Mensile</h3>
             <table style="width:100%; min-width:600px;">
                 <thead><tr id="headerMesi"></tr></thead>
                 <tbody id="bodyMatrice"></tbody>
             </table>
         </div>
         <div class="card" style="margin-top:20px;">
-            <h3><i class="fas fa-chart-line"></i> Andamento Annuale</h3>
+            <h3>📊 Andamento Annuale</h3>
             <div style="height:300px; position:relative; width:100%;"><canvas id="graficoAnnuale"></canvas></div>
         </div>
     </div>
 
     <!-- ===== PAGINA NEWS ===== -->
     <div id="pagina-news" class="container" style="display:none; padding:20px 0;">
-        <h3><i class="fas fa-newspaper"></i> News Finanziarie</h3>
+        <h3>📰 News Finanziarie</h3>
         <div style="display:flex; gap:8px; margin-bottom:20px; overflow-x:auto; padding-bottom:10px;">
-            <button onclick="filtraNews('tutte', event)" class="btn-modern btn-primary" style="flex:0; padding:8px 18px;"><i class="fas fa-globe"></i> Tutte</button>
-            <button onclick="filtraNews('italia', event)" class="btn-modern" style="flex:0; padding:8px 18px;"><i class="fas fa-flag"></i> Italia</button>
-            <button onclick="filtraNews('mondo', event)" class="btn-modern" style="flex:0; padding:8px 18px;"><i class="fas fa-globe-americas"></i> Global</button>
+            <button onclick="filtraNews('tutte', event)" class="btn-modern btn-primary" style="flex:0; padding:8px 18px;">🌎 Tutte</button>
+            <button onclick="filtraNews('italia', event)" class="btn-modern" style="flex:0; padding:8px 18px;">🇮🇹 Italia</button>
+            <button onclick="filtraNews('mondo', event)" class="btn-modern" style="flex:0; padding:8px 18px;">🌐 Global</button>
         </div>
         <div id="loading-news" style="text-align:center; padding:20px; color:var(--text-muted);">Caricamento notizie...</div>
         <div id="news-container" class="desktop-grid"></div>
@@ -1902,16 +1756,16 @@
     <!-- ===== PAGINA LISTE ===== -->
     <div id="pagina-liste" class="container" style="display:none; padding:20px 0;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:10px;">
-            <button onclick="mostraPagina('home')" class="btn-back-home"><i class="fas fa-arrow-left"></i> Torna alla Home</button>
-            <h3 style="margin:0;"><i class="fas fa-list-ul"></i> Gestione Liste Spese</h3>
+            <button onclick="mostraPagina('home')" class="btn-back-home">⬅ Torna alla Home</button>
+            <h3 style="margin:0;">📋 Gestione Liste Spese</h3>
         </div>
         <div class="card" style="margin-bottom:20px;">
             <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
                 <select id="lista-selezionata" style="flex:2; min-width:150px; margin:0;" onchange="caricaLista()">
-                    <option value=""><i class="fas fa-plus-circle"></i> Crea nuova lista...</option>
+                    <option value="">➕ Crea nuova lista...</option>
                 </select>
-                <button class="btn-modern btn-success" onclick="creaNuovaLista()" style="flex:0; min-width:80px;"><i class="fas fa-plus"></i> Nuova</button>
-                <button class="btn-modern btn-danger" onclick="eliminaLista()" style="flex:0; min-width:80px;"><i class="fas fa-trash"></i> Elimina</button>
+                <button class="btn-modern btn-success" onclick="creaNuovaLista()" style="flex:0; min-width:80px;">➕ Nuova</button>
+                <button class="btn-modern btn-danger" onclick="eliminaLista()" style="flex:0; min-width:80px;">🗑️ Elimina</button>
             </div>
             <div id="lista-info" style="margin-top:10px; font-size:0.85rem; color:var(--text-muted); display:none;">
                 <span id="lista-info-nome"></span> · <span id="lista-info-conteggio">0</span> spese · <span id="lista-info-totale">0.00 €</span>
@@ -1919,7 +1773,7 @@
         </div>
 
         <div id="lista-form" class="card" style="display:none; margin-bottom:20px;">
-            <h4 style="margin-top:0;"><i class="fas fa-pen"></i> Aggiungi Spesa a <span id="lista-nome-corrente" style="color:var(--blue);"></span></h4>
+            <h4 style="margin-top:0;">✏️ Aggiungi Spesa a <span id="lista-nome-corrente" style="color:var(--blue);"></span></h4>
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
                 <input type="date" id="lista-data" style="grid-column:1/-1;">
                 <select id="lista-categoria" style="grid-column:1/-1;">
@@ -1931,23 +1785,23 @@
                 </select>
                 <input type="text" id="lista-descrizione" placeholder="Descrizione spesa" style="grid-column:1/-1;">
                 <input type="number" id="lista-importo" placeholder="Importo (€)" step="0.01" inputmode="decimal" style="grid-column:1/-1;">
-                <button class="btn-modern btn-success" onclick="aggiungiSpesaLista()" style="grid-column:1/-1;"><i class="fas fa-plus"></i> Aggiungi Spesa</button>
+                <button class="btn-modern btn-success" onclick="aggiungiSpesaLista()" style="grid-column:1/-1;">➕ Aggiungi Spesa</button>
             </div>
         </div>
 
         <div id="lista-contenuto" style="display:none;">
             <div class="utenza-totale">
-                <span><span class="label"><i class="fas fa-coins"></i> Totale Spese Lista</span></span>
+                <span><span class="label">💰 Totale Spese Lista</span></span>
                 <span class="value" id="lista-totale-costo">0.00 €</span>
             </div>
             <div style="display:flex; gap:8px; margin-bottom:15px; overflow-x:auto; padding-bottom:10px; flex-wrap:wrap;">
-                <button onclick="filtraLista('tutte', event)" class="btn-modern btn-primary" style="flex:0; padding:6px 16px;"><i class="fas fa-globe"></i> Tutte</button>
+                <button onclick="filtraLista('tutte', event)" class="btn-modern btn-primary" style="flex:0; padding:6px 16px;">🌎 Tutte</button>
                 <div id="lista-filtri-categorie" style="display:flex; gap:6px; flex-wrap:wrap;"></div>
             </div>
             <div id="lista-spese-container"></div>
         </div>
         <div id="lista-vuota" style="display:none; text-align:center; padding:40px 20px; color:var(--text-muted);">
-            <span style="font-size:3.5rem; display:block; margin-bottom:12px;"><i class="fas fa-list-ul"></i></span>
+            <span style="font-size:3.5rem; display:block; margin-bottom:12px;">📋</span>
             <p><strong>Nessuna lista creata</strong></p>
         </div>
     </div>
@@ -1955,8 +1809,8 @@
     <!-- ===== MODALE AGGIUNTA CONTO ===== -->
     <div id="modalAggiungiConto" class="modal">
         <div class="modal-content">
-            <button class="close-btn" onclick="chiudiModalAggiungiConto()"><i class="fas fa-times"></i></button>
-            <h3 style="margin-bottom:16px;"><i class="fas fa-plus-circle"></i> Nuovo Conto</h3>
+            <button class="close-btn" onclick="chiudiModalAggiungiConto()">&times;</button>
+            <h3 style="margin-bottom:16px;">➕ Nuovo Conto</h3>
             <input type="text" id="inputNuovoConto" placeholder="Nome conto..." style="margin-bottom:8px;">
             <div style="margin-bottom:16px; display:flex; gap:8px; flex-wrap:wrap;">
                 <button onclick="setIconaConto('🏦')" class="btn-modern" style="flex:0; padding:8px 12px; font-size:1.2rem; max-width:50px;">🏦</button>
@@ -1966,8 +1820,8 @@
             </div>
             <input type="hidden" id="iconaNuovoConto" value="🏦">
             <div style="display:flex; gap:10px;">
-                <button class="btn-modern" onclick="chiudiModalAggiungiConto()" style="flex:1; max-width:none; background:var(--bg-input); color:var(--text-secondary);"><i class="fas fa-times"></i> Annulla</button>
-                <button class="btn-modern btn-success" onclick="creaNuovoConto()" style="flex:1; max-width:none;"><i class="fas fa-plus"></i> Crea</button>
+                <button class="btn-modern" onclick="chiudiModalAggiungiConto()" style="flex:1; max-width:none; background:var(--bg-input); color:var(--text-secondary);">Annulla</button>
+                <button class="btn-modern btn-success" onclick="creaNuovoConto()" style="flex:1; max-width:none;">➕ Crea</button>
             </div>
         </div>
     </div>
@@ -1975,12 +1829,12 @@
     <!-- ===== MODALE RINOMINA CONTO ===== -->
     <div id="modalRinominaConto" class="modal">
         <div class="modal-content" style="max-width:380px;">
-            <button class="close-btn" onclick="chiudiModalRinominaConto()"><i class="fas fa-times"></i></button>
-            <h3 style="margin-bottom:16px;"><i class="fas fa-pen"></i> Rinomina Conto</h3>
+            <button class="close-btn" onclick="chiudiModalRinominaConto()">&times;</button>
+            <h3 style="margin-bottom:16px;">✏️ Rinomina Conto</h3>
             <input type="text" id="inputRinominaConto" placeholder="Nuovo nome conto...">
             <div style="display:flex; gap:10px; margin-top:8px;">
-                <button class="btn-modern" onclick="chiudiModalRinominaConto()" style="flex:1; max-width:none; background:var(--bg-input); color:var(--text-secondary);"><i class="fas fa-times"></i> Annulla</button>
-                <button class="btn-modern btn-success" onclick="confermaRinominaConto()" style="flex:1; max-width:none;"><i class="fas fa-check"></i> Rinomina</button>
+                <button class="btn-modern" onclick="chiudiModalRinominaConto()" style="flex:1; max-width:none; background:var(--bg-input); color:var(--text-secondary);">Annulla</button>
+                <button class="btn-modern btn-success" onclick="confermaRinominaConto()" style="flex:1; max-width:none;">✅ Rinomina</button>
             </div>
         </div>
     </div>
@@ -1988,8 +1842,8 @@
     <!-- ===== MODALE GIROCONTO ===== -->
     <div id="modalGiroconto" class="modal">
         <div class="modal-content giroconto">
-            <button class="close-btn" onclick="chiudiModalGiroconto()"><i class="fas fa-times"></i></button>
-            <h3 style="margin-bottom:16px;"><i class="fas fa-exchange-alt"></i> Nuovo Giroconto</h3>
+            <button class="close-btn" onclick="chiudiModalGiroconto()">&times;</button>
+            <h3 style="margin-bottom:16px;">↔ Nuovo Giroconto</h3>
             <div id="giroconto-error" style="color:var(--red); font-size:0.85rem; margin-bottom:12px; display:none;"></div>
             <select id="giroconto-da" style="margin-bottom:12px;">
                 <option value="">Seleziona conto di origine...</option>
@@ -2001,8 +1855,8 @@
             <input type="date" id="giroconto-data" style="margin-bottom:12px;">
             <input type="text" id="giroconto-descrizione" placeholder="Descrizione (opzionale)" style="margin-bottom:16px;">
             <div style="display:flex; gap:10px;">
-                <button class="btn-modern" onclick="chiudiModalGiroconto()" style="flex:1; max-width:none; background:var(--bg-input); color:var(--text-secondary);"><i class="fas fa-times"></i> Annulla</button>
-                <button class="btn-modern btn-success" onclick="eseguiGiroconto()" style="flex:1; max-width:none;"><i class="fas fa-exchange-alt"></i> Esegui giroconto</button>
+                <button class="btn-modern" onclick="chiudiModalGiroconto()" style="flex:1; max-width:none; background:var(--bg-input); color:var(--text-secondary);">Annulla</button>
+                <button class="btn-modern btn-success" onclick="eseguiGiroconto()" style="flex:1; max-width:none;">↔ Esegui giroconto</button>
             </div>
         </div>
     </div>
@@ -2010,10 +1864,10 @@
     <!-- ===== MODALE STORICO GIROCONTI ===== -->
     <div id="modalStoricoGiroconti" class="modal">
         <div class="modal-content storico-giroconti">
-            <button class="close-btn" onclick="chiudiStoricoGiroconti()"><i class="fas fa-times"></i></button>
-            <h3 style="margin-bottom:16px;"><i class="fas fa-history"></i> Storico Giroconti</h3>
+            <button class="close-btn" onclick="chiudiStoricoGiroconti()">&times;</button>
+            <h3 style="margin-bottom:16px;">📜 Storico Giroconti</h3>
             <div id="storico-giroconti-container">
-                <div class="utenza-empty"><span class="icon"><i class="fas fa-inbox"></i></span><p>Nessun giroconto effettuato</p></div>
+                <div class="utenza-empty"><span class="icon">📭</span><p>Nessun giroconto effettuato</p></div>
             </div>
         </div>
     </div>
@@ -2021,12 +1875,12 @@
     <!-- ===== MODALE LOGIN ===== -->
     <div id="auth-modal" class="modal" style="display:none;">
         <div class="modal-content auth">
-            <button class="close-btn" onclick="chiudiAuthModal()"><i class="fas fa-times"></i></button>
-            <h3 style="margin-bottom:20px; text-align:center; font-size:1.25rem;" id="auth-title"><i class="fas fa-cloud-upload-alt"></i> Cloud Sync Login</h3>
+            <button class="close-btn" onclick="chiudiAuthModal()">&times;</button>
+            <h3 style="margin-bottom:20px; text-align:center; font-size:1.25rem;" id="auth-title">🔐 Cloud Sync Login</h3>
             <div id="auth-error" style="color:var(--red); font-size:0.85rem; margin-bottom:12px; display:none; text-align:center; font-weight:600;"></div>
             <input type="email" id="auth-email" placeholder="La tua Email" style="margin-bottom:12px;">
             <input type="password" id="auth-password" placeholder="Password (min. 6 caratteri)" style="margin-bottom:16px;">
-            <button class="btn-modern btn-success" id="btn-auth-primary" onclick="eseguiAuth()" style="max-width:none; width:100%;"><i class="fas fa-sign-in-alt"></i> ACCEDI</button>
+            <button class="btn-modern btn-success" id="btn-auth-primary" onclick="eseguiAuth()" style="max-width:none; width:100%;">ACCEDI</button>
             <div style="text-align:center; margin-top:16px; font-size:0.85rem;">
                 <a id="auth-toggle-link" onclick="toggleAuthMode()" style="color:var(--blue); font-weight:600; cursor:pointer; text-decoration:underline;">Non hai un account? Registrati</a>
             </div>
@@ -2036,14 +1890,14 @@
     <!-- ===== MODALE GESTIONE WIDGET ===== -->
     <div id="widget-modal" class="modal">
         <div class="modal-content widget-management">
-            <button class="close-btn" onclick="chiudiGestioneWidget()"><i class="fas fa-times"></i></button>
-            <h3 style="margin-bottom:16px;"><i class="fas fa-th-large"></i> Gestione Widget</h3>
+            <button class="close-btn" onclick="chiudiGestioneWidget()">&times;</button>
+            <h3 style="margin-bottom:16px;">📊 Gestione Widget</h3>
             <p style="color:var(--text-secondary); font-size:0.9rem; margin-bottom:16px;">Seleziona i widget che vuoi visualizzare nella dashboard. Puoi riordinarli trascinandoli.</p>
             <div id="widget-list"></div>
             <div style="display:flex; gap:8px; margin-top:20px; padding-top:16px; border-top:1px solid var(--border-light); flex-wrap:wrap;">
-                <button class="btn-modern btn-primary" onclick="selezionaTuttiWidget()" style="flex:1; max-width:none;"><i class="fas fa-check-double"></i> Seleziona tutti</button>
-                <button class="btn-modern" onclick="deselezionaTuttiWidget()" style="flex:1; max-width:none; background:var(--bg-input);"><i class="fas fa-times"></i> Deseleziona tutti</button>
-                <button class="btn-modern btn-success" onclick="chiudiGestioneWidget()" style="flex:1; max-width:none;"><i class="fas fa-check"></i> Applica e chiudi</button>
+                <button class="btn-modern btn-primary" onclick="selezionaTuttiWidget()" style="flex:1; max-width:none;">✅ Seleziona tutti</button>
+                <button class="btn-modern" onclick="deselezionaTuttiWidget()" style="flex:1; max-width:none; background:var(--bg-input);">⬜ Deseleziona tutti</button>
+                <button class="btn-modern btn-success" onclick="chiudiGestioneWidget()" style="flex:1; max-width:none;">✔️ Applica e chiudi</button>
             </div>
         </div>
     </div>
@@ -2051,11 +1905,11 @@
     <!-- ===== MODALE GUIDA ===== -->
     <div id="guide-modal" class="modal">
         <div class="modal-content guida">
-            <button class="close-btn" onclick="chiudiGuida()"><i class="fas fa-times"></i></button>
-            <h2 style="display:flex; align-items:center; gap:10px; margin-bottom:20px; color:var(--text-primary);"><i class="fas fa-book"></i> Guida a MoneyTrack</h2>
+            <button class="close-btn" onclick="chiudiGuida()">&times;</button>
+            <h2 style="display:flex; align-items:center; gap:10px; margin-bottom:20px; color:var(--text-primary);">📖 Guida a MoneyTrack</h2>
             <div class="guide-content">
                 <div class="guide-section" style="margin-bottom:20px;">
-                    <h3><i class="fas fa-rocket"></i> Primi Passi</h3>
+                    <h3>🎯 Primi Passi</h3>
                     <p>Benvenuto su MoneyTrack! Questa guida ti accompagna passo passo.</p>
                     <div style="display:flex; gap:12px; align-items:flex-start; margin-bottom:10px; background:var(--bg-input); padding:12px 16px; border-radius:var(--radius-sm); border-left:4px solid var(--blue);">
                         <span style="font-weight:700; color:var(--blue);">1</span>
@@ -2067,7 +1921,7 @@
                     </div>
                 </div>
                 <div style="margin-bottom:20px;">
-                    <h3><i class="fas fa-university"></i> Gestione Conti</h3>
+                    <h3>🏦 Gestione Conti</h3>
                     <p>Conti multipli per organizzare le tue finanze.</p>
                     <ul style="color:var(--text-secondary); line-height:1.8; padding-left:20px;">
                         <li><strong>Creare:</strong> scorri a destra fino all'ultima pagina e clicca su "Nuovo Conto".</li>
@@ -2076,7 +1930,7 @@
                     </ul>
                 </div>
                 <div style="margin-bottom:20px;">
-                    <h3><i class="fas fa-pen"></i> Aggiunta Movimenti</h3>
+                    <h3>✏️ Aggiunta Movimenti</h3>
                     <p>Registra entrate e uscite con pochi click.</p>
                     <ul style="color:var(--text-secondary); line-height:1.8; padding-left:20px;">
                         <li>Scegli il tipo (Entrata/Uscita), data, categoria, importo e nota.</li>
@@ -2085,15 +1939,15 @@
                     </ul>
                 </div>
                 <div style="margin-bottom:20px;">
-                    <h3><i class="fas fa-th-large"></i> Widget personalizzati</h3>
+                    <h3>📊 Widget personalizzati</h3>
                     <p>Trascina i widget per riordinarli, attivali/disattivali dal menu Widget.</p>
                 </div>
                 <div style="margin-bottom:20px;">
-                    <h3><i class="fas fa-cloud-upload-alt"></i> Backup e Sicurezza</h3>
+                    <h3>💾 Backup e Sicurezza</h3>
                     <p>Backup automatici ogni 5 minuti. Gestisci i backup dal menu.</p>
                 </div>
                 <div style="margin-top:16px; padding-top:16px; border-top:1px solid var(--border-light); text-align:center;">
-                    <button onclick="chiudiGuida()" class="btn-modern btn-primary" style="padding:12px 32px;"><i class="fas fa-check"></i> Ho capito, cominciamo!</button>
+                    <button onclick="chiudiGuida()" class="btn-modern btn-primary" style="padding:12px 32px;">✅ Ho capito, cominciamo!</button>
                 </div>
             </div>
         </div>
@@ -2102,10 +1956,10 @@
     <!-- ===== CALCOLATRICE ===== -->
     <div id="calc-modal" class="modal">
         <div class="modal-content" style="max-width:360px;">
-            <button class="close-btn" onclick="chiudiCalcolatrice()"><i class="fas fa-times"></i></button>
+            <button class="close-btn" onclick="chiudiCalcolatrice()">&times;</button>
             <input type="text" id="calc-screen" readonly style="width:100%; height:56px; background:var(--bg-input); border:none; text-align:right; padding:0 16px; font-size:1.8rem; font-weight:600; border-radius:var(--radius-sm); margin-bottom:16px; color:var(--text-primary);">
             <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:10px;">
-                <button onclick="clearScreen()" style="background:var(--red); color:white; border:none; border-radius:var(--radius-sm); padding:12px; font-weight:700; cursor:pointer;"><i class="fas fa-times"></i></button>
+                <button onclick="clearScreen()" style="background:var(--red); color:white; border:none; border-radius:var(--radius-sm); padding:12px; font-weight:700; cursor:pointer;">C</button>
                 <button onclick="pressKey('/')" class="btn-modern" style="flex:0; padding:12px;">/</button>
                 <button onclick="pressKey('*')" class="btn-modern" style="flex:0; padding:12px;">*</button>
                 <button onclick="pressKey('-')" class="btn-modern" style="flex:0; padding:12px;">-</button>
@@ -2116,7 +1970,7 @@
                 <button onclick="pressKey('4')" class="btn-modern" style="flex:0; padding:12px;">4</button>
                 <button onclick="pressKey('5')" class="btn-modern" style="flex:0; padding:12px;">5</button>
                 <button onclick="pressKey('6')" class="btn-modern" style="flex:0; padding:12px;">6</button>
-                <button onclick="calculate()" style="grid-row:span 2; background:var(--blue); color:white; border:none; border-radius:var(--radius-sm); font-weight:700; cursor:pointer;"><i class="fas fa-equals"></i></button>
+                <button onclick="calculate()" style="grid-row:span 2; background:var(--blue); color:white; border:none; border-radius:var(--radius-sm); font-weight:700; cursor:pointer;">=</button>
                 <button onclick="pressKey('1')" class="btn-modern" style="flex:0; padding:12px;">1</button>
                 <button onclick="pressKey('2')" class="btn-modern" style="flex:0; padding:12px;">2</button>
                 <button onclick="pressKey('3')" class="btn-modern" style="flex:0; padding:12px;">3</button>
@@ -2404,7 +2258,7 @@
             if (!container) return;
             const backups = getBackups();
             if (backups.length === 0) {
-                container.innerHTML = `<div class="utenza-empty"><span class="icon"><i class="fas fa-database"></i></span><p><strong>Nessun backup salvato</strong></p></div>`;
+                container.innerHTML = `<div class="utenza-empty"><span class="icon">💾</span><p><strong>Nessun backup salvato</strong></p></div>`;
                 return;
             }
             let html = `<div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">`;
@@ -2418,15 +2272,15 @@
                         <div style="font-size:0.8rem;color:var(--text-muted);">${data.toLocaleString('it-IT')}</div>
                     </div>
                     <div style="font-size:0.85rem;color:var(--text-secondary); margin-bottom:10px;">
-                        <span><i class="fas fa-university"></i> ${stats.conti || 0} conti</span>
-                        <span style="margin-left:12px;"><i class="fas fa-coins"></i> ${stats.transazioni || 0} transazioni</span>
-                        <span style="margin-left:12px;"><i class="fas fa-hand-holding-usd"></i> ${stats.debiti || 0} debiti</span>
-                        <span style="margin-left:12px;"><i class="fas fa-list-ul"></i> ${stats.liste || 0} liste</span>
+                        <span>🏦 ${stats.conti || 0} conti</span>
+                        <span style="margin-left:12px;">💰 ${stats.transazioni || 0} transazioni</span>
+                        <span style="margin-left:12px;">🏦 ${stats.debiti || 0} debiti</span>
+                        <span style="margin-left:12px;">📋 ${stats.liste || 0} liste</span>
                     </div>
                     <div class="debito-azioni">
-                        <button class="btn-modifica" onclick="ripristinaBackup(${backup.id})" style="background:var(--emerald);color:white;border:none;padding:6px 14px;border-radius:6px;font-weight:600;cursor:pointer;"><i class="fas fa-undo"></i> Ripristina</button>
-                        <button class="btn-modifica" onclick="esportaBackup(${backup.id})" style="background:var(--blue);color:white;border:none;padding:6px 14px;border-radius:6px;font-weight:600;cursor:pointer;"><i class="fas fa-file-export"></i> Esporta</button>
-                        <button class="btn-elimina" onclick="eliminaBackup(${backup.id})" style="background:var(--red);color:white;border:none;padding:6px 14px;border-radius:6px;font-weight:600;cursor:pointer;"><i class="fas fa-trash"></i> Elimina</button>
+                        <button class="btn-modifica" onclick="ripristinaBackup(${backup.id})" style="background:var(--emerald);color:white;border:none;padding:6px 14px;border-radius:6px;font-weight:600;cursor:pointer;">🔄 Ripristina</button>
+                        <button class="btn-modifica" onclick="esportaBackup(${backup.id})" style="background:var(--blue);color:white;border:none;padding:6px 14px;border-radius:6px;font-weight:600;cursor:pointer;">💾 Esporta</button>
+                        <button class="btn-elimina" onclick="eliminaBackup(${backup.id})" style="background:var(--red);color:white;border:none;padding:6px 14px;border-radius:6px;font-weight:600;cursor:pointer;">🗑️ Elimina</button>
                     </div>
                 </div>
                 `;
@@ -2460,7 +2314,7 @@
             const toast = document.createElement('div');
             const icone = { success: '✅', error: '❌', warning: '⚠️', info: 'ℹ️' };
             toast.className = `toast ${tipo}`;
-            toast.innerHTML = `<span class="toast-icon">${icone[tipo] || 'ℹ️'}</span><span class="toast-text">${messaggio}</span><button class="toast-close" onclick="this.parentElement.remove()"><i class="fas fa-times"></i></button>`;
+            toast.innerHTML = `<span class="toast-icon">${icone[tipo] || 'ℹ️'}</span><span class="toast-text">${messaggio}</span><button class="toast-close" onclick="this.parentElement.remove()">✕</button>`;
             container.appendChild(toast);
             setTimeout(() => { toast.style.animation = 'toastOut 0.3s ease';
                 setTimeout(() => toast.remove(), 300); }, durata);
@@ -2756,8 +2610,8 @@
                     <div class="widget-header">
                         <span class="widget-title">${widget.titolo}</span>
                         <div>
-                            <span class="widget-drag-handle" title="Trascina per riordinare"><i class="fas fa-grip-vertical"></i></span>
-                            <button class="widget-close" onclick="rimuoviWidget('${widgetId}')" title="Rimuovi widget"><i class="fas fa-times"></i></button>
+                            <span class="widget-drag-handle" title="Trascina per riordinare">⠿</span>
+                            <button class="widget-close" onclick="rimuoviWidget('${widgetId}')" title="Rimuovi widget">✕</button>
                         </div>
                     </div>
                     <div class="widget-content">${content}</div>
@@ -3178,7 +3032,7 @@
         function mostraStatoUtenteLoggato(email) {
             const link = document.getElementById("login-nav-link");
             if (link) {
-                link.innerHTML = `<i class="fas fa-sign-out-alt"></i> Esci (${email.split('@')[0]})`;
+                link.innerHTML = `🚪 Esci (${email.split('@')[0]})`;
                 link.setAttribute("onclick", "eseguiLogout()");
             }
         }
@@ -3186,7 +3040,7 @@
         function mostraStatoUtenteDisconnesso() {
             const link = document.getElementById("login-nav-link");
             if (link) {
-                link.innerHTML = `<i class="fas fa-sign-in-alt"></i> Login`;
+                link.innerHTML = "🔐 Login";
                 link.setAttribute("onclick", "loginbtn()");
             }
         }
@@ -3668,14 +3522,9 @@
             const content = document.getElementById('debiti-content-' + contoId);
             const icon = document.getElementById('debiti-toggle-icon-' + contoId);
             if (!content || !icon) return;
-            const isOpen = content.classList.contains('open');
-            if (isOpen) {
-                content.classList.remove('open');
-                icon.classList.remove('open');
-            } else {
-                content.classList.add('open');
-                icon.classList.add('open');
-            }
+            const isOpen = content.style.display !== 'none';
+            content.style.display = isOpen ? 'none' : 'block';
+            icon.classList.toggle('open', !isOpen);
             setDebitiOpenState(contoId, !isOpen);
         }
 
@@ -3794,7 +3643,7 @@
             const container = document.getElementById('debiti-lista-' + contoAttivoId);
             if (!container) return;
             if (debiti.length === 0) {
-                container.innerHTML = `<div class="utenza-empty"><span class="icon"><i class="fas fa-hand-holding-usd"></i></span><p>Nessun debito registrato</p></div>`;
+                container.innerHTML = `<div class="utenza-empty"><span class="icon">🏦</span><p>Nessun debito registrato</p></div>`;
                 return;
             }
             let html = '';
@@ -3808,18 +3657,18 @@
                         <div style="font-size:0.8rem;color:var(--text-muted);">Inizio: ${d.dataInizio}</div>
                     </div>
                     <div class="debito-dettagli">
-                        <div class="debito-dettaglio"><div class="label"><i class="fas fa-coins"></i> Capitale Residuo</div><div class="value">${d.capitaleResiduo.toFixed(2)} €</div></div>
-                        <div class="debito-dettaglio"><div class="label"><i class="fas fa-percent"></i> Tasso Annuo</div><div class="value">${d.tasso}%</div></div>
-                        <div class="debito-dettaglio"><div class="label"><i class="fas fa-calendar-check"></i> Estinzione</div><div class="value">${d.dataEstinzione || 'N/D'}</div></div>
+                        <div class="debito-dettaglio"><div class="label">💰 Capitale Residuo</div><div class="value">${d.capitaleResiduo.toFixed(2)} €</div></div>
+                        <div class="debito-dettaglio"><div class="label">📊 Tasso Annuo</div><div class="value">${d.tasso}%</div></div>
+                        <div class="debito-dettaglio"><div class="label">📅 Estinzione</div><div class="value">${d.dataEstinzione || 'N/D'}</div></div>
                     </div>
                     <div class="debito-progresso-container">
                         <div class="debito-progresso-label"><span>Progresso rimborso</span><span>${progresso.toFixed(1)}%</span></div>
                         <div class="debito-progresso"><div class="debito-progresso-fill ${progressoColor}" style="width:${Math.min(progresso,100)}%;"></div></div>
                     </div>
                     <div class="debito-azioni">
-                        <button class="btn-modifica" onclick="modificaDebito(${idx})"><i class="fas fa-edit"></i> Modifica</button>
-                        <button class="btn-elimina" onclick="eliminaDebito(${idx})"><i class="fas fa-trash"></i> Elimina</button>
-                        <button class="btn-paga-rata" onclick="aggiungiPagamentoDebito(${idx})"><i class="fas fa-hand-holding-usd"></i> Paga rata</button>
+                        <button class="btn-modifica" onclick="modificaDebito(${idx})">✏️ Modifica</button>
+                        <button class="btn-elimina" onclick="eliminaDebito(${idx})">🗑️ Elimina</button>
+                        <button class="btn-paga-rata" onclick="aggiungiPagamentoDebito(${idx})">💰 Paga rata</button>
                     </div>
                 </div>
                 `;
@@ -3977,7 +3826,7 @@
                 container.innerHTML += `
                 <div class="budget-item">
                     <div class="budget-info">
-                        <span>${sanitizeHTML(cat)} <span onclick="rimuoviBudget('${cat}')" style="cursor:pointer;opacity:0.4;margin-left:4px;"><i class="fas fa-times"></i></span></span>
+                        <span>${sanitizeHTML(cat)} <span onclick="rimuoviBudget('${cat}')" style="cursor:pointer;opacity:0.4;margin-left:4px;">🗑️</span></span>
                         <span style="color:${superato ? 'var(--red)' : 'var(--text-secondary)'};font-weight:bold;">
                             ${privacy ? '***' : speso.toFixed(2)}€ / ${privacy ? '***' : limite.toFixed(0)}€ (${percentuale.toFixed(0)}%)
                         </span>
@@ -3988,79 +3837,6 @@
                 </div>
                 `;
             });
-        }
-
-        // ==========================================
-        // 🔍 RICERCA GLOBALE
-        // ==========================================
-
-        function ricercaGlobale(query) {
-            query = query.trim().toLowerCase();
-            const resultsContainer = document.getElementById('globalSearchResults');
-            if (!resultsContainer) return;
-
-            if (!query) {
-                resultsContainer.style.display = 'none';
-                return;
-            }
-
-            // Cerca in tutti i conti
-            let risultati = [];
-            const conti = getConti();
-            conti.forEach(conto => {
-                if (!conto.spese) return;
-                conto.spese.forEach(s => {
-                    const searchable = `${s.data} ${s.cat} ${s.nota || ''} ${s.tipo}`.toLowerCase();
-                    if (searchable.includes(query)) {
-                        risultati.push({
-                            conto: conto.nome,
-                            data: s.data,
-                            categoria: s.cat,
-                            importo: s.imp,
-                            tipo: s.tipo,
-                            nota: s.nota || '',
-                            tipoOggetto: 'transazione'
-                        });
-                    }
-                });
-            });
-
-            // Cerca nei debiti
-            debiti.forEach(d => {
-                const searchable = `${d.nome} ${d.capitale} ${d.tasso} ${d.dataInizio}`.toLowerCase();
-                if (searchable.includes(query)) {
-                    risultati.push({
-                        conto: 'Debiti',
-                        data: d.dataInizio,
-                        categoria: 'Debito',
-                        importo: d.capitaleResiduo,
-                        tipo: 'Uscita',
-                        nota: d.nome,
-                        tipoOggetto: 'debito'
-                    });
-                }
-            });
-
-            // Mostra risultati
-            if (risultati.length === 0) {
-                resultsContainer.innerHTML = `<div class="empty-state"><i class="fas fa-search"></i> Nessun risultato trovato</div>`;
-            } else {
-                let html = '';
-                risultati.slice(0, 20).forEach(r => {
-                    const colore = r.tipo === 'Entrata' ? 'positive' : 'negative';
-                    html += `
-                    <div class="result-item">
-                        <div class="info">
-                            <div class="title">${sanitizeHTML(r.categoria)}</div>
-                            <div class="meta">${sanitizeHTML(r.conto)} · ${r.data}${r.nota ? ' · ' + sanitizeHTML(r.nota) : ''}</div>
-                        </div>
-                        <div class="amount ${colore}">${r.importo.toFixed(2)}€</div>
-                    </div>
-                    `;
-                });
-                resultsContainer.innerHTML = html;
-            }
-            resultsContainer.style.display = 'block';
         }
 
         // ==========================================
@@ -4149,13 +3925,13 @@
                     <td>
                         <small style="color:var(--text-muted);">${sanitizeHTML(s.data)}</small><br>
                         <strong>${sanitizeHTML(s.cat)}</strong>
-                        ${s.girocontoId ? `<span class="badge-giroconto"><i class="fas fa-exchange-alt"></i> Giroconto</span>` : ''}
+                        ${s.girocontoId ? `<span class="badge-giroconto">↔ Giroconto</span>` : ''}
                         <br><small style="color:var(--text-secondary);">${sanitizeHTML(s.nota || '')}</small>
                     </td>
                     <td style="text-align:right; white-space:nowrap;">
                         <span class="${s.tipo === 'Entrata' ? 'positivo':'negativo'}">${s.imp.toFixed(2)}€</span>
-                        <span class="action-icon" onclick="preparaModifica(${s.indexOrig})"><i class="fas fa-edit"></i></span>
-                        <span class="action-icon" onclick="eliminaRiga(${s.indexOrig})"><i class="fas fa-trash"></i></span>
+                        <span class="action-icon" onclick="preparaModifica(${s.indexOrig})">✏️</span>
+                        <span class="action-icon" onclick="eliminaRiga(${s.indexOrig})">🗑️</span>
                     </td>
                 </tr>
                 `);
@@ -4168,8 +3944,8 @@
                 div.className = 'mese-container';
                 div.innerHTML = `
                 <div class="mese-header" onclick="this.parentElement.classList.toggle('attivo')">
-                    <span><i class="fas fa-calendar-alt"></i> ${meseStr}</span>
-                    <span style="font-size:0.8rem;opacity:0.6;">${righeHtml.length} movimenti <i class="fas fa-chevron-down"></i></span>
+                    <span>📅 ${meseStr}</span>
+                    <span style="font-size:0.8rem;opacity:0.6;">${righeHtml.length} movimenti ▾</span>
                 </div>
                 <div class="mese-content"><table>${righeHtml.join("")}</table></div>
                 `;
@@ -4224,8 +4000,8 @@
                             <div class="saldo-center">
                                 <div class="saldo-nome">
                                     ${conto.icona || '🏦'} ${sanitizeHTML(conto.nome)}
-                                    <button class="rename-btn" onclick="apriModalRinominaConto('${conto.id}')" title="Rinomina conto"><i class="fas fa-edit"></i></button>
-                                    <button class="btn-privacy" onclick="togglePrivacy()" title="Attiva/disattiva privacy"><i class="fas fa-eye${privacy ? '-slash' : ''}"></i></button>
+                                    <button class="rename-btn" onclick="apriModalRinominaConto('${conto.id}')" title="Rinomina conto">✏️</button>
+                                    <button class="btn-privacy" onclick="togglePrivacy()" title="Attiva/disattiva privacy">👁️</button>
                                 </div>
                                 <h1 id="saldo-cifra-${conto.id}">0.00 €</h1>
                             </div>
@@ -4240,26 +4016,26 @@
                             <div class="section section-divider">
                                 <!-- Nuova Operazione con CAL a destra -->
                                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; width:100%;">
-                                    <h3 id="form-label-${conto.id}" style="margin:0;"><i class="fas fa-pen"></i> Nuova Operazione</h3>
-                                    <button class="btn-modern" onclick="apriCalcolatrice()" style="flex:0; padding:8px 16px;"><i class="fas fa-calculator"></i> CAL</button>
+                                    <h3 id="form-label-${conto.id}" style="margin:0;">✍️ Nuova Operazione</h3>
+                                    <button class="btn-modern" onclick="apriCalcolatrice()" style="flex:0; padding:8px 16px;">🧮 CAL</button>
                                 </div>
                                 <input type="hidden" id="edit-index-${conto.id}" value="-1">
                                 <select id="tipo-${conto.id}" onchange="aggiornaCategorie()">
-                                    <option value="Entrata"><i class="fas fa-arrow-up"></i> Entrata</option>
-                                    <option value="Uscita"><i class="fas fa-arrow-down"></i> Uscita</option>
+                                    <option value="Entrata">📈 Entrata</option>
+                                    <option value="Uscita">📉 Uscita</option>
                                 </select>
                                 <input type="date" id="data-${conto.id}">
                                 <div style="display:flex; gap:6px; align-items:center; width:100%;">
                                     <select id="categoria-${conto.id}" style="flex:1;"></select>
-                                    <button class="btn-modern" onclick="creaCategoria()" style="flex:0; padding:8px 12px;"><i class="fas fa-plus"></i></button>
-                                    <button class="btn-modern btn-danger" onclick="eliminaCategoria()" style="flex:0; padding:8px 12px;"><i class="fas fa-minus"></i></button>
-                                    <button class="btn-modern" onclick="modificaCategoria()" style="flex:0; padding:8px 12px;"><i class="fas fa-edit"></i></button>
+                                    <button class="btn-modern" onclick="creaCategoria()" style="flex:0; padding:8px 12px;">➕</button>
+                                    <button class="btn-modern btn-danger" onclick="eliminaCategoria()" style="flex:0; padding:8px 12px;">➖</button>
+                                    <button class="btn-modern" onclick="modificaCategoria()" style="flex:0; padding:8px 12px;">✏️</button>
                                 </div>
                                 <input type="number" id="importo-${conto.id}" placeholder="Importo (€)" step="0.01" inputmode="decimal">
                                 <input type="text" id="nota-${conto.id}" placeholder="Nota">
-                                <button class="btn-modern full-width" id="btn-salva-${conto.id}" onclick="aggiungiOperazione()"><i class="fas fa-save"></i> SALVA MOVIMENTO</button>
+                                <button class="btn-modern full-width" id="btn-salva-${conto.id}" onclick="aggiungiOperazione()">SALVA MOVIMENTO</button>
                                 
-                                <h3 style="margin-top:30px;"><i class="fas fa-calendar-plus"></i> Scadenze Future</h3>
+                                <h3 style="margin-top:30px;">📅 Scadenze Future</h3>
                                 <input type="date" id="data-futura-${conto.id}">
                                 <input type="text" id="desc-futura-${conto.id}" placeholder="Descrizione">
                                 <input type="number" id="imp-futura-${conto.id}" placeholder="Importo stimato (€)" inputmode="decimal">
@@ -4269,47 +4045,47 @@
                                         Includi nel calcolo del saldo futuro
                                     </label>
                                 </div>
-                                <button class="btn-modern full-width" id="btn-salva-futura-${conto.id}" onclick="aggiungiSpesaFutura()"><i class="fas fa-plus-circle"></i> Inserisci Spesa Futura</button>
+                                <button class="btn-modern full-width" id="btn-salva-futura-${conto.id}" onclick="aggiungiSpesaFutura()">Inserisci Spesa Futura</button>
                                 <details style="margin-top:12px; background:var(--bg-input); border:1px solid var(--border-light); border-radius:var(--radius-md); padding:12px;">
-                                    <summary style="cursor:pointer; font-weight:600; color:var(--text-secondary); outline:none; user-select:none;"><i class="fas fa-list"></i> Mostra Spese Future</summary>
+                                    <summary style="cursor:pointer; font-weight:600; color:var(--text-secondary); outline:none; user-select:none;">📋 Mostra Spese Future</summary>
                                     <div id="lista-future-${conto.id}" style="margin-top:10px; padding-top:10px; border-top:1px solid var(--border-light);"></div>
                                 </details>
                                 <div class="budget-container-desktop">
                                     <div class="budget-container">
-                                        <h4 style="margin-top:0; margin-bottom:12px;"><i class="fas fa-bullseye"></i> Budget Mensili</h4>
+                                        <h4 style="margin-top:0; margin-bottom:12px;">🎯 Budget Mensili</h4>
                                         <div class="budget-row">
                                             <select id="budget-categoria-${conto.id}"></select>
                                             <input type="number" id="budget-importo-${conto.id}" placeholder="Limite (€)" step="1" inputmode="decimal">
-                                            <button onclick="impostaBudget()"><i class="fas fa-check"></i> Imposta</button>
+                                            <button onclick="impostaBudget()">Imposta</button>
                                         </div>
                                         <div id="lista-budget-${conto.id}"></div>
                                     </div>
                                 </div>
                             </div>
                             <div class="section">
-                                <h3 style="margin-top:0;"><i class="fas fa-history"></i> Storico</h3>
+                                <h3 style="margin-top:0;">🕒 Storico</h3>
                                 <div class="filtro-mobile">
                                     <div class="filtro-riga">
-                                        <div class="filtro-gruppo"><label><i class="fas fa-calendar-day"></i> Da</label><input type="date" id="filtro-data-da-${conto.id}"></div>
-                                        <div class="filtro-gruppo"><label><i class="fas fa-calendar-day"></i> A</label><input type="date" id="filtro-data-a-${conto.id}"></div>
+                                        <div class="filtro-gruppo"><label>📅 Da</label><input type="date" id="filtro-data-da-${conto.id}"></div>
+                                        <div class="filtro-gruppo"><label>📅 A</label><input type="date" id="filtro-data-a-${conto.id}"></div>
                                     </div>
                                     <div class="filtro-riga">
-                                        <div class="filtro-gruppo"><label><i class="fas fa-filter"></i></label><select id="filtro-tipo-${conto.id}"><option value="">Tutti</option><option value="Entrata"><i class="fas fa-arrow-up"></i> Entrate</option><option value="Uscita"><i class="fas fa-arrow-down"></i> Uscite</option></select></div>
+                                        <div class="filtro-gruppo"><label>📊</label><select id="filtro-tipo-${conto.id}"><option value="">Tutti</option><option value="Entrata">📈 Entrate</option><option value="Uscita">📉 Uscite</option></select></div>
                                     </div>
                                     <div class="filtro-azioni">
-                                        <button class="btn-filtra" onclick="applicaFiltri()"><i class="fas fa-search"></i> Filtra</button>
-                                        <button class="btn-reset-filtro" onclick="resetFiltri()"><i class="fas fa-times"></i> Reset</button>
+                                        <button class="btn-filtra" onclick="applicaFiltri()">🔍 Filtra</button>
+                                        <button class="btn-reset-filtro" onclick="resetFiltri()">✕ Reset</button>
                                     </div>
-                                    <div class="filtro-ricerca"><span class="lente"><i class="fas fa-search"></i></span><input type="text" id="filtroRicerca-${conto.id}" placeholder="Cerca..."></div>
+                                    <div class="filtro-ricerca"><span class="lente">🔍</span><input type="text" id="filtroRicerca-${conto.id}" placeholder="Cerca..."></div>
                                 </div>
                                 <div id="lista-transazioni-${conto.id}"></div>
                                 <div class="budget-container-mobile">
                                     <div class="budget-container">
-                                        <h4 style="margin-top:0; margin-bottom:12px;"><i class="fas fa-bullseye"></i> Budget Mensili</h4>
+                                        <h4 style="margin-top:0; margin-bottom:12px;">🎯 Budget Mensili</h4>
                                         <div class="budget-row">
                                             <select id="budget-categoria-mobile-${conto.id}"></select>
                                             <input type="number" id="budget-importo-mobile-${conto.id}" placeholder="Limite (€)" step="1" inputmode="decimal">
-                                            <button onclick="impostaBudgetMobile()"><i class="fas fa-check"></i> Imposta</button>
+                                            <button onclick="impostaBudgetMobile()">Imposta</button>
                                         </div>
                                         <div id="lista-budget-mobile-${conto.id}"></div>
                                     </div>
@@ -4317,18 +4093,18 @@
                                 <!-- GESTIONE DEBITI - ACCORDION -->
                                 <div class="debiti-container">
                                     <div class="debiti-header" onclick="toggleDebiti('${conto.id}')">
-                                        <h3><i class="fas fa-hand-holding-usd"></i> Gestione Debiti</h3>
-                                        <span class="debiti-toggle-icon ${isDebitiOpen ? 'open' : ''}" id="debiti-toggle-icon-${conto.id}"><i class="fas fa-chevron-right"></i></span>
+                                        <h3>🏦 Gestione Debiti</h3>
+                                        <span class="debiti-toggle-icon ${isDebitiOpen ? 'open' : ''}" id="debiti-toggle-icon-${conto.id}">▶</span>
                                     </div>
-                                    <div class="debiti-content ${isDebitiOpen ? 'open' : ''}" id="debiti-content-${conto.id}">
+                                    <div class="debiti-content" id="debiti-content-${conto.id}" style="display:${isDebitiOpen ? 'block' : 'none'};">
                                         <div class="debito-form" id="debito-form">
-                                            <div class="form-group full-width"><label><i class="fas fa-tag"></i> Nome Debito</label><input type="text" id="debito-nome" placeholder="es. Mutuo, Prestito..."></div>
-                                            <div class="form-group"><label><i class="fas fa-coins"></i> Capitale</label><input type="number" id="debito-capitale" placeholder="€" step="1"></div>
-                                            <div class="form-group"><label><i class="fas fa-percent"></i> Tasso Annuo %</label><input type="number" id="debito-tasso" placeholder="%" step="0.1"></div>
-                                            <div class="form-group"><label><i class="fas fa-calendar-alt"></i> Rata Mensile</label><input type="number" id="debito-rata" placeholder="€" step="1"></div>
-                                            <div class="form-group"><label><i class="fas fa-calendar-check"></i> Data Inizio</label><input type="date" id="debito-data"></div>
-                                            <button class="btn-salva-debito" id="btn-salva-debito" onclick="aggiungiDebito()"><i class="fas fa-plus"></i> Aggiungi Debito</button>
-                                            <button class="btn-annulla-debito" onclick="resetFormDebito()" style="display:${debitoEditIndex !== -1 ? 'block' : 'none'};"><i class="fas fa-times"></i> Annulla</button>
+                                            <div class="form-group full-width"><label>📝 Nome Debito</label><input type="text" id="debito-nome" placeholder="es. Mutuo, Prestito..."></div>
+                                            <div class="form-group"><label>💰 Capitale</label><input type="number" id="debito-capitale" placeholder="€" step="1"></div>
+                                            <div class="form-group"><label>📊 Tasso Annuo %</label><input type="number" id="debito-tasso" placeholder="%" step="0.1"></div>
+                                            <div class="form-group"><label>📅 Rata Mensile</label><input type="number" id="debito-rata" placeholder="€" step="1"></div>
+                                            <div class="form-group"><label>📅 Data Inizio</label><input type="date" id="debito-data"></div>
+                                            <button class="btn-salva-debito" id="btn-salva-debito" onclick="aggiungiDebito()">➕ Aggiungi Debito</button>
+                                            <button class="btn-annulla-debito" onclick="resetFormDebito()" style="display:${debitoEditIndex !== -1 ? 'block' : 'none'};">✖ Annulla</button>
                                         </div>
                                         <div id="debiti-lista-${conto.id}"></div>
                                     </div>
@@ -4364,7 +4140,7 @@
             div.dataset.contoId = 'aggiungi-conto';
             div.innerHTML = `
             <div class="aggiungi-conto-card" onclick="apriModalAggiungiConto()">
-                <span class="plus-icon"><i class="fas fa-plus-circle"></i></span>
+                <span class="plus-icon">➕</span>
                 <div class="plus-title">Nuovo Conto</div>
                 <div class="plus-sub">Clicca per aggiungere un nuovo conto</div>
             </div>
@@ -4395,7 +4171,7 @@
             if (conti.length === 0) {
                 container.innerHTML = `
                 <div class="utenza-empty">
-                    <span class="icon"><i class="fas fa-university"></i></span>
+                    <span class="icon">🏦</span>
                     <p><strong>Nessun conto creato</strong></p>
                     <p style="font-size:0.8rem;">Clicca sul pulsante + in basso per crearne uno</p>
                 </div>
@@ -4642,7 +4418,7 @@
             if (giroconti.length === 0) {
                 container.innerHTML = `
                 <div class="utenza-empty">
-                    <span class="icon"><i class="fas fa-inbox"></i></span>
+                    <span class="icon">📭</span>
                     <p><strong>Nessun giroconto effettuato</strong></p>
                 </div>
                 `;
@@ -4651,12 +4427,12 @@
                 <table class="storico-tabella">
                     <thead>
                         <tr>
-                            <th><i class="fas fa-calendar-alt"></i> Data</th>
-                            <th><i class="fas fa-arrow-right"></i> Da</th>
-                            <th><i class="fas fa-arrow-left"></i> A</th>
-                            <th><i class="fas fa-coins"></i> Importo</th>
-                            <th><i class="fas fa-comment"></i> Descrizione</th>
-                            <th style="text-align:center;"><i class="fas fa-tools"></i> Azioni</th>
+                            <th>Data</th>
+                            <th>Da</th>
+                            <th>→ A</th>
+                            <th>Importo</th>
+                            <th>Descrizione</th>
+                            <th style="text-align:center;">Azioni</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -4670,7 +4446,7 @@
                         <td class="amount">${g.amount.toFixed(2)}€</td>
                         <td>${sanitizeHTML(g.description) || '-'}</td>
                         <td style="text-align:center;">
-                            <button class="btn-elimina-giroconto" onclick="eliminaGiroconto('${g.id}')" title="Elimina giroconto"><i class="fas fa-trash"></i></button>
+                            <button class="btn-elimina-giroconto" onclick="eliminaGiroconto('${g.id}')" title="Elimina giroconto">🗑️</button>
                         </td>
                     </tr>
                     `;
@@ -4816,9 +4592,9 @@
                     </div>
                     <div style="text-align:right; flex-shrink:0; display:flex; align-items:center; gap:8px;">
                         <span class="negativo" style="font-weight:700;">${valore.toFixed(2)}€</span>
-                        <span onclick="confermaFutura(${idx})" style="cursor:pointer; font-size:1.1rem; padding:2px;"><i class="fas fa-check-circle" style="color:var(--emerald);"></i></span>
-                        <span onclick="preparaModificaFutura(${idx})" style="cursor:pointer; font-size:1.1rem; padding:2px;"><i class="fas fa-edit"></i></span>
-                        <span onclick="eliminaFutura(${idx})" style="cursor:pointer; font-size:1.1rem; padding:2px;"><i class="fas fa-trash"></i></span>
+                        <span onclick="confermaFutura(${idx})" style="cursor:pointer; font-size:1.1rem; padding:2px;">✅</span>
+                        <span onclick="preparaModificaFutura(${idx})" style="cursor:pointer; font-size:1.1rem; padding:2px;">✏️</span>
+                        <span onclick="eliminaFutura(${idx})" style="cursor:pointer; font-size:1.1rem; padding:2px;">🗑️</span>
                     </div>
                 </div>
                 `;
@@ -5032,7 +4808,7 @@
                             <div style="padding:16px; background:var(--bg-card); border:1px solid var(--border-light); border-radius:var(--radius-md); margin-bottom:12px; box-shadow:var(--shadow-sm);">
                                 <a href="${item.link}" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;">
                                     <h4 style="margin:0 0 4px 0; font-size:0.95rem; color:var(--text-primary);">${sanitizeHTML(item.title)}</h4>
-                                    <p style="margin:0; font-size:0.75rem; color:var(--text-muted);"><i class="fas fa-calendar-alt"></i> ${new Date(item.pubDate).toLocaleDateString('it-IT')} - ${fonte.nome}</p>
+                                    <p style="margin:0; font-size:0.75rem; color:var(--text-muted);">${new Date(item.pubDate).toLocaleDateString('it-IT')} - ${fonte.nome}</p>
                                 </a>
                             </div>
                             `;
@@ -5068,7 +4844,7 @@
         function caricaSelectListe() {
             const select = document.getElementById("lista-selezionata");
             if (!select) return;
-            select.innerHTML = '<option value=""><i class="fas fa-plus-circle"></i> Crea nuova lista...</option>';
+            select.innerHTML = '<option value="">➕ Crea nuova lista...</option>';
             Object.keys(listeSpese).forEach(id => {
                 const option = document.createElement('option');
                 option.value = id;
@@ -5203,11 +4979,11 @@
                 `<button class="btn-filtro-cat ${filtroListaAttivo === cat ? 'attivo' : ''}" onclick="filtraLista('${cat}', event)" style="background:${filtroListaAttivo === cat ? 'var(--blue)' : 'var(--bg-input)'}; color:${filtroListaAttivo === cat ? 'white' : 'var(--text-secondary)'}; border:1px solid var(--border-light); padding:4px 14px; border-radius:20px; font-size:0.75rem; cursor:pointer; transition:var(--transition);">${cat}</button>`
             ).join('');
             if (lista.spese.length === 0) {
-                container.innerHTML = `<div class="utenza-empty"><span class="icon"><i class="fas fa-list-ul"></i></span><p><strong>Nessuna spesa</strong></p></div>`;
+                container.innerHTML = `<div class="utenza-empty"><span class="icon">📋</span><p><strong>Nessuna spesa</strong></p></div>`;
                 return;
             }
             if (speseLista.length === 0) {
-                container.innerHTML = `<div class="utenza-empty"><span class="icon"><i class="fas fa-search"></i></span><p><strong>Nessuna spesa per "${filtroListaAttivo}"</strong></p></div>`;
+                container.innerHTML = `<div class="utenza-empty"><span class="icon">🔍</span><p><strong>Nessuna spesa per "${filtroListaAttivo}"</strong></p></div>`;
                 return;
             }
             const gruppi = {};
@@ -5220,7 +4996,7 @@
                 items.forEach(s => subtotale += s.importo);
                 html += `<div style="margin-bottom:16px;"><div class="lista-totale-categoria" style="background:var(--bg-input); border-radius:var(--radius-sm); padding:6px 12px; display:flex; justify-content:space-between; font-weight:600; margin-bottom:6px;"><span>📂 ${cat}</span><span>${subtotale.toFixed(2)} €</span></div>`;
                 items.forEach(s => {
-                    html += `<div class="lista-spesa-card"><div class="info"><div class="data"><i class="fas fa-calendar-alt"></i> ${s.data}</div><div class="desc">${sanitizeHTML(s.descrizione)}</div><span class="categoria">${sanitizeHTML(s.categoria)}</span></div><div class="importo">${s.importo.toFixed(2)} €</div><div class="azioni"><span onclick="eliminaSpesaLista(${s.id})"><i class="fas fa-trash"></i></span></div></div>`;
+                    html += `<div class="lista-spesa-card"><div class="info"><div class="data">📅 ${s.data}</div><div class="desc">${sanitizeHTML(s.descrizione)}</div><span class="categoria">${sanitizeHTML(s.categoria)}</span></div><div class="importo">${s.importo.toFixed(2)} €</div><div class="azioni"><span onclick="eliminaSpesaLista(${s.id})">🗑️</span></div></div>`;
                 });
                 html += `</div>`;
             });
@@ -5755,7 +5531,6 @@
         window.cambiaLingua = cambiaLingua;
         window.cambiaValuta = cambiaValuta;
         window.ripristinaStatoSubmenu = ripristinaStatoSubmenu;
-        window.ricercaGlobale = ricercaGlobale;
 
         console.log('✅ MoneyTrack 2.1 - Tutte le funzionalità caricate!');
     </script>
