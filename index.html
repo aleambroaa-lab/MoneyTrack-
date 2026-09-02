@@ -2480,7 +2480,12 @@
             const modal = document.getElementById('widget-modal');
             modal.style.display = 'flex';
             document.body.style.overflow = 'hidden';
-            document.getElementById('myDropdown').classList.remove('show');
+            // Chiudi il menu principale
+            const dropdown = document.getElementById("myDropdown");
+            if (dropdown) {
+                dropdown.classList.remove("show");
+                dropdown.style.display = "";
+            }
             renderizzaListaWidget();
         }
 
@@ -2877,6 +2882,12 @@
         function loginbtn() {
             document.getElementById("auth-modal").style.display = "flex";
             document.getElementById("auth-error").style.display = "none";
+            // Chiudi il menu principale
+            const dropdown = document.getElementById("myDropdown");
+            if (dropdown) {
+                dropdown.classList.remove("show");
+                dropdown.style.display = "";
+            }
         }
 
         function chiudiAuthModal() {
@@ -3190,7 +3201,12 @@
         function apriGuida() {
             document.getElementById('guide-modal').style.display = 'flex';
             document.body.style.overflow = 'hidden';
-            document.getElementById('myDropdown').classList.remove('show');
+            // Chiudi il menu principale
+            const dropdown = document.getElementById("myDropdown");
+            if (dropdown) {
+                dropdown.classList.remove("show");
+                dropdown.style.display = "";
+            }
         }
 
         function chiudiGuida() {
@@ -3297,6 +3313,17 @@
             } else {
                 console.warn("Pulsante menu non trovato!");
             }
+
+            // Chiudi il menu quando si clicca su un link del dropdown
+            document.querySelectorAll('#myDropdown a').forEach(link => {
+                link.addEventListener('click', function() {
+                    const dropdown = document.getElementById("myDropdown");
+                    if (dropdown) {
+                        dropdown.classList.remove("show");
+                        dropdown.style.display = "";
+                    }
+                });
+            });
         });
 
         // Funzione per aprire/chiudere sottomenu
@@ -3359,6 +3386,13 @@
         }
 
         function mostraPagina(p) {
+            // Chiudi il menu principale
+            const dropdown = document.getElementById("myDropdown");
+            if (dropdown) {
+                dropdown.classList.remove("show");
+                dropdown.style.display = "";
+            }
+
             document.querySelectorAll('#pagina-backup, #pagina-analisi, #pagina-news, #pagina-liste, #sezione-scadenze, #pagina-conti').forEach(el => el.style.display = 'none');
             const contiScroll = document.getElementById('contiScrollContainer');
             const selector = document.getElementById('contoSelector');
