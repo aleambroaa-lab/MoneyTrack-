@@ -163,11 +163,19 @@
         .submenu-content .submenu-content .submenu-content a { padding-left: 56px !important; }
         .dropdown-divider { height: 1px; background: var(--border-light); margin: 4px 12px; }
 
+        /* ===== PATRIMONIO / PREVISIONE / SALDO – BLOCCO UNICO ===== */
         .patrimonio-totale {
-            max-width: 1200px; margin: 16px auto 8px; padding: 16px 24px;
-            background: var(--bg-card); border-radius: var(--radius-md);
-            box-shadow: var(--shadow-sm); border: 1px solid var(--border-light);
-            display: flex; justify-content: space-between; align-items: center;
+            max-width: 1200px;
+            margin: 12px auto 0;
+            padding: 14px 24px;
+            background: var(--bg-card);
+            border-radius: var(--radius-md) var(--radius-md) 0 0;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-light);
+            border-bottom: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             transition: background 0.3s, border 0.3s;
         }
         .patrimonio-totale .label { font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); }
@@ -176,20 +184,33 @@
         .patrimonio-totale .value.negativo { color: var(--red); }
 
         #previsione-globale {
-            max-width: 1200px; margin: 8px auto; padding: 16px 24px;
-            background: var(--bg-card); border: 1px solid var(--border-light);
-            border-radius: var(--radius-md); box-shadow: var(--shadow-sm);
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 12px 24px;
+            background: var(--bg-card);
+            border-left: 1px solid var(--border-light);
+            border-right: 1px solid var(--border-light);
+            border-top: none;
+            border-bottom: none;
+            border-radius: 0;
+            box-shadow: none;
             transition: background 0.3s, border 0.3s;
         }
+
+        .conti-scroll-container {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none;
+            gap: 0;
+            width: 100%;
+            margin-top: 0;
+        }
+        .conti-scroll-container::-webkit-scrollbar { display: none; }
 
         .conto-selector { display: none !important; }
         .container { max-width: 1200px; margin: 0 auto; padding: 0 16px 40px; }
 
-        .conti-scroll-container {
-            display: flex; overflow-x: auto; scroll-snap-type: x mandatory;
-            scrollbar-width: none; gap: 0; width: 100%;
-        }
-        .conti-scroll-container::-webkit-scrollbar { display: none; }
         .conto-page { flex: 0 0 100%; scroll-snap-align: start; padding: 0 16px 24px; box-sizing: border-box; }
         .conto-page-aggiungi {
             flex: 0 0 100%; scroll-snap-align: start;
@@ -207,10 +228,20 @@
         .aggiungi-conto-card .plus-sub { font-size: 0.85rem; color: var(--text-muted); margin-top: 4px; }
 
         .header-saldo {
-            background: var(--bg-card); border: 1px solid var(--border-light);
-            border-radius: var(--radius-md); padding: 24px 20px; margin-top: 12px;
-            box-shadow: var(--shadow-sm); display: flex; justify-content: space-between;
-            align-items: center; min-height: 100px; transition: background 0.3s, border 0.3s;
+            background: var(--bg-card);
+            border-left: 1px solid var(--border-light);
+            border-right: 1px solid var(--border-light);
+            border-bottom: 1px solid var(--border-light);
+            border-top: none;
+            border-radius: 0 0 var(--radius-md) var(--radius-md);
+            padding: 20px;
+            margin-top: 0;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            min-height: 90px;
+            transition: background 0.3s, border 0.3s;
         }
         .header-saldo .saldo-center { flex: 1; text-align: center; }
         .saldo-nome { font-size: 1rem; font-weight: 600; color: var(--text-secondary); display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; }
@@ -482,8 +513,10 @@
             .debito-form { grid-template-columns: 1fr; }
             .debito-card .debito-dettagli { grid-template-columns: 1fr 1fr; }
             .patrimonio-totale .value { font-size: 1.2rem; }
+            .patrimonio-totale { padding: 10px 16px; }
+            #previsione-globale { padding: 10px 16px; }
             .header-saldo h1 { font-size: 2rem; }
-            .header-saldo { flex-direction: column; align-items: stretch; text-align: center; }
+            .header-saldo { flex-direction: column; align-items: stretch; text-align: center; padding: 16px 12px; }
             .header-saldo .saldo-center { order: 2; }
             .header-saldo .saldo-side { order: 1; justify-content: center; margin-bottom: 6px; }
             .dashboard-widget { min-width: 200px; }
@@ -518,7 +551,6 @@
             .desktop-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
             .table-container, .mese-content, #lista-transazioni-* { overflow-x: auto !important; -webkit-overflow-scrolling: touch; display: block !important; width: 100% !important; }
             .mese-content table { min-width: 300px; width: 100% !important; }
-            .header-saldo { padding: 16px 12px !important; }
             .header-saldo h1 { font-size: 1.6rem !important; }
             input, select { font-size: 0.85rem !important; padding: 8px 10px !important; }
             .debito-card .debito-dettagli { grid-template-columns: 1fr 1fr !important; gap: 4px !important; }
@@ -653,7 +685,7 @@
         <span class="value" id="patrimonioValore">0.00 €</span>
     </div>
 
-    <div id="previsione-globale" class="info-previsione" style="max-width:1200px; margin:8px auto; padding:16px 24px;"></div>
+    <div id="previsione-globale" class="info-previsione"></div>
 
     <div class="conto-selector" id="contoSelector" style="display:none !important;"></div>
 
@@ -1285,7 +1317,7 @@
         function salvaDebiti() { localStorage.setItem("moneyTrack_debiti", JSON.stringify(debiti)); }
 
         // ==========================================
-        // 🎨 FUNZIONE POPOLA CONTO (FIX PRINCIPALE)
+        // 🎨 POPOLA CONTO
         // ==========================================
         function popolaConto(contoId) {
             const conto = getDatiConto(contoId);
@@ -1295,10 +1327,8 @@
             const contoFuture = conto.future || [];
             const contoCustomCats = conto.customCats || JSON.parse(JSON.stringify(DEFAULT_CATS));
 
-            // Aggiorna categorie per questo conto
             aggiornaCategoriePerConto(contoId);
 
-            // Popola la lista transazioni
             const l = document.getElementById("lista-transazioni-" + contoId);
             if (l) {
                 l.innerHTML = "";
@@ -1373,7 +1403,6 @@
                 aggiornaBudgetProgressContainer("lista-budget-mobile-" + contoId, catsUscita);
             }
 
-            // Popola spese future
             const futureContainer = document.getElementById("lista-future-" + contoId);
             if (futureContainer) {
                 futureContainer.innerHTML = "";
@@ -1400,7 +1429,6 @@
                 }
             }
 
-            // Inizializza le select budget per questo conto
             const budgetSelect = document.getElementById("budget-categoria-" + contoId);
             if (budgetSelect) {
                 const cats = contoCustomCats["Uscita"] && contoCustomCats["Uscita"].length > 0 ? contoCustomCats["Uscita"] : DEFAULT_CATS["Uscita"];
@@ -1417,7 +1445,6 @@
             const dataFuturaInput = document.getElementById("data-futura-" + contoId);
             if (dataFuturaInput && !dataFuturaInput.value) dataFuturaInput.value = new Date().toISOString().split('T')[0];
 
-            // Popola debiti per questo conto
             renderizzaDebitiPerConto(contoId);
         }
 
@@ -1534,6 +1561,7 @@
             popolaConto(contoId);
             aggiornaPatrimonio();
             aggiornaPaginaConti();
+            aggiornaApp();
             mostraToast('✅ Movimento aggiunto!', 'success');
             if (currentUser) syncDatiSuSupabase();
         }
@@ -1572,6 +1600,7 @@
                 popolaConto(contoId);
                 aggiornaPatrimonio();
                 aggiornaPaginaConti();
+                aggiornaApp();
                 mostraToast('🗑️ Transazione eliminata', 'info');
                 if (currentUser) syncDatiSuSupabase();
             }
@@ -1598,6 +1627,7 @@
             document.getElementById("imp-futura-" + contoId).value = "";
             if (checkbox) checkbox.checked = true;
             popolaConto(contoId);
+            aggiornaApp();
             mostraToast('✅ Spesa futura aggiunta!', 'success');
             if (currentUser) syncDatiSuSupabase();
         }
@@ -1626,6 +1656,7 @@
             popolaConto(contoId);
             aggiornaPatrimonio();
             aggiornaPaginaConti();
+            aggiornaApp();
             mostraToast('✅ Spesa futura confermata!', 'success');
             if (currentUser) syncDatiSuSupabase();
         }
@@ -1637,6 +1668,7 @@
                 conto.future.splice(idx, 1);
                 salvaDatiApp();
                 popolaConto(contoId);
+                aggiornaApp();
                 mostraToast('🗑️ Spesa futura eliminata', 'info');
                 if (currentUser) syncDatiSuSupabase();
             }
@@ -1691,7 +1723,6 @@
             const container = document.getElementById(containerId);
             if (!container) return;
             container.innerHTML = "";
-            // Estrai contoId dal containerId
             const match = containerId.match(/lista-budget(?:-mobile)?-(.+)$/);
             const contoId = match ? match[1] : contoAttivoId;
             const conto = getDatiConto(contoId);
@@ -1768,7 +1799,7 @@
         }
 
         // ==========================================
-        // 🏦 DEBITI - CON TOGGLE
+        // 🏦 DEBITI
         // ==========================================
         function getDebitiOpenState(contoId) {
             const key = 'moneyTrack_debiti_open_' + contoId;
@@ -1937,7 +1968,7 @@
         // 📊 AGGIORNA APP (FIX)
         // ==========================================
         function aggiornaApp() {
-            // Popola tutti i conti per garantire che nessuno rimanga vuoto
+            // Popola tutti i conti
             const conti = getConti();
             conti.forEach(conto => {
                 popolaConto(conto.id);
@@ -1945,6 +1976,17 @@
             aggiornaPatrimonio();
             renderizzaDashboardPersonalizzata();
             aggiornaPaginaConti();
+            
+            // ✅ FIX: Calcola la previsione globale basandosi sul saldo del conto attivo
+            const conto = getContoAttivo();
+            if (conto) {
+                let saldoConto = 0;
+                (conto.spese || []).forEach(s => {
+                    if (s.tipo === "Entrata") saldoConto += s.imp;
+                    else saldoConto -= s.imp;
+                });
+                calcolaPrevisione(saldoConto);
+            }
         }
 
         function calcolaPrevisione(saldoAttuale) {
@@ -1966,6 +2008,7 @@
 
             const div = document.getElementById("previsione-globale");
             if (!div) return;
+            div.style.display = 'block';
             div.style.textAlign = "left";
             if (privacy) {
                 div.innerHTML = `<small>Previsione fine mese: *** € | Saldo Futuro: *** €</small>`;
@@ -2013,7 +2056,7 @@
         }
 
         // ==========================================
-        // 📊 GESTIONE WIDGET
+        // 📊 WIDGET
         // ==========================================
         function apriGestioneWidget() {
             const modal = document.getElementById('widget-modal');
@@ -2098,14 +2141,10 @@
         }
 
         function renderizzaDashboardPersonalizzata() {
-            const contiScroll = document.getElementById('contiScrollContainer');
-            if (!contiScroll) return;
-            // Trova il container del conto attivo
             const contoPage = document.getElementById('conto-page-' + contoAttivoId);
             if (!contoPage) return;
             const container = contoPage.querySelector('#dashboard-personalizzata');
             if (!container) return;
-
             const widgets = [...dashboardLayout].sort((a, b) => a.posizione - b.posizione);
             if (widgets.length === 0) {
                 container.style.display = 'none';
@@ -2672,7 +2711,7 @@
         }
 
         // ==========================================
-        // 🧭 NAVIGAZIONE E MENU
+        // 🧭 NAVIGAZIONE
         // ==========================================
         function toggleMenu() {
             const dropdown = document.getElementById("myDropdown");
@@ -2763,6 +2802,7 @@
                 selector.style.display = 'none';
                 patrimonio.style.display = 'flex';
                 previsioneGlobale.style.display = 'block';
+                previsioneGlobale.style.visibility = 'visible';
                 aggiornaApp();
                 renderizzaDebiti();
                 renderizzaDashboardPersonalizzata();
@@ -2851,9 +2891,6 @@
             }
         }
 
-        // ==========================================
-        // 🏦 RENDERIZZA CONTI (FIX)
-        // ==========================================
         function renderizzaConti() {
             const container = document.getElementById('contiScrollContainer');
             if (!container) return;
@@ -2981,7 +3018,6 @@
             container.innerHTML = html;
             aggiungiPaginaAggiungiConto();
 
-            // ✅ FIX CRITICO: Popola TUTTI i conti, non solo quello attivo
             conti.forEach(conto => {
                 popolaConto(conto.id);
             });
@@ -3006,7 +3042,7 @@
         }
 
         // ==========================================
-        // 📋 PAGINA CONTI - LISTA
+        // 📋 PAGINA CONTI
         // ==========================================
         function aggiornaPaginaConti() {
             const container = document.getElementById('listaContiPagina');
@@ -3133,13 +3169,7 @@
             salvaDatiApp();
             chiudiModalGiroconto();
 
-            // ✅ FIX: Ripopola TUTTI i conti dopo il giroconto
-            const conti = getConti();
-            conti.forEach(conto => {
-                popolaConto(conto.id);
-            });
-            aggiornaPatrimonio();
-            aggiornaPaginaConti();
+            aggiornaApp();
 
             mostraToast(`✅ Giroconto di ${importo.toFixed(2)}€ da "${contoFrom.nome}" a "${contoTo.nome}" completato!`, 'success');
             if (currentUser) syncDatiSuSupabase();
@@ -3167,11 +3197,7 @@
             datiApp.giroconti = giroconti;
             salvaDatiApp();
 
-            // ✅ FIX: Ripopola tutti i conti
-            const conti2 = getConti();
-            conti2.forEach(conto => { popolaConto(conto.id); });
-            aggiornaPatrimonio();
-            aggiornaPaginaConti();
+            aggiornaApp();
             chiudiStoricoGiroconti();
             mostraToast(`🗑️ Giroconto "${giro.fromAccountName} → ${giro.toAccountName}" eliminato`, 'success');
             if (currentUser) syncDatiSuSupabase();
@@ -3235,6 +3261,8 @@
         // 💡 SUGGERIMENTI
         // ==========================================
         function apriPopupSuggerimenti() {
+            const conto = getContoAttivo();
+            const spese = conto ? (conto.spese || []) : [];
             if (spese.length === 0) { alert('💡 Inizia a tracciare le tue spese!'); return; }
             if (privacy) { alert('🔒 Privacy attiva. Disattivala per vedere i suggerimenti.'); return; }
             const oggi = new Date();
@@ -3288,7 +3316,7 @@
         }
 
         // ==========================================
-        // 📤 ESPORTA/IMPORTA DATI
+        // 📤 ESPORTA/IMPORTA
         // ==========================================
         function esportaDati() {
             const backupData = {
@@ -3436,7 +3464,6 @@
             const giorniMese = new Date(anno, mese + 1, 0).getDate();
             let offset = primoGiorno === 0 ? 6 : primoGiorno - 1;
             for (let i = 0; i < offset; i++) grid.innerHTML += `<div class="cal-giorno vuoto"></div>`;
-            // Raccogli tutte le spese future da tutti i conti
             const allFuture = [];
             getConti().forEach(conto => {
                 (conto.future || []).forEach(f => allFuture.push(f));
@@ -3797,6 +3824,9 @@
             aggiornaListaBackup();
             aggiornaPaginaConti();
 
+            // Calcola previsione iniziale
+            aggiornaApp();
+
             if ("Notification" in window && Notification.permission !== "granted" && Notification.permission !== "denied") {
                 Notification.requestPermission();
             }
@@ -3845,7 +3875,6 @@
                 if (activeElement && ['INPUT', 'SELECT', 'TEXTAREA'].includes(activeElement.tagName)) {
                     const id = activeElement.id;
                     if (id && id.includes('-') && (id.includes('importo') || id.includes('nota') || id.includes('data'))) {
-                        // Estrai contoId
                         const match = id.match(/-(\w+)$/);
                         if (match && match[1]) aggiungiOperazionePerConto(match[1]);
                         e.preventDefault();
@@ -3856,6 +3885,53 @@
                 document.querySelectorAll('.modal').forEach(m => { if (m.style.display === 'flex') m.style.display = 'none'; });
             }
         });
+
+        // ==========================================
+        // ✏️ CREA NUOVO CONTO
+        // ==========================================
+        function creaNuovoConto() {
+            const nome = document.getElementById('inputNuovoConto').value.trim();
+            if (!nome) { alert('Inserisci un nome!'); return; }
+            const icona = document.getElementById('iconaNuovoConto').value || '🏦';
+            const id = 'conto_' + Date.now();
+
+            if (!datiApp) datiApp = { conti: {} };
+            if (!datiApp.conti) datiApp.conti = {};
+
+            let customCatsDaUsare;
+            const contoCorrente = contoAttivoId && datiApp.conti[contoAttivoId] ? datiApp.conti[contoAttivoId] : null;
+            if (contoCorrente && contoCorrente.customCats && Object.keys(contoCorrente.customCats).length > 0) {
+                customCatsDaUsare = JSON.parse(JSON.stringify(contoCorrente.customCats));
+            } else {
+                customCatsDaUsare = JSON.parse(JSON.stringify(DEFAULT_CATS));
+            }
+
+            datiApp.conti[id] = {
+                nome: nome, icona: icona,
+                spese: [], future: [],
+                customCats: customCatsDaUsare,
+                budgets: {}, utenze: [], liste: {}
+            };
+
+            salvaDatiApp();
+            contoAttivoId = id;
+            localStorage.setItem("moneyTrack_conto_attivo", contoAttivoId);
+
+            renderizzaConti();
+            renderizzaSelector();
+            aggiornaPatrimonio();
+            renderizzaDebiti();
+            renderizzaDashboardPersonalizzata();
+            caricaSelectListe();
+            aggiornaPaginaConti();
+            aggiornaApp();
+
+            chiudiModalAggiungiConto();
+            mostraToast('✅ Conto "' + nome + '" creato con le stesse categorie!', 'success');
+
+            setTimeout(() => scrollToConto(id), 300);
+            if (currentUser) syncDatiSuSupabase();
+        }
 
         // ==========================================
         // 📌 ESPORTA FUNZIONI GLOBALI
@@ -3967,53 +4043,6 @@
         window.cambiaLingua = cambiaLingua;
         window.cambiaValuta = cambiaValuta;
         window.ripristinaStatoSubmenu = ripristinaStatoSubmenu;
-        window.creaNuovoConto = creaNuovoConto;
-
-        // ==========================================
-        // ✏️ CREA NUOVO CONTO
-        // ==========================================
-        function creaNuovoConto() {
-            const nome = document.getElementById('inputNuovoConto').value.trim();
-            if (!nome) { alert('Inserisci un nome!'); return; }
-            const icona = document.getElementById('iconaNuovoConto').value || '🏦';
-            const id = 'conto_' + Date.now();
-
-            if (!datiApp) datiApp = { conti: {} };
-            if (!datiApp.conti) datiApp.conti = {};
-
-            let customCatsDaUsare;
-            const contoCorrente = contoAttivoId && datiApp.conti[contoAttivoId] ? datiApp.conti[contoAttivoId] : null;
-            if (contoCorrente && contoCorrente.customCats && Object.keys(contoCorrente.customCats).length > 0) {
-                customCatsDaUsare = JSON.parse(JSON.stringify(contoCorrente.customCats));
-            } else {
-                customCatsDaUsare = JSON.parse(JSON.stringify(DEFAULT_CATS));
-            }
-
-            datiApp.conti[id] = {
-                nome: nome, icona: icona,
-                spese: [], future: [],
-                customCats: customCatsDaUsare,
-                budgets: {}, utenze: [], liste: {}
-            };
-
-            salvaDatiApp();
-            contoAttivoId = id;
-            localStorage.setItem("moneyTrack_conto_attivo", contoAttivoId);
-
-            renderizzaConti();
-            renderizzaSelector();
-            aggiornaPatrimonio();
-            renderizzaDebiti();
-            renderizzaDashboardPersonalizzata();
-            caricaSelectListe();
-            aggiornaPaginaConti();
-
-            chiudiModalAggiungiConto();
-            mostraToast('✅ Conto "' + nome + '" creato con le stesse categorie!', 'success');
-
-            setTimeout(() => scrollToConto(id), 300);
-            if (currentUser) syncDatiSuSupabase();
-        }
 
         console.log('✅ MoneyTrack 2.1 - Tutte le funzionalità caricate!');
     </script>
