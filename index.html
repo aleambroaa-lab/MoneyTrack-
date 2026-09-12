@@ -227,6 +227,7 @@
         .aggiungi-conto-card .plus-title { font-weight: 700; font-size: 1.2rem; color: var(--text-primary); }
         .aggiungi-conto-card .plus-sub { font-size: 0.85rem; color: var(--text-muted); margin-top: 4px; }
 
+        /* ===== HEADER SALDO: padding allineato a patrimonio/previsione ===== */
         .header-saldo {
             background: var(--bg-card);
             border-left: 1px solid var(--border-light);
@@ -234,7 +235,7 @@
             border-bottom: 1px solid var(--border-light);
             border-top: none;
             border-radius: 0 0 var(--radius-md) var(--radius-md);
-            padding: 20px;
+            padding: 20px 24px;
             margin-top: 0;
             box-shadow: var(--shadow-sm);
             display: flex;
@@ -390,7 +391,9 @@
         .badge-giroconto { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 0.6rem; font-weight: 700; background: var(--blue-light); color: var(--blue); margin-left: 4px; }
 
         .filtro-mobile { background: var(--bg-card); border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 16px; margin-bottom: 16px; }
-        .filtro-riga { display: flex; gap: 8px; flex-wrap: wrap; }
+        /* ===== FILTRI: righe separate con margine ===== */
+        .filtro-riga { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+        .filtro-riga:last-of-type { margin-bottom: 0; }
         .filtro-gruppo { display: flex; align-items: center; gap: 4px; background: var(--bg-input); border-radius: var(--radius-sm); padding: 2px 8px; flex: 1; min-width: 120px; }
         .filtro-gruppo label { font-size: 0.6rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; margin: 0; }
         .filtro-gruppo input, .filtro-gruppo select { border: none; background: transparent; padding: 8px 4px; font-size: 0.8rem; margin: 0; flex: 1; min-width: 60px; }
@@ -400,10 +403,11 @@
         .btn-filtra:hover { background: #3b56e0; }
         .btn-reset-filtro { background: var(--red); color: white; }
         .btn-reset-filtro:hover { background: #dc2626; }
+        /* ===== RICERCA: lente a destra, testo non coperto ===== */
         .filtro-ricerca { position: relative; margin-top: 8px; }
-        .filtro-ricerca input { padding: 10px 12px 10px 36px; border: 1px solid var(--border-light); border-radius: var(--radius-sm); width: 100%; background: var(--bg-input); color: var(--text-primary); font-size: 0.9rem; outline: none; transition: var(--transition); }
+        .filtro-ricerca input { padding: 10px 40px 10px 12px; border: 1px solid var(--border-light); border-radius: var(--radius-sm); width: 100%; background: var(--bg-input); color: var(--text-primary); font-size: 0.9rem; outline: none; transition: var(--transition); }
         .filtro-ricerca input:focus { border-color: var(--blue); box-shadow: 0 0 0 4px rgba(79,106,245,0.1); }
-        .filtro-ricerca .lente { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); opacity: 0.5; font-size: 0.9rem; }
+        .filtro-ricerca .lente { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); opacity: 0.55; font-size: 0.95rem; pointer-events: none; }
 
         .budget-container { background: var(--bg-card); border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 16px; margin-top: 16px; }
         .budget-item { margin-bottom: 12px; }
@@ -516,7 +520,7 @@
             .patrimonio-totale { padding: 10px 16px; }
             #previsione-globale { padding: 10px 16px; }
             .header-saldo h1 { font-size: 2rem; }
-            .header-saldo { flex-direction: column; align-items: stretch; text-align: center; padding: 16px 12px; }
+            .header-saldo { flex-direction: column; align-items: stretch; text-align: center; padding: 16px 16px; }
             .header-saldo .saldo-center { order: 2; }
             .header-saldo .saldo-side { order: 1; justify-content: center; margin-bottom: 6px; }
             .dashboard-widget { min-width: 200px; }
@@ -2977,7 +2981,7 @@
                                         <button class="btn-filtra" onclick="applicaFiltriPerConto('${conto.id}')">🔍 Filtra</button>
                                         <button class="btn-reset-filtro" onclick="resetFiltriPerConto('${conto.id}')">✕ Reset</button>
                                     </div>
-                                    <div class="filtro-ricerca"><span class="lente">🔍</span><input type="text" id="filtroRicerca-${conto.id}" placeholder="Cerca..." onkeyup="aggiornaAppPerConto('${conto.id}')"></div>
+                                    <div class="filtro-ricerca"><input type="text" id="filtroRicerca-${conto.id}" placeholder="Cerca..." onkeyup="aggiornaAppPerConto('${conto.id}')"><span class="lente">🔍</span></div>
                                 </div>
                                 <div id="lista-transazioni-${conto.id}"></div>
                                 <div class="budget-container-mobile">
