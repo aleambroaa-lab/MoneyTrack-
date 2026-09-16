@@ -520,7 +520,7 @@
             .patrimonio-totale { padding: 10px 16px; }
             #previsione-globale { padding: 10px 16px; }
             .header-saldo h1 { font-size: 2rem; }
-            .header-saldo { flex-direction: column; align-items: stretch; text-align: center; padding: 16px 16px; }
+            .header-saldo { flex-direction: column; align-items: stretch; text-align: center; padding: 14px 16px; }
             .header-saldo .saldo-center { order: 2; }
             .header-saldo .saldo-side { order: 1; justify-content: center; margin-bottom: 6px; }
             .dashboard-widget { min-width: 200px; }
@@ -541,6 +541,9 @@
             .container { padding: 0 8px 20px; }
             .modal-content { padding: 20px; max-width: 100%; }
             .header-saldo h1 { font-size: 1.6rem; }
+            .header-saldo { padding: 12px 16px; }
+            .patrimonio-totale { padding: 10px 16px; }
+            #previsione-globale { padding: 10px 16px; }
             .dashboard-widget { min-width: 160px; padding: 12px; }
             .logo-box img { height: 36px; }
             .center-title .title-main { font-size: 1rem; }
@@ -551,7 +554,11 @@
         }
 
         @media (max-width: 768px) {
-            body, .container, .conto-page, .conto-page-aggiungi { overflow-x: hidden !important; max-width: 100vw !important; padding-left: 8px !important; padding-right: 8px !important; }
+            body, .container, .conto-page-aggiungi { overflow-x: hidden !important; max-width: 100vw !important; padding-left: 8px !important; padding-right: 8px !important; }
+            /* Il conto-page NON deve avere padding orizzontale: così il saldo tocca i bordi come patrimonio/previsione */
+            .conto-page { overflow-x: hidden !important; max-width: 100vw !important; padding-left: 0 !important; padding-right: 0 !important; }
+            /* Il container interno del conto non aggiunge padding extra */
+            .conto-page > .container { padding-left: 0 !important; padding-right: 0 !important; }
             .desktop-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
             .table-container, .mese-content, #lista-transazioni-* { overflow-x: auto !important; -webkit-overflow-scrolling: touch; display: block !important; width: 100% !important; }
             .mese-content table { min-width: 300px; width: 100% !important; }
