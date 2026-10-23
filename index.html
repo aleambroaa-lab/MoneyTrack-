@@ -614,6 +614,140 @@
             50% { transform: translateX(-50%) scale(1.03); }
             100% { transform: translateX(-50%) scale(1); }
         }
+
+        /* ===== ACCESSIBILITÀ: CARATTERI E LOGO PIÙ GRANDI ===== */
+        body {
+            font-size: 17px;
+        }
+
+        /* Logo più grande in alto a sinistra */
+        .logo-box img {
+            height: 66px;
+            border-radius: 16px;
+        }
+
+        /* Titoli e testi principali */
+        .center-title .title-main {
+            font-size: 1.65rem;
+        }
+        .center-title .title-sub {
+            font-size: 0.95rem;
+        }
+        .patrimonio-totale .label {
+            font-size: 0.9rem;
+        }
+        .patrimonio-totale .value {
+            font-size: 1.8rem;
+        }
+        .header-saldo h1 {
+            font-size: 3.2rem;
+        }
+        .saldo-nome {
+            font-size: 1.15rem;
+        }
+        .btn-modern {
+            font-size: 0.85rem;
+        }
+        .btn-back-home {
+            font-size: 1rem;
+        }
+        input, select {
+            font-size: 1.05rem;
+        }
+        label {
+            font-size: 0.85rem;
+        }
+        h3 {
+            font-size: 1.25rem;
+        }
+        h4 {
+            font-size: 1.05rem;
+        }
+        table {
+            font-size: 1rem;
+        }
+        .mese-header {
+            font-size: 1.05rem;
+        }
+        .dropdown-content a {
+            font-size: 1rem;
+        }
+        .submenu-header {
+            font-size: 1rem;
+        }
+        .btn-suggerimenti {
+            font-size: 1.7rem;
+            width: 42px;
+            height: 42px;
+        }
+        .menu-dots {
+            font-size: 1.9rem;
+        }
+        .filtro-gruppo label {
+            font-size: 0.7rem;
+        }
+        .filtro-gruppo input,
+        .filtro-gruppo select {
+            font-size: 0.9rem;
+        }
+        .filtro-azioni button {
+            font-size: 0.85rem;
+        }
+        .filtro-ricerca input {
+            font-size: 1rem;
+        }
+        .budget-info {
+            font-size: 0.95rem;
+        }
+        .debito-azioni button {
+            font-size: 0.8rem;
+        }
+        .storico-tabella {
+            font-size: 0.95rem;
+        }
+        .toast {
+            font-size: 1rem;
+        }
+
+        /* Media query: logo ancora più grande su schermi piccoli? No, manteniamo proporzioni leggibili */
+        @media (max-width: 768px) {
+            .logo-box img {
+                height: 54px;
+            }
+            .center-title .title-main {
+                font-size: 1.3rem;
+            }
+            .center-title .title-sub {
+                font-size: 0.8rem;
+            }
+            .patrimonio-totale .value {
+                font-size: 1.4rem;
+            }
+            .header-saldo h1 {
+                font-size: 2rem;
+            }
+            input, select {
+                font-size: 0.95rem !important;
+            }
+        }
+        @media (max-width: 480px) {
+            .logo-box img {
+                height: 46px;
+            }
+            .center-title .title-main {
+                font-size: 1.15rem;
+            }
+            .center-title .title-sub {
+                font-size: 0.72rem;
+            }
+            .patrimonio-totale .value {
+                font-size: 1.25rem;
+            }
+            .header-saldo h1 {
+                font-size: 1.8rem;
+            }
+        }
+        /* ===== FINE ACCESSIBILITÀ ===== */
     </style>
 </head>
 <body>
