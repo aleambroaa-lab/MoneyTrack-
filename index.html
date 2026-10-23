@@ -6,91 +6,95 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="MoneyTrack">
     <link rel="apple-touch-icon" href="icona-512.png">
-    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <title>MoneyTrack · Multi Conto</title>
-    
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
     <style>
-        /* ==========================================================
-           DESIGN SYSTEM — MoneyTrack Modern UI
-           ========================================================== */
         :root {
-            --bg-body: #f4f6fb;
-            --bg-body-alt: #eef1f8;
+            --bg-body: #eef1f8;
             --bg-card: #ffffff;
-            --bg-input: #f4f6fb;
-            --bg-hover: #eef1f8;
-            --border-light: #e5e9f2;
-            --border-strong: #d5dbea;
-            --text-primary: #0b1220;
-            --text-secondary: #475467;
-            --text-muted: #8894a8;
+            --bg-input: #f1f4fa;
+            --bg-hover: #e8edf7;
+            --bg-elevated: #ffffff;
+            --border-light: #e2e8f3;
+            --border-strong: #cbd5e8;
+            --text-primary: #0a1020;
+            --text-secondary: #4a5570;
+            --text-muted: #8a93a8;
 
-            --emerald: #10b981;
-            --emerald-light: #d1fae5;
-            --red: #ef4444;
-            --red-light: #fee2e2;
-            --blue: #4f6af5;
-            --blue-dark: #3b56e0;
+            --blue: #4361ee;
+            --blue-dark: #324bcb;
             --blue-light: #e0e7ff;
-            --purple: #8b5cf6;
-            --orange: #f59e0b;
+            --violet: #7209b7;
+            --violet-light: #f3e5fb;
+            --emerald: #06d6a0;
+            --emerald-dark: #05a87e;
+            --emerald-light: #d2f7ec;
+            --red: #ef476f;
+            --red-light: #fde0e7;
+            --orange: #ffb703;
+            --yellow: #ffd166;
 
-            --shadow-xs: 0 1px 2px rgba(16,24,40,0.04);
-            --shadow-sm: 0 1px 3px rgba(16,24,40,0.06), 0 1px 2px rgba(16,24,40,0.04);
-            --shadow-md: 0 4px 12px rgba(16,24,40,0.08), 0 2px 4px rgba(16,24,40,0.04);
-            --shadow-lg: 0 12px 32px rgba(16,24,40,0.10), 0 4px 8px rgba(16,24,40,0.04);
-            --shadow-xl: 0 24px 64px rgba(16,24,40,0.14);
-            --ring: 0 0 0 4px rgba(79,106,245,0.15);
+            --grad-primary: linear-gradient(135deg, #4361ee 0%, #7209b7 100%);
+            --grad-success: linear-gradient(135deg, #06d6a0 0%, #26a17b 100%);
+            --grad-danger: linear-gradient(135deg, #ef476f 0%, #c9184a 100%);
+            --grad-warm: linear-gradient(135deg, #ffb703 0%, #fb8500 100%);
+            --grad-cool: linear-gradient(135deg, #4cc9f0 0%, #4361ee 100%);
 
-            --radius-xs: 6px;
-            --radius-sm: 10px;
-            --radius-md: 14px;
-            --radius-lg: 20px;
-            --radius-xl: 28px;
+            --shadow-xs: 0 1px 2px rgba(10,16,32,0.05);
+            --shadow-sm: 0 2px 6px rgba(10,16,32,0.06), 0 1px 2px rgba(10,16,32,0.04);
+            --shadow-md: 0 8px 24px rgba(10,16,32,0.08), 0 2px 6px rgba(10,16,32,0.04);
+            --shadow-lg: 0 16px 48px rgba(10,16,32,0.12), 0 4px 12px rgba(10,16,32,0.06);
+            --shadow-xl: 0 32px 80px rgba(10,16,32,0.16);
+            --shadow-blue: 0 8px 24px rgba(67,97,238,0.28);
+            --shadow-green: 0 8px 24px rgba(6,214,160,0.28);
+            --shadow-red: 0 8px 24px rgba(239,71,111,0.28);
+            --ring: 0 0 0 4px rgba(67,97,238,0.16);
+
+            --radius-xs: 8px;
+            --radius-sm: 12px;
+            --radius-md: 18px;
+            --radius-lg: 24px;
+            --radius-xl: 32px;
             --radius-pill: 999px;
 
             --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            --transition: 0.18s cubic-bezier(0.4, 0, 0.2, 1);
-            --transition-slow: 0.32s cubic-bezier(0.4, 0, 0.2, 1);
-
+            --transition: 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            --transition-fast: 0.15s ease;
             --maxw: 1200px;
         }
 
         .dark-theme {
-            --bg-body: #0b1220;
-            --bg-body-alt: #0f1729;
-            --bg-card: #151f33;
-            --bg-input: #1c2940;
-            --bg-hover: #22314b;
-            --border-light: #24334f;
-            --border-strong: #334465;
-            --text-primary: #f1f5fb;
-            --text-secondary: #c3cddf;
-            --text-muted: #7f8ea8;
+            --bg-body: #070c18;
+            --bg-card: #101728;
+            --bg-input: #1a2338;
+            --bg-hover: #212c45;
+            --bg-elevated: #161f34;
+            --border-light: #1f2b43;
+            --border-strong: #354566;
+            --text-primary: #f4f7fb;
+            --text-secondary: #b9c3d8;
+            --text-muted: #6b7894;
 
-            --emerald-light: rgba(16,185,129,0.18);
-            --red-light: rgba(239,68,68,0.18);
-            --blue-light: rgba(79,106,245,0.20);
+            --blue-light: rgba(67,97,238,0.18);
+            --violet-light: rgba(114,9,183,0.18);
+            --emerald-light: rgba(6,214,160,0.16);
+            --red-light: rgba(239,71,111,0.18);
 
-            --shadow-xs: 0 1px 2px rgba(0,0,0,0.35);
-            --shadow-sm: 0 1px 3px rgba(0,0,0,0.45);
-            --shadow-md: 0 4px 16px rgba(0,0,0,0.55);
-            --shadow-lg: 0 12px 40px rgba(0,0,0,0.65);
-            --shadow-xl: 0 24px 70px rgba(0,0,0,0.75);
-            --ring: 0 0 0 4px rgba(79,106,245,0.30);
+            --shadow-xs: 0 1px 2px rgba(0,0,0,0.4);
+            --shadow-sm: 0 2px 6px rgba(0,0,0,0.45);
+            --shadow-md: 0 8px 24px rgba(0,0,0,0.55);
+            --shadow-lg: 0 16px 48px rgba(0,0,0,0.65);
+            --shadow-xl: 0 32px 80px rgba(0,0,0,0.75);
+            --ring: 0 0 0 4px rgba(67,97,238,0.32);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -99,8 +103,9 @@
             font-family: var(--font);
             background: var(--bg-body);
             background-image:
-                radial-gradient(1200px 500px at 10% -10%, rgba(79,106,245,0.08), transparent 60%),
-                radial-gradient(900px 400px at 100% 0%, rgba(139,92,246,0.06), transparent 60%);
+                radial-gradient(1000px 600px at -10% -20%, rgba(67,97,238,0.14), transparent 60%),
+                radial-gradient(800px 500px at 110% 10%, rgba(114,9,183,0.10), transparent 60%),
+                radial-gradient(600px 400px at 50% 110%, rgba(6,214,160,0.08), transparent 60%);
             background-attachment: fixed;
             color: var(--text-primary);
             transition: background 0.3s, color 0.3s;
@@ -112,8 +117,9 @@
         }
         .dark-theme body {
             background-image:
-                radial-gradient(1200px 500px at 10% -10%, rgba(79,106,245,0.18), transparent 60%),
-                radial-gradient(900px 400px at 100% 0%, rgba(139,92,246,0.14), transparent 60%);
+                radial-gradient(1000px 600px at -10% -20%, rgba(67,97,238,0.25), transparent 60%),
+                radial-gradient(800px 500px at 110% 10%, rgba(114,9,183,0.20), transparent 60%),
+                radial-gradient(600px 400px at 50% 110%, rgba(6,214,160,0.14), transparent 60%);
         }
 
         input, select, button, textarea { font-family: var(--font); font-size: 1rem; }
@@ -124,89 +130,83 @@
         ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
 
+        /* ===== NAV ===== */
         nav {
-            background: color-mix(in srgb, var(--bg-card) 78%, transparent);
+            background: color-mix(in srgb, var(--bg-card) 72%, transparent);
             border-bottom: 1px solid var(--border-light);
-            padding: 10px 20px;
+            padding: 12px 20px;
             position: sticky;
             top: 0;
             z-index: 100;
-            backdrop-filter: saturate(180%) blur(14px);
-            -webkit-backdrop-filter: saturate(180%) blur(14px);
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
             transition: background 0.3s, border 0.3s;
         }
         .nav-inner { max-width: var(--maxw); margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
 
         .logo-box { display: flex; align-items: center; cursor: pointer; flex-shrink: 0; }
         .logo-box img {
-            height: 56px;
-            width: auto;
-            border-radius: 14px;
+            height: 52px; width: auto;
+            border-radius: 16px;
             transition: transform var(--transition), box-shadow var(--transition);
             box-shadow: var(--shadow-sm);
             background: var(--bg-card);
         }
-        .logo-box:hover img { transform: translateY(-1px) scale(1.03); box-shadow: var(--shadow-md); }
+        .logo-box:hover img { transform: translateY(-2px) rotate(-3deg) scale(1.05); box-shadow: var(--shadow-md); }
 
         .center-title { text-align: center; flex: 1; padding: 0 12px; }
         .center-title .title-main {
-            font-weight: 800;
-            font-size: 1.35rem;
-            letter-spacing: -0.4px;
-            background: linear-gradient(135deg, var(--blue), var(--purple));
+            font-weight: 900;
+            font-size: 1.45rem;
+            letter-spacing: -0.6px;
+            background: var(--grad-primary);
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        .center-title .title-sub { font-size: 0.78rem; color: var(--text-muted); letter-spacing: 0.2px; margin-top: 1px; font-weight: 500; }
+        .center-title .title-sub { font-size: 0.78rem; color: var(--text-muted); letter-spacing: 0.2px; margin-top: 0; font-weight: 500; }
 
         .menu-container { position: relative; display: flex; align-items: center; gap: 6px; }
-
         .btn-suggerimenti {
-            background: transparent; border: none; cursor: pointer;
+            background: var(--bg-input); border: none; cursor: pointer;
             color: var(--text-secondary); padding: 6px;
             transition: var(--transition);
-            line-height: 1; border-radius: 50%;
-            width: 40px; height: 40px;
+            border-radius: 50%; width: 40px; height: 40px;
             display: flex; align-items: center; justify-content: center;
             font-size: 1.15rem;
         }
-        .btn-suggerimenti:hover { background: var(--bg-hover); color: var(--orange); transform: translateY(-1px); }
+        .btn-suggerimenti:hover { background: var(--yellow); color: var(--text-primary); transform: translateY(-2px) scale(1.08); box-shadow: var(--shadow-md); }
 
         .menu-dots {
             font-size: 1.5rem; cursor: pointer; color: var(--text-secondary);
-            padding: 0 10px; transition: var(--transition);
-            background: transparent; border: none; line-height: 1;
-            border-radius: var(--radius-sm);
-            height: 40px; display: flex; align-items: center;
+            padding: 0 12px; transition: var(--transition);
+            background: var(--bg-input); border: none; line-height: 1;
+            border-radius: 50%;
+            width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
         }
-        .menu-dots:hover { color: var(--blue); background: var(--bg-hover); }
+        .menu-dots:hover { color: white; background: var(--blue); transform: rotate(90deg); }
 
         .dropdown-content {
             display: none; position: absolute; right: 0; top: 52px;
-            background: var(--bg-card);
-            min-width: 250px;
-            border: 1px solid var(--border-light);
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-xl);
-            padding: 8px 0; z-index: 101;
-            overflow: hidden;
-            animation: dropdownIn 0.18s ease;
+            background: var(--bg-elevated); min-width: 260px;
+            border: 1px solid var(--border-light); border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-xl); padding: 8px 0; z-index: 101;
+            overflow: hidden; animation: dropdownIn 0.2s cubic-bezier(0.34,1.56,0.64,1);
         }
         @keyframes dropdownIn {
-            from { opacity: 0; transform: translateY(-6px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; transform: translateY(-8px) scale(0.96); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
         .dropdown-content a {
             display: flex; align-items: center; gap: 10px;
-            padding: 11px 18px; color: var(--text-secondary);
+            padding: 11px 20px; color: var(--text-secondary);
             text-decoration: none; font-size: 0.92rem;
-            cursor: pointer; transition: var(--transition);
+            cursor: pointer; transition: var(--transition-fast);
             font-weight: 500;
         }
-        .dropdown-content a:hover { background: var(--bg-hover); color: var(--text-primary); }
+        .dropdown-content a:hover { background: var(--bg-hover); color: var(--text-primary); padding-left: 24px; }
 
-        .dropdown-content .theme-toggle-item { display: flex; justify-content: space-between; align-items: center; padding: 11px 18px; }
+        .dropdown-content .theme-toggle-item { display: flex; justify-content: space-between; align-items: center; padding: 11px 20px; }
         .dropdown-content .theme-toggle-item span { color: var(--text-secondary); font-size: 0.92rem; font-weight: 500; }
 
         .toggle-switch { position: relative; width: 44px; height: 24px; flex-shrink: 0; }
@@ -220,7 +220,7 @@
             height: 18px; width: 18px; left: 3px; bottom: 3px;
             background: white; transition: 0.3s; border-radius: 50%;
             font-size: 10px; position: absolute;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.25);
         }
         .toggle-switch input:checked + .toggle-slider { background: var(--blue); }
         .toggle-switch input:checked + .toggle-slider:before { content: "☀️"; transform: translateX(20px); }
@@ -231,8 +231,8 @@
         .dropdown-submenu:last-child { border-bottom: none; }
         .submenu-header {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 11px 18px; cursor: pointer; color: var(--text-secondary);
-            font-size: 0.92rem; transition: var(--transition); user-select: none;
+            padding: 11px 20px; cursor: pointer; color: var(--text-secondary);
+            font-size: 0.92rem; transition: var(--transition-fast); user-select: none;
             font-weight: 500;
         }
         .submenu-header:hover { background: var(--bg-hover); color: var(--text-primary); }
@@ -240,10 +240,10 @@
         .submenu-header .submenu-arrow.open { transform: rotate(90deg); }
         .submenu-content { display: none; background: var(--bg-hover); border-top: 1px solid var(--border-light); padding: 4px 0; }
         .submenu-content.open { display: block; }
-        .submenu-content a { padding: 9px 18px 9px 36px !important; font-size: 0.88rem !important; }
-        .submenu-content .theme-toggle-item { padding: 9px 18px 9px 36px !important; }
+        .submenu-content a { padding: 9px 20px 9px 40px !important; font-size: 0.88rem !important; }
+        .submenu-content .theme-toggle-item { padding: 9px 20px 9px 40px !important; }
         .submenu-content .theme-toggle-item span { font-size: 0.88rem !important; }
-        .submenu-content .setting-row { display: flex; align-items: center; gap: 8px; padding: 7px 18px 7px 36px; font-size: 0.88rem; color: var(--text-secondary); }
+        .submenu-content .setting-row { display: flex; align-items: center; gap: 8px; padding: 7px 20px 7px 40px; font-size: 0.88rem; color: var(--text-secondary); }
         .submenu-content .setting-row select {
             flex: 1; padding: 5px 10px; border-radius: var(--radius-xs);
             border: 1px solid var(--border-light); background: var(--bg-card);
@@ -251,54 +251,64 @@
             min-width: 80px; cursor: pointer;
         }
         .submenu-content .setting-row select:focus { border-color: var(--blue); box-shadow: var(--ring); }
-        .submenu-content .submenu-header { padding: 9px 18px 9px 36px !important; font-size: 0.88rem !important; }
-        .submenu-content .submenu-content .submenu-header { padding-left: 48px !important; }
-        .submenu-content .submenu-content .submenu-content a { padding-left: 56px !important; }
+        .submenu-content .submenu-header { padding: 9px 20px 9px 40px !important; font-size: 0.88rem !important; }
         .dropdown-divider { height: 1px; background: var(--border-light); margin: 4px 12px; }
 
+        /* ===== PATRIMONIO ===== */
         .patrimonio-totale {
             max-width: var(--maxw);
-            margin: 16px auto 0;
-            padding: 16px 24px;
-            background: linear-gradient(135deg, var(--bg-card), color-mix(in srgb, var(--bg-card) 92%, var(--blue)));
-            border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-            box-shadow: var(--shadow-sm);
-            border: 1px solid var(--border-light);
-            border-bottom: none;
+            margin: 20px auto 0;
+            padding: 20px 28px;
+            background: var(--grad-primary);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-blue), var(--shadow-md);
+            border: none;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            transition: background 0.3s, border 0.3s;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            transition: transform var(--transition);
+        }
+        .patrimonio-totale::before {
+            content: "";
+            position: absolute; inset: 0;
+            background: radial-gradient(circle at 100% 0%, rgba(255,255,255,0.25), transparent 50%);
+            pointer-events: none;
         }
         .patrimonio-totale .label {
-            font-size: 0.78rem; font-weight: 600;
-            text-transform: uppercase; letter-spacing: 0.6px;
-            color: var(--text-muted);
+            font-size: 0.78rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 1px;
+            color: rgba(255,255,255,0.85);
+            position: relative; z-index: 1;
         }
-        .patrimonio-totale .value { font-size: 1.55rem; font-weight: 800; letter-spacing: -0.6px; }
-        .patrimonio-totale .value.positivo { color: var(--emerald); }
-        .patrimonio-totale .value.negativo { color: var(--red); }
+        .patrimonio-totale .value {
+            font-size: 2rem; font-weight: 900; letter-spacing: -1.2px;
+            color: white; position: relative; z-index: 1;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+        .patrimonio-totale .value.positivo { color: white; }
+        .patrimonio-totale .value.negativo { color: #ffd6de; }
 
         #previsione-globale {
             max-width: var(--maxw);
             margin: 0 auto;
-            padding: 14px 24px;
+            padding: 16px 28px;
             background: var(--bg-card);
-            border-left: 1px solid var(--border-light);
-            border-right: 1px solid var(--border-light);
-            border-radius: 0;
-            box-shadow: none;
+            border: 1px solid var(--border-light);
+            border-top: none;
+            border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+            box-shadow: var(--shadow-sm);
             transition: background 0.3s, border 0.3s;
+            margin-bottom: 4px;
         }
 
         .conti-scroll-container {
-            display: flex;
-            overflow-x: auto;
+            display: flex; overflow-x: auto;
             scroll-snap-type: x mandatory;
             scrollbar-width: none;
-            gap: 0;
             width: 100%;
-            margin-top: 0;
         }
         .conti-scroll-container::-webkit-scrollbar { display: none; }
 
@@ -312,177 +322,218 @@
             min-height: 300px; padding: 0 16px;
         }
         .aggiungi-conto-card {
-            background: var(--bg-card); border: 2px dashed var(--border-strong);
-            border-radius: var(--radius-lg); padding: 40px 20px; text-align: center;
-            width: 100%; max-width: 360px; cursor: pointer;
-            transition: var(--transition-slow);
+            background: var(--bg-card);
+            border: 2px dashed var(--border-strong);
+            border-radius: var(--radius-xl); padding: 48px 24px; text-align: center;
+            width: 100%; max-width: 380px; cursor: pointer;
+            transition: var(--transition);
         }
         .aggiungi-conto-card:hover {
             border-color: var(--blue);
             background: var(--bg-hover);
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: var(--shadow-blue);
         }
-        .aggiungi-conto-card .plus-icon { font-size: 3.5rem; display: block; margin-bottom: 12px; color: var(--blue); }
-        .aggiungi-conto-card .plus-title { font-weight: 700; font-size: 1.15rem; color: var(--text-primary); }
-        .aggiungi-conto-card .plus-sub { font-size: 0.85rem; color: var(--text-muted); margin-top: 4px; }
+        .aggiungi-conto-card .plus-icon { font-size: 4rem; display: block; margin-bottom: 14px; color: var(--blue); }
+        .aggiungi-conto-card .plus-title { font-weight: 800; font-size: 1.3rem; color: var(--text-primary); }
+        .aggiungi-conto-card .plus-sub { font-size: 0.88rem; color: var(--text-muted); margin-top: 6px; }
 
+        /* ===== HEADER SALDO (card colorata) ===== */
         .header-saldo {
-            background: linear-gradient(135deg, var(--bg-card), color-mix(in srgb, var(--bg-card) 94%, var(--blue)));
-            border-left: 1px solid var(--border-light);
-            border-right: 1px solid var(--border-light);
-            border-bottom: 1px solid var(--border-light);
-            border-radius: 0 0 var(--radius-lg) var(--radius-lg);
-            padding: 22px 24px;
-            box-shadow: var(--shadow-sm);
+            background: var(--grad-primary);
+            border: none;
+            border-radius: var(--radius-xl);
+            padding: 32px 28px;
+            margin: 16px 0 20px;
+            box-shadow: var(--shadow-blue), var(--shadow-md);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            min-height: 96px;
-            transition: background 0.3s, border 0.3s;
+            min-height: 140px;
+            position: relative;
+            overflow: hidden;
+            transition: transform var(--transition);
         }
-        .header-saldo .saldo-center { flex: 1; text-align: center; }
+        .header-saldo::before {
+            content: "";
+            position: absolute; inset: 0;
+            background:
+                radial-gradient(circle at 15% 20%, rgba(255,255,255,0.18), transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(255,255,255,0.12), transparent 45%);
+            pointer-events: none;
+        }
+        .header-saldo .saldo-center { flex: 1; text-align: center; position: relative; z-index: 1; }
         .saldo-nome {
-            font-size: 1rem; font-weight: 600; color: var(--text-secondary);
-            display: flex; align-items: center; justify-content: center;
-            gap: 8px; flex-wrap: wrap;
+            font-size: 1rem; font-weight: 600;
+            color: rgba(255,255,255,0.9);
+            display: inline-flex; align-items: center; justify-content: center;
+            gap: 6px; flex-wrap: wrap;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            padding: 6px 16px;
+            border-radius: var(--radius-pill);
         }
         .saldo-nome .rename-btn {
-            background: transparent; border: none; color: var(--text-muted);
-            cursor: pointer; font-size: 0.9rem; padding: 4px 8px;
-            border-radius: var(--radius-xs); transition: var(--transition);
+            background: transparent; border: none; color: rgba(255,255,255,0.75);
+            cursor: pointer; font-size: 0.9rem; padding: 2px 6px;
+            border-radius: 50%; transition: var(--transition);
         }
-        .saldo-nome .rename-btn:hover { background: var(--bg-hover); color: var(--blue); }
+        .saldo-nome .rename-btn:hover { background: rgba(255,255,255,0.25); color: white; transform: scale(1.15); }
         .header-saldo h1 {
-            font-size: 2.7rem; font-weight: 800;
-            letter-spacing: -1.5px; margin: 4px 0 0;
-            color: var(--text-primary);
+            font-size: 3.2rem; font-weight: 900;
+            letter-spacing: -2px; margin: 8px 0 0;
+            color: white;
             font-variant-numeric: tabular-nums;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.18);
+            position: relative; z-index: 1;
         }
         .btn-privacy {
-            background: var(--bg-input); border: none; color: var(--text-secondary);
-            width: 36px; height: 36px; border-radius: 50%;
+            background: rgba(255,255,255,0.2); border: none; color: white;
+            width: 40px; height: 40px; border-radius: 50%;
             cursor: pointer; font-size: 1rem;
             display: inline-flex; align-items: center; justify-content: center;
             transition: var(--transition);
+            backdrop-filter: blur(10px);
         }
-        .btn-privacy:hover { background: var(--bg-hover); transform: scale(1.05); }
-        .header-saldo .saldo-side { display: flex; gap: 6px; align-items: center; flex-shrink: 0; }
+        .btn-privacy:hover { background: rgba(255,255,255,0.35); transform: scale(1.1); }
+        .header-saldo .saldo-side { display: flex; gap: 6px; align-items: center; flex-shrink: 0; position: relative; z-index: 1; }
 
+        /* ===== PULSANTI ===== */
         .btn-modern {
-            border: none; padding: 10px 16px; border-radius: var(--radius-sm);
-            font-weight: 600; font-size: 0.78rem; text-transform: uppercase;
-            letter-spacing: 0.4px; cursor: pointer; transition: var(--transition);
-            background: var(--bg-input); color: var(--text-secondary);
-            box-shadow: var(--shadow-xs); display: inline-flex;
-            align-items: center; justify-content: center; gap: 6px;
-            min-height: 42px; flex: 0 1 auto;
-            border: 1px solid transparent;
+            border: none;
+            padding: 11px 22px;
+            border-radius: var(--radius-pill);
+            font-weight: 700;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: var(--transition);
+            background: var(--bg-input);
+            color: var(--text-secondary);
+            box-shadow: var(--shadow-xs);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            min-height: 44px;
+            flex: 0 1 auto;
         }
-        .btn-modern:hover { background: var(--bg-hover); transform: translateY(-1px); box-shadow: var(--shadow-sm); }
-        .btn-modern:active { transform: scale(0.97); }
+        .btn-modern:hover { background: var(--bg-hover); transform: translateY(-2px); box-shadow: var(--shadow-md); }
+        .btn-modern:active { transform: scale(0.95); }
         .btn-modern:focus-visible { outline: none; box-shadow: var(--ring); }
 
-        .btn-modern.btn-success { background: var(--emerald); color: white; box-shadow: 0 4px 12px rgba(16,185,129,0.28); }
-        .btn-modern.btn-success:hover { background: #059669; box-shadow: 0 6px 16px rgba(16,185,129,0.35); }
-        .btn-modern.btn-danger { background: var(--red); color: white; box-shadow: 0 4px 12px rgba(239,68,68,0.28); }
-        .btn-modern.btn-danger:hover { background: #dc2626; }
-        .btn-modern.btn-warning { background: var(--orange); color: #0b1a2e; }
-        .btn-modern.btn-primary { background: var(--blue); color: white; box-shadow: 0 4px 12px rgba(79,106,245,0.30); }
-        .btn-modern.btn-primary:hover { background: var(--blue-dark); box-shadow: 0 6px 16px rgba(79,106,245,0.38); }
-        .btn-modern.btn-info { background: var(--purple); color: white; box-shadow: 0 4px 12px rgba(139,92,246,0.28); }
-        .btn-modern.full-width { width: 100%; max-width: 100%; padding: 14px; font-size: 0.85rem; height: 50px; margin-top: 12px; }
+        .btn-modern.btn-success { background: var(--grad-success); color: white; box-shadow: var(--shadow-green); }
+        .btn-modern.btn-success:hover { filter: brightness(1.08); box-shadow: 0 12px 32px rgba(6,214,160,0.4); }
+        .btn-modern.btn-danger { background: var(--grad-danger); color: white; box-shadow: var(--shadow-red); }
+        .btn-modern.btn-danger:hover { filter: brightness(1.08); }
+        .btn-modern.btn-warning { background: var(--grad-warm); color: white; }
+        .btn-modern.btn-primary { background: var(--grad-primary); color: white; box-shadow: var(--shadow-blue); }
+        .btn-modern.btn-primary:hover { filter: brightness(1.08); box-shadow: 0 12px 32px rgba(67,97,238,0.4); }
+        .btn-modern.btn-info { background: linear-gradient(135deg, #4cc9f0, #4361ee); color: white; box-shadow: 0 8px 24px rgba(76,201,240,0.3); }
+        .btn-modern.full-width {
+            width: 100%; max-width: 100%;
+            padding: 16px; font-size: 0.88rem;
+            height: 54px; margin-top: 12px;
+            border-radius: var(--radius-pill);
+        }
 
         .btn-back-home {
-            background: var(--bg-card); border: 1px solid var(--border-light);
-            padding: 10px 18px; border-radius: var(--radius-sm);
-            font-weight: 600; color: var(--text-secondary); cursor: pointer;
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            padding: 11px 20px; border-radius: var(--radius-pill);
+            font-weight: 700; color: var(--text-secondary); cursor: pointer;
             display: inline-flex; align-items: center; gap: 6px;
             transition: var(--transition); box-shadow: var(--shadow-xs);
-            font-size: 0.9rem;
+            font-size: 0.88rem;
         }
-        .btn-back-home:hover { background: var(--bg-hover); transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+        .btn-back-home:hover { background: var(--bg-hover); transform: translateY(-2px); box-shadow: var(--shadow-md); color: var(--text-primary); }
 
+        /* ===== MODALI ===== */
         .modal {
             display: none; position: fixed; inset: 0;
-            background: rgba(11,18,32,0.45);
-            backdrop-filter: blur(6px);
-            -webkit-backdrop-filter: blur(6px);
+            background: rgba(10,16,32,0.55);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             z-index: 1000; justify-content: center; align-items: center; padding: 20px;
             animation: fadeIn 0.2s ease;
         }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         .modal-content {
-            background: var(--bg-card); padding: 28px; border-radius: var(--radius-xl);
-            max-width: 500px; width: 100%; max-height: 90vh; overflow-y: auto;
+            background: var(--bg-card); padding: 28px;
+            border-radius: var(--radius-xl);
+            max-width: 520px; width: 100%; max-height: 90vh; overflow-y: auto;
             box-shadow: var(--shadow-xl);
             border: 1px solid var(--border-light);
             position: relative;
-            animation: modalIn 0.24s cubic-bezier(0.34, 1.56, 0.64, 1);
+            animation: modalIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
         @keyframes modalIn {
-            from { opacity: 0; transform: scale(0.96) translateY(8px); }
+            from { opacity: 0; transform: scale(0.94) translateY(12px); }
             to { opacity: 1; transform: scale(1) translateY(0); }
         }
-        .modal-content.auth { max-width: 400px; }
+        .modal-content.auth { max-width: 420px; }
         .modal-content.guida { max-width: 720px; }
-        .modal-content.giroconto { max-width: 480px; }
-        .modal-content.storico-giroconti { max-width: 720px; }
+        .modal-content.giroconto { max-width: 500px; }
+        .modal-content.storico-giroconti { max-width: 760px; }
 
         .close-btn {
             position: absolute; top: 14px; right: 16px;
             background: var(--bg-input); border: none;
-            width: 34px; height: 34px; border-radius: 50%;
+            width: 36px; height: 36px; border-radius: 50%;
             font-size: 1.1rem; color: var(--text-secondary);
             cursor: pointer; transition: var(--transition);
             display: flex; align-items: center; justify-content: center;
         }
-        .close-btn:hover { background: var(--red-light); color: var(--red); transform: rotate(90deg); }
+        .close-btn:hover { background: var(--red); color: white; transform: rotate(90deg) scale(1.1); }
 
+        /* ===== TOAST ===== */
         #toast-container {
             position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
             z-index: 99999; display: flex; flex-direction: column; align-items: center;
-            gap: 10px; width: 92%; max-width: 420px; pointer-events: none;
+            gap: 10px; width: 92%; max-width: 440px; pointer-events: none;
         }
         .toast {
-            background: var(--bg-card); border: 1px solid var(--border-light);
-            border-radius: var(--radius-md); padding: 14px 18px;
-            box-shadow: var(--shadow-lg); font-size: 0.92rem;
+            background: var(--bg-elevated); border: 1px solid var(--border-light);
+            border-radius: var(--radius-md); padding: 16px 20px;
+            box-shadow: var(--shadow-xl); font-size: 0.92rem;
             display: flex; align-items: center; gap: 12px;
-            pointer-events: auto; animation: toastIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            width: 100%; border-left: 4px solid var(--blue);
-            font-weight: 500;
+            pointer-events: auto; animation: toastIn 0.35s cubic-bezier(0.34,1.56,0.64,1);
+            width: 100%; font-weight: 600;
+            border-left: 4px solid var(--blue);
         }
         .toast.success { border-left-color: var(--emerald); }
         .toast.error { border-left-color: var(--red); }
         .toast.warning { border-left-color: var(--orange); }
-        .toast .toast-icon { font-size: 1.3rem; }
+        .toast .toast-icon { font-size: 1.4rem; }
         .toast .toast-text { flex: 1; }
         .toast .toast-close {
             background: none; border: none; color: var(--text-muted);
-            cursor: pointer; font-size: 1.1rem; padding: 2px 6px;
-            border-radius: var(--radius-xs); transition: var(--transition);
+            cursor: pointer; font-size: 1.1rem; padding: 2px 8px;
+            border-radius: 50%; transition: var(--transition);
         }
         .toast .toast-close:hover { background: var(--bg-hover); color: var(--text-primary); }
-        @keyframes toastIn { from { opacity: 0; transform: translateY(20px) scale(0.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
-        @keyframes toastOut { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(20px); } }
+        @keyframes toastIn { from { opacity: 0; transform: translateY(24px) scale(0.94); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        @keyframes toastOut { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(24px); } }
 
+        /* ===== CARD ===== */
         .card {
             background: var(--bg-card); border: 1px solid var(--border-light);
-            border-radius: var(--radius-lg); padding: 22px;
-            box-shadow: var(--shadow-sm); transition: background 0.3s, border 0.3s, box-shadow 0.2s;
+            border-radius: var(--radius-xl); padding: 24px;
+            box-shadow: var(--shadow-sm); transition: var(--transition);
         }
-        .card:hover { box-shadow: var(--shadow-md); }
+        .card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
         .card + .card { margin-top: 20px; }
 
+        /* ===== FORM ===== */
         input, select {
-            width: 100%; padding: 12px 14px;
+            width: 100%; padding: 14px 16px;
             border: 1px solid var(--border-light);
             border-radius: var(--radius-sm);
             background: var(--bg-input);
             color: var(--text-primary);
             font-size: 0.95rem;
-            transition: var(--transition); outline: none; margin-bottom: 12px;
+            transition: var(--transition-fast); outline: none; margin-bottom: 12px;
             font-weight: 500;
         }
         input::placeholder { color: var(--text-muted); font-weight: 400; }
@@ -494,429 +545,480 @@
         }
         select {
             appearance: none;
-            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' stroke='%237b8799' stroke-width='1.8' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' stroke='%238a93a8' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>");
             background-repeat: no-repeat;
-            background-position: right 14px center;
-            padding-right: 38px;
+            background-position: right 16px center;
+            padding-right: 42px;
             cursor: pointer;
         }
         label {
-            font-size: 0.72rem; font-weight: 600;
-            text-transform: uppercase; letter-spacing: 0.5px;
+            font-size: 0.72rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.6px;
             color: var(--text-muted); display: block; margin-bottom: 5px;
         }
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .form-grid .full { grid-column: 1 / -1; }
 
+        /* ===== WIDGET ===== */
         .dashboard-widgets {
             display: flex; gap: 16px; overflow-x: auto;
             scroll-snap-type: x mandatory;
-            padding: 8px 0 16px; scrollbar-width: thin; margin: 0 -4px;
+            padding: 12px 4px 20px; scrollbar-width: thin;
+            margin: 0 -4px;
         }
         .dashboard-widget {
-            flex: 0 0 auto; min-width: 270px; max-width: 90vw;
+            flex: 0 0 auto; min-width: 280px; max-width: 90vw;
             scroll-snap-align: start;
             background: var(--bg-card);
             border: 1px solid var(--border-light);
             border-radius: var(--radius-lg);
-            padding: 18px; box-shadow: var(--shadow-sm);
+            padding: 20px;
+            box-shadow: var(--shadow-md);
             transition: var(--transition); position: relative; cursor: grab;
+            overflow: hidden;
+        }
+        .dashboard-widget::before {
+            content: "";
+            position: absolute; top: 0; left: 0; right: 0; height: 4px;
+            background: var(--grad-primary);
         }
         .dashboard-widget:active { cursor: grabbing; }
-        .dashboard-widget:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
-        .dashboard-widget.dragging { opacity: 0.5; transform: rotate(1.5deg); }
-        .dashboard-widget.drag-over { outline: 2px dashed var(--blue); outline-offset: 4px; }
+        .dashboard-widget:hover { box-shadow: var(--shadow-lg); transform: translateY(-4px); }
+        .dashboard-widget.dragging { opacity: 0.5; transform: rotate(2deg) scale(0.98); }
+        .dashboard-widget.drag-over { outline: 3px dashed var(--blue); outline-offset: 4px; }
 
-        .dashboard-widget .widget-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .dashboard-widget .widget-title { font-weight: 600; font-size: 0.88rem; color: var(--text-secondary); }
+        .dashboard-widget .widget-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+        .dashboard-widget .widget-title { font-weight: 700; font-size: 0.9rem; color: var(--text-primary); }
         .widget-drag-handle { opacity: 0.35; cursor: grab; font-size: 0.9rem; user-select: none; }
         .widget-drag-handle:hover { opacity: 0.9; }
         .widget-close {
             background: none; border: none; color: var(--text-muted);
-            cursor: pointer; font-size: 1rem; padding: 2px 6px;
-            border-radius: var(--radius-xs); transition: var(--transition);
+            cursor: pointer; font-size: 1rem; padding: 4px 8px;
+            border-radius: 50%; transition: var(--transition);
         }
-        .widget-close:hover { color: var(--red); background: var(--red-light); }
+        .widget-close:hover { color: white; background: var(--red); transform: rotate(90deg); }
         .widget-empty-state {
-            text-align: center; padding: 32px 20px; color: var(--text-muted);
+            text-align: center; padding: 40px 20px; color: var(--text-muted);
             background: var(--bg-card); border: 2px dashed var(--border-strong);
-            border-radius: var(--radius-md);
+            border-radius: var(--radius-lg);
         }
         .widget-empty-state .empty-icon { font-size: 2.5rem; display: block; margin-bottom: 8px; }
-        .widget-empty-state .empty-title { font-weight: 600; color: var(--text-secondary); }
+        .widget-empty-state .empty-title { font-weight: 700; color: var(--text-secondary); }
 
+        /* ===== MESI / MOVIMENTI ===== */
         .mese-container {
             border: 1px solid var(--border-light);
-            border-radius: var(--radius-md);
-            margin-bottom: 8px;
+            border-radius: var(--radius-lg);
+            margin-bottom: 12px;
             overflow: hidden;
             background: var(--bg-card);
+            box-shadow: var(--shadow-xs);
+            transition: var(--transition);
         }
+        .mese-container:hover { box-shadow: var(--shadow-sm); }
         .mese-header {
-            padding: 14px 18px; cursor: pointer;
+            padding: 16px 20px; cursor: pointer;
             display: flex; justify-content: space-between; align-items: center;
-            font-weight: 600; color: var(--text-secondary);
-            transition: var(--transition); user-select: none;
+            font-weight: 700; color: var(--text-secondary);
+            transition: var(--transition-fast); user-select: none;
             font-size: 0.92rem;
         }
-        .mese-header:hover { background: var(--bg-hover); }
+        .mese-header:hover { background: var(--bg-hover); color: var(--text-primary); }
         .mese-content { display: none; padding: 0 8px 8px; }
         .mese-container.attivo .mese-content { display: block; }
         .mese-container.attivo .mese-header {
-            background: var(--bg-hover);
+            background: var(--bg-hover); color: var(--text-primary);
             border-bottom: 1px solid var(--border-light);
         }
 
         table { width: 100%; border-collapse: collapse; }
-        td { padding: 12px 6px; border-bottom: 1px solid var(--border-light); vertical-align: middle; }
+        td { padding: 14px 8px; border-bottom: 1px solid var(--border-light); vertical-align: middle; }
         tr:last-child td { border-bottom: none; }
+        tr { transition: var(--transition-fast); }
+        tr:hover td { background: var(--bg-hover); }
         .sticky-col { position: sticky; left: 0; background: var(--bg-card); z-index: 1; }
-        .positivo { color: var(--emerald); font-weight: 700; }
-        .negativo { color: var(--red); font-weight: 700; }
+        .positivo { color: var(--emerald); font-weight: 800; }
+        .negativo { color: var(--red); font-weight: 800; }
         .action-icon {
-            cursor: pointer; padding: 4px 6px; border-radius: var(--radius-xs);
+            cursor: pointer; padding: 6px 8px; border-radius: var(--radius-xs);
             transition: var(--transition); font-size: 1rem; opacity: 0.55;
             display: inline-block;
         }
-        .action-icon:hover { opacity: 1; background: var(--bg-hover); }
+        .action-icon:hover { opacity: 1; background: var(--bg-input); transform: scale(1.15); }
 
         .badge-cat {
-            display: inline-block; padding: 3px 10px; border-radius: var(--radius-pill);
-            font-size: 0.7rem; font-weight: 600;
+            display: inline-block; padding: 4px 12px; border-radius: var(--radius-pill);
+            font-size: 0.7rem; font-weight: 700;
             background: var(--bg-input); color: var(--text-secondary);
         }
         .badge-giroconto {
-            display: inline-block; padding: 2px 9px; border-radius: var(--radius-pill);
-            font-size: 0.6rem; font-weight: 700;
+            display: inline-block; padding: 3px 10px; border-radius: var(--radius-pill);
+            font-size: 0.62rem; font-weight: 800;
             background: var(--blue-light); color: var(--blue);
             margin-left: 4px;
         }
 
+        /* ===== FILTRI ===== */
         .filtro-mobile {
             background: var(--bg-card); border: 1px solid var(--border-light);
-            border-radius: var(--radius-lg); padding: 16px; margin-bottom: 16px;
+            border-radius: var(--radius-lg); padding: 18px; margin-bottom: 16px;
+            box-shadow: var(--shadow-xs);
         }
-        .filtro-riga { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+        .filtro-riga { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
         .filtro-riga:last-of-type { margin-bottom: 0; }
         .filtro-gruppo {
-            display: flex; align-items: center; gap: 4px;
+            display: flex; align-items: center; gap: 6px;
             background: var(--bg-input); border-radius: var(--radius-sm);
-            padding: 2px 10px; flex: 1; min-width: 120px;
+            padding: 4px 12px; flex: 1; min-width: 120px;
             border: 1px solid transparent;
-            transition: var(--transition);
+            transition: var(--transition-fast);
         }
         .filtro-gruppo:focus-within { border-color: var(--blue); box-shadow: var(--ring); }
         .filtro-gruppo label {
-            font-size: 0.6rem; color: var(--text-muted); font-weight: 600;
-            text-transform: uppercase; margin: 0;
+            font-size: 0.6rem; color: var(--text-muted); font-weight: 700;
+            text-transform: uppercase; margin: 0; letter-spacing: 0.4px;
         }
         .filtro-gruppo input, .filtro-gruppo select {
             border: none; background: transparent; padding: 9px 4px;
             font-size: 0.82rem; margin: 0; flex: 1; min-width: 60px;
         }
         .filtro-gruppo input:focus, .filtro-gruppo select:focus { box-shadow: none; background: transparent; }
-        .filtro-azioni { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
+        .filtro-azioni { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
         .filtro-azioni button {
-            padding: 8px 16px; border-radius: var(--radius-sm);
-            border: none; font-weight: 600; font-size: 0.78rem;
+            padding: 10px 18px; border-radius: var(--radius-pill);
+            border: none; font-weight: 700; font-size: 0.78rem;
             cursor: pointer; transition: var(--transition);
             flex: 1; min-width: 60px;
+            text-transform: uppercase; letter-spacing: 0.4px;
         }
-        .btn-filtra { background: var(--blue); color: white; }
-        .btn-filtra:hover { background: var(--blue-dark); }
-        .btn-reset-filtro { background: var(--red); color: white; }
-        .btn-reset-filtro:hover { background: #dc2626; }
+        .btn-filtra { background: var(--grad-primary); color: white; box-shadow: var(--shadow-blue); }
+        .btn-filtra:hover { filter: brightness(1.08); transform: translateY(-1px); }
+        .btn-reset-filtro { background: var(--grad-danger); color: white; box-shadow: var(--shadow-red); }
+        .btn-reset-filtro:hover { filter: brightness(1.08); }
 
-        .filtro-ricerca { position: relative; margin-top: 8px; }
+        .filtro-ricerca { position: relative; margin-top: 10px; }
         .filtro-ricerca input {
-            padding: 11px 42px 11px 14px;
+            padding: 12px 44px 12px 16px;
             border: 1px solid var(--border-light);
-            border-radius: var(--radius-sm);
+            border-radius: var(--radius-pill);
             width: 100%; background: var(--bg-input);
             color: var(--text-primary); font-size: 0.92rem;
-            outline: none; transition: var(--transition);
+            outline: none; transition: var(--transition-fast);
         }
         .filtro-ricerca input:focus { border-color: var(--blue); box-shadow: var(--ring); background: var(--bg-card); }
         .filtro-ricerca .lente {
-            position: absolute; right: 14px; top: 50%;
+            position: absolute; right: 16px; top: 50%;
             transform: translateY(-50%); opacity: 0.55;
             font-size: 0.95rem; pointer-events: none;
         }
 
+        /* ===== BUDGET ===== */
         .budget-container {
             background: var(--bg-card); border: 1px solid var(--border-light);
-            border-radius: var(--radius-lg); padding: 18px; margin-top: 16px;
+            border-radius: var(--radius-lg); padding: 20px; margin-top: 16px;
+            box-shadow: var(--shadow-xs);
         }
-        .budget-item { margin-bottom: 14px; }
+        .budget-item { margin-bottom: 16px; }
         .budget-item:last-child { margin-bottom: 0; }
-        .budget-info { display: flex; justify-content: space-between; font-size: 0.88rem; margin-bottom: 6px; font-weight: 500; }
-        .progress-bar-bg { background: var(--bg-input); border-radius: 20px; height: 8px; overflow: hidden; }
+        .budget-info { display: flex; justify-content: space-between; font-size: 0.88rem; margin-bottom: 8px; font-weight: 600; }
+        .progress-bar-bg { background: var(--bg-input); border-radius: 20px; height: 10px; overflow: hidden; }
         .progress-bar-fill {
-            height: 100%; background: linear-gradient(90deg, var(--emerald), #34d399);
-            border-radius: 20px; transition: width 0.4s ease;
+            height: 100%;
+            background: linear-gradient(90deg, var(--emerald), #4ade80);
+            border-radius: 20px;
+            transition: width 0.5s cubic-bezier(0.34,1.56,0.64,1);
         }
         .progress-bar-fill.danger { background: linear-gradient(90deg, var(--red), #f87171); }
         .budget-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-        .budget-row select, .budget-row input { flex: 1; min-width: 80px; margin-bottom: 0; padding: 9px 12px; font-size: 0.85rem; }
+        .budget-row select, .budget-row input { flex: 1; min-width: 80px; margin-bottom: 0; padding: 10px 14px; font-size: 0.85rem; }
         .budget-row button {
-            padding: 9px 18px; background: var(--blue); color: white;
-            border: none; border-radius: var(--radius-sm); font-weight: 600;
-            cursor: pointer; transition: var(--transition); height: 42px; flex-shrink: 0;
+            padding: 10px 20px; background: var(--grad-primary); color: white;
+            border: none; border-radius: var(--radius-pill); font-weight: 700;
+            cursor: pointer; transition: var(--transition); height: 44px; flex-shrink: 0;
+            box-shadow: var(--shadow-blue);
         }
-        .budget-row button:hover { background: var(--blue-dark); }
+        .budget-row button:hover { filter: brightness(1.08); transform: translateY(-1px); }
 
-        .debiti-container { margin-top: 30px; }
+        /* ===== DEBITI ===== */
+        .debiti-container { margin-top: 32px; }
         .debiti-header {
             cursor: pointer; display: flex; justify-content: space-between; align-items: center;
-            padding: 14px 16px; border: 1px solid var(--border-light);
-            border-radius: var(--radius-md);
+            padding: 16px 20px;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
             background: var(--bg-card);
-            transition: var(--transition); user-select: none;
-            margin-bottom: 8px;
+            transition: var(--transition-fast); user-select: none;
+            margin-bottom: 10px;
+            box-shadow: var(--shadow-xs);
         }
-        .debiti-header:hover { background: var(--bg-hover); }
-        .debiti-header h3 { margin: 0; font-size: 1rem; font-weight: 600; color: var(--text-secondary); display: flex; align-items: center; gap: 8px; }
-        .debiti-toggle-icon { font-size: 0.85rem; color: var(--text-muted); transition: transform 0.25s ease; }
-        .debiti-toggle-icon.open { transform: rotate(90deg); }
+        .debiti-header:hover { background: var(--bg-hover); transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+        .debiti-header h3 { margin: 0; font-size: 1.05rem; font-weight: 800; color: var(--text-primary); display: flex; align-items: center; gap: 8px; }
+        .debiti-toggle-icon { font-size: 0.9rem; color: var(--text-muted); transition: transform 0.3s ease; }
+        .debiti-toggle-icon.open { transform: rotate(90deg); color: var(--blue); }
         .debiti-content { padding-top: 12px; }
 
         .debito-form {
             background: var(--bg-card); border: 1px solid var(--border-light);
-            border-radius: var(--radius-lg); padding: 18px;
+            border-radius: var(--radius-lg); padding: 20px;
             display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;
+            box-shadow: var(--shadow-xs);
         }
         .debito-form .full-width { grid-column: 1 / -1; }
         .debito-form .form-group { display: flex; flex-direction: column; gap: 5px; }
-        .debito-form .form-group label { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; color: var(--text-muted); margin: 0; }
-        .debito-form input, .debito-form select { margin: 0; padding: 9px 12px; font-size: 0.88rem; }
+        .debito-form .form-group label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin: 0; letter-spacing: 0.4px; }
+        .debito-form input, .debito-form select { margin: 0; padding: 10px 14px; font-size: 0.88rem; }
         .btn-salva-debito {
-            grid-column: 1 / -1; background: var(--emerald); color: white;
-            border: none; padding: 12px; border-radius: var(--radius-sm);
-            font-weight: 600; cursor: pointer; transition: var(--transition);
+            grid-column: 1 / -1; background: var(--grad-success); color: white;
+            border: none; padding: 14px; border-radius: var(--radius-pill);
+            font-weight: 800; cursor: pointer; transition: var(--transition);
+            box-shadow: var(--shadow-green); text-transform: uppercase; letter-spacing: 0.5px; font-size: 0.82rem;
         }
-        .btn-salva-debito:hover { background: #059669; }
+        .btn-salva-debito:hover { filter: brightness(1.08); transform: translateY(-1px); }
         .btn-annulla-debito {
             grid-column: 1 / -1; background: var(--bg-input);
             border: 1px solid var(--border-light); color: var(--text-secondary);
-            padding: 11px; border-radius: var(--radius-sm); cursor: pointer; transition: var(--transition);
+            padding: 12px; border-radius: var(--radius-pill); cursor: pointer;
+            transition: var(--transition); font-weight: 700;
         }
         .btn-annulla-debito:hover { background: var(--border-light); }
 
         .debito-card {
             background: var(--bg-card); border: 1px solid var(--border-light);
-            border-radius: var(--radius-lg); padding: 18px; margin-bottom: 12px;
+            border-radius: var(--radius-lg); padding: 20px; margin-bottom: 12px;
             box-shadow: var(--shadow-sm); transition: var(--transition);
         }
-        .debito-card:hover { box-shadow: var(--shadow-md); }
-        .debito-card .debito-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 6px; }
-        .debito-card .debito-nome { font-weight: 700; font-size: 1.05rem; }
-        .debito-card .debito-dettagli { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 12px; }
-        .debito-card .debito-dettaglio { background: var(--bg-input); padding: 10px; border-radius: var(--radius-sm); text-align: center; }
-        .debito-card .debito-dettaglio .label { font-size: 0.6rem; text-transform: uppercase; color: var(--text-muted); margin: 0; letter-spacing: 0.4px; }
-        .debito-card .debito-dettaglio .value { font-weight: 700; font-size: 1rem; margin-top: 2px; }
-        .debito-card .debito-progresso-container { margin: 10px 0; }
-        .debito-progresso-label { display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--text-secondary); margin-bottom: 4px; font-weight: 500; }
-        .debito-progresso { background: var(--bg-input); border-radius: 20px; height: 7px; overflow: hidden; }
-        .debito-progresso-fill { height: 100%; border-radius: 20px; transition: width 0.4s ease; }
-        .debito-progresso-fill.verde { background: linear-gradient(90deg, var(--emerald), #34d399); }
-        .debito-progresso-fill.giallo { background: linear-gradient(90deg, var(--orange), #fbbf24); }
+        .debito-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+        .debito-card .debito-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 6px; }
+        .debito-card .debito-nome { font-weight: 800; font-size: 1.1rem; }
+        .debito-card .debito-dettagli { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+        .debito-card .debito-dettaglio { background: var(--bg-input); padding: 12px 8px; border-radius: var(--radius-sm); text-align: center; }
+        .debito-card .debito-dettaglio .label { font-size: 0.6rem; text-transform: uppercase; color: var(--text-muted); margin: 0; letter-spacing: 0.4px; font-weight: 700; }
+        .debito-card .debito-dettaglio .value { font-weight: 800; font-size: 1rem; margin-top: 4px; }
+        .debito-card .debito-progresso-container { margin: 12px 0; }
+        .debito-progresso-label { display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--text-secondary); margin-bottom: 6px; font-weight: 600; }
+        .debito-progresso { background: var(--bg-input); border-radius: 20px; height: 8px; overflow: hidden; }
+        .debito-progresso-fill { height: 100%; border-radius: 20px; transition: width 0.5s cubic-bezier(0.34,1.56,0.64,1); }
+        .debito-progresso-fill.verde { background: linear-gradient(90deg, var(--emerald), #4ade80); }
+        .debito-progresso-fill.giallo { background: linear-gradient(90deg, var(--orange), var(--yellow)); }
         .debito-progresso-fill.rosso { background: linear-gradient(90deg, var(--red), #f87171); }
 
-        .debito-azioni { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+        .debito-azioni { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
         .debito-azioni button {
-            padding: 7px 14px; border-radius: var(--radius-sm);
-            border: none; font-weight: 600; font-size: 0.72rem;
+            padding: 9px 18px; border-radius: var(--radius-pill);
+            border: none; font-weight: 700; font-size: 0.75rem;
             cursor: pointer; transition: var(--transition);
+            text-transform: uppercase; letter-spacing: 0.3px;
         }
-        .debito-azioni .btn-modifica { background: var(--blue); color: white; }
-        .debito-azioni .btn-modifica:hover { background: var(--blue-dark); }
-        .debito-azioni .btn-elimina { background: var(--red); color: white; }
-        .debito-azioni .btn-elimina:hover { background: #dc2626; }
-        .debito-azioni .btn-paga-rata { background: var(--emerald); color: white; }
-        .debito-azioni .btn-paga-rata:hover { background: #059669; }
+        .debito-azioni .btn-modifica { background: var(--grad-primary); color: white; box-shadow: var(--shadow-blue); }
+        .debito-azioni .btn-modifica:hover { filter: brightness(1.08); transform: translateY(-1px); }
+        .debito-azioni .btn-elimina { background: var(--grad-danger); color: white; box-shadow: var(--shadow-red); }
+        .debito-azioni .btn-elimina:hover { filter: brightness(1.08); transform: translateY(-1px); }
+        .debito-azioni .btn-paga-rata { background: var(--grad-success); color: white; box-shadow: var(--shadow-green); }
+        .debito-azioni .btn-paga-rata:hover { filter: brightness(1.08); transform: translateY(-1px); }
 
+        /* ===== LISTE ===== */
         .lista-spesa-card {
             background: var(--bg-card); border: 1px solid var(--border-light);
-            border-radius: var(--radius-md); padding: 14px 16px; margin-bottom: 8px;
+            border-radius: var(--radius-lg); padding: 16px 20px; margin-bottom: 10px;
             display: flex; justify-content: space-between; align-items: center;
             flex-wrap: wrap; gap: 10px; transition: var(--transition);
+            box-shadow: var(--shadow-xs);
         }
-        .lista-spesa-card:hover { box-shadow: var(--shadow-sm); transform: translateX(2px); }
+        .lista-spesa-card:hover { box-shadow: var(--shadow-md); transform: translateX(4px); border-color: var(--blue); }
         .lista-spesa-card .info { flex: 1; min-width: 140px; }
-        .lista-spesa-card .info .data { font-size: 0.7rem; color: var(--text-muted); font-weight: 500; }
-        .lista-spesa-card .info .desc { font-weight: 600; font-size: 0.95rem; margin: 2px 0; }
+        .lista-spesa-card .info .data { font-size: 0.72rem; color: var(--text-muted); font-weight: 600; }
+        .lista-spesa-card .info .desc { font-weight: 700; font-size: 0.98rem; margin: 4px 0; }
         .lista-spesa-card .info .categoria {
-            font-size: 0.65rem; background: var(--bg-input);
-            padding: 2px 10px; border-radius: var(--radius-pill);
-            color: var(--text-secondary); display: inline-block;
+            font-size: 0.68rem; background: var(--bg-input);
+            padding: 3px 12px; border-radius: var(--radius-pill);
+            color: var(--text-secondary); display: inline-block; font-weight: 600;
         }
-        .lista-spesa-card .importo { font-weight: 800; font-size: 1.1rem; color: var(--red); font-variant-numeric: tabular-nums; }
+        .lista-spesa-card .importo { font-weight: 900; font-size: 1.2rem; color: var(--red); font-variant-numeric: tabular-nums; }
         .lista-spesa-card .azioni { display: flex; gap: 4px; }
         .lista-spesa-card .azioni span {
-            cursor: pointer; padding: 6px; border-radius: 50%;
+            cursor: pointer; padding: 8px; border-radius: 50%;
             transition: var(--transition); opacity: 0.5;
+            display: inline-flex; align-items: center; justify-content: center;
         }
-        .lista-spesa-card .azioni span:hover { opacity: 1; background: var(--bg-hover); }
+        .lista-spesa-card .azioni span:hover { opacity: 1; background: var(--red-light); transform: scale(1.15); }
 
+        /* ===== CALENDARIO ===== */
         .grid-calendario {
             display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px;
-            background: var(--bg-input); padding: 6px; border-radius: var(--radius-md);
+            background: var(--bg-input); padding: 8px; border-radius: var(--radius-lg);
         }
         .cal-giorno {
-            background: var(--bg-card); padding: 8px 6px;
-            border-radius: var(--radius-sm); min-height: 68px;
-            font-size: 0.8rem; display: flex; flex-direction: column;
+            background: var(--bg-card); padding: 10px 8px;
+            border-radius: var(--radius-sm); min-height: 76px;
+            font-size: 0.82rem; display: flex; flex-direction: column;
             border: 1px solid transparent; transition: var(--transition);
+            font-weight: 600;
         }
-        .cal-giorno:hover { border-color: var(--border-strong); }
+        .cal-giorno:hover { border-color: var(--blue); transform: translateY(-2px); box-shadow: var(--shadow-sm); }
         .cal-giorno.vuoto { background: transparent; }
-        .cal-giorno.oggi { border: 2px solid var(--blue); box-shadow: 0 0 0 3px rgba(79,106,245,0.12); }
+        .cal-giorno.oggi {
+            border: 2px solid var(--blue);
+            box-shadow: 0 0 0 4px rgba(67,97,238,0.15);
+            background: var(--blue-light);
+        }
         .cal-badge-scadenza {
-            font-size: 0.58rem; padding: 3px 6px; border-radius: 4px; margin-top: 3px;
-            background: var(--red); color: white;
+            font-size: 0.6rem; padding: 4px 8px; border-radius: 6px; margin-top: 4px;
+            background: var(--grad-danger); color: white;
             white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-            font-weight: 500;
+            font-weight: 700; box-shadow: var(--shadow-xs);
         }
 
+        /* ===== PAGE CONTI ===== */
         #pagina-conti { padding: 20px 0; }
         #pagina-conti .page-title {
-            text-align: center; font-size: 1.7rem; font-weight: 800;
-            color: var(--text-primary); margin-bottom: 8px;
-            letter-spacing: -0.5px;
+            text-align: center; font-size: 2rem; font-weight: 900;
+            color: var(--text-primary); margin-bottom: 12px;
+            letter-spacing: -1px;
         }
         #pagina-conti .totale-conti {
             text-align: center; font-size: 1.15rem; font-weight: 600;
-            color: var(--text-secondary); margin-bottom: 18px;
-            padding: 14px; background: var(--bg-card);
-            border-radius: var(--radius-lg); border: 1px solid var(--border-light);
+            color: var(--text-secondary); margin-bottom: 24px;
+            padding: 18px; background: var(--bg-card);
+            border-radius: var(--radius-xl); border: 1px solid var(--border-light);
             box-shadow: var(--shadow-sm);
         }
-        #pagina-conti .totale-conti .value { color: var(--blue); font-weight: 800; }
-        .conti-actions { display: flex; gap: 12px; justify-content: center; margin-bottom: 22px; flex-wrap: wrap; }
-        .conti-actions .btn-modern { padding: 12px 24px; font-size: 0.85rem; flex: 0 1 auto; min-width: 180px; }
+        #pagina-conti .totale-conti .value { color: var(--blue); font-weight: 900; font-size: 1.4rem; }
+        .conti-actions { display: flex; gap: 12px; justify-content: center; margin-bottom: 24px; flex-wrap: wrap; }
+        .conti-actions .btn-modern { padding: 14px 28px; font-size: 0.85rem; flex: 0 1 auto; min-width: 200px; }
 
         .conto-riga {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 16px 20px; background: var(--bg-card);
-            border: 1px solid var(--border-light); border-radius: var(--radius-md);
-            margin-bottom: 8px; box-shadow: var(--shadow-xs); transition: var(--transition);
+            padding: 18px 24px; background: var(--bg-card);
+            border: 1px solid var(--border-light); border-radius: var(--radius-lg);
+            margin-bottom: 10px; box-shadow: var(--shadow-xs); transition: var(--transition);
             cursor: pointer;
         }
-        .conto-riga:hover { box-shadow: var(--shadow-md); transform: translateX(4px); border-color: var(--blue); }
-        .conto-riga .conto-info { display: flex; align-items: center; gap: 14px; }
-        .conto-riga .conto-icona {
-            font-size: 1.5rem; width: 44px; height: 44px;
-            display: flex; align-items: center; justify-content: center;
-            background: var(--bg-input); border-radius: var(--radius-md);
+        .conto-riga:hover {
+            box-shadow: var(--shadow-md); transform: translateX(6px);
+            border-color: var(--blue);
         }
-        .conto-riga .conto-nome { font-weight: 600; font-size: 1rem; color: var(--text-primary); }
-        .conto-riga .conto-giacenza { font-weight: 800; font-size: 1.1rem; font-variant-numeric: tabular-nums; }
+        .conto-riga .conto-info { display: flex; align-items: center; gap: 16px; }
+        .conto-riga .conto-icona {
+            font-size: 1.6rem; width: 52px; height: 52px;
+            display: flex; align-items: center; justify-content: center;
+            background: var(--blue-light); border-radius: var(--radius-md);
+        }
+        .conto-riga .conto-nome { font-weight: 700; font-size: 1.05rem; color: var(--text-primary); }
+        .conto-riga .conto-giacenza { font-weight: 900; font-size: 1.2rem; font-variant-numeric: tabular-nums; }
         .conto-riga .conto-giacenza.positivo { color: var(--emerald); }
         .conto-riga .conto-giacenza.negativo { color: var(--red); }
 
-        .btn-aggiungi-conto-footer { display: flex; justify-content: center; margin-top: 28px; }
+        .btn-aggiungi-conto-footer { display: flex; justify-content: center; margin-top: 32px; }
         .btn-aggiungi-conto-footer .btn-circle {
-            width: 64px; height: 64px; border-radius: 50%;
-            background: linear-gradient(135deg, var(--blue), var(--purple));
-            color: white; border: none; font-size: 2.2rem; font-weight: 300;
-            cursor: pointer; box-shadow: 0 8px 24px rgba(79,106,245,0.35);
+            width: 72px; height: 72px; border-radius: 50%;
+            background: var(--grad-primary);
+            color: white; border: none; font-size: 2.4rem; font-weight: 300;
+            cursor: pointer;
+            box-shadow: 0 12px 32px rgba(67,97,238,0.4);
             transition: var(--transition);
             display: flex; align-items: center; justify-content: center;
         }
         .btn-aggiungi-conto-footer .btn-circle:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 12px 32px rgba(79,106,245,0.45);
+            transform: translateY(-4px) scale(1.08) rotate(90deg);
+            box-shadow: 0 20px 48px rgba(67,97,238,0.5);
         }
 
+        /* ===== STORICO ===== */
         .storico-tabella { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
         .storico-tabella th {
-            text-align: left; padding: 12px 8px;
+            text-align: left; padding: 14px 10px;
             border-bottom: 2px solid var(--border-light);
-            color: var(--text-muted); font-weight: 600;
-            font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px;
+            color: var(--text-muted); font-weight: 700;
+            font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.6px;
         }
-        .storico-tabella td { padding: 12px 8px; border-bottom: 1px solid var(--border-light); vertical-align: middle; }
-        .storico-tabella .amount { font-weight: 700; color: var(--red); }
+        .storico-tabella td { padding: 14px 10px; border-bottom: 1px solid var(--border-light); vertical-align: middle; }
+        .storico-tabella tr:hover td { background: var(--bg-hover); }
+        .storico-tabella .amount { font-weight: 800; color: var(--red); }
         .storico-tabella .btn-elimina-giroconto {
             background: none; border: none; color: var(--red); cursor: pointer;
-            font-size: 1.1rem; padding: 4px 6px; border-radius: var(--radius-xs);
+            font-size: 1.1rem; padding: 6px 8px; border-radius: 50%;
             transition: var(--transition); opacity: 0.6;
         }
-        .storico-tabella .btn-elimina-giroconto:hover { opacity: 1; background: var(--red-light); }
+        .storico-tabella .btn-elimina-giroconto:hover { opacity: 1; background: var(--red-light); transform: scale(1.1); }
 
+        /* ===== BACKUP ===== */
         #pagina-backup .backup-card {
             background: var(--bg-card); border: 1px solid var(--border-light);
-            border-radius: var(--radius-lg); padding: 18px; margin-bottom: 12px;
+            border-radius: var(--radius-lg); padding: 20px; margin-bottom: 12px;
             box-shadow: var(--shadow-sm); transition: var(--transition);
         }
-        #pagina-backup .backup-card:hover { box-shadow: var(--shadow-md); }
-        #pagina-backup .backup-actions-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; justify-content: center; }
+        #pagina-backup .backup-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+        #pagina-backup .backup-actions-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; justify-content: center; }
         #pagina-backup .backup-actions-bar button {
-            padding: 11px 20px; border-radius: var(--radius-sm);
-            border: 1px solid var(--border-light); font-weight: 600;
+            padding: 12px 22px; border-radius: var(--radius-pill);
+            border: 1px solid var(--border-light); font-weight: 700;
             cursor: pointer; transition: var(--transition); font-size: 0.82rem;
-            flex: 1 1 auto; min-width: 120px;
+            flex: 1 1 auto; min-width: 130px;
             background: var(--bg-card); color: var(--text-secondary);
+            text-transform: uppercase; letter-spacing: 0.3px;
         }
         #pagina-backup .backup-actions-bar button:hover {
-            background: var(--bg-hover); transform: translateY(-1px);
-            box-shadow: var(--shadow-sm); border-color: var(--border-strong);
+            background: var(--bg-hover); transform: translateY(-2px);
+            box-shadow: var(--shadow-md); border-color: var(--blue); color: var(--blue);
         }
         #pagina-backup .backup-status {
             display: flex; align-items: center; gap: 10px;
             background: var(--bg-card); border: 1px solid var(--border-light);
-            border-radius: var(--radius-md); padding: 12px 18px;
-            margin-bottom: 16px; font-size: 0.88rem; color: var(--text-secondary);
-            font-weight: 500;
+            border-radius: var(--radius-md); padding: 14px 20px;
+            margin-bottom: 20px; font-size: 0.88rem; color: var(--text-secondary);
+            font-weight: 600;
         }
-        #pagina-backup .status-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
-        #pagina-backup .status-dot.active { background: var(--emerald); box-shadow: 0 0 0 3px rgba(16,185,129,0.2); }
+        #pagina-backup .status-dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+        #pagina-backup .status-dot.active { background: var(--emerald); box-shadow: 0 0 0 4px rgba(6,214,160,0.2); animation: pulseDot 2s infinite; }
+        @keyframes pulseDot {
+            0%, 100% { box-shadow: 0 0 0 4px rgba(6,214,160,0.2); }
+            50% { box-shadow: 0 0 0 8px rgba(6,214,160,0.1); }
+        }
         #pagina-backup .page-title {
-            text-align: center; font-size: 1.7rem; font-weight: 800;
-            color: var(--text-primary); margin-bottom: 8px; letter-spacing: -0.5px;
+            text-align: center; font-size: 2rem; font-weight: 900;
+            color: var(--text-primary); margin-bottom: 12px; letter-spacing: -1px;
         }
 
+        /* ===== MEDIA QUERIES ===== */
         @media (max-width: 768px) {
             .form-grid { grid-template-columns: 1fr; }
             .debito-form { grid-template-columns: 1fr; }
             .debito-card .debito-dettagli { grid-template-columns: 1fr 1fr; }
-            .patrimonio-totale .value { font-size: 1.3rem; }
-            .patrimonio-totale { padding: 14px 18px; }
-            #previsione-globale { padding: 12px 18px; }
-            .header-saldo h1 { font-size: 2.1rem; }
-            .header-saldo { flex-direction: column; align-items: stretch; text-align: center; padding: 16px 18px; }
-            .header-saldo .saldo-center { order: 2; }
-            .header-saldo .saldo-side { order: 1; justify-content: center; margin-bottom: 6px; }
-            .dashboard-widget { min-width: 220px; }
-            .logo-box img { height: 46px; }
-            .center-title .title-main { font-size: 1.15rem; }
+            .patrimonio-totale .value { font-size: 1.6rem; }
+            .patrimonio-totale { padding: 18px 22px; margin: 16px 8px 0; }
+            #previsione-globale { padding: 14px 22px; margin: 0 8px; }
+            .header-saldo { padding: 24px 20px; min-height: 120px; margin: 12px 0 16px; }
+            .header-saldo h1 { font-size: 2.4rem; }
+            .logo-box img { height: 44px; }
+            .center-title .title-main { font-size: 1.2rem; }
             .center-title .title-sub { font-size: 0.7rem; }
-            .conti-actions .btn-modern { min-width: 140px; font-size: 0.78rem; padding: 10px 16px; }
-            #pagina-conti .page-title { font-size: 1.4rem; }
-            .conto-riga { padding: 12px 16px; }
-            .conto-riga .conto-icona { font-size: 1.2rem; width: 38px; height: 38px; }
+            .conti-actions .btn-modern { min-width: 160px; font-size: 0.78rem; }
+            #pagina-conti .page-title { font-size: 1.6rem; }
+            .conto-riga { padding: 14px 18px; }
+            .conto-riga .conto-icona { font-size: 1.3rem; width: 44px; height: 44px; }
             .storico-tabella { font-size: 0.8rem; }
-            .storico-tabella th, .storico-tabella td { padding: 8px 4px; }
-            #pagina-backup .backup-actions-bar button { min-width: 100px; font-size: 0.75rem; padding: 9px 12px; }
-            .dropdown-content { min-width: 220px; }
-            .btn-suggerimenti { font-size: 1.1rem; width: 36px; height: 36px; }
+            .storico-tabella th, .storico-tabella td { padding: 10px 6px; }
+            #pagina-backup .backup-actions-bar button { min-width: 110px; font-size: 0.75rem; padding: 10px 14px; }
+            .dropdown-content { min-width: 230px; }
+            .btn-suggerimenti, .menu-dots { width: 36px; height: 36px; }
+            #pagina-backup .page-title { font-size: 1.6rem; }
         }
         @media (max-width: 480px) {
             .container { padding: 0 10px 20px; }
             .modal-content { padding: 22px; max-width: 100%; }
-            .header-saldo h1 { font-size: 1.7rem; }
-            .header-saldo { padding: 14px 16px; }
-            .patrimonio-totale { padding: 12px 16px; }
-            #previsione-globale { padding: 12px 16px; }
-            .dashboard-widget { min-width: 180px; padding: 14px; }
-            .logo-box img { height: 40px; }
-            .center-title .title-main { font-size: 1.05rem; }
+            .header-saldo h1 { font-size: 2rem; }
+            .header-saldo { padding: 20px 16px; }
+            .patrimonio-totale { padding: 16px 20px; margin: 12px 6px 0; }
+            .patrimonio-totale .value { font-size: 1.5rem; }
+            #previsione-globale { padding: 14px 20px; margin: 0 6px; }
+            .dashboard-widget { min-width: 200px; padding: 16px; }
+            .logo-box img { height: 38px; }
+            .center-title .title-main { font-size: 1.1rem; }
             .center-title .title-sub { font-size: 0.65rem; }
-            #pagina-backup .backup-actions-bar button { min-width: 80px; font-size: 0.68rem; padding: 8px 10px; }
-            .dropdown-content { min-width: 200px; }
-            .btn-suggerimenti { font-size: 1rem; width: 32px; height: 32px; }
+            #pagina-backup .backup-actions-bar button { min-width: 90px; font-size: 0.7rem; padding: 8px 12px; }
+            .dropdown-content { min-width: 210px; }
+            .btn-suggerimenti, .menu-dots { width: 32px; height: 32px; font-size: 1rem; }
         }
-
         @media (max-width: 768px) {
             body, .container, .conto-page-aggiungi { overflow-x: hidden !important; max-width: 100vw !important; padding-left: 10px !important; padding-right: 10px !important; }
             .conto-page { overflow-x: hidden !important; max-width: 100vw !important; padding-left: 0 !important; padding-right: 0 !important; }
@@ -924,20 +1026,19 @@
             .desktop-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
             .table-container, .mese-content, #lista-transazioni-* { overflow-x: auto !important; -webkit-overflow-scrolling: touch; display: block !important; width: 100% !important; }
             .mese-content table { min-width: 300px; width: 100% !important; }
-            .header-saldo h1 { font-size: 1.7rem !important; }
-            input, select { font-size: 0.9rem !important; padding: 10px 12px !important; }
+            input, select { font-size: 0.9rem !important; padding: 12px 14px !important; }
             .debito-card .debito-dettagli { grid-template-columns: 1fr 1fr !important; gap: 6px !important; }
             .budget-row select, .budget-row input { min-width: 60px !important; font-size: 0.82rem !important; }
         }
 
-        .dark-theme .card, .dark-theme .header-saldo, .dark-theme .filtro-mobile,
-        .dark-theme .budget-container, .dark-theme .debito-form, .dark-theme .debito-card,
-        .dark-theme .backup-card, .dark-theme .modal-content, .dark-theme .toast,
-        .dark-theme .aggiungi-conto-card, .dark-theme .dashboard-widget,
-        .dark-theme #pagina-conti .totale-conti, .dark-theme .conto-riga,
-        .dark-theme #pagina-backup .backup-status, .dark-theme .dropdown-content,
-        .dark-theme .submenu-content, .dark-theme .mese-container,
-        .dark-theme .debiti-header {
+        /* ===== DARK MODE OVERRIDES ===== */
+        .dark-theme .card, .dark-theme .filtro-mobile, .dark-theme .budget-container,
+        .dark-theme .debito-form, .dark-theme .debito-card, .dark-theme .backup-card,
+        .dark-theme .modal-content, .dark-theme .toast, .dark-theme .aggiungi-conto-card,
+        .dark-theme .dashboard-widget, .dark-theme #pagina-conti .totale-conti,
+        .dark-theme .conto-riga, .dark-theme #pagina-backup .backup-status,
+        .dark-theme .dropdown-content, .dark-theme .submenu-content,
+        .dark-theme .mese-container, .dark-theme .debiti-header {
             background: var(--bg-card); border-color: var(--border-light);
         }
         .dark-theme .sticky-col { background: var(--bg-card); }
@@ -947,34 +1048,36 @@
         .dark-theme input:focus, .dark-theme select:focus { background: var(--bg-input); }
         .dark-theme .submenu-content .setting-row select { background: var(--bg-input); }
         .dark-theme .cal-giorno { background: var(--bg-card); }
+        .dark-theme .cal-giorno.oggi { background: var(--blue-light); }
         .dark-theme .grid-calendario { background: var(--bg-input); }
-        .dark-theme .patrimonio-totale { background: linear-gradient(135deg, var(--bg-card), color-mix(in srgb, var(--bg-card) 92%, var(--blue))); }
-        .dark-theme .header-saldo { background: linear-gradient(135deg, var(--bg-card), color-mix(in srgb, var(--bg-card) 94%, var(--blue))); }
+        .dark-theme .btn-modern { background: var(--bg-input); color: var(--text-secondary); }
+        .dark-theme .btn-modern:hover { background: var(--bg-hover); }
 
+        /* ===== SECTION HEADINGS ===== */
         .section { padding: 16px 0; border-bottom: 1px solid var(--border-light); }
         .section:last-child { border-bottom: none; }
         h3 {
-            font-size: 1.1rem; font-weight: 700;
-            color: var(--text-primary); margin-bottom: 14px;
+            font-size: 1.15rem; font-weight: 800;
+            color: var(--text-primary); margin-bottom: 16px;
             display: flex; align-items: center; gap: 8px;
-            letter-spacing: -0.2px;
+            letter-spacing: -0.3px;
         }
         h4 {
-            font-size: 0.98rem; font-weight: 600;
-            color: var(--text-secondary); margin-bottom: 10px;
+            font-size: 1rem; font-weight: 700;
+            color: var(--text-secondary); margin-bottom: 12px;
             display: flex; align-items: center; gap: 6px;
         }
 
         .utenza-totale {
-            background: linear-gradient(135deg, var(--blue), var(--purple));
-            color: white; padding: 14px 20px; border-radius: var(--radius-md);
+            background: var(--grad-primary);
+            color: white; padding: 18px 24px; border-radius: var(--radius-lg);
             display: flex; justify-content: space-between; align-items: center;
             margin-bottom: 16px; flex-wrap: wrap; gap: 8px;
-            box-shadow: 0 8px 24px rgba(79,106,245,0.28);
+            box-shadow: var(--shadow-blue);
         }
-        .utenza-totale .value { font-weight: 800; font-size: 1.2rem; font-variant-numeric: tabular-nums; }
-        .utenza-empty { text-align: center; padding: 36px; color: var(--text-muted); }
-        .utenza-empty .icon { font-size: 3rem; display: block; margin-bottom: 10px; opacity: 0.8; }
+        .utenza-totale .value { font-weight: 900; font-size: 1.3rem; font-variant-numeric: tabular-nums; }
+        .utenza-empty { text-align: center; padding: 40px; color: var(--text-muted); }
+        .utenza-empty .icon { font-size: 3rem; display: block; margin-bottom: 12px; opacity: 0.7; }
 
         .info-previsione {
             background: var(--bg-card); border: 1px solid var(--border-light);
@@ -991,31 +1094,35 @@
 
         #migrateBtn {
             position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
-            z-index: 99999; background: var(--emerald); color: white;
-            border: none; border-radius: var(--radius-pill); padding: 14px 28px;
-            font-size: 0.95rem; font-weight: 700;
-            box-shadow: 0 8px 24px rgba(16,185,129,0.45);
+            z-index: 99999; background: var(--grad-success); color: white;
+            border: none; border-radius: var(--radius-pill); padding: 16px 32px;
+            font-size: 0.95rem; font-weight: 800;
+            box-shadow: 0 12px 32px rgba(6,214,160,0.5);
             cursor: pointer; display: none;
             animation: pulse 2s infinite;
+            text-transform: uppercase; letter-spacing: 0.5px;
         }
         @keyframes pulse {
             0% { transform: translateX(-50%) scale(1); }
-            50% { transform: translateX(-50%) scale(1.04); }
+            50% { transform: translateX(-50%) scale(1.05); }
             100% { transform: translateX(-50%) scale(1); }
         }
 
         .conto-page, .mese-container, .debito-card, .lista-spesa-card, .backup-card {
-            animation: slideUp 0.3s ease;
+            animation: slideUp 0.35s cubic-bezier(0.34,1.56,0.64,1);
         }
         @keyframes slideUp {
-            from { opacity: 0; transform: translateY(6px); }
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
         button:focus-visible, a:focus-visible {
             outline: 2px solid var(--blue);
-            outline-offset: 2px;
+            outline-offset: 3px;
         }
+
+        /* Icone emoji più grandi e definite nei bottoni principali */
+        .btn-modern { font-feature-settings: "ss01"; }
     </style>
 </head>
 <body>
@@ -1037,10 +1144,10 @@
                 <div id="myDropdown" class="dropdown-content">
                     <a onclick="loginbtn()" id="login-nav-link">🔐 Login</a>
                     <a onclick="mostraPagina('conti')" style="color:var(--blue);font-weight:600;">🏦 Conti</a>
-                    <a onclick="mostraPagina('analisi')" style="color:var(--purple);font-weight:500;">📊 Analisi</a>
-                    <a onclick="mostraPagina('liste')" style="color:var(--purple);font-weight:500;">📋 Liste</a>
-                    <a onclick="mostraPagina('news')" style="color:var(--purple);font-weight:500;">📰 News</a>
-                    <a onclick="mostraPagina('scadenze')" style="color:var(--purple);font-weight:500;">📅 Scadenze</a>
+                    <a onclick="mostraPagina('analisi')" style="color:var(--violet);font-weight:500;">📊 Analisi</a>
+                    <a onclick="mostraPagina('liste')" style="color:var(--violet);font-weight:500;">📋 Liste</a>
+                    <a onclick="mostraPagina('news')" style="color:var(--violet);font-weight:500;">📰 News</a>
+                    <a onclick="mostraPagina('scadenze')" style="color:var(--violet);font-weight:500;">📅 Scadenze</a>
 
                     <div class="dropdown-submenu">
                         <div class="submenu-header" onclick="toggleSubmenu('settings')">
@@ -1127,12 +1234,10 @@
             <button onclick="mostraPagina('home')" class="btn-back-home">⬅ Torna alla Home</button>
         </div>
         <div class="page-title">💾 Backup e Sincronizzazione</div>
-
         <div class="backup-status" id="backupStatus">
             <span class="status-dot active" id="statusDot"></span>
             <span id="statusText">Caricamento...</span>
         </div>
-
         <div class="backup-actions-bar">
             <button class="btn-sync-cloud" onclick="sincronizzaDalCloud()">🔄 Sincronizza dal Cloud</button>
             <button class="btn-backup-rapido" onclick="esportaDati()">📋 Backup rapido</button>
@@ -1141,7 +1246,6 @@
             <button class="btn-esporta-tutti" onclick="esportaTuttiBackup()">💾 Esporta Tutti</button>
             <button class="btn-pulisci-backup" onclick="pulisciBackup()">🧹 Pulizia</button>
         </div>
-
         <div id="backupList"></div>
     </div>
 
@@ -1150,12 +1254,12 @@
             <button onclick="mostraPagina('home')" class="btn-back-home">⬅ Torna alla Home</button>
             <h3 style="margin:0;">📅 Calendario Scadenze</h3>
         </div>
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; background:var(--bg-card); padding:12px; border-radius:var(--radius-md); border:1px solid var(--border-light); flex-wrap:wrap; gap:8px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; background:var(--bg-card); padding:12px; border-radius:var(--radius-lg); border:1px solid var(--border-light); flex-wrap:wrap; gap:8px; box-shadow:var(--shadow-xs);">
             <button onclick="navigaMeseCalendario(-1)" class="btn-modern" style="flex:0; padding:8px 16px;">◀ Mese Prec.</button>
-            <h3 id="cal-titolo-mese" style="margin:0; font-size:1.15rem; font-weight:700; text-transform:capitalize;"></h3>
+            <h3 id="cal-titolo-mese" style="margin:0; font-size:1.2rem; font-weight:800; text-transform:capitalize;"></h3>
             <button onclick="navigaMeseCalendario(1)" class="btn-modern" style="flex:0; padding:8px 16px;">Mese Succ. ▶</button>
         </div>
-        <div style="display:grid; grid-template-columns:repeat(7,1fr); text-align:center; font-weight:600; font-size:0.7rem; text-transform:uppercase; color:var(--text-muted); margin-bottom:6px; letter-spacing:0.5px;">
+        <div style="display:grid; grid-template-columns:repeat(7,1fr); text-align:center; font-weight:700; font-size:0.7rem; text-transform:uppercase; color:var(--text-muted); margin-bottom:8px; letter-spacing:0.6px;">
             <div>Lun</div><div>Mar</div><div>Mer</div><div>Gio</div><div>Ven</div><div>Sab</div><div>Dom</div>
         </div>
         <div id="calendario-grid" class="grid-calendario"></div>
@@ -1245,7 +1349,6 @@
             <p><strong>Nessuna lista creata</strong></p>
         </div>
     </div>
-
     <div id="modalAggiungiConto" class="modal">
         <div class="modal-content">
             <button class="close-btn" onclick="chiudiModalAggiungiConto()">&times;</button>
@@ -1311,7 +1414,7 @@
     <div id="auth-modal" class="modal" style="display:none;">
         <div class="modal-content auth">
             <button class="close-btn" onclick="chiudiAuthModal()">&times;</button>
-            <h3 style="margin-bottom:20px; text-align:center; font-size:1.2rem;" id="auth-title">🔐 Cloud Sync Login</h3>
+            <h3 style="margin-bottom:20px; text-align:center; font-size:1.25rem;" id="auth-title">🔐 Cloud Sync Login</h3>
             <div id="auth-error" style="color:var(--red); font-size:0.85rem; margin-bottom:12px; display:none; text-align:center; font-weight:600;"></div>
             <input type="email" id="auth-email" placeholder="La tua Email" style="margin-bottom:12px;">
             <input type="password" id="auth-password" placeholder="Password (min. 6 caratteri)" style="margin-bottom:16px;">
@@ -1389,25 +1492,25 @@
     <div id="calc-modal" class="modal">
         <div class="modal-content" style="max-width:380px;">
             <button class="close-btn" onclick="chiudiCalcolatrice()">&times;</button>
-            <input type="text" id="calc-screen" readonly style="width:100%; height:60px; background:var(--bg-input); border:none; text-align:right; padding:0 18px; font-size:1.9rem; font-weight:700; border-radius:var(--radius-md); margin-bottom:18px; color:var(--text-primary); font-variant-numeric: tabular-nums;">
+            <input type="text" id="calc-screen" readonly style="width:100%; height:64px; background:var(--bg-input); border:none; text-align:right; padding:0 20px; font-size:2rem; font-weight:800; border-radius:var(--radius-md); margin-bottom:20px; color:var(--text-primary); font-variant-numeric: tabular-nums;">
             <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:10px;">
-                <button onclick="clearScreen()" style="background:var(--red); color:white; border:none; border-radius:var(--radius-sm); padding:14px; font-weight:700; cursor:pointer;">C</button>
-                <button onclick="pressKey('/')" class="btn-modern" style="flex:0; padding:14px;">/</button>
-                <button onclick="pressKey('*')" class="btn-modern" style="flex:0; padding:14px;">*</button>
-                <button onclick="pressKey('-')" class="btn-modern" style="flex:0; padding:14px;">-</button>
-                <button onclick="pressKey('7')" class="btn-modern" style="flex:0; padding:14px;">7</button>
-                <button onclick="pressKey('8')" class="btn-modern" style="flex:0; padding:14px;">8</button>
-                <button onclick="pressKey('9')" class="btn-modern" style="flex:0; padding:14px;">9</button>
-                <button onclick="pressKey('+')" class="btn-modern" style="flex:0; padding:14px;">+</button>
-                <button onclick="pressKey('4')" class="btn-modern" style="flex:0; padding:14px;">4</button>
-                <button onclick="pressKey('5')" class="btn-modern" style="flex:0; padding:14px;">5</button>
-                <button onclick="pressKey('6')" class="btn-modern" style="flex:0; padding:14px;">6</button>
-                <button onclick="calculate()" style="grid-row:span 2; background:var(--blue); color:white; border:none; border-radius:var(--radius-sm); font-weight:700; cursor:pointer;">=</button>
-                <button onclick="pressKey('1')" class="btn-modern" style="flex:0; padding:14px;">1</button>
-                <button onclick="pressKey('2')" class="btn-modern" style="flex:0; padding:14px;">2</button>
-                <button onclick="pressKey('3')" class="btn-modern" style="flex:0; padding:14px;">3</button>
-                <button onclick="pressKey('0')" class="btn-modern" style="flex:0; padding:14px;">0</button>
-                <button onclick="pressKey(',')" class="btn-modern" style="flex:0; padding:14px;">,</button>
+                <button onclick="clearScreen()" style="background:var(--grad-danger); color:white; border:none; border-radius:var(--radius-md); padding:16px; font-weight:800; cursor:pointer; box-shadow:var(--shadow-red);">C</button>
+                <button onclick="pressKey('/')" class="btn-modern" style="flex:0; padding:16px;">/</button>
+                <button onclick="pressKey('*')" class="btn-modern" style="flex:0; padding:16px;">*</button>
+                <button onclick="pressKey('-')" class="btn-modern" style="flex:0; padding:16px;">-</button>
+                <button onclick="pressKey('7')" class="btn-modern" style="flex:0; padding:16px;">7</button>
+                <button onclick="pressKey('8')" class="btn-modern" style="flex:0; padding:16px;">8</button>
+                <button onclick="pressKey('9')" class="btn-modern" style="flex:0; padding:16px;">9</button>
+                <button onclick="pressKey('+')" class="btn-modern" style="flex:0; padding:16px;">+</button>
+                <button onclick="pressKey('4')" class="btn-modern" style="flex:0; padding:16px;">4</button>
+                <button onclick="pressKey('5')" class="btn-modern" style="flex:0; padding:16px;">5</button>
+                <button onclick="pressKey('6')" class="btn-modern" style="flex:0; padding:16px;">6</button>
+                <button onclick="calculate()" style="grid-row:span 2; background:var(--grad-primary); color:white; border:none; border-radius:var(--radius-md); font-weight:800; cursor:pointer; box-shadow:var(--shadow-blue);">=</button>
+                <button onclick="pressKey('1')" class="btn-modern" style="flex:0; padding:16px;">1</button>
+                <button onclick="pressKey('2')" class="btn-modern" style="flex:0; padding:16px;">2</button>
+                <button onclick="pressKey('3')" class="btn-modern" style="flex:0; padding:16px;">3</button>
+                <button onclick="pressKey('0')" class="btn-modern" style="flex:0; padding:16px;">0</button>
+                <button onclick="pressKey(',')" class="btn-modern" style="flex:0; padding:16px;">,</button>
             </div>
         </div>
     </div>
@@ -1440,9 +1543,6 @@
         let lastDataHash = '';
         let lastSyncTimestamp = 0;
 
-        // ==========================================
-        // 📦 DATABASE E STATO
-        // ==========================================
         const DEFAULT_CATS = {
             "Uscita": ["🏠 Casa", "🍕 Cibo", "🚗 Auto", "🛒 Spesa", "⏳ Programmata"],
             "Entrata": ["💰 Stipendio", "➕ Altro"]
@@ -1479,9 +1579,6 @@
         const MIN_OPERATION_INTERVAL = 1000;
         const mesiEstesi = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"];
 
-        // ==========================================
-        // 💾 SISTEMA BACKUP
-        // ==========================================
         const MAX_BACKUPS = 20;
         const BACKUP_KEY = 'moneyTrack_backups';
         const AUTO_BACKUP_INTERVAL = 5 * 60 * 1000;
@@ -1498,10 +1595,8 @@
                     data: new Date().toISOString(),
                     version: '2.1',
                     dati: {
-                        datiApp: datiApp,
-                        contoAttivoId: contoAttivoId,
-                        debiti: debiti,
-                        dashboardLayout: dashboardLayout,
+                        datiApp: datiApp, contoAttivoId: contoAttivoId,
+                        debiti: debiti, dashboardLayout: dashboardLayout,
                         darkTheme: localStorage.getItem('moneyTrack_darkTheme') === 'true'
                     },
                     stats: {
@@ -1628,7 +1723,7 @@
                 html += `
                 <div class="backup-card">
                     <div class="backup-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:6px;">
-                        <div class="backup-nome" style="font-weight:700;">${sanitizeHTML(backup.nome)}</div>
+                        <div class="backup-nome" style="font-weight:800;">${sanitizeHTML(backup.nome)}</div>
                         <div style="font-size:0.8rem;color:var(--text-muted);">${data.toLocaleString('it-IT')}</div>
                     </div>
                     <div style="font-size:0.85rem;color:var(--text-secondary); margin-bottom:10px;">
@@ -1638,9 +1733,9 @@
                         <span style="margin-left:12px;">📋 ${stats.liste || 0} liste</span>
                     </div>
                     <div class="debito-azioni">
-                        <button class="btn-modifica" onclick="ripristinaBackup(${backup.id})" style="background:var(--emerald);color:white;border:none;padding:6px 14px;border-radius:6px;font-weight:600;cursor:pointer;">🔄 Ripristina</button>
-                        <button class="btn-modifica" onclick="esportaBackup(${backup.id})" style="background:var(--blue);color:white;border:none;padding:6px 14px;border-radius:6px;font-weight:600;cursor:pointer;">💾 Esporta</button>
-                        <button class="btn-elimina" onclick="eliminaBackup(${backup.id})" style="background:var(--red);color:white;border:none;padding:6px 14px;border-radius:6px;font-weight:600;cursor:pointer;">🗑️ Elimina</button>
+                        <button class="btn-modifica" onclick="ripristinaBackup(${backup.id})" style="background:var(--grad-success);color:white;border:none;padding:8px 16px;border-radius:999px;font-weight:700;cursor:pointer;">🔄 Ripristina</button>
+                        <button class="btn-modifica" onclick="esportaBackup(${backup.id})" style="background:var(--grad-primary);color:white;border:none;padding:8px 16px;border-radius:999px;font-weight:700;cursor:pointer;">💾 Esporta</button>
+                        <button class="btn-elimina" onclick="eliminaBackup(${backup.id})" style="background:var(--grad-danger);color:white;border:none;padding:8px 16px;border-radius:999px;font-weight:700;cursor:pointer;">🗑️ Elimina</button>
                     </div>
                 </div>
                 `;
@@ -1663,9 +1758,6 @@
             }, AUTO_BACKUP_INTERVAL);
         }
 
-        // ==========================================
-        // 🍞 TOAST
-        // ==========================================
         function mostraToast(messaggio, tipo = 'info', durata = 4000) {
             const container = document.getElementById('toast-container');
             if (!container) return;
@@ -1677,9 +1769,6 @@
             setTimeout(() => { toast.style.animation = 'toastOut 0.3s ease'; setTimeout(() => toast.remove(), 300); }, durata);
         }
 
-        // ==========================================
-        // 📦 FUNZIONI DATI
-        // ==========================================
         function getDatiConto(contoId) {
             if (!datiApp) datiApp = { conti: {} };
             if (!datiApp.conti) datiApp.conti = {};
@@ -1729,9 +1818,6 @@
         function salvaContoAttivo() { salvaDatiApp(); }
         function salvaDebiti() { localStorage.setItem("moneyTrack_debiti", JSON.stringify(debiti)); }
 
-        // ==========================================
-        // 🎨 POPOLA CONTO
-        // ==========================================
         function popolaConto(contoId) {
             const conto = getDatiConto(contoId);
             if (!conto) return;
@@ -1777,13 +1863,13 @@
                     mappaGruppi.get(chiaveMese).push(`
                     <tr>
                         <td>
-                            <small style="color:var(--text-muted);">${sanitizeHTML(s.data)}</small><br>
-                            <strong>${sanitizeHTML(s.cat)}</strong>
+                            <small style="color:var(--text-muted);font-weight:600;">${sanitizeHTML(s.data)}</small><br>
+                            <strong style="font-size:0.98rem;">${sanitizeHTML(s.cat)}</strong>
                             ${s.girocontoId ? `<span class="badge-giroconto">↔ Giroconto</span>` : ''}
                             <br><small style="color:var(--text-secondary);">${sanitizeHTML(s.nota || '')}</small>
                         </td>
                         <td style="text-align:right; white-space:nowrap;">
-                            <span class="${s.tipo === 'Entrata' ? 'positivo':'negativo'}">${s.imp.toFixed(2)}€</span>
+                            <span class="${s.tipo === 'Entrata' ? 'positivo':'negativo'}" style="font-size:1.05rem;">${s.imp.toFixed(2)}€</span>
                             <span class="action-icon" onclick="preparaModificaPerConto('${contoId}', ${s.indexOrig})">✏️</span>
                             <span class="action-icon" onclick="eliminaRigaPerConto('${contoId}', ${s.indexOrig})">🗑️</span>
                         </td>
@@ -1795,8 +1881,13 @@
                 if (saldoEl) saldoEl.innerText = privacy ? "*** €" : saldo.toFixed(2) + " €";
                 const box = document.getElementById("boxSaldo-" + contoId);
                 if (box) {
-                    box.style.backgroundColor = saldo >= 0 ? "var(--emerald-light)" : "var(--red-light)";
-                    box.style.borderLeft = `4px solid ${saldo >= 0 ? 'var(--emerald)' : 'var(--red)'}`;
+                    if (saldo < 0) {
+                        box.style.background = "var(--grad-danger)";
+                        box.style.boxShadow = "var(--shadow-red), var(--shadow-md)";
+                    } else {
+                        box.style.background = "var(--grad-primary)";
+                        box.style.boxShadow = "var(--shadow-blue), var(--shadow-md)";
+                    }
                 }
 
                 mappaGruppi.forEach((righeHtml, meseStr) => {
@@ -1805,7 +1896,7 @@
                     div.innerHTML = `
                     <div class="mese-header" onclick="this.parentElement.classList.toggle('attivo')">
                         <span>📅 ${meseStr}</span>
-                        <span style="font-size:0.8rem;opacity:0.6;">${righeHtml.length} movimenti ▾</span>
+                        <span style="font-size:0.8rem;opacity:0.7;font-weight:600;">${righeHtml.length} movimenti ▾</span>
                     </div>
                     <div class="mese-content"><table>${righeHtml.join("")}</table></div>
                     `;
@@ -1825,16 +1916,16 @@
                     contoFuture.sort((a, b) => new Date(a.data) - new Date(b.data)).forEach((s, idx) => {
                         const valore = parseFloat(s.imp) || 0;
                         futureContainer.innerHTML += `
-                        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border-light); padding:10px 0; gap:8px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border-light); padding:12px 0; gap:8px;">
                             <div style="flex:1; min-width:0;">
-                                <small style="color:var(--text-muted);">${s.data}</small><br>
-                                <b style="font-size:0.9rem; display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${sanitizeHTML(s.desc)}">${sanitizeHTML(s.desc)}</b>
+                                <small style="color:var(--text-muted);font-weight:600;">${s.data}</small><br>
+                                <b style="font-size:0.92rem; display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${sanitizeHTML(s.desc)}">${sanitizeHTML(s.desc)}</b>
                             </div>
                             <div style="text-align:right; flex-shrink:0; display:flex; align-items:center; gap:8px;">
-                                <span class="negativo" style="font-weight:700;">${valore.toFixed(2)}€</span>
-                                <span onclick="confermaFuturaPerConto('${contoId}', ${idx})" style="cursor:pointer; font-size:1.1rem; padding:2px;">✅</span>
-                                <span onclick="preparaModificaFuturaPerConto('${contoId}', ${idx})" style="cursor:pointer; font-size:1.1rem; padding:2px;">✏️</span>
-                                <span onclick="eliminaFuturaPerConto('${contoId}', ${idx})" style="cursor:pointer; font-size:1.1rem; padding:2px;">🗑️</span>
+                                <span class="negativo" style="font-weight:800;">${valore.toFixed(2)}€</span>
+                                <span onclick="confermaFuturaPerConto('${contoId}', ${idx})" style="cursor:pointer; font-size:1.15rem; padding:4px;">✅</span>
+                                <span onclick="preparaModificaFuturaPerConto('${contoId}', ${idx})" style="cursor:pointer; font-size:1.15rem; padding:4px;">✏️</span>
+                                <span onclick="eliminaFuturaPerConto('${contoId}', ${idx})" style="cursor:pointer; font-size:1.15rem; padding:4px;">🗑️</span>
                             </div>
                         </div>
                         `;
@@ -1861,9 +1952,6 @@
             renderizzaDebitiPerConto(contoId);
         }
 
-        // ==========================================
-        // 🏷️ CATEGORIE PER CONTO
-        // ==========================================
         function aggiornaCategoriePerConto(contoId) {
             const conto = getDatiConto(contoId);
             if (!conto) return;
@@ -1939,9 +2027,6 @@
             }
         }
 
-        // ==========================================
-        // ✏️ OPERAZIONI PER CONTO
-        // ==========================================
         function aggiungiOperazionePerConto(contoId) {
             const now = Date.now();
             if (now - lastOperationTime < MIN_OPERATION_INTERVAL) { alert('Attendi un momento!'); return; }
@@ -2019,9 +2104,6 @@
             }
         }
 
-        // ==========================================
-        // 📅 SPESE FUTURE PER CONTO
-        // ==========================================
         function aggiungiSpesaFuturaPerConto(contoId) {
             const conto = getDatiConto(contoId);
             if (!conto) return;
@@ -2087,9 +2169,6 @@
             }
         }
 
-        // ==========================================
-        // 💰 BUDGET PER CONTO
-        // ==========================================
         function impostaBudgetPerConto(contoId) {
             const conto = getDatiConto(contoId);
             if (!conto) return;
@@ -2168,9 +2247,6 @@
             });
         }
 
-        // ==========================================
-        // 📌 FILTRI PER CONTO
-        // ==========================================
         function applicaFiltriPerConto(contoId) {
             const dataDa = document.getElementById('filtro-data-da-' + contoId).value;
             const dataA = document.getElementById('filtro-data-a-' + contoId).value;
@@ -2211,9 +2287,6 @@
             popolaConto(contoId);
         }
 
-        // ==========================================
-        // 🏦 DEBITI
-        // ==========================================
         function getDebitiOpenState(contoId) {
             const key = 'moneyTrack_debiti_open_' + contoId;
             return localStorage.getItem(key) === 'true';
@@ -2355,7 +2428,7 @@
                 <div class="debito-card">
                     <div class="debito-header">
                         <div class="debito-nome">${d.nome}</div>
-                        <div style="font-size:0.8rem;color:var(--text-muted);">Inizio: ${d.dataInizio}</div>
+                        <div style="font-size:0.8rem;color:var(--text-muted);font-weight:600;">Inizio: ${d.dataInizio}</div>
                     </div>
                     <div class="debito-dettagli">
                         <div class="debito-dettaglio"><div class="label">💰 Capitale Residuo</div><div class="value">${d.capitaleResiduo.toFixed(2)} €</div></div>
@@ -2377,9 +2450,6 @@
             container.innerHTML = html;
         }
 
-        // ==========================================
-        // 📊 AGGIORNA APP (con patrimonio totale per previsione)
-        // ==========================================
         function aggiornaApp() {
             const conti = getConti();
             conti.forEach(conto => {
@@ -2389,7 +2459,6 @@
             renderizzaDashboardPersonalizzata();
             aggiornaPaginaConti();
 
-            // Calcola il patrimonio totale (somma saldi di tutti i conti)
             let patrimonioTotale = 0;
             conti.forEach(conto => {
                 (conto.spese || []).forEach(s => {
@@ -2406,7 +2475,6 @@
             const fineMese = new Date(oggi.getFullYear(), oggi.getMonth() + 1, 0);
             fineMese.setHours(23, 59, 59, 999);
 
-            // Aggrega le spese future di TUTTI i conti (solo quelle che impattano il saldo e non ancora passate)
             let impegniMese = 0;
             let tuttiImpegniFuturi = 0;
             getConti().forEach(conto => {
@@ -2434,25 +2502,25 @@
             }
 
             const bloccoMese = impegniMese > 0
-                ? `<div style="color:var(--red); font-size:0.75rem;">Impegni: -${impegniMese.toFixed(2)}€</div>
-                   <div style="margin-top:2px;">Saldo previsto: <strong style="color:${previstoFineMese >= 0 ? 'var(--emerald)' : 'var(--red)'};">${previstoFineMese.toFixed(2)}€</strong></div>`
+                ? `<div style="color:var(--red); font-size:0.75rem; font-weight:600;">Impegni: -${impegniMese.toFixed(2)}€</div>
+                   <div style="margin-top:4px; font-size:1rem;">Saldo previsto: <strong style="color:${previstoFineMese >= 0 ? 'var(--emerald)' : 'var(--red)'}; font-weight:900;">${previstoFineMese.toFixed(2)}€</strong></div>`
                 : `<div style="color:var(--text-muted); font-size:0.75rem;">Nessuna spesa futura in programma</div>
-                   <div style="margin-top:2px;">Saldo attuale: <strong style="color:${patrimonioTotale >= 0 ? 'var(--emerald)' : 'var(--red)'};">${patrimonioTotale.toFixed(2)}€</strong></div>`;
+                   <div style="margin-top:4px; font-size:1rem;">Saldo attuale: <strong style="color:${patrimonioTotale >= 0 ? 'var(--emerald)' : 'var(--red)'}; font-weight:900;">${patrimonioTotale.toFixed(2)}€</strong></div>`;
 
             const bloccoTotale = tuttiImpegniFuturi > 0
-                ? `<div style="color:var(--red); font-size:0.75rem;">Impegni: -${tuttiImpegniFuturi.toFixed(2)}€</div>
-                   <div style="margin-top:2px;">Saldo previsto: <strong style="color:${saldoFuturo >= 0 ? 'var(--emerald)' : 'var(--red)'};">${saldoFuturo.toFixed(2)}€</strong></div>`
+                ? `<div style="color:var(--red); font-size:0.75rem; font-weight:600;">Impegni: -${tuttiImpegniFuturi.toFixed(2)}€</div>
+                   <div style="margin-top:4px; font-size:1rem;">Saldo previsto: <strong style="color:${saldoFuturo >= 0 ? 'var(--emerald)' : 'var(--red)'}; font-weight:900;">${saldoFuturo.toFixed(2)}€</strong></div>`
                 : `<div style="color:var(--text-muted); font-size:0.75rem;">Nessuna spesa futura registrata</div>
-                   <div style="margin-top:2px;">Saldo attuale: <strong style="color:${patrimonioTotale >= 0 ? 'var(--emerald)' : 'var(--red)'};">${patrimonioTotale.toFixed(2)}€</strong></div>`;
+                   <div style="margin-top:4px; font-size:1rem;">Saldo attuale: <strong style="color:${patrimonioTotale >= 0 ? 'var(--emerald)' : 'var(--red)'}; font-weight:900;">${patrimonioTotale.toFixed(2)}€</strong></div>`;
 
             div.innerHTML = `
-            <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:8px; flex-wrap:wrap;">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px; flex-wrap:wrap;">
                 <div style="flex:1; min-width:0; font-size:0.9rem;">
-                    <div style="color:var(--text-secondary); font-weight:600; font-size:0.7rem; text-transform:uppercase; letter-spacing:0.5px;">Entro fine mese</div>
+                    <div style="color:var(--text-secondary); font-weight:700; font-size:0.7rem; text-transform:uppercase; letter-spacing:0.6px;">Entro fine mese</div>
                     ${bloccoMese}
                 </div>
-                <div style="flex:1; min-width:0; text-align:right; border-left:1px solid var(--border-light); padding-left:12px; font-size:0.9rem;">
-                    <div style="color:var(--text-secondary); font-weight:600; font-size:0.7rem; text-transform:uppercase; letter-spacing:0.5px;">Prospettiva totale</div>
+                <div style="flex:1; min-width:0; text-align:right; border-left:1px solid var(--border-light); padding-left:14px; font-size:0.9rem;">
+                    <div style="color:var(--text-secondary); font-weight:700; font-size:0.7rem; text-transform:uppercase; letter-spacing:0.6px;">Prospettiva totale</div>
                     ${bloccoTotale}
                 </div>
             </div>
@@ -2484,9 +2552,6 @@
             aggiornaApp();
         }
 
-        // ==========================================
-        // 📊 WIDGET
-        // ==========================================
         function apriGestioneWidget() {
             const modal = document.getElementById('widget-modal');
             modal.style.display = 'flex';
@@ -2509,11 +2574,11 @@
             WIDGETS_AVAILABLE.forEach(w => {
                 const isActive = dashboardLayout.some(dw => dw.tipo === w.tipo);
                 html += `
-                <div class="widget-option" onclick="toggleWidget('${w.tipo}')" style="display:flex; justify-content:space-between; align-items:center; padding:12px 0; border-bottom:1px solid var(--border-light); cursor:pointer;">
+                <div class="widget-option" onclick="toggleWidget('${w.tipo}')" style="display:flex; justify-content:space-between; align-items:center; padding:14px 0; border-bottom:1px solid var(--border-light); cursor:pointer;">
                     <div style="display:flex; align-items:center; gap:12px;">
-                        <span style="font-size:1.3rem;">${w.titolo.split(' ')[0]}</span>
+                        <span style="font-size:1.4rem;">${w.titolo.split(' ')[0]}</span>
                         <div>
-                            <div style="font-weight:500;">${w.titolo}</div>
+                            <div style="font-weight:600;">${w.titolo}</div>
                             <div style="font-size:0.75rem; color:var(--text-muted);">${w.desc}</div>
                         </div>
                     </div>
@@ -2657,11 +2722,11 @@
             const score = Math.min(100, Math.max(0, 50 + (percentualeRisparmio * 2)));
             return `
             <div style="text-align:center; padding:6px 0;">
-                <span style="font-size:2.4rem; font-weight:700; color:${score >= 70 ? 'var(--emerald)' : (score >= 40 ? 'var(--orange)' : 'var(--red)')};">${score.toFixed(0)}%</span>
-                <div style="font-size:0.8rem; color:var(--text-muted);">Salute Finanziaria</div>
-                <div style="margin-top:8px; font-size:0.85rem; color:var(--text-secondary);">
+                <span style="font-size:2.6rem; font-weight:900; color:${score >= 70 ? 'var(--emerald)' : (score >= 40 ? 'var(--orange)' : 'var(--red)')};">${score.toFixed(0)}%</span>
+                <div style="font-size:0.8rem; color:var(--text-muted); font-weight:600;">Salute Finanziaria</div>
+                <div style="margin-top:10px; font-size:0.85rem; color:var(--text-secondary);">
                     <div>📈 Risparmio: <strong>${risparmio.toFixed(2)}€</strong> (${percentualeRisparmio.toFixed(1)}%)</div>
-                    <div style="margin-top:2px; font-size:0.7rem; color:var(--text-muted);">
+                    <div style="margin-top:4px; font-size:0.7rem; color:var(--text-muted);">
                         ${score >= 70 ? '✅ Ottima gestione!' : score >= 40 ? '⚠️ Attenzione alle spese!' : '🔴 Rivedere il budget!'}
                     </div>
                 </div>
@@ -2676,13 +2741,13 @@
             return `
             <div>
                 ${debitiAttivi.slice(0, 3).map(d => `
-                    <div style="display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px solid var(--border-light);">
+                    <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border-light);">
                         <span style="font-weight:500;">${d.nome}</span>
-                        <span style="font-weight:700; color:var(--red);">${d.capitaleResiduo.toFixed(0)}€</span>
+                        <span style="font-weight:800; color:var(--red);">${d.capitaleResiduo.toFixed(0)}€</span>
                     </div>
                 `).join('')}
-                ${debitiAttivi.length > 3 ? `<div style="text-align:center;font-size:0.7rem;color:var(--text-muted);padding:4px;">+${debitiAttivi.length - 3} altri debiti</div>` : ''}
-                <div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border-light);display:flex;justify-content:space-between;font-weight:700;">
+                ${debitiAttivi.length > 3 ? `<div style="text-align:center;font-size:0.7rem;color:var(--text-muted);padding:6px;">+${debitiAttivi.length - 3} altri debiti</div>` : ''}
+                <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border-light);display:flex;justify-content:space-between;font-weight:800;">
                     <span>Totale residuo</span><span style="color:var(--red);">${totaleResiduo.toFixed(2)}€</span>
                 </div>
             </div>
@@ -2711,14 +2776,14 @@
             const variazione = media > 0 ? ((ultimo - media) / media * 100) : 0;
             return `
             <div>
-                <div style="display:flex; justify-content:space-between; font-size:0.85rem;">
+                <div style="display:flex; justify-content:space-between; font-size:0.85rem; font-weight:600;">
                     <span>📊 Media 6 mesi: <strong>${media.toFixed(0)}€</strong></span>
                     <span style="color:${variazione > 0 ? 'var(--red)' : 'var(--emerald)'};">${variazione > 0 ? '↑' : '↓'} ${Math.abs(variazione).toFixed(1)}%</span>
                 </div>
-                <div style="display:flex; gap:4px; margin-top:8px; height:30px; align-items:flex-end;">
-                    ${trend.map((v, i) => `<div style="flex:1; background:${i === trend.length - 1 ? 'var(--red)' : 'var(--blue)'}; height:${v > 0 ? Math.max(10, (v / (Math.max(...trend) || 1)) * 100) : 5}%; border-radius:4px; min-height:5px;"></div>`).join('')}
+                <div style="display:flex; gap:6px; margin-top:10px; height:40px; align-items:flex-end;">
+                    ${trend.map((v, i) => `<div style="flex:1; background:${i === trend.length - 1 ? 'var(--grad-danger)' : 'var(--grad-primary)'}; height:${v > 0 ? Math.max(10, (v / (Math.max(...trend) || 1)) * 100) : 5}%; border-radius:6px; min-height:5px;"></div>`).join('')}
                 </div>
-                <div style="display:flex; justify-content:space-between; font-size:0.6rem; color:var(--text-muted); margin-top:4px;">${ultimi6Mesi.map(m => `<span>${m.mese}</span>`).join('')}</div>
+                <div style="display:flex; justify-content:space-between; font-size:0.6rem; color:var(--text-muted); margin-top:6px;">${ultimi6Mesi.map(m => `<span>${m.mese}</span>`).join('')}</div>
             </div>
             `;
         }
@@ -2740,15 +2805,15 @@
             const percentuale = totEntrate > 0 ? (risparmio / totEntrate * 100) : 0;
             return `
             <div style="text-align:center; padding:6px 0;">
-                <div style="font-size:2rem; font-weight:700; color:${risparmio >= 0 ? 'var(--emerald)' : 'var(--red)'};">${risparmio.toFixed(0)}€</div>
-                <div style="font-size:0.8rem; color:var(--text-secondary);">Risparmiato questo mese</div>
-                <div style="margin-top:10px;">
-                    <div style="display:flex; justify-content:space-between; font-size:0.75rem;">
+                <div style="font-size:2.2rem; font-weight:900; color:${risparmio >= 0 ? 'var(--emerald)' : 'var(--red)'};">${risparmio.toFixed(0)}€</div>
+                <div style="font-size:0.8rem; color:var(--text-secondary); font-weight:600;">Risparmiato questo mese</div>
+                <div style="margin-top:12px;">
+                    <div style="display:flex; justify-content:space-between; font-size:0.75rem; font-weight:600;">
                         <span>Progresso obiettivo (20%)</span>
                         <span>${Math.min(100, (percentuale / 20 * 100)).toFixed(0)}%</span>
                     </div>
-                    <div class="progress-bar-bg" style="height:6px;">
-                        <div class="progress-bar-fill" style="width:${Math.min(100, (percentuale / 20 * 100))}%;background:${percentuale >= 20 ? 'var(--emerald)' : 'var(--orange)'};"></div>
+                    <div class="progress-bar-bg" style="height:8px;">
+                        <div class="progress-bar-fill" style="width:${Math.min(100, (percentuale / 20 * 100))}%;background:${percentuale >= 20 ? 'var(--grad-success)' : 'var(--grad-warm)'};"></div>
                     </div>
                 </div>
             </div>
@@ -2771,9 +2836,9 @@
             if (sorted.length === 0) return '<p style="color:var(--text-muted);text-align:center;padding:10px;">Nessuna spesa questo mese</p>';
             const totali = Object.values(categorie).reduce((a, b) => a + b, 0);
             return `<div>${sorted.map(([cat, imp]) => `
-            <div style="display:flex; justify-content:space-between; padding:4px 0; font-size:0.8rem; border-bottom:1px solid var(--border-light);">
-                <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:60%;">${cat}</span>
-                <span>${(imp / totali * 100).toFixed(0)}% (${imp.toFixed(0)}€)</span>
+            <div style="display:flex; justify-content:space-between; padding:6px 0; font-size:0.8rem; border-bottom:1px solid var(--border-light);">
+                <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:60%;font-weight:500;">${cat}</span>
+                <span style="font-weight:700;">${(imp / totali * 100).toFixed(0)}% (${imp.toFixed(0)}€)</span>
             </div>
             `).join('')}</div>`;
         }
@@ -2786,17 +2851,14 @@
             const prossime = contoFuture.filter(f => new Date(f.data) >= oggi).sort((a, b) => new Date(a.data) - new Date(b.data)).slice(0, 4);
             if (prossime.length === 0) return '<p style="color:var(--text-muted);text-align:center;padding:10px;">Nessuna spesa futura</p>';
             return `<div>${prossime.map(p => `
-            <div style="display:flex; justify-content:space-between; padding:4px 0; font-size:0.8rem; border-bottom:1px solid var(--border-light);">
-                <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:55%;">${p.desc}</span>
-                <span style="font-weight:700; color:var(--red);">${p.imp.toFixed(0)}€</span>
-                <span style="font-size:0.6rem; color:var(--text-muted);">${p.data}</span>
+            <div style="display:flex; justify-content:space-between; padding:6px 0; font-size:0.8rem; border-bottom:1px solid var(--border-light);">
+                <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:55%;font-weight:500;">${p.desc}</span>
+                <span style="font-weight:800; color:var(--red);">${p.imp.toFixed(0)}€</span>
+                <span style="font-size:0.62rem; color:var(--text-muted);font-weight:600;">${p.data}</span>
             </div>
             `).join('')}</div>`;
         }
 
-        // ==========================================
-        // 📊 DRAG & DROP WIDGET
-        // ==========================================
         function onWidgetDragStart(e, widgetId) {
             draggedWidgetId = widgetId;
             e.dataTransfer.effectAllowed = 'move';
@@ -2837,9 +2899,6 @@
             draggedWidgetId = null;
         }
 
-        // ==========================================
-        // 🔐 AUTH
-        // ==========================================
         function toggleAuthMode() {
             const title = document.getElementById("auth-title");
             const btn = document.getElementById("btn-auth-primary");
@@ -3041,9 +3100,6 @@
             }
         }
 
-        // ==========================================
-        // ✏️ RINOMINA CONTO
-        // ==========================================
         function apriModalRinominaConto(contoId) {
             contoDaRinominare = contoId;
             const conto = getDatiConto(contoId);
@@ -3072,9 +3128,6 @@
             if (currentUser) syncDatiSuSupabase();
         }
 
-        // ==========================================
-        // 📖 GUIDA
-        // ==========================================
         function apriGuida() {
             document.getElementById('guide-modal').style.display = 'flex';
             document.body.style.overflow = 'hidden';
@@ -3087,9 +3140,6 @@
             document.body.style.overflow = 'auto';
         }
 
-        // ==========================================
-        // 🔄 MIGRAZIONE
-        // ==========================================
         function migraDatiDaVersionePrecedente() {
             const oldDb = localStorage.getItem("moneyTrack_db");
             if (!oldDb || JSON.parse(oldDb).length === 0) return false;
@@ -3139,9 +3189,6 @@
             } catch (e) { alert('❌ Errore: ' + e.message); }
         }
 
-        // ==========================================
-        // 🧭 NAVIGAZIONE
-        // ==========================================
         function toggleMenu() {
             const dropdown = document.getElementById("myDropdown");
             if (dropdown) {
@@ -3252,9 +3299,6 @@
             window.scrollTo(0, 0);
         }
 
-        // ==========================================
-        // 🏷️ GESTIONE CONTI
-        // ==========================================
         let iconaContoSelezionata = '🏦';
 
         function setIconaConto(icona) {
@@ -3333,7 +3377,7 @@
                         <div class="header-saldo" id="boxSaldo-${conto.id}">
                             <div class="saldo-center">
                                 <div class="saldo-nome">
-                                    ${conto.icona || '🏦'} ${sanitizeHTML(conto.nome)}
+                                    <span>${conto.icona || '🏦'} ${sanitizeHTML(conto.nome)}</span>
                                     <button class="rename-btn" onclick="apriModalRinominaConto('${conto.id}')" title="Rinomina conto">✏️</button>
                                     <button class="btn-privacy" onclick="togglePrivacy()" title="Attiva/disattiva privacy">👁️</button>
                                 </div>
@@ -3376,8 +3420,8 @@
                                     </label>
                                 </div>
                                 <button class="btn-modern full-width" id="btn-salva-futura-${conto.id}" onclick="aggiungiSpesaFuturaPerConto('${conto.id}')">Inserisci Spesa Futura</button>
-                                <details style="margin-top:12px; background:var(--bg-input); border:1px solid var(--border-light); border-radius:var(--radius-md); padding:12px;">
-                                    <summary style="cursor:pointer; font-weight:600; color:var(--text-secondary); outline:none; user-select:none;">📋 Mostra Spese Future</summary>
+                                <details style="margin-top:12px; background:var(--bg-input); border:1px solid var(--border-light); border-radius:var(--radius-md); padding:14px;">
+                                    <summary style="cursor:pointer; font-weight:700; color:var(--text-secondary); outline:none; user-select:none;">📋 Mostra Spese Future</summary>
                                     <div id="lista-future-${conto.id}" style="margin-top:10px; padding-top:10px; border-top:1px solid var(--border-light);"></div>
                                 </details>
                                 <div class="budget-container-desktop">
@@ -3470,9 +3514,6 @@
             container.appendChild(div);
         }
 
-        // ==========================================
-        // 📋 PAGINA CONTI
-        // ==========================================
         function aggiornaPaginaConti() {
             const container = document.getElementById('listaContiPagina');
             if (!container) return;
@@ -3519,9 +3560,6 @@
             container.innerHTML = html;
         }
 
-        // ==========================================
-        // ↔ GIROCONTI
-        // ==========================================
         function apriModalGiroconto() {
             const conti = getConti();
             if (conti.length < 2) { mostraToast('⚠️ Servono almeno 2 conti per fare un giroconto!', 'warning'); return; }
@@ -3597,16 +3635,11 @@
 
             salvaDatiApp();
             chiudiModalGiroconto();
-
             aggiornaApp();
-
             mostraToast(`✅ Giroconto di ${importo.toFixed(2)}€ da "${contoFrom.nome}" a "${contoTo.nome}" completato!`, 'success');
             if (currentUser) syncDatiSuSupabase();
         }
 
-        // ==========================================
-        // 🗑️ ELIMINAZIONE GIROCONTO
-        // ==========================================
         function eliminaGiroconto(girocontoId) {
             if (!girocontoId) return;
             if (!confirm('Eliminare questo giroconto e tutte le transazioni associate?')) return;
@@ -3614,18 +3647,15 @@
             const idx = giroconti.findIndex(g => g.id === girocontoId);
             if (idx === -1) { mostraToast('❌ Giroconto non trovato nello storico', 'error'); return; }
             const giro = giroconti[idx];
-
             const conti = getConti();
             conti.forEach(conto => {
                 if (!conto.spese) return;
                 conto.spese = conto.spese.filter(s => s.girocontoId !== girocontoId);
                 datiApp.conti[conto.id].spese = conto.spese;
             });
-
             giroconti.splice(idx, 1);
             datiApp.giroconti = giroconti;
             salvaDatiApp();
-
             aggiornaApp();
             chiudiStoricoGiroconti();
             mostraToast(`🗑️ Giroconto "${giro.fromAccountName} → ${giro.toAccountName}" eliminato`, 'success');
@@ -3641,12 +3671,9 @@
             } else {
                 let html = `
                 <table class="storico-tabella">
-                    <thead>
-                        <tr>
-                            <th>Data</th><th>Da</th><th>→ A</th><th>Importo</th><th>Descrizione</th><th style="text-align:center;">Azioni</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+                    <thead><tr>
+                        <th>Data</th><th>Da</th><th>→ A</th><th>Importo</th><th>Descrizione</th><th style="text-align:center;">Azioni</th>
+                    </tr></thead><tbody>
                 `;
                 giroconti.sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(g => {
                     html += `
@@ -3670,9 +3697,6 @@
 
         function chiudiStoricoGiroconti() { document.getElementById('modalStoricoGiroconti').style.display = 'none'; }
 
-        // ==========================================
-        // 🧮 CALCOLATRICE
-        // ==========================================
         function apriCalcolatrice() { document.getElementById('calc-modal').style.display = 'flex'; document.getElementById('calc-screen').focus(); }
         function chiudiCalcolatrice() { document.getElementById('calc-modal').style.display = 'none'; clearScreen(); }
         function pressKey(valore) { const screen = document.getElementById('calc-screen'); if (valore === ',') screen.value += '.'; else screen.value += valore; }
@@ -3686,9 +3710,6 @@
             }
         }
 
-        // ==========================================
-        // 💡 SUGGERIMENTI
-        // ==========================================
         function apriPopupSuggerimenti() {
             const conto = getContoAttivo();
             const spese = conto ? (conto.spese || []) : [];
@@ -3726,9 +3747,6 @@
             alert('💡 Consigli Finanziari\n\n' + msg);
         }
 
-        // ==========================================
-        // 🔧 UTILITY
-        // ==========================================
         function sanitizeHTML(str) {
             if (typeof str !== 'string') return '';
             const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#x27;', "/": '&#x2F;' };
@@ -3744,9 +3762,6 @@
             } catch { return 'Errore'; }
         }
 
-        // ==========================================
-        // 📤 ESPORTA/IMPORTA
-        // ==========================================
         function esportaDati() {
             const backupData = {
                 datiApp: datiApp, contoAttivoId: contoAttivoId,
@@ -3849,9 +3864,6 @@
             window.location.reload();
         }
 
-        // ==========================================
-        // 🌙 TEMA
-        // ==========================================
         function toggleTheme() {
             darkThemeEnabled = !darkThemeEnabled;
             localStorage.setItem('moneyTrack_darkTheme', darkThemeEnabled);
@@ -3870,9 +3882,6 @@
             }
         }
 
-        // ==========================================
-        // 📅 CALENDARIO
-        // ==========================================
         function navigaMeseCalendario(direzione) {
             meseCorrente += direzione;
             if (meseCorrente > 11) { meseCorrente = 0; annoCorrente++; }
@@ -3906,9 +3915,6 @@
             }
         }
 
-        // ==========================================
-        // 🗞️ NEWS
-        // ==========================================
         async function caricaNews() {
             const container = document.getElementById("news-container");
             const loader = document.getElementById("loading-news");
@@ -3929,9 +3935,9 @@
                             card.className = 'news-card';
                             card.setAttribute('data-categoria', fonte.cat);
                             card.innerHTML = `
-                            <div style="padding:16px; background:var(--bg-card); border:1px solid var(--border-light); border-radius:var(--radius-md); margin-bottom:12px; box-shadow:var(--shadow-sm); border-left:6px solid ${fonte.colore};">
+                            <div style="padding:18px; background:var(--bg-card); border:1px solid var(--border-light); border-radius:var(--radius-lg); margin-bottom:12px; box-shadow:var(--shadow-sm); border-left:6px solid ${fonte.colore}; transition:var(--transition);">
                                 <a href="${item.link}" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;">
-                                    <h4 style="margin:0 0 4px 0; font-size:0.95rem; color:var(--text-primary);">${sanitizeHTML(item.title)}</h4>
+                                    <h4 style="margin:0 0 6px 0; font-size:1rem; color:var(--text-primary);">${sanitizeHTML(item.title)}</h4>
                                     <p style="margin:0; font-size:0.75rem; color:var(--text-muted);">${new Date(item.pubDate).toLocaleDateString('it-IT')} - ${fonte.nome}</p>
                                 </a>
                             </div>
@@ -3957,9 +3963,6 @@
             });
         }
 
-        // ==========================================
-        // 📋 LISTE SPESE
-        // ==========================================
         function caricaSelectListe() {
             const select = document.getElementById("lista-selezionata");
             if (!select) return;
@@ -4120,7 +4123,7 @@
                 const items = gruppi[cat];
                 let subtotale = 0;
                 items.forEach(s => subtotale += s.importo);
-                html += `<div style="margin-bottom:16px;"><div class="lista-totale-categoria" style="background:var(--bg-input); border-radius:var(--radius-sm); padding:6px 12px; display:flex; justify-content:space-between; font-weight:600; margin-bottom:6px;"><span>📂 ${cat}</span><span>${subtotale.toFixed(2)} €</span></div>`;
+                html += `<div style="margin-bottom:16px;"><div class="lista-totale-categoria" style="background:var(--bg-input); border-radius:var(--radius-sm); padding:8px 14px; display:flex; justify-content:space-between; font-weight:700; margin-bottom:8px;"><span>📂 ${cat}</span><span>${subtotale.toFixed(2)} €</span></div>`;
                 items.forEach(s => {
                     html += `<div class="lista-spesa-card"><div class="info"><div class="data">📅 ${s.data}</div><div class="desc">${sanitizeHTML(s.descrizione)}</div><span class="categoria">${sanitizeHTML(s.categoria)}</span></div><div class="importo">${s.importo.toFixed(2)} €</div><div class="azioni"><span onclick="eliminaSpesaLista(${s.id})">🗑️</span></div></div>`;
                 });
@@ -4129,9 +4132,6 @@
             container.innerHTML = html;
         }
 
-        // ==========================================
-        // 📊 ANALISI
-        // ==========================================
         function initYearSelect() {
             const select = document.getElementById("anno-selezionato");
             if (!select || select.options.length > 0) return;
@@ -4160,7 +4160,7 @@
                 type: 'bar',
                 data: {
                     labels: ["Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic"],
-                    datasets: [{ label: 'Entrate', data: entrate, backgroundColor: '#10b981' }, { label: 'Uscite', data: uscite, backgroundColor: '#ef4444' }]
+                    datasets: [{ label: 'Entrate', data: entrate, backgroundColor: '#06d6a0' }, { label: 'Uscite', data: uscite, backgroundColor: '#ef476f' }]
                 },
                 options: { responsive: true, maintainAspectRatio: false }
             });
@@ -4201,9 +4201,6 @@
             body.innerHTML += rigaTotali;
         }
 
-        // ==========================================
-        // 🚀 INIZIALIZZAZIONE
-        // ==========================================
         document.addEventListener('DOMContentLoaded', function() {
             datiApp = JSON.parse(localStorage.getItem("moneyTrack_multi_dati")) || null;
             contoAttivoId = localStorage.getItem("moneyTrack_conto_attivo") || null;
@@ -4252,7 +4249,6 @@
             caricaSelectListe();
             aggiornaListaBackup();
             aggiornaPaginaConti();
-
             aggiornaApp();
 
             if ("Notification" in window && Notification.permission !== "granted" && Notification.permission !== "denied") {
@@ -4294,9 +4290,6 @@
             });
         });
 
-        // ==========================================
-        // ⌨️ SHORTCUT
-        // ==========================================
         document.addEventListener('keydown', function(e) {
             if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
                 const activeElement = document.activeElement;
@@ -4314,9 +4307,6 @@
             }
         });
 
-        // ==========================================
-        // ✏️ CREA NUOVO CONTO
-        // ==========================================
         function creaNuovoConto() {
             const nome = document.getElementById('inputNuovoConto').value.trim();
             if (!nome) { alert('Inserisci un nome!'); return; }
@@ -4361,9 +4351,6 @@
             if (currentUser) syncDatiSuSupabase();
         }
 
-        // ==========================================
-        // 📌 ESPORTA FUNZIONI GLOBALI
-        // ==========================================
         window.mostraPagina = mostraPagina;
         window.aggiornaApp = aggiornaApp;
         window.popolaConto = popolaConto;
