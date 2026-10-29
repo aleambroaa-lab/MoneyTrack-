@@ -209,7 +209,7 @@
         .dropdown-content .theme-toggle-item { display: flex; justify-content: space-between; align-items: center; padding: 11px 20px; }
         .dropdown-content .theme-toggle-item span { color: var(--text-secondary); font-size: 0.92rem; font-weight: 500; }
 
-        .toggle-switch { position: relative; width: 44px; height: 24px; flex-shrink: 0; }
+        .toggle-switch { position: relative; width: 44px; height: 24px; flex-shrink: 0; display: inline-block; }
         .toggle-switch input { opacity: 0; width: 0; height: 0; }
         .toggle-slider {
             position: absolute; cursor: pointer; inset: 0;
@@ -338,7 +338,7 @@
         .aggiungi-conto-card .plus-title { font-weight: 800; font-size: 1.3rem; color: var(--text-primary); }
         .aggiungi-conto-card .plus-sub { font-size: 0.88rem; color: var(--text-muted); margin-top: 6px; }
 
-        /* ===== HEADER SALDO (card colorata) ===== */
+        /* ===== HEADER SALDO ===== */
         .header-saldo {
             background: var(--grad-primary);
             border: none;
@@ -586,6 +586,11 @@
         .dashboard-widget:hover { box-shadow: var(--shadow-lg); transform: translateY(-4px); }
         .dashboard-widget.dragging { opacity: 0.5; transform: rotate(2deg) scale(0.98); }
         .dashboard-widget.drag-over { outline: 3px dashed var(--blue); outline-offset: 4px; }
+
+        /* Widget multi-conto più largo */
+        .dashboard-widget[data-widget-tipo="multiconto"] {
+            min-width: 480px;
+        }
 
         .dashboard-widget .widget-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
         .dashboard-widget .widget-title { font-weight: 700; font-size: 0.9rem; color: var(--text-primary); }
@@ -1002,6 +1007,7 @@
             .dropdown-content { min-width: 230px; }
             .btn-suggerimenti, .menu-dots { width: 36px; height: 36px; }
             #pagina-backup .page-title { font-size: 1.6rem; }
+            .dashboard-widget[data-widget-tipo="multiconto"] { min-width: 92vw; }
         }
         @media (max-width: 480px) {
             .container { padding: 0 10px 20px; }
@@ -1121,7 +1127,6 @@
             outline-offset: 3px;
         }
 
-        /* Icone emoji più grandi e definite nei bottoni principali */
         .btn-modern { font-feature-settings: "ss01"; }
     </style>
 </head>
@@ -1476,7 +1481,7 @@
                 </div>
                 <div style="margin-bottom:20px;">
                     <h3>📊 Widget personalizzati</h3>
-                    <p>Trascina i widget per riordinarli, attivali/disattivali dal menu Widget.</p>
+                    <p>Trascina i widget per riordinarli, attivali/disattivali dal menu Widget. Il widget <strong>"Andamento Conti"</strong> mostra l'evoluzione del saldo di ogni conto negli ultimi 12 mesi con una linea del patrimonio totale.</p>
                 </div>
                 <div style="margin-bottom:20px;">
                     <h3>💾 Backup e Sicurezza</h3>
@@ -1556,6 +1561,7 @@
 
         const WIDGETS_AVAILABLE = [
             { id: 'salute', titolo: '💪 Salute Finanziaria', tipo: 'salute', desc: 'Valutazione della tua salute finanziaria' },
+            { id: 'multiconto', titolo: '📈 Andamento Conti', tipo: 'multiconto', desc: 'Linee di saldo di tutti i conti nel tempo' },
             { id: 'debiti', titolo: '🏦 Debiti Attivi', tipo: 'debiti', desc: 'Riepilogo dei tuoi debiti' },
             { id: 'trend', titolo: '📈 Trend Spese', tipo: 'trend', desc: 'Andamento delle spese mensili' },
             { id: 'risparmio', titolo: '🎯 Risparmio Mese', tipo: 'risparmio', desc: 'Monitoraggio del risparmio mensile' },
@@ -1587,13 +1593,27 @@
         function getBackups() { try { return JSON.parse(localStorage.getItem(BACKUP_KEY)) || []; } catch { return []; } }
         function saveBackups(backups) { localStorage.setItem(BACKUP_KEY, JSON.stringify(backups)); }
 
+        // ==========================================
+        // 🧮 CALCOLO SALDI — UNICA FONTE DI VERITÀ
+        // ==========================================
+        function calcolaSaldoConto(conto) {
+            if (!conto || !conto.spese) return 0;
+            return conto.spese.reduce((acc, s) => {
+                return acc + (s.tipo === "Entrata" ? s.imp : -s.imp);
+            }, 0);
+        }
+
+        function calcolaPatrimonioTotale() {
+            return getConti().reduce((sum, conto) => sum + calcolaSaldoConto(conto), 0);
+        }
+
         function creaBackup(nome = null) {
             try {
                 const backup = {
                     id: Date.now(),
                     nome: nome || `Backup ${new Date().toLocaleString('it-IT')}`,
                     data: new Date().toISOString(),
-                    version: '2.1',
+                    version: '2.3',
                     dati: {
                         datiApp: datiApp, contoAttivoId: contoAttivoId,
                         debiti: debiti, dashboardLayout: dashboardLayout,
@@ -1685,7 +1705,7 @@
             const backups = getBackups();
             if (backups.length === 0) { mostraToast('❌ Nessun backup da esportare', 'error'); return; }
             try {
-                const data = { exportDate: new Date().toISOString(), version: '2.1', backups: backups };
+                const data = { exportDate: new Date().toISOString(), version: '2.3', backups: backups };
                 const json = JSON.stringify(data, null, 2);
                 const blob = new Blob([json], { type: 'application/json' });
                 const url = URL.createObjectURL(blob);
@@ -2057,8 +2077,6 @@
             document.getElementById("importo-" + contoId).value = "";
             document.getElementById("nota-" + contoId).value = "";
             popolaConto(contoId);
-            aggiornaPatrimonio();
-            aggiornaPaginaConti();
             aggiornaApp();
             mostraToast('✅ Movimento aggiunto!', 'success');
             if (currentUser) syncDatiSuSupabase();
@@ -2096,8 +2114,6 @@
                 conto.spese.splice(idx, 1);
                 salvaDatiApp();
                 popolaConto(contoId);
-                aggiornaPatrimonio();
-                aggiornaPaginaConti();
                 aggiornaApp();
                 mostraToast('🗑️ Transazione eliminata', 'info');
                 if (currentUser) syncDatiSuSupabase();
@@ -2149,8 +2165,6 @@
             conto.future.splice(idx, 1);
             salvaDatiApp();
             popolaConto(contoId);
-            aggiornaPatrimonio();
-            aggiornaPaginaConti();
             aggiornaApp();
             mostraToast('✅ Spesa futura confermata!', 'success');
             if (currentUser) syncDatiSuSupabase();
@@ -2450,22 +2464,17 @@
             container.innerHTML = html;
         }
 
+        // ==========================================
+        // 🔧 AGGIORNA APP — UNICO PUNTO DI CALCOLO
+        // ==========================================
         function aggiornaApp() {
             const conti = getConti();
-            conti.forEach(conto => {
-                popolaConto(conto.id);
-            });
-            aggiornaPatrimonio();
+            conti.forEach(conto => popolaConto(conto.id));
+
+            const patrimonioTotale = aggiornaPatrimonio();
+
             renderizzaDashboardPersonalizzata();
             aggiornaPaginaConti();
-
-            let patrimonioTotale = 0;
-            conti.forEach(conto => {
-                (conto.spese || []).forEach(s => {
-                    if (s.tipo === "Entrata") patrimonioTotale += s.imp;
-                    else patrimonioTotale -= s.imp;
-                });
-            });
             calcolaPrevisione(patrimonioTotale);
         }
 
@@ -2477,6 +2486,7 @@
 
             let impegniMese = 0;
             let tuttiImpegniFuturi = 0;
+
             getConti().forEach(conto => {
                 (conto.future || []).forEach(f => {
                     const df = new Date(f.data);
@@ -2496,6 +2506,7 @@
             if (!div) return;
             div.style.display = 'block';
             div.style.textAlign = "left";
+
             if (privacy) {
                 div.innerHTML = `<small>Previsione fine mese: *** € | Saldo Futuro: *** €</small>`;
                 return;
@@ -2528,16 +2539,7 @@
         }
 
         function aggiornaPatrimonio() {
-            const conti = getConti();
-            let totale = 0;
-            conti.forEach(conto => {
-                if (conto.spese) {
-                    conto.spese.forEach(s => {
-                        if (s.tipo === "Entrata") totale += s.imp;
-                        else totale -= s.imp;
-                    });
-                }
-            });
+            const totale = calcolaPatrimonioTotale();
             const el = document.getElementById('patrimonioValore');
             if (el) {
                 el.textContent = (privacy ? '***' : totale.toFixed(2)) + ' €';
@@ -2545,6 +2547,7 @@
             }
             const totaleEl = document.getElementById('totaleContiValore');
             if (totaleEl) totaleEl.textContent = (privacy ? '***' : totale.toFixed(2)) + ' €';
+            return totale;
         }
 
         function togglePrivacy() {
@@ -2567,6 +2570,9 @@
             renderizzaDashboardPersonalizzata();
         }
 
+        // ==========================================
+        // 📊 GESTIONE WIDGET — FIX TOGGLE
+        // ==========================================
         function renderizzaListaWidget() {
             const container = document.getElementById('widget-list');
             if (!container) return;
@@ -2574,7 +2580,7 @@
             WIDGETS_AVAILABLE.forEach(w => {
                 const isActive = dashboardLayout.some(dw => dw.tipo === w.tipo);
                 html += `
-                <div class="widget-option" onclick="toggleWidget('${w.tipo}')" style="display:flex; justify-content:space-between; align-items:center; padding:14px 0; border-bottom:1px solid var(--border-light); cursor:pointer;">
+                <div class="widget-option" style="display:flex; justify-content:space-between; align-items:center; padding:14px 0; border-bottom:1px solid var(--border-light);">
                     <div style="display:flex; align-items:center; gap:12px;">
                         <span style="font-size:1.4rem;">${w.titolo.split(' ')[0]}</span>
                         <div>
@@ -2582,8 +2588,8 @@
                             <div style="font-size:0.75rem; color:var(--text-muted);">${w.desc}</div>
                         </div>
                     </div>
-                    <label class="toggle-switch" style="margin:0;">
-                        <input type="checkbox" ${isActive ? 'checked' : ''} data-widget-tipo="${w.tipo}" onchange="toggleWidget('${w.tipo}')">
+                    <label class="toggle-switch" style="margin:0;" onclick="event.stopPropagation();">
+                        <input type="checkbox" ${isActive ? 'checked' : ''} data-widget-tipo="${w.tipo}" onchange="toggleWidget('${w.tipo}', event)">
                         <span class="toggle-slider"></span>
                     </label>
                 </div>
@@ -2592,7 +2598,9 @@
             container.innerHTML = html;
         }
 
-        function toggleWidget(tipo) {
+        function toggleWidget(tipo, event) {
+            if (event && event.stopPropagation) event.stopPropagation();
+
             const existingIndex = dashboardLayout.findIndex(w => w.tipo === tipo);
             if (existingIndex === -1) {
                 const widget = WIDGETS_AVAILABLE.find(w => w.tipo === tipo);
@@ -2608,8 +2616,9 @@
                 mostraToast('🗑️ Widget rimosso: ' + removed.titolo, 'info');
             }
             localStorage.setItem("moneyTrack_dashboard_layout", JSON.stringify(dashboardLayout));
-            renderizzaListaWidget();
+            // NON rirenderizzare la lista: la checkbox è già nello stato corretto
             renderizzaDashboardPersonalizzata();
+            if (currentUser) syncDatiSuSupabase();
         }
 
         function selezionaTuttiWidget() {
@@ -2620,10 +2629,12 @@
                     dashboardLayout.push({ id: newId, titolo: w.titolo, tipo: w.tipo, posizione: dashboardLayout.length });
                 }
             });
+            dashboardLayout.forEach((w, i) => w.posizione = i);
             localStorage.setItem("moneyTrack_dashboard_layout", JSON.stringify(dashboardLayout));
             renderizzaListaWidget();
             renderizzaDashboardPersonalizzata();
             mostraToast('✅ Tutti i widget selezionati', 'success');
+            if (currentUser) syncDatiSuSupabase();
         }
 
         function deselezionaTuttiWidget() {
@@ -2632,6 +2643,7 @@
             renderizzaListaWidget();
             renderizzaDashboardPersonalizzata();
             mostraToast('🗑️ Tutti i widget rimossi', 'info');
+            if (currentUser) syncDatiSuSupabase();
         }
 
         function renderizzaDashboardPersonalizzata() {
@@ -2652,6 +2664,7 @@
                 const widgetId = widget.id || 'widget_' + index;
                 html += `
                 <div class="dashboard-widget" 
+                     data-widget-tipo="${widget.tipo}"
                      data-widget-id="${widgetId}"
                      data-widget-index="${index}"
                      draggable="true"
@@ -2695,6 +2708,7 @@
         function renderWidgetContent(widget) {
             switch (widget.tipo) {
                 case 'salute': return renderWidgetSalute();
+                case 'multiconto': return renderWidgetMultiConto();
                 case 'debiti': return renderWidgetDebiti();
                 case 'trend': return renderWidgetTrend();
                 case 'risparmio': return renderWidgetRisparmio();
@@ -2702,6 +2716,147 @@
                 case 'prossime': return renderWidgetProssime();
                 default: return '<p style="color:var(--text-muted);">Widget non disponibile</p>';
             }
+        }
+
+        // ==========================================
+        // 📈 NUOVO WIDGET: ANDAMENTO MULTI-CONTO
+        // ==========================================
+        function renderWidgetMultiConto() {
+            const conti = getConti();
+            if (conti.length === 0) {
+                return '<p style="color:var(--text-muted);text-align:center;padding:10px;">Nessun conto creato</p>';
+            }
+
+            const labels = [];
+            const mesiKeys = [];
+            for (let i = 11; i >= 0; i--) {
+                const d = new Date();
+                d.setDate(1);
+                d.setMonth(d.getMonth() - i);
+                labels.push(mesiEstesi[d.getMonth()].substring(0, 3) + ' ' + String(d.getFullYear()).slice(-2));
+                mesiKeys.push({ anno: d.getFullYear(), mese: d.getMonth() });
+            }
+
+            const datasets = [];
+            const palette = [
+                '#4361ee', '#7209b7', '#06d6a0', '#ef476f', '#ffb703',
+                '#4cc9f0', '#f72585', '#3a0ca3', '#f77f00', '#2ec4b6'
+            ];
+
+            conti.forEach((conto, idx) => {
+                const spese = [...(conto.spese || [])].sort((a, b) => new Date(a.data) - new Date(b.data));
+                const saldoPerMese = [];
+                let saldo = 0;
+                let idxSpesa = 0;
+
+                const primoMese = new Date(mesiKeys[0].anno, mesiKeys[0].mese, 1);
+                while (idxSpesa < spese.length && new Date(spese[idxSpesa].data) < primoMese) {
+                    saldo += spese[idxSpesa].tipo === 'Entrata' ? spese[idxSpesa].imp : -spese[idxSpesa].imp;
+                    idxSpesa++;
+                }
+
+                mesiKeys.forEach(mk => {
+                    const fineMese = new Date(mk.anno, mk.mese + 1, 0, 23, 59, 59);
+                    while (idxSpesa < spese.length && new Date(spese[idxSpesa].data) <= fineMese) {
+                        saldo += spese[idxSpesa].tipo === 'Entrata' ? spese[idxSpesa].imp : -spese[idxSpesa].imp;
+                        idxSpesa++;
+                    }
+                    saldoPerMese.push(saldo);
+                });
+
+                datasets.push({
+                    label: (conto.icona || '🏦') + ' ' + conto.nome,
+                    data: saldoPerMese,
+                    borderColor: palette[idx % palette.length],
+                    backgroundColor: palette[idx % palette.length] + '20',
+                    borderWidth: 2.5,
+                    tension: 0.35,
+                    pointRadius: 2,
+                    pointHoverRadius: 5,
+                    fill: false
+                });
+            });
+
+            const patrimonioPerMese = mesiKeys.map((mk, i) =>
+                datasets.reduce((sum, ds) => sum + (ds.data[i] || 0), 0)
+            );
+
+            const isDark = document.documentElement.classList.contains('dark-theme');
+            datasets.push({
+                label: '💰 Patrimonio Totale',
+                data: patrimonioPerMese,
+                borderColor: isDark ? '#f4f7fb' : '#0a1020',
+                backgroundColor: isDark ? 'rgba(244,247,251,0.08)' : 'rgba(10,16,32,0.06)',
+                borderWidth: 3.5,
+                tension: 0.35,
+                pointRadius: 3,
+                pointHoverRadius: 6,
+                fill: true
+            });
+
+            const canvasId = 'chart-multiconto-' + Date.now() + '-' + Math.random().toString(36).substr(2, 5);
+
+            setTimeout(() => {
+                const canvas = document.getElementById(canvasId);
+                if (!canvas) return;
+                if (canvas._chartInstance) canvas._chartInstance.destroy();
+                const textColor = isDark ? '#b9c3d8' : '#4a5570';
+                const gridColor = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
+
+                canvas._chartInstance = new Chart(canvas.getContext('2d'), {
+                    type: 'line',
+                    data: { labels, datasets },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        interaction: { mode: 'index', intersect: false },
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    color: textColor,
+                                    boxWidth: 12,
+                                    boxHeight: 12,
+                                    padding: 10,
+                                    font: { size: 11, weight: '600' },
+                                    usePointStyle: true
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: (ctx) => {
+                                        const val = ctx.parsed.y;
+                                        return `${ctx.dataset.label}: ${val.toFixed(2)} €`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                ticks: { color: textColor, font: { size: 10 } },
+                                grid: { color: gridColor }
+                            },
+                            y: {
+                                ticks: {
+                                    color: textColor,
+                                    font: { size: 10 },
+                                    callback: (v) => v.toFixed(0) + '€'
+                                },
+                                grid: { color: gridColor }
+                            }
+                        }
+                    }
+                });
+            }, 60);
+
+            return `
+            <div style="position:relative; width:100%; height:220px;">
+                <canvas id="${canvasId}"></canvas>
+            </div>
+            <div style="text-align:center; font-size:0.65rem; color:var(--text-muted); margin-top:6px; font-weight:600;">
+                Ultimi 12 mesi · saldo cumulato per conto
+            </div>
+            `;
         }
 
         function renderWidgetSalute() {
@@ -3518,16 +3673,7 @@
             const container = document.getElementById('listaContiPagina');
             if (!container) return;
             const conti = getConti();
-            const totale = conti.reduce((sum, conto) => {
-                let saldo = 0;
-                if (conto.spese) {
-                    conto.spese.forEach(s => {
-                        if (s.tipo === "Entrata") saldo += s.imp;
-                        else saldo -= s.imp;
-                    });
-                }
-                return sum + saldo;
-            }, 0);
+            const totale = conti.reduce((sum, conto) => sum + calcolaSaldoConto(conto), 0);
             const totaleEl = document.getElementById('totaleContiValore');
             if (totaleEl) totaleEl.textContent = (privacy ? '***' : totale.toFixed(2)) + ' €';
 
@@ -3537,13 +3683,7 @@
             }
             let html = '';
             conti.forEach(conto => {
-                let saldo = 0;
-                if (conto.spese) {
-                    conto.spese.forEach(s => {
-                        if (s.tipo === "Entrata") saldo += s.imp;
-                        else saldo -= s.imp;
-                    });
-                }
+                const saldo = calcolaSaldoConto(conto);
                 const isPositivo = saldo >= 0;
                 html += `
                 <div class="conto-riga" onclick="cambiaConto('${conto.id}'); mostraPagina('home')" style="cursor:pointer;">
@@ -3594,13 +3734,7 @@
 
             const contoFrom = getDatiConto(fromId);
             if (!contoFrom) { mostraToast('❌ Conto origine non trovato!', 'error'); return; }
-            let saldoFrom = 0;
-            if (contoFrom.spese) {
-                contoFrom.spese.forEach(s => {
-                    if (s.tipo === "Entrata") saldoFrom += s.imp;
-                    else saldoFrom -= s.imp;
-                });
-            }
+            const saldoFrom = calcolaSaldoConto(contoFrom);
             if (saldoFrom < importo) {
                 mostraToast(`⚠️ Saldo insufficiente sul conto origine (${saldoFrom.toFixed(2)}€)`, 'warning');
                 return;
@@ -3767,7 +3901,7 @@
                 datiApp: datiApp, contoAttivoId: contoAttivoId,
                 debiti: debiti, dashboardLayout: dashboardLayout,
                 darkTheme: localStorage.getItem('moneyTrack_darkTheme') === 'true',
-                version: '2.1'
+                version: '2.3'
             };
             const jsonString = JSON.stringify(backupData);
             if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -3806,7 +3940,7 @@
                 try {
                     const contenuto = e.target.result;
                     const dati = JSON.parse(contenuto);
-                    if (dati.version !== '2.1') { alert("Versione precedente."); return; }
+                    if (dati.version !== '2.3' && dati.version !== '2.2' && dati.version !== '2.1') { alert("Versione precedente."); return; }
                     if (dati.datiApp) {
                         datiApp = dati.datiApp;
                         if (dati.contoAttivoId) { contoAttivoId = dati.contoAttivoId; localStorage.setItem("moneyTrack_conto_attivo", contoAttivoId); }
@@ -3868,6 +4002,7 @@
             darkThemeEnabled = !darkThemeEnabled;
             localStorage.setItem('moneyTrack_darkTheme', darkThemeEnabled);
             applyTheme();
+            renderizzaDashboardPersonalizzata();
         }
 
         function applyTheme() {
@@ -4459,7 +4594,7 @@
         window.cambiaValuta = cambiaValuta;
         window.ripristinaStatoSubmenu = ripristinaStatoSubmenu;
 
-        console.log('✅ MoneyTrack 2.1 - Tutte le funzionalità caricate!');
+        console.log('✅ MoneyTrack 2.3 - Fix widget toggle + Andamento Conti caricati!');
     </script>
 </body>
 </html>
